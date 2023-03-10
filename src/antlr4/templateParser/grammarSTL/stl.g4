@@ -8,35 +8,31 @@ file : STL_ALWAYS formula EOF
 
 formula : tantecendent IMPL tconsequent;
 
-tantecendent : F LCPAREN NUMERIC RCPAREN tformula | tantecendent && tantecendent;
+tantecendent : EVENTUALLY LCPAREN NUMERIC RCPAREN tformula | tantecendent AND tantecendent;
 
-tconsequent : F LCPAREN NUMERIC RCPAREN placeholder;
+tconsequent : EVENTUALLY LCPAREN NUMERIC RCPAREN placeholder;
 
-tformula: boolean | placeholder | DT_AND
+tformula: boolean | placeholder | AND
 	| LPAREN tformula RPAREN 
 	| NOT tformula 
 	| tformula AND tformula 
 	| tformula OR tformula 
-	| tformula XOR tformula 
 	;
 
 placeholder: 'P' NUMERIC ;
 
-EVENTUALLY
-    : 'eventually'
-    ;
+EVENTUALLY: 'F';
+
 STL_ALWAYS
-    : 'always'
-    ;
-NEXT
-    : 'nexttime'
-    ;
-UNTIL
-    : 'until'
+    : 'G'
     ;
 
 RELEASE
     : 'release'
+    ;
+
+IMPL
+    : '->'
     ;
 
 SCOL
