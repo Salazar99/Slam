@@ -398,14 +398,17 @@ Trinary Template::evaluate(size_t time) {
   return !_antCachedValues[time] ||
          ((shift >= _max_length) ? Trinary::U : _conCachedValues[(shift)]);
 }
+
 Trinary Template::evaluateAntNoChache(size_t time) {
   return evalAutomaton(time, _ant);
 }
+
 Trinary Template::evaluate_ant(size_t time) {
   linearEval(harm::Location::Ant);
 
   return _antCachedValues[time];
 }
+
 Trinary Template::evaluate_con(size_t time) {
   linearEval(harm::Location::Con);
 
