@@ -22,17 +22,14 @@ public:
   virtual void enterFormula(stlParser::FormulaContext * /*ctx*/) override { }
   virtual void exitFormula(stlParser::FormulaContext * /*ctx*/) override { }
 
-  virtual void enterTantecendent(stlParser::TantecendentContext * /*ctx*/) override { }
-  virtual void exitTantecendent(stlParser::TantecendentContext * /*ctx*/) override { }
-
-  virtual void enterTconsequent(stlParser::TconsequentContext * /*ctx*/) override { }
-  virtual void exitTconsequent(stlParser::TconsequentContext * /*ctx*/) override { }
-
   virtual void enterTformula(stlParser::TformulaContext * /*ctx*/) override { }
   virtual void exitTformula(stlParser::TformulaContext * /*ctx*/) override { }
 
   virtual void enterPlaceholder(stlParser::PlaceholderContext * /*ctx*/) override { }
   virtual void exitPlaceholder(stlParser::PlaceholderContext * /*ctx*/) override { }
+
+  virtual void enterInterval(stlParser::IntervalContext * /*ctx*/) override { }
+  virtual void exitInterval(stlParser::IntervalContext * /*ctx*/) override { }
 
   virtual void enterBoolean(stlParser::BooleanContext * /*ctx*/) override { }
   virtual void exitBoolean(stlParser::BooleanContext * /*ctx*/) override { }

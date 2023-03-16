@@ -12,23 +12,23 @@
 class  stlParser : public antlr4::Parser {
 public:
   enum {
-    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, EVENTUALLY = 7, 
-    STL_ALWAYS = 8, RELEASE = 9, IMPL = 10, SCOL = 11, COL = 12, FIRST_MATCH = 13, 
-    SIGN = 14, LGPAREN = 15, RGPAREN = 16, LCPAREN = 17, RCPAREN = 18, LPAREN = 19, 
-    RPAREN = 20, VARIABLE = 21, NUMERIC = 22, VERILOG_BINARY = 23, GCC_BINARY = 24, 
-    HEX = 25, BOOLEAN = 26, PLUS = 27, MINUS = 28, TIMES = 29, DIV = 30, 
-    GT = 31, GE = 32, LT = 33, LE = 34, EQ = 35, NEQ = 36, BAND = 37, BOR = 38, 
-    BXOR = 39, NEG = 40, LSHIFT = 41, RSHIFT = 42, AND = 43, OR = 44, NOT = 45, 
-    WS = 46
+    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, STL_EVENTUALLY = 7, 
+    STL_ALWAYS = 8, RELEASE = 9, IMPL = 10, SCOL = 11, COL = 12, COMMA = 13, 
+    FIRST_MATCH = 14, SIGN = 15, LGPAREN = 16, RGPAREN = 17, LCPAREN = 18, 
+    RCPAREN = 19, LPAREN = 20, RPAREN = 21, VARIABLE = 22, NUMERIC = 23, 
+    VERILOG_BINARY = 24, GCC_BINARY = 25, HEX = 26, BOOLEAN = 27, PLUS = 28, 
+    MINUS = 29, TIMES = 30, DIV = 31, GT = 32, GE = 33, LT = 34, LE = 35, 
+    EQ = 36, NEQ = 37, BAND = 38, BOR = 39, BXOR = 40, NEG = 41, LSHIFT = 42, 
+    RSHIFT = 43, AND = 44, OR = 45, NOT = 46, WS = 47
   };
 
   enum {
-    RuleFile = 0, RuleFormula = 1, RuleTantecendent = 2, RuleTconsequent = 3, 
-    RuleTformula = 4, RulePlaceholder = 5, RuleBoolean = 6, RuleBooleanAtom = 7, 
-    RuleBooleanConstant = 8, RuleBooleanVariable = 9, RuleLogic = 10, RuleBitSelect = 11, 
-    RuleLogicAtom = 12, RuleLogicConstant = 13, RuleLogicVariable = 14, 
-    RuleNumeric = 15, RuleNumericAtom = 16, RuleNumericConstant = 17, RuleNumericVariable = 18, 
-    RuleVariable = 19, RuleRelop = 20
+    RuleFile = 0, RuleFormula = 1, RuleTformula = 2, RulePlaceholder = 3, 
+    RuleInterval = 4, RuleBoolean = 5, RuleBooleanAtom = 6, RuleBooleanConstant = 7, 
+    RuleBooleanVariable = 8, RuleLogic = 9, RuleBitSelect = 10, RuleLogicAtom = 11, 
+    RuleLogicConstant = 12, RuleLogicVariable = 13, RuleNumeric = 14, RuleNumericAtom = 15, 
+    RuleNumericConstant = 16, RuleNumericVariable = 17, RuleVariable = 18, 
+    RuleRelop = 19
   };
 
   stlParser(antlr4::TokenStream *input);
@@ -43,10 +43,9 @@ public:
 
   class FileContext;
   class FormulaContext;
-  class TantecendentContext;
-  class TconsequentContext;
   class TformulaContext;
   class PlaceholderContext;
+  class IntervalContext;
   class BooleanContext;
   class BooleanAtomContext;
   class BooleanConstantContext;
@@ -70,6 +69,11 @@ public:
     antlr4::tree::TerminalNode *STL_ALWAYS();
     FormulaContext *formula();
     antlr4::tree::TerminalNode *EOF();
+    antlr4::tree::TerminalNode *LCPAREN();
+    std::vector<IntervalContext *> interval();
+    IntervalContext* interval(size_t i);
+    antlr4::tree::TerminalNode *COMMA();
+    antlr4::tree::TerminalNode *RCPAREN();
     antlr4::tree::TerminalNode *LPAREN();
     antlr4::tree::TerminalNode *RPAREN();
 
@@ -84,9 +88,9 @@ public:
   public:
     FormulaContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    TantecendentContext *tantecendent();
+    std::vector<TformulaContext *> tformula();
+    TformulaContext* tformula(size_t i);
     antlr4::tree::TerminalNode *IMPL();
-    TconsequentContext *tconsequent();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -95,55 +99,24 @@ public:
 
   FormulaContext* formula();
 
-  class  TantecendentContext : public antlr4::ParserRuleContext {
-  public:
-    TantecendentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *EVENTUALLY();
-    antlr4::tree::TerminalNode *LCPAREN();
-    antlr4::tree::TerminalNode *NUMERIC();
-    antlr4::tree::TerminalNode *RCPAREN();
-    TformulaContext *tformula();
-    std::vector<TantecendentContext *> tantecendent();
-    TantecendentContext* tantecendent(size_t i);
-    antlr4::tree::TerminalNode *AND();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  TantecendentContext* tantecendent();
-  TantecendentContext* tantecendent(int precedence);
-  class  TconsequentContext : public antlr4::ParserRuleContext {
-  public:
-    TconsequentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *EVENTUALLY();
-    antlr4::tree::TerminalNode *LCPAREN();
-    antlr4::tree::TerminalNode *NUMERIC();
-    antlr4::tree::TerminalNode *RCPAREN();
-    PlaceholderContext *placeholder();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  TconsequentContext* tconsequent();
-
   class  TformulaContext : public antlr4::ParserRuleContext {
   public:
     TformulaContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     BooleanContext *boolean();
     PlaceholderContext *placeholder();
-    antlr4::tree::TerminalNode *AND();
     antlr4::tree::TerminalNode *LPAREN();
     std::vector<TformulaContext *> tformula();
     TformulaContext* tformula(size_t i);
     antlr4::tree::TerminalNode *RPAREN();
     antlr4::tree::TerminalNode *NOT();
+    antlr4::tree::TerminalNode *STL_EVENTUALLY();
+    antlr4::tree::TerminalNode *LCPAREN();
+    std::vector<IntervalContext *> interval();
+    IntervalContext* interval(size_t i);
+    antlr4::tree::TerminalNode *COMMA();
+    antlr4::tree::TerminalNode *RCPAREN();
+    antlr4::tree::TerminalNode *AND();
     antlr4::tree::TerminalNode *OR();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -165,6 +138,19 @@ public:
   };
 
   PlaceholderContext* placeholder();
+
+  class  IntervalContext : public antlr4::ParserRuleContext {
+  public:
+    IntervalContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *NUMERIC();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  IntervalContext* interval();
 
   class  BooleanContext : public antlr4::ParserRuleContext {
   public:
@@ -319,6 +305,7 @@ public:
     antlr4::tree::TerminalNode *LT();
     VariableContext *variable();
     antlr4::tree::TerminalNode *SIGN();
+    antlr4::tree::TerminalNode *COMMA();
     antlr4::tree::TerminalNode *NUMERIC();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -424,7 +411,6 @@ public:
 
 
   virtual bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;
-  bool tantecendentSempred(TantecendentContext *_localctx, size_t predicateIndex);
   bool tformulaSempred(TformulaContext *_localctx, size_t predicateIndex);
   bool booleanSempred(BooleanContext *_localctx, size_t predicateIndex);
   bool logicSempred(LogicContext *_localctx, size_t predicateIndex);

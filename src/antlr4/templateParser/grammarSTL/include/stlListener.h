@@ -20,17 +20,14 @@ public:
   virtual void enterFormula(stlParser::FormulaContext *ctx) = 0;
   virtual void exitFormula(stlParser::FormulaContext *ctx) = 0;
 
-  virtual void enterTantecendent(stlParser::TantecendentContext *ctx) = 0;
-  virtual void exitTantecendent(stlParser::TantecendentContext *ctx) = 0;
-
-  virtual void enterTconsequent(stlParser::TconsequentContext *ctx) = 0;
-  virtual void exitTconsequent(stlParser::TconsequentContext *ctx) = 0;
-
   virtual void enterTformula(stlParser::TformulaContext *ctx) = 0;
   virtual void exitTformula(stlParser::TformulaContext *ctx) = 0;
 
   virtual void enterPlaceholder(stlParser::PlaceholderContext *ctx) = 0;
   virtual void exitPlaceholder(stlParser::PlaceholderContext *ctx) = 0;
+
+  virtual void enterInterval(stlParser::IntervalContext *ctx) = 0;
+  virtual void exitInterval(stlParser::IntervalContext *ctx) = 0;
 
   virtual void enterBoolean(stlParser::BooleanContext *ctx) = 0;
   virtual void exitBoolean(stlParser::BooleanContext *ctx) = 0;

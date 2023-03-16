@@ -2,26 +2,25 @@ grammar stl;
 import proposition;
 
 file : STL_ALWAYS formula EOF
-| STL_ALWAYS LPAREN formula RPAREN EOF;
+| STL_ALWAYS LCPAREN interval COMMA interval RCPAREN LPAREN formula RPAREN EOF;
 
 
+formula : tformula IMPL tformula;
 
-formula : tantecendent IMPL tconsequent;
-
-tantecendent : EVENTUALLY LCPAREN NUMERIC RCPAREN tformula | tantecendent AND tantecendent;
-
-tconsequent : EVENTUALLY LCPAREN NUMERIC RCPAREN placeholder;
-
-tformula: boolean | placeholder | AND
+tformula: boolean | placeholder
 	| LPAREN tformula RPAREN 
 	| NOT tformula 
 	| tformula AND tformula 
 	| tformula OR tformula 
+    | STL_EVENTUALLY LCPAREN interval COMMA interval RCPAREN tformula
 	;
 
 placeholder: 'P' NUMERIC ;
 
-EVENTUALLY: 'F';
+interval: 'X' NUMERIC | NUMERIC ;
+
+
+STL_EVENTUALLY: 'F'; 
 
 STL_ALWAYS
     : 'G'
@@ -41,6 +40,10 @@ SCOL
 
 COL
     : ':'
+    ;
+
+COMMA 
+    : ','
     ;
 
 FIRST_MATCH
