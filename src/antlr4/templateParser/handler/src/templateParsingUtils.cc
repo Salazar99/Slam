@@ -17,14 +17,14 @@ harm::Template *parseTemplate(std::string formula, harm::Trace *trace,
   addTypeToTemplate(formula, decls);
 
   // parse typed propositions
-  if (language == "Spot") {
-    hparser::SpotParserHandler listener(trace);
+  if (language == "stl") {
+    hparser::StlParserHandler listener(trace);
     listener.addErrorMessage("\t\t\tIn formula: " + formula);
     listener._useCache = useCache;
     antlr4::ANTLRInputStream input(formula);
-    spotLexer lexer(&input);
+    stlLexer lexer(&input);
     antlr4::CommonTokenStream tokens(&lexer);
-    spotParser parser(&tokens);
+    stlParser parser(&tokens);
     antlr4::tree::ParseTree *treeFragAnt = parser.file();
     antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, treeFragAnt);
     Hstring templateFormula = listener.getTemplateFormula();
@@ -35,8 +35,6 @@ harm::Template *parseTemplate(std::string formula, harm::Trace *trace,
   exit(0);
     */
     return new harm::Template(templateFormula, trace, limits);
-  } else if (language == "SVA") {
-  } else if (language == "PSL") {
   } else {
     messageError("Unknown language: '" + language + "'");
   }
