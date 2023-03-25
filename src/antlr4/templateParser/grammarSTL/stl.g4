@@ -7,7 +7,7 @@ file : STL_ALWAYS formula EOF
 
 formula : tformula IMPL tformula;
 
-tformula: boolean | placeholder
+tformula: boolean | placeholder | DT_AND
 	| LPAREN tformula RPAREN 
 	| NOT tformula 
 	| tformula AND tformula 
@@ -19,6 +19,9 @@ placeholder: 'P' NUMERIC ;
 
 interval: 'X' NUMERIC | NUMERIC ;
 
+DT_AND
+    : '..&&..'
+    ;
 
 STL_EVENTUALLY: 'F'; 
 

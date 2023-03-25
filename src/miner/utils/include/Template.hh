@@ -338,7 +338,7 @@ private:
   std::vector<Proposition *> _cProps;
   std::vector<Proposition *> _acProps;
 
-  ///automaton representation of the antecedent
+  ///TODO need to change Automatons with another class to represent ant e con 
   Automaton *_ant;
   Automaton *_con;
 

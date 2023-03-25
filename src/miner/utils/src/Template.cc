@@ -517,19 +517,9 @@ void Template::build() {
                  "SpotLTL: Syntax errors in consequent of assertion:\n" +
                      hcon.toSpotString());
 
-  //  debug
-  //  print_spin_ltl(std::cout, ant.f, false) << '\n';
-  //  print_spin_ltl(std::cout, con.f, false) << '\n';
-  auto antAutomaton = generateDeterministicSpotAutomaton(ant.f);
-  auto conAutomaton = generateDeterministicSpotAutomaton(con.f);
-
-  // debug
-  // print_hoa(std::cout, antAutomaton) << '\n';
-  // print_hoa(std::cout, conAutomaton) << '\n';
-
-  // generare a custom automata to implement the evaluation function of the template
-  _ant = buildAutomaton(antAutomaton, _tokenToProp);
-  _con = buildAutomaton(conAutomaton, _tokenToProp);
+ 
+  //TODO
+  /*For ant e con create 2 new proposition that has to be evaluated considering the the intervals of their subformulas*/
 
   // get a new antecedent (hant might have been modified by the above code)
   hant = _templateFormula.getAnt();
