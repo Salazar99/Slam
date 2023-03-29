@@ -12,14 +12,14 @@
 class  stlLexer : public antlr4::Lexer {
 public:
   enum {
-    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, STL_EVENTUALLY = 7, 
-    STL_ALWAYS = 8, RELEASE = 9, IMPL = 10, SCOL = 11, COL = 12, COMMA = 13, 
-    FIRST_MATCH = 14, SIGN = 15, LGPAREN = 16, RGPAREN = 17, LCPAREN = 18, 
-    RCPAREN = 19, LPAREN = 20, RPAREN = 21, VARIABLE = 22, NUMERIC = 23, 
-    VERILOG_BINARY = 24, GCC_BINARY = 25, HEX = 26, BOOLEAN = 27, PLUS = 28, 
-    MINUS = 29, TIMES = 30, DIV = 31, GT = 32, GE = 33, LT = 34, LE = 35, 
-    EQ = 36, NEQ = 37, BAND = 38, BOR = 39, BXOR = 40, NEG = 41, LSHIFT = 42, 
-    RSHIFT = 43, AND = 44, OR = 45, NOT = 46, WS = 47
+    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, DT_AND = 7, 
+    STL_EVENTUALLY = 8, STL_ALWAYS = 9, RELEASE = 10, IMPL = 11, SCOL = 12, 
+    COL = 13, COMMA = 14, FIRST_MATCH = 15, SIGN = 16, LGPAREN = 17, RGPAREN = 18, 
+    LCPAREN = 19, RCPAREN = 20, LPAREN = 21, RPAREN = 22, VARIABLE = 23, 
+    NUMERIC = 24, VERILOG_BINARY = 25, GCC_BINARY = 26, HEX = 27, BOOLEAN = 28, 
+    PLUS = 29, MINUS = 30, TIMES = 31, DIV = 32, GT = 33, GE = 34, LT = 35, 
+    LE = 36, EQ = 37, NEQ = 38, BAND = 39, BOR = 40, BXOR = 41, NEG = 42, 
+    LSHIFT = 43, RSHIFT = 44, AND = 45, OR = 46, NOT = 47, WS = 48
   };
 
   stlLexer(antlr4::CharStream *input);
