@@ -10,6 +10,7 @@ class Hstring {
 public:
   enum class Stype {
     Temp,
+    Intv,
     Ph,
     Inst,
     Imp,

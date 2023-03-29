@@ -25,13 +25,7 @@
 #include "Trace.hh"
 #include "Trinary.hh"
 #include "exp.hh"
-
-// spotLTL
-#include "spot/tl/parse.hh"
-#include "spot/tl/print.hh"
-#include "spot/twa/bddprint.hh"
-#include "spot/twaalgos/hoa.hh"
-#include "spot/twaalgos/translate.hh"
+#include "Implication.hh"
 
 namespace harm {
     class EdgeProposition;
@@ -328,7 +322,7 @@ private:
   std::map<std::string, Proposition **> _aphToProp;
   std::map<std::string, Proposition **> _cphToProp;
   std::map<std::string, Proposition **> _acphToProp;
-
+  
   /* current proposition domains:
     the generator of permutations will use the following propositions to
     generate the permutations
@@ -338,9 +332,8 @@ private:
   std::vector<Proposition *> _cProps;
   std::vector<Proposition *> _acProps;
 
-  ///TODO need to change Automatons with another class to represent ant e con 
-  Automaton *_ant;
-  Automaton *_con;
+  ///Represents template implication
+  Implication *_impl;
 
 public:
   /// length of the trace

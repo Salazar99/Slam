@@ -114,7 +114,7 @@ void stlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
     _intervals.pop();
     _intervals.pop();
     newFormula =
-        _subFormulas.top() + Hstring(" F[", Hstring::Stype::Temp) + Hstring(interval1,Hstring::Stype::Temp) + Hstring(",", Hstring::Stype::Temp) + Hstring(interval2,Hstring::Stype::Temp) + Hstring("]", Hstring::Stype::Temp) + newFormula;
+        _subFormulas.top() + Hstring(" F[", Hstring::Stype::Temp) + Hstring(interval1,Hstring::Stype::Intv) + Hstring(",", Hstring::Stype::Temp) + Hstring(interval2,Hstring::Stype::Intv) + Hstring("]", Hstring::Stype::Temp) + newFormula;
     _subFormulas.pop();
     _subFormulas.push(newFormula);
     return;

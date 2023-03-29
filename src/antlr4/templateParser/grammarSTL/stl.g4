@@ -17,7 +17,7 @@ tformula: boolean | placeholder | DT_AND
 
 placeholder: 'P' NUMERIC ;
 
-interval: 'X' NUMERIC | NUMERIC ;
+interval: 'X' NUMERIC;
 
 DT_AND
     : '..&&..'

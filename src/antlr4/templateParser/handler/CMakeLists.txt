@@ -10,6 +10,7 @@ SET(NAME antlr4TemplateParserHandler)
 #############################################
 SET (ANTLR4_PSL_PARSER_HANDLER
      src/SpotParserHandler.cc
+     src/StlParserHandler.cc
      src/SpotToSVAhandler.cc
      src/templateParsingUtils.cc
      )

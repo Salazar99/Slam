@@ -389,85 +389,9 @@ Trinary Template::evaluateOffset(size_t time) {
 }
 
 Trinary Template::evaluate(size_t time) {
-
-  linearEval(harm::Location::AntCon);
-
-  size_t shift = time +
-                 (_applyDynamicShift ? _dynamicShiftCachedValues[time] : 0) +
-                 _constShift;
-  return !_antCachedValues[time] ||
-         ((shift >= _max_length) ? Trinary::U : _conCachedValues[(shift)]);
+  _impl->evaluate(time);
 }
 
-Trinary Template::evaluateAntNoChache(size_t time) {
-  return evalAutomaton(time, _ant);
-}
-
-Trinary Template::evaluate_ant(size_t time) {
-  linearEval(harm::Location::Ant);
-
-  return _antCachedValues[time];
-}
-
-Trinary Template::evaluate_con(size_t time) {
-  linearEval(harm::Location::Con);
-
-  return _conCachedValues[time];
-}
-
-Trinary Template::evalAutomaton(size_t time, Automaton *root) const {
-  Automaton::Node *cn = root->_root;
-  /* visit the automaton by evaluating the edges (which are propositions)
-   */
-  while (time < _max_length) {
-    for (const auto &edge : cn->_outEdges) {
-      // if "the current cn->_outEdges[i] is true at instant 'time'"
-      if (edge->_prop->evaluate(time)) {
-        if (edge->_toNode->_type == 0)
-          return Trinary::F;
-        else if (edge->_toNode->_type == 1) {
-          return Trinary::T;
-        }
-
-        // go to the next state
-        cn = edge->_toNode;
-        break;
-      }
-    }
-    // each time we change state, time increases by 1
-    time++;
-  }
-  return Trinary::U;
-}
-Trinary Template::evalAutomatonDyShift(size_t time, Automaton *root,
-                                       size_t &dShift) {
-  Automaton::Node *cn = root->_root;
-  /* visit the automaton by evaluating the edges (which are propositions)
-   */
-  while (time < _max_length) {
-    for (const auto &edge : cn->_outEdges) {
-      // if "the current cn->_outEdges[i] is true at instant 'time'"
-      if (edge->_prop->evaluate(time)) {
-        if (edge->_toNode->_type == 0) {
-          dShift = time;
-          return Trinary::F;
-        } else if (edge->_toNode->_type == 1) {
-          // store the dynamic shift for the current evaluation
-          dShift = time;
-          return Trinary::T;
-        }
-
-        // go to the next state
-        cn = edge->_toNode;
-        break;
-      }
-    }
-    // each time we change state, time increases by 1
-    time++;
-  }
-  dShift = time;
-  return Trinary::U;
-}
 bool Template::assHoldsOnTrace(harm::Location update) {
 
   switch (update) {

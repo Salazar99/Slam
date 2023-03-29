@@ -506,20 +506,75 @@ void Template::build() {
       std::fill_n(_cachedDynShiftsP[i], _max_length, 0);
     }
   }
-  // generate the corresponding automata for both antecedent and consequent
-  spot::parsed_formula ant = spot::parse_infix_psl(hant.toSpotString());
-  messageErrorIf(ant.format_errors(std::cerr),
-                 "SpotLTL: Syntax errors in antecedent of assertion:\n" +
-                     _templateFormula.toString());
 
-  spot::parsed_formula con = spot::parse_infix_psl(hcon.toSpotString());
-  messageErrorIf(con.format_errors(std::cerr),
-                 "SpotLTL: Syntax errors in consequent of assertion:\n" +
-                     hcon.toSpotString());
+  std::vector<TemporalExp *> impant,impcon;
 
- 
-  //TODO
-  /*For ant e con create 2 new proposition that has to be evaluated considering the the intervals of their subformulas*/
+  //iter over hant to find each subformula
+  std::vector<Hstring> phIntv;
+  bool isEventually = false;
+  
+  for (size_t i = 0; i < hant.size(); i++){
+    auto &s = hant[i];
+    if(s._t == Hstring::Stype::Ph){
+      if(isEventually){
+        impant.push_back(new StlEventually(new StlPlaceholder(s._pp)));
+      }
+      else{
+        impant.push_back(new StlPlaceholder(s._pp));
+      }  
+      isEventually = false;
+    }
+    else if(s._t == Hstring::Stype::Intv){
+      //TODO
+    }
+    else if(s._t == Hstring::Stype::Inst){
+      if(isEventually){
+        impant.push_back(new StlEventually(new StlInst(s._pp)));
+      }
+      else{
+        impant.push_back(new StlInst(s._pp));
+      }  
+      isEventually = false;
+    }
+    else if(s._t == Hstring::Stype::Temp && s._s == "&&")
+      phIntv.clear();
+
+    else if(s._t == Hstring::Stype::Temp && s._s == "F[")
+      isEventually = true;
+
+  }
+
+  isEventually = false;
+
+  for (size_t i = 0; i < hcon.size(); i++){
+    auto &s = hant[i];
+    if(s._t == Hstring::Stype::Ph){
+      if(isEventually){
+        impcon.push_back(new StlEventually(new StlPlaceholder(s._pp)));
+      }
+      else{
+        impcon.push_back(new StlPlaceholder(s._pp));
+      }  
+    }
+    else if(s._t == Hstring::Stype::Intv){
+      //TODO
+    }
+    else if(s._t == Hstring::Stype::Inst){
+      if(isEventually){
+        impcon.push_back(new StlEventually(new StlInst(s._pp)));
+      }
+      else{
+        impcon.push_back(new StlInst(s._pp));
+      }  
+    }
+    else if(s._t == Hstring::Stype::Temp && s._s == "&&")
+      phIntv.clear();
+
+    else if(s._t == Hstring::Stype::Temp && s._s == "F[")
+      isEventually = true;
+  }
+
+  _impl = new Implication(impant,impcon);
 
   // get a new antecedent (hant might have been modified by the above code)
   hant = _templateFormula.getAnt();
@@ -538,10 +593,6 @@ void Template::build() {
       _dtOp = std::make_pair(e._s, new DTNextAnd(e._offset, this, _limits));
     }
   }
-
-  //retrieve the depth of the automata
-  _antDepth = getDepth(_ant);
-  _conDepth = getDepth(_con);
 }
 
 void Template::genPermutations(const std::vector<Proposition *> &antP,
