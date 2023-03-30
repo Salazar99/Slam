@@ -9,7 +9,7 @@ namespace harm{
         public:
             StlInst(Proposition ** prop);
 
-            ~StlInst();
+            ~StlInst() = default;
 
             Trinary evaluate(size_t time) override;
 

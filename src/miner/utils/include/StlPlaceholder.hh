@@ -1,6 +1,7 @@
 #pragma once 
 
 #include"TemporalExp.hh"
+#include"Template.hh"
 
 namespace harm{
 
@@ -8,7 +9,7 @@ namespace harm{
         public:
             StlPlaceholder(Proposition ** prop);
 
-            ~StlPlaceholder();
+            ~StlPlaceholder() = default;
 
             Trinary evaluate(size_t time) override;
 

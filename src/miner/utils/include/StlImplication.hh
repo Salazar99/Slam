@@ -15,7 +15,7 @@ namespace harm{
     public:
         StlImplication(std::vector<TemporalExp *> ant,std::vector<TemporalExp *> con);
 
-        ~StlImplication();
+        ~StlImplication()=default;
 
         Trinary evaluate(size_t time);
 

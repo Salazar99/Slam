@@ -8,7 +8,7 @@ namespace harm{
         public:
             StlEventually(TemporalExp * operand);
 
-            ~StlEventually();
+            ~StlEventually() = default;
 
             Trinary evaluate(size_t time) override;
 

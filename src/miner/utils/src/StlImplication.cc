@@ -7,8 +7,6 @@ namespace harm{
         _ant(ant), _con(con) 
     {};
 
-    StlImplication::~StlImplication(){};
-
     Trinary StlImplication::evaluate(size_t time){
         for(auto p : _ant){
             //A subformula of the _ant is F -> the entire antecedent is F -> implication is true regardless of the con
