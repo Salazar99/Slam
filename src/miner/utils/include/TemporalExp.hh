@@ -11,5 +11,5 @@ namespace harm{
             
             virtual Trinary evaluate(size_t time) = 0;
 
-    }   
+    };   
 };

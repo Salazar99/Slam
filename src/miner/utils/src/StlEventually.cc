@@ -2,7 +2,7 @@
 
 namespace harm{
 
-    StlEventually::StlEventually(TemporalExp& operand):_operand(operand);
+    StlEventually::StlEventually(TemporalExp * operand):_operand(operand){};
 
     Trinary StlEventually::evaluate(size_t time){
         if(time < _interval.first)
@@ -13,7 +13,7 @@ namespace harm{
             return _operand->evaluate(time);
     }
 
-    void setInterval(std::pair<size_t,size_t> intv){
+    void StlEventually::setInterval(std::pair<size_t,size_t> intv){
         _interval = intv;
     }
 

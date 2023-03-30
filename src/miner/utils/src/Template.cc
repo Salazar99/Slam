@@ -70,14 +70,8 @@ Template::Template(const Template &original) {
 
 Template::~Template() {
 
-  if (_dtOp.second != nullptr) {
-    //if the template uses a dt operator, the responsability of freeing _ant falls on the dt operator
-    delete _dtOp.second;
-  } else {
-    delete _ant;
-  }
+  delete _impl;
 
-  delete _con;
 
   delete[] _antCachedValues;
   delete[] _conCachedValues;
@@ -195,14 +189,6 @@ void Template::loadPerm(size_t n) {
   // available permutations
 }
 
-std::string Template::printAutomatons() {
-  std::string ret;
-  ret += "Ant:\n";
-  ret += printAutomaton(_ant);
-  ret += "Con:\n";
-  ret += printAutomaton(_con);
-  return ret;
-}
 
 size_t Template::getNumPlaceholders(harm::Location where) {
   if (where == harm::Location::Ant) {
@@ -574,25 +560,8 @@ void Template::build() {
       isEventually = true;
   }
 
-  _impl = new Implication(impant,impcon);
+  _impl = new StlImplication(impant,impcon);
 
-  // get a new antecedent (hant might have been modified by the above code)
-  hant = _templateFormula.getAnt();
-  // build the dt operators
-  for (size_t i = 0; i < hant.size(); i++) {
-    auto &e = hant[i];
-    if (e._t == Hstring::Stype::DTNext) {
-      _dtOp = std::make_pair(e._s,
-                             new DTNext(dynamic_cast<BooleanConstant *>(*e._pp),
-                                        e._offset, this, _limits));
-    } else if (e._t == Hstring::Stype::DTNCReps) {
-      _dtOp = std::make_pair(
-          e._s, new DTNCReps(dynamic_cast<BooleanConstant *>(*e._pp), e._offset,
-                             this, _limits));
-    } else if (e._t == Hstring::Stype::DTNextAnd) {
-      _dtOp = std::make_pair(e._s, new DTNextAnd(e._offset, this, _limits));
-    }
-  }
 }
 
 void Template::genPermutations(const std::vector<Proposition *> &antP,
@@ -627,60 +596,6 @@ void Template::genPermutations(const std::vector<Proposition *> &antP,
   _permIndex = 0;
 }
 
-size_t Template::gatherInterestingValue(size_t time, int depth, int width) {
-
-  DTOperator *template_dt = _dtOp.second;
-
-  Proposition *tc = new BooleanConstant(true, VarType::Bool, 1, 0);
-  Proposition *fc = new BooleanConstant(false, VarType::Bool, 1, 0);
-  template_dt->addItem(tc, depth);
-  size_t ret = -1;
-
-  Automaton::Node *cn = _ant->_root;
-  //visit the automaton by evaluating the edges (which are propositions)
-
-  size_t currTime = time;
-  while (currTime < _max_length) {
-    for (const auto &edge : cn->_outEdges) {
-      if (edge->_prop->evaluate(currTime)) {
-        if (edge->_toNode->_type == 0) {
-          goto antFalse;
-        } else {
-          template_dt->substitute(depth, width, fc);
-          if (!edge->_prop->evaluate(currTime)) {
-            ret = currTime;
-          }
-          if (edge->_toNode->_type == 1) {
-            template_dt->substitute(depth, width, fc);
-            goto antTrue;
-          }
-          template_dt->substitute(depth, width, fc);
-        }
-        // go to the next state
-        cn = edge->_toNode;
-        break;
-      }
-    }
-    // each currTime we change state, currTime increases by 1
-    currTime++;
-  }
-
-  goto antUnknown;
-
-antTrue:;
-  if (evaluate_con((_applyDynamicShift ? currTime : time) +
-                   (_constShift ? 1 : 0)) != Trinary::T) {
-    ret = -1;
-  }
-
-antFalse:;
-antUnknown:;
-  template_dt->popItem(depth);
-
-  delete tc;
-  delete fc;
-  return ret;
-}
 
 std::string Template::findCauseInProposition(Proposition *ep, size_t time,
                                              bool goal) {
@@ -815,32 +730,7 @@ std::string Template::findCauseInEdgeProposition(EdgeProposition *ep,
 
   return ep->toString();
 }
-std::string Template::findCauseOfFailure(size_t time) {
-  Automaton::Node *cn = _con->_root;
-  // visit the automaton by evaluating the edges (which are propositions)
 
-  while (time < _max_length) {
-    for (const auto &edge : cn->_outEdges) {
-      // if "the current cn->_outEdges[i] is true at instant 'time'"
-      if (edge->_prop->evaluate(time)) {
-        if (edge->_toNode->_type == 0) {
-          return findCauseInEdgeProposition(edge->_prop, time, true, 1);
-        } else if (edge->_toNode->_type == 1) {
-          assert(0);
-        }
-
-        // go to the next state
-        cn = edge->_toNode;
-        break;
-      }
-    }
-    // each time we change state, time increases by 1
-    time++;
-  }
-
-  assert(0);
-  return "";
-}
 std::unordered_map<std::string, size_t> Template::findCauseOfFailure() {
   std::unordered_map<std::string, size_t> ret;
   for (size_t i = 0; i < _max_length; i++) {
@@ -923,14 +813,14 @@ void Template::check() {
                   << "\n";
         size_t shift = 0;
         if (_applyDynamicShift) {
-          evalAutomatonDyShift(i, _ant, shift);
+         // evalAutomatonDyShift(i, _ant, shift);
         } else {
-          evalAutomaton(i, _ant);
+         // evalAutomaton(i, _ant);
         }
 
         shift += _constShift;
 
-        evalAutomatonDyShift(shift, _con, shift);
+      //  evalAutomatonDyShift(shift, _con, shift);
         std::cout << "[" << i << "," << shift << "]"
                   << "\n";
         std::cout << _trace->printTrace(i, (shift - i) + 1) << "\n";
@@ -1102,7 +992,6 @@ Automaton *Template::buildDiamondAutomaton(bool conNegated) {
   auto spotAut = generateDeterministicSpotAutomaton(implication.f);
   return buildAutomaton(spotAut, _tokenToProp);
 }
-Automaton *Template::getAntecedentAutomaton() { return _ant; }
 
 void Template::subPropInAssertion(Proposition *original, Proposition *newProp) {
   bool found = 0;

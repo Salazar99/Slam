@@ -6,7 +6,7 @@ namespace harm{
 
     class StlPlaceholder: public TemporalExp{
         public:
-            StlPlaceholder(Proposition &prop);
+            StlPlaceholder(Proposition ** prop);
 
             ~StlPlaceholder();
 
@@ -14,7 +14,7 @@ namespace harm{
 
         private:
 
-            Proposition * _prop;
-    }
+            Proposition ** _prop;
+    };
 
 };

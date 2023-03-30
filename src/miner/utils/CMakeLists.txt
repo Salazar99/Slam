@@ -12,14 +12,11 @@ SET(MINER_UTILS_SRC src/Trace.cc src/DataType.cc src/Template.cc
 	src/PermGenerator.cc
 	src/Hstring.cc  src/EdgeProposition.cc
         src/DTAnd.cc
-        src/DTNext.cc
-        src/DTNCReps.cc
-    src/DTNextAnd.cc
     src/minerUtils.cc
     src/Context.cc
     src/Assertion.cc
     src/DTUtils.cc
-    src/Implication.cc
+    src/StlImplication.cc
     src/StlEventually.cc
     src/StlInst.cc
     src/StlPlaceholder.cc

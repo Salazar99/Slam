@@ -318,6 +318,9 @@ std::ostream &operator<<(std::ostream &os, const Hstring::Stype &t) {
   case Hstring::Stype::Inst:
     os << "Inst";
     break;
+  case Hstring::Stype::Intv:
+    os << "Intv";
+    break;
   case Hstring::Stype::Ph:
     os << "Ph";
     break;

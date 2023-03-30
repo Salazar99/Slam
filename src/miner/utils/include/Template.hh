@@ -15,9 +15,6 @@
 
 #include "Automaton.hh"
 #include "DTAnd.hh"
-#include "DTNCReps.hh"
-#include "DTNext.hh"
-#include "DTNextAnd.hh"
 #include "Hstring.hh"
 #include "Location.hh"
 #include "PermGenerator.hh"
@@ -25,7 +22,11 @@
 #include "Trace.hh"
 #include "Trinary.hh"
 #include "exp.hh"
-#include "Implication.hh"
+#include "StlImplication.hh"
+#include "StlEventually.hh"
+#include "StlPlaceholder.hh"
+#include "StlInst.hh"
+#include "TemporalExp.hh"
 
 namespace harm {
     class EdgeProposition;
@@ -333,7 +334,7 @@ private:
   std::vector<Proposition *> _acProps;
 
   ///Represents template implication
-  Implication *_impl;
+  StlImplication *_impl;
 
 public:
   /// length of the trace
@@ -386,8 +387,5 @@ private:
   size_t _availThreads = 1;
 
   friend DTAnd;
-  friend DTNext;
-  friend DTNextAnd;
-  friend DTNCReps;
 };
 } // namespace harm

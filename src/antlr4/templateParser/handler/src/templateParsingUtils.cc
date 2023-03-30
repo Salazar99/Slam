@@ -1,5 +1,6 @@
 #include "templateParsingUtils.hh"
 #include "SpotParserHandler.hh"
+#include "StlParserHandler.hh"
 #include "SpotToSVAhandler.hh"
 #include "Template.hh"
 #include "spotLexer.h"

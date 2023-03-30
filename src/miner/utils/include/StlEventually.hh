@@ -6,7 +6,7 @@ namespace harm{
 
     class StlEventually: public TemporalExp{
         public:
-            StlEventually(TemporalExp& operand);
+            StlEventually(TemporalExp * operand);
 
             ~StlEventually();
 
@@ -18,6 +18,6 @@ namespace harm{
             std::pair<size_t,size_t> _interval;
 
             TemporalExp * _operand;
-    }
+    };
 
 };
