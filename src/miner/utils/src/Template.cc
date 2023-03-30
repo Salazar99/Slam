@@ -70,8 +70,7 @@ Template::Template(const Template &original) {
 
 Template::~Template() {
 
-    //  FIXME: missing virtual destructor
-//  delete _impl;
+  delete _impl;
 
 
   delete[] _antCachedValues;

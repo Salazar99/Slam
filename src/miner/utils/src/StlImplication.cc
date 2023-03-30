@@ -4,9 +4,7 @@ namespace harm {
 
 StlImplication::StlImplication(const std::vector<TemporalExp *> &ant,
                                const std::vector<TemporalExp *> &con)
-    : _ant(ant), _con(con){
-
-    }
+    : _ant(ant), _con(con) {}
 
 StlImplication::~StlImplication(){};
 

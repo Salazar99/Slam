@@ -1,21 +1,19 @@
-#pragma once 
+#pragma once
 
-#include"TemporalExp.hh"
-#include"Template.hh"
+#include "TemporalExp.hh"
 
-namespace harm{
+namespace harm {
 
-    class StlInst: public TemporalExp{
-        public:
-            StlInst(Proposition ** prop);
+class StlInst : public TemporalExp {
+public:
+  StlInst(expression::Proposition **prop);
 
-            virtual ~StlInst();
+  virtual ~StlInst();
 
-            virtual Trinary evaluate(size_t time) override;
+  virtual Trinary evaluate(size_t time) override;
 
-        private:
-            Proposition ** _prop;
-
-    };
-
+private:
+  expression::Proposition **_prop;
 };
+
+}; // namespace harm

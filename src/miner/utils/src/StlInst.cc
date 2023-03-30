@@ -1,7 +1,7 @@
 #include "StlInst.hh"
 
 namespace harm {
-StlInst::StlInst(Proposition **prop) : _prop(prop){};
+StlInst::StlInst(expression::Proposition **prop) : _prop(prop){};
 
 StlInst::~StlInst(){};
 
