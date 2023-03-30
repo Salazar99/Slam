@@ -1,24 +1,22 @@
 #pragma once
 
-#include"TemporalExp.hh"
-#include<vector>
+#include "TemporalExp.hh"
+#include <vector>
 
-namespace harm{
+namespace harm {
 
-    class StlImplication: public TemporalExp{
+class StlImplication : public TemporalExp {
 
-    private:
-        std::vector<TemporalExp *> _ant;
-        std::vector<TemporalExp *> _con;
+private:
+  std::vector<TemporalExp *> _ant;
+  std::vector<TemporalExp *> _con;
 
+public:
+  StlImplication(const std::vector<TemporalExp *> &ant,
+                 const std::vector<TemporalExp *> &con);
 
-    public:
-        StlImplication(std::vector<TemporalExp *> ant,std::vector<TemporalExp *> con);
+  virtual ~StlImplication();
 
-        ~StlImplication();
-
-        Trinary evaluate(size_t time);
-
-   
-    };
-}//namespace harm
+  virtual Trinary evaluate(size_t time) override;
+};
+} //namespace harm

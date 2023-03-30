@@ -8,9 +8,9 @@ namespace harm{
         public:
             StlEventually(TemporalExp * operand);
 
-            ~StlEventually();
+            virtual ~StlEventually();
 
-            Trinary evaluate(size_t time) override;
+            virtual Trinary evaluate(size_t time) override;
 
             void setInterval(std::pair<size_t,size_t> intv);
 

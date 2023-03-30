@@ -1,11 +1,12 @@
-#include"StlPlaceholder.hh"
+#include "StlPlaceholder.hh"
 
-namespace harm{
+namespace harm {
 
-StlPlaceholder::StlPlacegolder(Proposition ** prop): _prop(prop){};
+StlPlaceholder::StlPlaceholder(expression::Proposition **prop) : _prop(prop){};
+StlPlaceholder::~StlPlaceholder(){};
 
-Trinary StlPlaceholder::evaluate(size_t time){
-    return _prop->evaluate(time);
+Trinary StlPlaceholder::evaluate(size_t time) {
+  return (*_prop)->evaluate(time) ? Trinary::T : Trinary::F;
 }
 
-};
+}; // namespace harm

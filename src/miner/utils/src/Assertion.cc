@@ -35,7 +35,8 @@ void Assertion::fillValuesOffset(Template *t) {
     _values = new Trinary[t->_max_length];
   }
   for (size_t i = 0; i < t->_max_length; i++) {
-    _values[i] = t->evaluateOffset(i);
+      //    FIXME
+//    _values[i] = t->evaluateOffset(i);
   }
   _max_length = t->_max_length;
 }

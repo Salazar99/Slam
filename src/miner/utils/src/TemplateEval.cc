@@ -92,9 +92,7 @@ void Template::joinData(Trinary *cachedValues, Range traceRange,
   }
 }
 
-Trinary Template::evaluate(size_t time) {
-  return _impl->evaluate(time);
-}
+Trinary Template::evaluate(size_t time) { return _impl->evaluate(time); }
 
 bool Template::assHoldsOnTrace(harm::Location update) {
 
@@ -144,9 +142,10 @@ bool Template::assHoldsOnTraceOffset(harm::Location update) {
   }
 
   for (size_t i = 0; i < _max_length; i++) {
-    if (evaluateOffset(i) == Trinary::F) {
-      return false;
-    }
+        //FIXME: evaluateOffset undefined
+    //if (evaluateOffset(i) == Trinary::F) {
+    //  return false;
+    //}
   }
   return true;
 }
@@ -171,7 +170,8 @@ bool Template::isVacuous(harm::Location update) {
 
   //ant at least true once
   for (size_t i = 0; i < _max_length; i++) {
-    if (evaluate_ant(i) == Trinary::T && evaluate(i) == Trinary::T) {
+        //FIXME
+    if (/*evaluate_ant(i) == Trinary::T &&*/ evaluate(i) == Trinary::T) {
       goto nextCondition;
     }
   }
@@ -179,10 +179,11 @@ bool Template::isVacuous(harm::Location update) {
 
 nextCondition:;
   //con at least false once
+  //FIXME: evaluate_con is undefined
   for (size_t i = 0; i < _max_length; i++) {
-    if (evaluate_con(i) == Trinary::F) {
-      return false;
-    }
+//    if (evaluate_con(i) == Trinary::F) {
+//      return false;
+//    }
   }
   return true;
 }
@@ -206,19 +207,21 @@ bool Template::isVacuousOffset(harm::Location update) {
   }
 
   //ant at least true once
+  //FIXME: evaluate_ant is undefined
   for (size_t i = 0; i < _max_length; i++) {
-    if (evaluate_ant(i) == Trinary::T && evaluate(i) == Trinary::F) {
-      goto nextCondition;
-    }
+    //    if (evaluate_ant(i) == Trinary::T && evaluate(i) == Trinary::F) {
+    goto nextCondition;
   }
+  //  }
   return true;
 
 nextCondition:;
   //cons at least false once
   for (size_t i = 0; i < _max_length; i++) {
-    if (evaluate_con(i) == Trinary::T) {
-      return false;
-    }
+        //FIXME
+//    if (evaluate_con(i) == Trinary::T) {
+//      return false;
+//    }
   }
   return true;
 }

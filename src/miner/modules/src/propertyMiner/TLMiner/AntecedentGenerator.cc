@@ -50,9 +50,10 @@ Result_DC mean_MT(Template *t) {
   t->setCacheAntFalse();
 
   for (size_t i = 0; i < t->_max_length; i++) {
-    if (t->evaluate_ant(i) != Trinary::T) {
-      continue;
-    }
+  //FIXME: evaluate_ant is undefined
+  //  if (t->evaluate_ant(i) != Trinary::T) {
+  //    continue;
+  //  }
     if (t->evaluate(i) == Trinary::T) {
       ++res.occGoal;
       ++res.occProposition;
@@ -229,10 +230,11 @@ AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
                                              int depth) {
   std::vector<size_t> ivs;
   for (size_t i = 0; i < t->_max_length; i++) {
-    size_t iv = t->gatherInterestingValue(i, depth, -1);
-    if (iv != (size_t)-1) {
-      ivs.push_back(iv);
-    }
+  //FIXME: gatherInterestingValue is undefined
+//    size_t iv = t->gatherInterestingValue(i, depth, -1);
+    //if (iv != (size_t)-1) {
+    //  ivs.push_back(iv);
+    //}
   }
   return ivs;
 }

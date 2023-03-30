@@ -15,10 +15,10 @@ void StlParserHandler::enterFile(__attribute__((unused))
                                   stlParser::FileContext *ctx) {
   _abort = false;
 }
-stlParserHandler::stlParserHandler(harm::Trace *trace)
+StlParserHandler::StlParserHandler(harm::Trace *trace)
     : _abort(false), _trace(trace) {}
 
-void stlParserHandler::exitFile(stlParser::FileContext *ctx) {
+void StlParserHandler::exitFile(stlParser::FileContext *ctx) {
   auto formula = _subFormulas.top();
   auto G_interval2 = _intervals.top();
   auto G_interval1 = _intervals.top();
@@ -33,7 +33,7 @@ void stlParserHandler::exitFile(stlParser::FileContext *ctx) {
   _errorMessages.clear();
 }
 
-void stlParserHandler::exitFormula(stlParser::FormulaContext *ctx) {
+void StlParserHandler::exitFormula(stlParser::FormulaContext *ctx) {
   if (ctx->tformula().size() == 2 && ctx->IMPL() != nullptr) {
     auto formulaCon = _subFormulas.top();
     _subFormulas.pop();
@@ -45,7 +45,7 @@ void stlParserHandler::exitFormula(stlParser::FormulaContext *ctx) {
   }
 }
 
-void stlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
+void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 
   if (ctx->boolean() != nullptr) {
     Proposition *p = parsePropositionAlreadyTyped(ctx->getText(), _trace);
@@ -72,9 +72,10 @@ void stlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
     _subFormulas.push(Hstring(ph, Hstring::Stype::Ph, _phToProp.at(ph)));
     return;
   }
-  if (ctx->interval() != nullptr){
-    std::string intv = ctx->interval()->getText();
-    _intervals.push(intv);
+  if (!ctx->interval().empty()){
+      //    FIXME:: occhio che interval e' un vettore di due elementi
+//    std::string intv = ctx->interval()->getText();
+//    _intervals.push(intv);
     return;
   }
 
@@ -108,13 +109,14 @@ void stlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 
   if (ctx->tformula().size() == 3 && ctx->STL_EVENTUALLY() != nullptr) {
     Hstring newFormula = _subFormulas.top();
-    Hstring interval2 = _intervals.top();
-    Hstring interval1 = _intervals.top();
+      //    FIXME
+ //   Hstring interval2 = _intervals.top();
+ //   Hstring interval1 = _intervals.top();
     _subFormulas.pop();
     _intervals.pop();
     _intervals.pop();
-    newFormula =
-        _subFormulas.top() + Hstring(" F[", Hstring::Stype::Temp) + Hstring(interval1,Hstring::Stype::Intv) + Hstring(",", Hstring::Stype::Temp) + Hstring(interval2,Hstring::Stype::Intv) + Hstring("]", Hstring::Stype::Temp) + newFormula;
+ //   newFormula =
+//        _subFormulas.top() + Hstring(" F[", Hstring::Stype::Temp) + Hstring(interval1,Hstring::Stype::Intv) + Hstring(",", Hstring::Stype::Temp) + Hstring(interval2,Hstring::Stype::Intv) + Hstring("]", Hstring::Stype::Temp) + newFormula;
     _subFormulas.pop();
     _subFormulas.push(newFormula);
     return;
@@ -140,7 +142,7 @@ void stlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 }
 
 
-std::string stlParserHandler::printErrorMessage() {
+std::string StlParserHandler::printErrorMessage() {
   std::stringstream ss;
   for (auto &msg : _errorMessages) {
     ss << msg << "\n";
@@ -148,14 +150,14 @@ std::string stlParserHandler::printErrorMessage() {
   return ss.str();
 }
 
-void stlParserHandler::visitErrorNode(__attribute__((unused))
+void StlParserHandler::visitErrorNode(__attribute__((unused))
                                        antlr4::tree::ErrorNode *node) {
   messageError("Antlr parse error: " + node->getText() + "\n" +
                printErrorMessage());
 }
-void stlParserHandler::addErrorMessage(const std::string &msg) {
+void StlParserHandler::addErrorMessage(const std::string &msg) {
   _errorMessages.push_back(msg);
 }
-Hstring &stlParserHandler::getTemplateFormula() { return _templateFormula; }
+Hstring &StlParserHandler::getTemplateFormula() { return _templateFormula; }
 
 } // namespace hparser

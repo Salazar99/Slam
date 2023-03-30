@@ -8,5 +8,5 @@ add_subdirectory(handler)
 
 add_library(${NAME} INTERFACE)
 target_include_directories(${NAME} INTERFACE ./)
-target_link_libraries(${NAME} INTERFACE antlr4SpotParserGrammar antlr4STLParserGrammar antlr4SVAParserGrammar antlr4TemplateParserHandler)
+target_link_libraries(${NAME} INTERFACE antlr4SpotParserGrammar antlr4SVAParserGrammar antlr4StlParserGrammar antlr4TemplateParserHandler)
 

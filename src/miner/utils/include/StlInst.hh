@@ -9,9 +9,9 @@ namespace harm{
         public:
             StlInst(Proposition ** prop);
 
-            ~StlInst();
+            virtual ~StlInst();
 
-            Trinary evaluate(size_t time) override;
+            virtual Trinary evaluate(size_t time) override;
 
         private:
             Proposition ** _prop;
