@@ -171,46 +171,18 @@ add_subdirectory(src/fort)
 add_subdirectory(src/miner)
 target_link_libraries(${NAME} miner templateParser)
 
-#Trace generator
-include_directories(src/traceGenerator/include/)
-SET(TG_MAIN_SRC src/traceGenerator/traceGenerator.cc
-    src/traceGenerator/src/z3TestCaseGenerator.cc)
-
-add_executable(traceGenerator EXCLUDE_FROM_ALL ${TG_MAIN_SRC})
-target_link_libraries(traceGenerator commandLineParser templateParser propositionParser varParser traceReader ${Z3_LIBRARY})
-
-#axc project
-add_executable(evaluator EXCLUDE_FROM_ALL src/evaluator/main.cc)
-target_link_libraries(evaluator estimator commandLineParser traceReader)
-
 
 ### TESTS & EXAMPLES ###
 enable_testing()
 include (CTest)
 add_subdirectory(tests)
 add_subdirectory(examples)
-#############
 
 
-#C++ API
-SET(API_SRC src/api/cpp/src/harm.cc)
-add_library(devharm SHARED ${API_SRC} )
-target_include_directories(devharm PUBLIC src/api/cpp/include/)
-target_link_libraries(devharm PUBLIC globals logging exp miner templateParser propositionParser varParser traceReader miner_utils ${Z3_LIBRARY})
-
-
-#Update includes for api debug
-file(COPY src/globals/include/globals.hh DESTINATION src/api/cpp/include/harm/)
-file(COPY src/utils/include/colors.hh DESTINATION src/api/cpp/include/harm/)
-file(COPY src/miner/utils/include/Assertion.hh DESTINATION src/api/cpp/include/harm/)
-file(COPY src/miner/utils/include/Trinary.hh DESTINATION src/api/cpp/include/harm/)
-
-#Install
 
 INSTALL(FILES src/globals/include/globals.hh src/utils/include/colors.hh src/miner/utils/include/Assertion.hh src/miner/utils/include/Trinary.hh DESTINATION harm/include/harm)
-INSTALL(FILES src/api/cpp/include/harm.hh DESTINATION harm/include)
 
-INSTALL(TARGETS harm devharm 
+INSTALL(TARGETS harm 
     RUNTIME DESTINATION harm/bin
     LIBRARY DESTINATION harm/lib
     ARCHIVE DESTINATION harm/lib
