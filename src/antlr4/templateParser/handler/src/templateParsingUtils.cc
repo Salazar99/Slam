@@ -29,8 +29,8 @@ harm::Template *parseTemplate(std::string formula, harm::Trace *trace,
     antlr4::tree::ParseTree *treeFragAnt = parser.file();
     antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, treeFragAnt);
     Hstring templateFormula = listener.getTemplateFormula();
-    /*
-    DEBUG
+    
+    /*DEBUG
     std::cout << treeFragAnt->toStringTree(&parser) << "\n";
     std::cout << formula << "\n";
   exit(0);

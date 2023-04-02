@@ -102,7 +102,7 @@ void ManualDefinition::mineContexts(Trace *trace,
 
   for (auto &contextTag : contextsTag) {
     auto contextName = getAttributeValue(contextTag, "name", "");
-    auto language = getAttributeValue(contextTag, "language", "Spot");
+    auto language = getAttributeValue(contextTag, "language", "stl");
     Context *context = new Context(contextName, language);
 
     // templates

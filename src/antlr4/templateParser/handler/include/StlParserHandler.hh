@@ -47,6 +47,7 @@ private:
   virtual void exitFormula(stlParser::FormulaContext *ctx) override;
   virtual void visitErrorNode(antlr4::tree::ErrorNode *node) override;
   virtual void exitTformula(stlParser::TformulaContext *ctx) override;
+  virtual void exitInterval(stlParser::IntervalContext * ctx) override;
   };
 
 } // namespace hparser

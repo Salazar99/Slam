@@ -72,12 +72,6 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
     _subFormulas.push(Hstring(ph, Hstring::Stype::Ph, _phToProp.at(ph)));
     return;
   }
-  if (!ctx->interval().empty()){
-      //    FIXME:: occhio che interval e' un vettore di due elementi
-//    std::string intv = ctx->interval()->getText();
-//    _intervals.push(intv);
-    return;
-  }
 
   if (ctx->DT_AND() != nullptr) {
     messageErrorIf(dtCount > 0,
@@ -107,16 +101,26 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
     return;
   }
 
+  //If we are exiting a tformula rule that gives STL_eventually operator
   if (ctx->tformula().size() == 3 && ctx->STL_EVENTUALLY() != nullptr) {
-    Hstring newFormula = _subFormulas.top();
-      //    FIXME
- //   Hstring interval2 = _intervals.top();
- //   Hstring interval1 = _intervals.top();
-    _subFormulas.pop();
+
+    //Get last interval member found, end of interval
+    std::string interval2 = _intervals.top(); 
     _intervals.pop();
+    //Get second interval member, beginning of inverval
+    std::string interval1 = _intervals.top();
     _intervals.pop();
- //   newFormula =
-//        _subFormulas.top() + Hstring(" F[", Hstring::Stype::Temp) + Hstring(interval1,Hstring::Stype::Intv) + Hstring(",", Hstring::Stype::Temp) + Hstring(interval2,Hstring::Stype::Intv) + Hstring("]", Hstring::Stype::Temp) + newFormula;
+
+    //Since intervals are another type of placeholder, reuse same structure
+    if(!_phToProp.count(interval1)){
+        _phToProp[interval1] = new Proposition *(nullptr);      
+    }
+    if(!_phToProp.count(interval2)){
+        _phToProp[interval2] = new Proposition *(nullptr);
+    }
+    
+    Hstring newFormula =
+        Hstring(" F[", Hstring::Stype::Temp) + Hstring(interval1,Hstring::Stype::Intv, _phToProp[interval1]) + Hstring(",", Hstring::Stype::Temp) + Hstring(interval2,Hstring::Stype::Intv, _phToProp[interval2]) + Hstring("]", Hstring::Stype::Temp) + _subFormulas.top();
     _subFormulas.pop();
     _subFormulas.push(newFormula);
     return;
@@ -139,6 +143,10 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
     _subFormulas.push(newFormula);
     return;
   }
+}
+
+void StlParserHandler::exitInterval(stlParser::IntervalContext * ctx){
+  _intervals.push(ctx->getText());
 }
 
 
