@@ -416,6 +416,8 @@ void Template::build() {
       _tokenToProp[e._s] = e._pp;
       _aphToProp.insert({{e._s, e._pp}});
       antPhs.insert(e._s);
+    } else if (e._t == Hstring::Stype::Intv){
+      _tokenToIntv[e._s] = e._intv; 
     } else if (e._t == Hstring::Stype::Inst) {
       _tokenToProp[e._s] = e._pp;
       _iToProp[e._s] = e._pp;
@@ -448,6 +450,8 @@ void Template::build() {
       } else {
         _cphToProp.insert({{e._s, e._pp}});
       }
+    } else if (e._t == Hstring::Stype::Intv){
+      _tokenToIntv[e._s] = e._intv; 
     } else if (e._t == Hstring::Stype::Inst) {
       _tokenToProp[e._s] = e._pp;
       _iToProp[e._s] = e._pp;

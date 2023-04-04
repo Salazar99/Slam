@@ -525,9 +525,10 @@ void Qualifier::printAssertions(Context &context,
         ass_colored = ass->_toString.second;
         ass_black = ass->_toString.first;
       } else if (clc::outputLang == "SVA") {
-        Hstring svaFormula = hparser::spotToSVA(ass->_toString.first, trace);
-        ass_black = svaFormula.toString(1);
-        ass_colored = svaFormula.toColoredString(1);
+        //FIXME
+        //Hstring svaFormula = hparser::spotToSVA(ass->_toString.first, trace);
+        //ass_black = svaFormula.toString(1);
+        //ass_colored = svaFormula.toColoredString(1);
       }
       line.push_back(std::to_string(i));
       line.push_back(ass_colored);
@@ -852,8 +853,9 @@ void Qualifier::dumpAssToFile(Context &context, Trace *trace,
     if (clc::outputLang == "Spot") {
       assFile << a->_toString.first << "\n";
     } else if (clc::outputLang == "SVA") {
-      Hstring svaFormula = hparser::spotToSVA(a->_toString.first, trace);
-      assFile << svaFormula.toString(1) << "\n";
+      //FIXME
+      //Hstring svaFormula = hparser::spotToSVA(a->_toString.first, trace);
+      //assFile << svaFormula.toString(1) << "\n";
     }
 #if enPB
     pb.increment(0);

@@ -313,6 +313,8 @@ private:
    */
   /// link of all placeholders to all instantiated propositions
   std::unordered_map<std::string, Proposition **> _tokenToProp;
+  ///link to all interval placeholders
+  std::unordered_map<std::string, int **> _tokenToIntv;
   /// link of all user instantiated placeholders to their respective
   /// propositions
   std::unordered_map<std::string, Proposition **> _iToProp;

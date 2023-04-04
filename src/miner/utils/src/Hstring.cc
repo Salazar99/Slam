@@ -2,10 +2,15 @@
 #include "Hstring.hh"
 
 Hstring::Hstring(std::string s, Stype t, expression::Proposition **pp)
-    : _s(s), _t(t), _pp(pp), _offset(-1) {
+    : _s(s), _t(t),_intv(nullptr),_pp(pp), _offset(-1) {
   _append.push_back(*this);
 }
-Hstring::Hstring() : _s(""), _t(Stype::Temp), _pp(nullptr), _offset(-1) {
+Hstring::Hstring(std::string s, Stype t, int **intv)
+    : _s(s), _t(t), _intv(intv),_pp(nullptr),_offset(-1) {
+  _append.push_back(*this);
+}
+
+Hstring::Hstring() : _s(""), _t(Stype::Temp), _intv(nullptr), _pp(nullptr), _offset(-1) {
   _append.push_back(*this);
 }
 Hstring Hstring::operator+(const Hstring &right) {
@@ -223,7 +228,8 @@ std::string Hstring::toSpotString() {
 
 Hstring Hstring::getAnt() {
   Hstring ret;
-  size_t i = 1;
+  //i == 5 because our G now have intervals
+  size_t i = 5;
   while (_append[i]._t != Stype::Imp) {
     ret._append.push_back(_append[i++]);
   }

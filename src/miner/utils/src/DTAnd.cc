@@ -133,13 +133,13 @@ std::pair<std::string, std::string> DTAnd::prettyPrint(bool offset) {
 
   if (offset) {
     //negate the consequent
-    con = Hstring("!(", Hstring::Stype::Temp, nullptr) + con +
-          Hstring(")", Hstring::Stype::Temp, nullptr);
+    con = Hstring("!(", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + con +
+          Hstring(")", Hstring::Stype::Temp,(expression::Proposition**) nullptr);
   }
 
   //compose the reduced template
-  auto reducedTemplate = Hstring("G(", Hstring::Stype::G) + ant + imp + con +
-                         Hstring(")", Hstring::Stype::G);
+  auto reducedTemplate = Hstring("G(", Hstring::Stype::G,(expression::Proposition**) nullptr) + ant + imp + con +
+                         Hstring(")", Hstring::Stype::G,(expression::Proposition**) nullptr);
   return std::make_pair(reducedTemplate.toString(1),
                         reducedTemplate.toColoredString(1));
 }

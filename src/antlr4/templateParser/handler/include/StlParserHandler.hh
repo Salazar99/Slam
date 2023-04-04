@@ -32,7 +32,8 @@ private:
   bool _abort;
 
   std::stack<Hstring> _subFormulas;
-  std::stack<std::string> _intervals;
+  std::stack<std::string> _intervalNames;
+  std::unordered_map<std::string, int **> _intervals;
   harm::Trace *_trace;
   Hstring _templateFormula;
   std::unordered_map<std::string, expression::Proposition **> _phToProp;

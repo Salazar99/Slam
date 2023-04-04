@@ -22,6 +22,9 @@ public:
   };
 
   Hstring(std::string s, Stype t, expression::Proposition **pp = nullptr);
+
+  Hstring(std::string s, Stype t, int **intv = nullptr);
+  
   Hstring();
 
   ~Hstring() = default;
@@ -54,6 +57,7 @@ public:
   expression::Proposition **_pp;
   int _offset;
   std::string _sep;
+  int ** _intv;
 
 private:
   std::vector<Hstring> _append;

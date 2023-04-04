@@ -1,9 +1,6 @@
 #include "templateParsingUtils.hh"
-#include "SpotParserHandler.hh"
 #include "StlParserHandler.hh"
-#include "SpotToSVAhandler.hh"
 #include "Template.hh"
-#include "spotLexer.h"
 
 #include <regex>
 #include <tuple>
@@ -36,12 +33,14 @@ harm::Template *parseTemplate(std::string formula, harm::Trace *trace,
   exit(0);
     */
     return new harm::Template(templateFormula, trace, limits);
-  } else {
+cd E  } else {
     messageError("Unknown language: '" + language + "'");
   }
   return nullptr;
 }
 
+//FIXME Do we still need this?
+/*
 Hstring spotToSVA(std::string spotFormula, harm::Trace *trace) {
 
   auto decls = trace->getDeclarations();
@@ -57,15 +56,15 @@ Hstring spotToSVA(std::string spotFormula, harm::Trace *trace) {
   spotParser parser(&tokens);
   antlr4::tree::ParseTree *treeFragAnt = parser.file();
   antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, treeFragAnt);
-  /*
-  DEBUG
-  std::cout << treeFragAnt->toStringTree(&parser) << "\n";
-  std::cout << formula << "\n";
+  
+  //DEBUG
+  //std::cout << treeFragAnt->toStringTree(&parser) << "\n";
+  //std::cout << formula << "\n";
 exit(0);
-  */
+  
   return listener.getConvertedFormula();
 }
-
+*/
 void findAllOccurances(std::vector<size_t> &vec, std::string data,
                        std::string toSearch) {
   // Get the first occurrence
@@ -78,6 +77,7 @@ void findAllOccurances(std::vector<size_t> &vec, std::string data,
     pos = data.find(toSearch, pos + toSearch.size());
   }
 }
+
 void addTypeToTemplate(std::string &formula,
                        std::vector<harm::VarDeclaration> varDeclarations) {
   /*all this code is to solve the problem of
