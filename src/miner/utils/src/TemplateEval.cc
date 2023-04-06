@@ -94,6 +94,14 @@ void Template::joinData(Trinary *cachedValues, Range traceRange,
 
 Trinary Template::evaluate(size_t time) { return _impl->evaluate(time); }
 
+Trinary Template::evaluate_ant(size_t time){
+  return _impl->evaluate_ant(time);
+}
+
+Trinary Template::evaluate_con(size_t time){
+  return _impl->evaluate_con(time);
+}
+
 bool Template::assHoldsOnTrace(harm::Location update) {
 
   switch (update) {

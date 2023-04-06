@@ -5,7 +5,7 @@ Hstring::Hstring(std::string s, Stype t, expression::Proposition **pp)
     : _s(s), _t(t),_intv(nullptr),_pp(pp), _offset(-1) {
   _append.push_back(*this);
 }
-Hstring::Hstring(std::string s, Stype t, int **intv)
+Hstring::Hstring(std::string s, Stype t, size_t **intv)
     : _s(s), _t(t), _intv(intv),_pp(nullptr),_offset(-1) {
   _append.push_back(*this);
 }

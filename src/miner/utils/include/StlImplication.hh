@@ -18,5 +18,9 @@ public:
   virtual ~StlImplication();
 
   virtual Trinary evaluate(size_t time) override;
+
+  Trinary evaluate_ant(size_t time);
+  
+  Trinary evaluate_con(size_t time);
 };
 } //namespace harm

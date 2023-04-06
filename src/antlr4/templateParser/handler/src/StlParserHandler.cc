@@ -112,7 +112,7 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 
     //Since intervals are another type of placeholder, reuse same structure
     Hstring newFormula =
-        Hstring(" F[", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + Hstring(interval1,Hstring::Stype::Intv, _intervals.at(interval1)) + Hstring(",", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + Hstring(interval2,Hstring::Stype::Intv, _intervals.at(interval2)) + Hstring("]", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + _subFormulas.top();
+        Hstring("F[", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + Hstring(interval1,Hstring::Stype::Intv, _intervals.at(interval1)) + Hstring(",", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + Hstring(interval2,Hstring::Stype::Intv, _intervals.at(interval2)) + Hstring("]", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + _subFormulas.top();
     _subFormulas.pop();
     _subFormulas.push(newFormula);
     return;
@@ -139,11 +139,25 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 
 void StlParserHandler::exitInterval(stlParser::IntervalContext * ctx){
   std::string intname = ctx->getText();
-//if new interval placeholder, add it to the map 
- if(!_intervals.count(intname)){
-        _intervals[intname] = nullptr;     
+    //If the interval is a boolean
+  if(ctx->boolean() != nullptr){
+    if(!_intervals.count(intname)){
+      //FIXME This is awfull, find a more elegant way to do this
+      std::stringstream ss(intname);
+      size_t intval;
+      ss >> intval;
+      size_t * pvalue = new size_t(intval);
+      size_t ** vp = new size_t*(pvalue);
+      _intervals[intname] = vp;
     }
-//Add it to the queue to be able to construct the operators correctly
+  }else {//if the interval is a placeholder  
+    //if new interval placeholder, add it to the map 
+    if(!_intervals.count(intname)){
+      _intervals[intname] = nullptr;     
+    }
+  }
+
+  //Add it to the queue to be able to construct the operators correctly
   _intervalNames.push(intname);
 }
 

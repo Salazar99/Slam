@@ -500,14 +500,19 @@ void Template::build() {
   std::vector<TemporalExp *> impant,impcon;
 
   //iter over hant to find each subformula
-  std::vector<Hstring> phIntv;
+  std::stack<std::string> phIntv;
   bool isEventually = false;
   
   for (size_t i = 0; i < hant.size(); i++){
     auto &s = hant[i];
     if(s._t == Hstring::Stype::Ph){
       if(isEventually){
-        impant.push_back(new StlEventually(new StlPlaceholder(s._pp)));
+         std::string intval1 = phIntv.top();
+        phIntv.pop();
+        std::string intval2 = phIntv.top();
+        phIntv.pop();
+        std::pair<size_t **, size_t **> interval(_tokenToIntv.at(intval1),_tokenToIntv.at(intval2));
+        impant.push_back(new StlEventually(new StlPlaceholder(s._pp), interval));
       }
       else{
         impant.push_back(new StlPlaceholder(s._pp));
@@ -515,51 +520,61 @@ void Template::build() {
       isEventually = false;
     }
     else if(s._t == Hstring::Stype::Intv){
-      //TODO
+      phIntv.push(s._s);
     }
     else if(s._t == Hstring::Stype::Inst){
       if(isEventually){
-        impant.push_back(new StlEventually(new StlInst(s._pp)));
+        std::string intval1 = phIntv.top();
+        phIntv.pop();
+        std::string intval2 = phIntv.top();
+        phIntv.pop();
+        std::pair<size_t **, size_t **> interval(_tokenToIntv.at(intval1),_tokenToIntv.at(intval2));
+        impant.push_back(new StlEventually(new StlInst(s._pp), interval));
       }
       else{
         impant.push_back(new StlInst(s._pp));
       }  
       isEventually = false;
     }
-    else if(s._t == Hstring::Stype::Temp && s._s == "&&")
-      phIntv.clear();
-
     else if(s._t == Hstring::Stype::Temp && s._s == "F[")
       isEventually = true;
-
   }
 
   isEventually = false;
 
   for (size_t i = 0; i < hcon.size(); i++){
-    auto &s = hant[i];
+    auto &s = hcon[i];
     if(s._t == Hstring::Stype::Ph){
       if(isEventually){
-        impcon.push_back(new StlEventually(new StlPlaceholder(s._pp)));
+         std::string intval1 = phIntv.top();
+        phIntv.pop();
+        std::string intval2 = phIntv.top();
+        phIntv.pop();
+        std::pair<size_t **, size_t **> interval(_tokenToIntv.at(intval1),_tokenToIntv.at(intval2));
+        impcon.push_back(new StlEventually(new StlPlaceholder(s._pp), interval));
       }
       else{
         impcon.push_back(new StlPlaceholder(s._pp));
       }  
+      isEventually = false;
     }
     else if(s._t == Hstring::Stype::Intv){
-      //TODO
+      phIntv.push(s._s);
     }
     else if(s._t == Hstring::Stype::Inst){
       if(isEventually){
-        impcon.push_back(new StlEventually(new StlInst(s._pp)));
+        std::string intval1 = phIntv.top();
+        phIntv.pop();
+        std::string intval2 = phIntv.top();
+        phIntv.pop();
+        std::pair<size_t **, size_t **> interval(_tokenToIntv.at(intval1),_tokenToIntv.at(intval2));
+        impcon.push_back(new StlEventually(new StlInst(s._pp), interval));
       }
       else{
         impcon.push_back(new StlInst(s._pp));
       }  
+      isEventually = false;
     }
-    else if(s._t == Hstring::Stype::Temp && s._s == "&&")
-      phIntv.clear();
-
     else if(s._t == Hstring::Stype::Temp && s._s == "F[")
       isEventually = true;
   }

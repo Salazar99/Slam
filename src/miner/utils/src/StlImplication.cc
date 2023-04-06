@@ -25,4 +25,26 @@ Trinary StlImplication::evaluate(size_t time) {
   return Trinary::T;
 }
 
+
+Trinary StlImplication::evaluate_ant(size_t time){
+  for (auto p : _ant) {
+    //A subformula of the _ant is F, the entire _ant is F
+    if (p->evaluate(time) == Trinary::F)
+      return Trinary::F;
+  }
+  //all _subformulas are T, then all _ant is T
+  return Trinary::T;
+}
+  
+Trinary StlImplication::evaluate_con(size_t time){
+  for (auto p : _con) {
+    //a subformula of _con is F, then all _con is F
+    if (p->evaluate(time) == Trinary::F)
+      return Trinary::F;
+  }
+  //al subformulas are T, then _con is T
+  return Trinary::T;
+}
+
+
 }; // namespace harm

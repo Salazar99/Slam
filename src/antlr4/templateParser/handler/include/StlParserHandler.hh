@@ -33,7 +33,7 @@ private:
 
   std::stack<Hstring> _subFormulas;
   std::stack<std::string> _intervalNames;
-  std::unordered_map<std::string, int **> _intervals;
+  std::unordered_map<std::string, size_t **> _intervals;
   harm::Trace *_trace;
   Hstring _templateFormula;
   std::unordered_map<std::string, expression::Proposition **> _phToProp;

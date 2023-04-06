@@ -33,7 +33,7 @@ harm::Template *parseTemplate(std::string formula, harm::Trace *trace,
   exit(0);
     */
     return new harm::Template(templateFormula, trace, limits);
-cd E  } else {
+  } else {
     messageError("Unknown language: '" + language + "'");
   }
   return nullptr;
