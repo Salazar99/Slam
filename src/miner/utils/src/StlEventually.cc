@@ -3,18 +3,18 @@
 namespace harm {
 
 StlEventually::StlEventually(TemporalExp *operand,
-                             std::pair<size_t **, size_t **> interval)
+                             std::pair<size_t , size_t > *interval)
     : _operand(operand), _interval(interval){};
 
 StlEventually::~StlEventually() {}
 
 Trinary StlEventually::evaluate(size_t time) {
 
-  if (time + **_interval.first > _trace->getLength()) {
+  if (time + _interval->first > _trace->getLength()) {
     return Trinary::U;
   }
 
-  for (size_t i = time + **_interval.first; i <= time + **_interval.second;
+  for (size_t i = time + _interval->first; i <= time + _interval->second;
        i++) {
 
     if (i == _trace->getLength()) {
@@ -28,7 +28,7 @@ Trinary StlEventually::evaluate(size_t time) {
   return Trinary::F;
 }
 
-void StlEventually::setInterval(std::pair<size_t **, size_t **> intv) {
+void StlEventually::setInterval(std::pair<size_t, size_t> * intv) {
   _interval = intv;
 }
 

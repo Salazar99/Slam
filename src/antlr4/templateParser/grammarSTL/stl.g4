@@ -13,14 +13,17 @@ tformula: boolean | placeholder | DT_AND
 	| NOT tformula 
 	| tformula AND tformula 
 	| tformula OR tformula 
-    | STL_EVENTUALLY LCPAREN interval COMMA interval RCPAREN tformula
+    | STL_EVENTUALLY LCPAREN interval RCPAREN tformula
 	;
 
 placeholder: 'P' NUMERIC ;
 
-interval: 'X' NUMERIC 
-        | boolean
+interval_placeholder: 'X' NUMERIC;
+
+interval: interval_placeholder COMMA interval_placeholder 
+        | NUMERIC COMMA NUMERIC
         ;
+
 
 DT_AND
     : '..&&..'

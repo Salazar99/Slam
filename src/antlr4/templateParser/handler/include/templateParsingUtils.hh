@@ -12,7 +12,7 @@ void addTypeToTemplate(std::string &formula,
                        std::vector<harm::VarDeclaration> varDeclarations);
 
 harm::Template *parseTemplate(std::string formula, harm::Trace *trace,
-                              const std::string &language = "Spot",
+                              const std::string &language = "stl",
                               const harm::DTLimits &limits = harm::DTLimits(),
                               bool useCache = true);
 Hstring spotToSVA(std::string spotFormula, harm::Trace *trace);

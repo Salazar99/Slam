@@ -24,11 +24,11 @@ public:
 
   enum {
     RuleFile = 0, RuleFormula = 1, RuleTformula = 2, RulePlaceholder = 3, 
-    RuleInterval = 4, RuleBoolean = 5, RuleBooleanAtom = 6, RuleBooleanConstant = 7, 
-    RuleBooleanVariable = 8, RuleLogic = 9, RuleBitSelect = 10, RuleLogicAtom = 11, 
-    RuleLogicConstant = 12, RuleLogicVariable = 13, RuleNumeric = 14, RuleNumericAtom = 15, 
-    RuleNumericConstant = 16, RuleNumericVariable = 17, RuleVariable = 18, 
-    RuleRelop = 19
+    RuleInterval_placeholder = 4, RuleInterval = 5, RuleBoolean = 6, RuleBooleanAtom = 7, 
+    RuleBooleanConstant = 8, RuleBooleanVariable = 9, RuleLogic = 10, RuleBitSelect = 11, 
+    RuleLogicAtom = 12, RuleLogicConstant = 13, RuleLogicVariable = 14, 
+    RuleNumeric = 15, RuleNumericAtom = 16, RuleNumericConstant = 17, RuleNumericVariable = 18, 
+    RuleVariable = 19, RuleRelop = 20
   };
 
   explicit stlParser(antlr4::TokenStream *input);
@@ -52,6 +52,7 @@ public:
   class FormulaContext;
   class TformulaContext;
   class PlaceholderContext;
+  class Interval_placeholderContext;
   class IntervalContext;
   class BooleanContext;
   class BooleanAtomContext;
@@ -120,9 +121,7 @@ public:
     antlr4::tree::TerminalNode *NOT();
     antlr4::tree::TerminalNode *STL_EVENTUALLY();
     antlr4::tree::TerminalNode *LCPAREN();
-    std::vector<IntervalContext *> interval();
-    IntervalContext* interval(size_t i);
-    antlr4::tree::TerminalNode *COMMA();
+    IntervalContext *interval();
     antlr4::tree::TerminalNode *RCPAREN();
     antlr4::tree::TerminalNode *AND();
     antlr4::tree::TerminalNode *OR();
@@ -147,12 +146,28 @@ public:
 
   PlaceholderContext* placeholder();
 
+  class  Interval_placeholderContext : public antlr4::ParserRuleContext {
+  public:
+    Interval_placeholderContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *NUMERIC();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  Interval_placeholderContext* interval_placeholder();
+
   class  IntervalContext : public antlr4::ParserRuleContext {
   public:
     IntervalContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *NUMERIC();
-    BooleanContext *boolean();
+    std::vector<Interval_placeholderContext *> interval_placeholder();
+    Interval_placeholderContext* interval_placeholder(size_t i);
+    antlr4::tree::TerminalNode *COMMA();
+    std::vector<antlr4::tree::TerminalNode *> NUMERIC();
+    antlr4::tree::TerminalNode* NUMERIC(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

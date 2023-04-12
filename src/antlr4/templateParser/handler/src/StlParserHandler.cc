@@ -20,13 +20,11 @@ StlParserHandler::StlParserHandler(harm::Trace *trace)
 
 void StlParserHandler::exitFile(stlParser::FileContext *ctx) {
   auto formula = _subFormulas.top();
-  auto G_interval2 = _intervalNames.top();
-    _intervalNames.pop();
-  auto G_interval1 = _intervalNames.top();
+  auto G_interval = _intervalNames.top();
   _intervalNames.pop();
   _subFormulas.pop();
 
-  auto STL_G = Hstring("G[", Hstring::Stype::G,(expression::Proposition**) nullptr) + Hstring(G_interval1, Hstring::Stype::Intv, _intervals.at(G_interval1)) + Hstring(",", Hstring::Stype::G, (expression::Proposition**) nullptr) + Hstring(G_interval2, Hstring::Stype::G, _intervals.at(G_interval2)) + Hstring("]", Hstring::Stype::G,(expression::Proposition**) nullptr);
+  auto STL_G = Hstring("G[", Hstring::Stype::G,(expression::Proposition**) nullptr)+ Hstring(G_interval, Hstring::Stype::G, _intervals.at(G_interval)) + Hstring("]", Hstring::Stype::G,(expression::Proposition**) nullptr);
 
   _templateFormula = STL_G + Hstring("(", Hstring::Stype::G,(expression::Proposition**) nullptr) + formula +
                      Hstring(")", Hstring::Stype::G,(expression::Proposition**) nullptr);
@@ -104,15 +102,12 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
   //If we are exiting a tformula rule that gives STL_eventually operator
   if (ctx->tformula().size() == 1 && ctx->STL_EVENTUALLY() != nullptr) {
     //Get last interval member found, end of interval
-    std::string interval2 = _intervalNames.top(); 
-    _intervalNames.pop();
-    //Get second interval member, beginning of inverval
-    std::string interval1 = _intervalNames.top();
+    std::string interval = _intervalNames.top(); 
     _intervalNames.pop();
 
     //Since intervals are another type of placeholder, reuse same structure
     Hstring newFormula =
-        Hstring("F[", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + Hstring(interval1,Hstring::Stype::Intv, _intervals.at(interval1)) + Hstring(",", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + Hstring(interval2,Hstring::Stype::Intv, _intervals.at(interval2)) + Hstring("]", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + _subFormulas.top();
+        Hstring("F[", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + Hstring(interval,Hstring::Stype::Intv, _intervals.at(interval)) + Hstring("]", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + _subFormulas.top();
     _subFormulas.pop();
     _subFormulas.push(newFormula);
     return;
@@ -137,28 +132,54 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
   }
 }
 
+//Interval_placeholder COMMA Interval_placeholder
+//NUMERIC COMMA NUMERIC 
+//FIXME
 void StlParserHandler::exitInterval(stlParser::IntervalContext * ctx){
-  std::string intname = ctx->getText();
-    //If the interval is a boolean
-  if(ctx->boolean() != nullptr){
-    if(!_intervals.count(intname)){
-      //FIXME This is awfull, find a more elegant way to do this
-      std::stringstream ss(intname);
-      size_t intval;
-      ss >> intval;
-      size_t * pvalue = new size_t(intval);
-      size_t ** vp = new size_t*(pvalue);
-      _intervals[intname] = vp;
+  //Interval is made of 2 placeholders
+  std::stack<std::string> intval;
+  if(ctx->interval_placeholder().size() == 2){
+    for(auto boundary : ctx->interval_placeholder()){
+      std::string bound = "X" + boundary->NUMERIC()->getText();
+      intval.push(bound);
     }
-  }else {//if the interval is a placeholder  
-    //if new interval placeholder, add it to the map 
-    if(!_intervals.count(intname)){
-      _intervals[intname] = nullptr;     
-    }
-  }
+    std::string rightb = intval.top();
+    intval.pop();
+    std::string leftb = intval.top();
+    intval.pop();
 
-  //Add it to the queue to be able to construct the operators correctly
-  _intervalNames.push(intname);
+    std::string intervalname = leftb + "," + rightb;
+
+    //std pair will be defined in the future
+    _intervals[intervalname] = nullptr;
+    _intervalNames.push(intervalname);
+  }
+  //Interval is defined
+  else{
+    for(auto boundary : ctx->NUMERIC()){
+      std::string bound = boundary->getText();
+      intval.push(bound);
+    }
+      //sstream magic to get size_t from numeric
+      std::string rightb = intval.top();
+      intval.pop();
+      std::string leftb = intval.top();
+      intval.pop();
+      std::stringstream r(rightb);
+      std::stringstream l(leftb);
+
+      size_t rightval;
+      size_t leftval;
+      r >> rightval;
+      l >> leftval;
+
+      std::string intervalname = leftb + "," + rightb;
+
+      std::pair<size_t,size_t> * interval = new std::pair<size_t,size_t>(leftval,rightval);
+
+      _intervals[intervalname] = interval;
+      _intervalNames.push(intervalname);
+  }
 }
 
 

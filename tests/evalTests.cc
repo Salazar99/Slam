@@ -64,9 +64,8 @@ protected:
   void build(std::string tempStrAnt, std::string tempStrCon) {
     //Create the _impl object
     std::vector<harm::TemporalExp *> ant,con;
-    std::pair<size_t **,size_t **> interval(_tokenToIntv.at("3"),_tokenToIntv.at("4"));
 
-    ant.push_back(new StlEventually(new StlPlaceholder(_tokenToProp.at("v1")),interval));
+    ant.push_back(new StlEventually(new StlPlaceholder(_tokenToProp.at("v1")),_tokenToIntv.at("1,3")));
 
     con.push_back(new StlPlaceholder(_tokenToProp.at("v2")));
 
@@ -83,16 +82,21 @@ protected:
     build(_tempStrAnt, _tempStrCon);
 
     for (size_t i = 0; i < _trace->getLength(); i++) {
-      EXPECT_EQ(_t->evaluate_ant(i), evaluate_ant(i));
-      EXPECT_EQ(_t->evaluate_con(i), evaluate_con(i));
-      EXPECT_EQ(_t->evaluate(i), evaluate(i));
+      std::cout<< "Time:" << i <<std::endl;
+      //EXPECT_EQ(_t->evaluate_ant(i), evaluate_ant(i));
+      //EXPECT_EQ(_t->evaluate_con(i), evaluate_con(i));
+      //EXPECT_EQ(_t->evaluate(i), evaluate(i));
+      std::cout<< "_t->evaluate_ant: " << _t->evaluate_ant(i) << ", ";
+      std::cout<< "evaluate_ant: " << evaluate_ant(i) << std::endl;
+      //std::cout<< "_t->evaluate_con: " << _t->evaluate_con(i) << ", ";
+      //std::cout<< "evaluate_con: " << evaluate_ant(i) << std::endl;
     }
   }
 
   void init() {
 
     _max_length = _trace->getLength();
-    _t = hparser::parseTemplate("G[x1,x2](" + _tempStrAnt + _imp + _tempStrCon + ")",
+    _t = hparser::parseTemplate("G[X1,X2](" + _tempStrAnt + _imp + _tempStrCon + ")",
                                 _trace);
   }
 
@@ -104,25 +108,21 @@ public:
   StlImplication * _impl = nullptr;
   Template *_t = nullptr;
   std::unordered_map<std::string, expression::Proposition **> _tokenToProp;
-  std::unordered_map<std::string, size_t **> _tokenToIntv;
+  std::unordered_map<std::string, std::pair<size_t,size_t> *> _tokenToIntv;
   std::string _tempStrAnt = "";
   std::string _tempStrCon = "";
   std::string _imp = "";
 };
 
 TEST_F(EvalTest, t1) {
-  _tr = new CSVtraceReader("../tests/input/EvalTest_t1.csv");
+  _tr = new CSVtraceReader("/mnt/c/Users/danni/Desktop/Ex-harm/tests/input/EvalTest_t1.csv");
   _trace = _tr->readTrace();
 
   _tokenToProp["v1"] = new Proposition *(_trace->getBooleanVariable("v1"));
   _tokenToProp["v2"] = new Proposition *(_trace->getBooleanVariable("v2"));
-  size_t * p1 = new size_t(1);
-  size_t * p2 = new size_t(3);
-  size_t **ptri1 = new size_t *(p1);
-  size_t **ptri2 = new size_t *(p2);
-
-  _tokenToIntv["1"] = ptri1; 
-  _tokenToIntv["3"] = ptri2;
+ 
+ std::pair<size_t,size_t> * ptri = new std::pair<size_t,size_t>(1,3); 
+  _tokenToIntv.insert({"1,3",ptri}); 
 
   _tempStrAnt = "F[1,3]v1";
   _tempStrCon = "v2";

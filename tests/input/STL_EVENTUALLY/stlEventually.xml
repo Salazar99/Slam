@@ -1,9 +1,7 @@
 <harm>
 	<context name="default"> 
 		<prop exp="v1" loc="a, dt"/>
-		<prop exp="v2" loc="a, dt"/>
-		<prop exp="v3" loc="a, dt"/>
-		<prop exp="v4" loc="c"/>
-        <template dtLimits="3D,3W,3A,0.3E,R" exp="G[X1,X2]((F[3,4]P1) -> P0)" /> 
+		<prop exp="v2" loc="c, dt"/>
+        <template dtLimits="3D,3W,3A,0.3E,R" exp="G[X1,X2]((F[1,3]v1) -> v2)" /> 
 	</context>
 </harm>

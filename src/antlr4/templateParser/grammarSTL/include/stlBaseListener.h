@@ -28,6 +28,9 @@ public:
   virtual void enterPlaceholder(stlParser::PlaceholderContext * /*ctx*/) override { }
   virtual void exitPlaceholder(stlParser::PlaceholderContext * /*ctx*/) override { }
 
+  virtual void enterInterval_placeholder(stlParser::Interval_placeholderContext * /*ctx*/) override { }
+  virtual void exitInterval_placeholder(stlParser::Interval_placeholderContext * /*ctx*/) override { }
+
   virtual void enterInterval(stlParser::IntervalContext * /*ctx*/) override { }
   virtual void exitInterval(stlParser::IntervalContext * /*ctx*/) override { }
 

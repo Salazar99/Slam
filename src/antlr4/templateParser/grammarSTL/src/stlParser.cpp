@@ -43,10 +43,11 @@ void stlParserInitialize() {
   assert(stlParserStaticData == nullptr);
   auto staticData = std::make_unique<StlParserStaticData>(
     std::vector<std::string>{
-      "file", "formula", "tformula", "placeholder", "interval", "boolean", 
-      "booleanAtom", "booleanConstant", "booleanVariable", "logic", "bitSelect", 
-      "logicAtom", "logicConstant", "logicVariable", "numeric", "numericAtom", 
-      "numericConstant", "numericVariable", "variable", "relop"
+      "file", "formula", "tformula", "placeholder", "interval_placeholder", 
+      "interval", "boolean", "booleanAtom", "booleanConstant", "booleanVariable", 
+      "logic", "bitSelect", "logicAtom", "logicConstant", "logicVariable", 
+      "numeric", "numericAtom", "numericConstant", "numericVariable", "variable", 
+      "relop"
     },
     std::vector<std::string>{
       "", "'P'", "'X'", "',bool>'", "',logic('", "')>'", "',numeric('", 
@@ -66,90 +67,93 @@ void stlParserInitialize() {
     }
   );
   static const int32_t serializedATNSegment[] = {
-  	4,1,48,260,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,
+  	4,1,48,267,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,
   	7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,
-  	14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,1,0,1,0,1,0,1,0,
-  	1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,3,0,56,8,0,1,1,1,1,1,1,1,
-  	1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,
-  	1,2,3,2,80,8,2,1,2,1,2,1,2,1,2,1,2,1,2,5,2,88,8,2,10,2,12,2,91,9,2,1,
-  	3,1,3,1,3,1,4,1,4,1,4,3,4,99,8,4,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,
-  	1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,
-  	5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,3,5,135,8,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,
-  	1,5,1,5,1,5,1,5,1,5,5,5,149,8,5,10,5,12,5,152,9,5,1,6,1,6,3,6,156,8,6,
-  	1,7,1,7,1,8,1,8,1,8,1,8,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,3,9,172,8,9,1,
-  	9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,
-  	1,9,1,9,1,9,1,9,1,9,5,9,197,8,9,10,9,12,9,200,9,9,1,10,1,10,1,10,1,10,
-  	3,10,206,8,10,1,10,1,10,1,11,1,11,3,11,212,8,11,1,12,1,12,1,13,1,13,1,
-  	13,1,13,1,13,1,13,1,13,1,13,1,14,1,14,1,14,1,14,1,14,1,14,1,14,3,14,231,
-  	8,14,1,14,1,14,1,14,1,14,1,14,1,14,5,14,239,8,14,10,14,12,14,242,9,14,
-  	1,15,1,15,3,15,246,8,15,1,16,1,16,1,17,1,17,1,17,1,17,1,17,1,17,1,18,
-  	1,18,1,19,1,19,1,19,0,4,4,10,18,28,20,0,2,4,6,8,10,12,14,16,18,20,22,
-  	24,26,28,30,32,34,36,38,0,4,1,0,31,32,1,0,29,30,1,0,24,27,1,0,33,36,280,
-  	0,55,1,0,0,0,2,57,1,0,0,0,4,79,1,0,0,0,6,92,1,0,0,0,8,98,1,0,0,0,10,134,
-  	1,0,0,0,12,155,1,0,0,0,14,157,1,0,0,0,16,159,1,0,0,0,18,171,1,0,0,0,20,
-  	201,1,0,0,0,22,211,1,0,0,0,24,213,1,0,0,0,26,215,1,0,0,0,28,230,1,0,0,
-  	0,30,245,1,0,0,0,32,247,1,0,0,0,34,249,1,0,0,0,36,255,1,0,0,0,38,257,
-  	1,0,0,0,40,41,5,9,0,0,41,42,3,2,1,0,42,43,5,0,0,1,43,56,1,0,0,0,44,45,
-  	5,9,0,0,45,46,5,19,0,0,46,47,3,8,4,0,47,48,5,14,0,0,48,49,3,8,4,0,49,
-  	50,5,20,0,0,50,51,5,21,0,0,51,52,3,2,1,0,52,53,5,22,0,0,53,54,5,0,0,1,
-  	54,56,1,0,0,0,55,40,1,0,0,0,55,44,1,0,0,0,56,1,1,0,0,0,57,58,3,4,2,0,
-  	58,59,5,11,0,0,59,60,3,4,2,0,60,3,1,0,0,0,61,62,6,2,-1,0,62,80,3,10,5,
-  	0,63,80,3,6,3,0,64,80,5,7,0,0,65,66,5,21,0,0,66,67,3,4,2,0,67,68,5,22,
-  	0,0,68,80,1,0,0,0,69,70,5,47,0,0,70,80,3,4,2,4,71,72,5,8,0,0,72,73,5,
-  	19,0,0,73,74,3,8,4,0,74,75,5,14,0,0,75,76,3,8,4,0,76,77,5,20,0,0,77,78,
-  	3,4,2,1,78,80,1,0,0,0,79,61,1,0,0,0,79,63,1,0,0,0,79,64,1,0,0,0,79,65,
-  	1,0,0,0,79,69,1,0,0,0,79,71,1,0,0,0,80,89,1,0,0,0,81,82,10,3,0,0,82,83,
+  	14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,7,20,1,0,1,
+  	0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,3,0,58,8,0,1,1,
+  	1,1,1,1,1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,
+  	2,1,2,3,2,80,8,2,1,2,1,2,1,2,1,2,1,2,1,2,5,2,88,8,2,10,2,12,2,91,9,2,
+  	1,3,1,3,1,3,1,4,1,4,1,4,1,5,1,5,1,5,1,5,1,5,1,5,1,5,3,5,106,8,5,1,6,1,
+  	6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,
+  	1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,3,6,142,8,
+  	6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,5,6,156,8,6,10,6,12,
+  	6,159,9,6,1,7,1,7,3,7,163,8,7,1,8,1,8,1,9,1,9,1,9,1,9,1,10,1,10,1,10,
+  	1,10,1,10,1,10,1,10,1,10,3,10,179,8,10,1,10,1,10,1,10,1,10,1,10,1,10,
+  	1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,
+  	1,10,1,10,1,10,5,10,204,8,10,10,10,12,10,207,9,10,1,11,1,11,1,11,1,11,
+  	3,11,213,8,11,1,11,1,11,1,12,1,12,3,12,219,8,12,1,13,1,13,1,14,1,14,1,
+  	14,1,14,1,14,1,14,1,14,1,14,1,15,1,15,1,15,1,15,1,15,1,15,1,15,3,15,238,
+  	8,15,1,15,1,15,1,15,1,15,1,15,1,15,5,15,246,8,15,10,15,12,15,249,9,15,
+  	1,16,1,16,3,16,253,8,16,1,17,1,17,1,18,1,18,1,18,1,18,1,18,1,18,1,19,
+  	1,19,1,20,1,20,1,20,0,4,4,12,20,30,21,0,2,4,6,8,10,12,14,16,18,20,22,
+  	24,26,28,30,32,34,36,38,40,0,4,1,0,31,32,1,0,29,30,1,0,24,27,1,0,33,36,
+  	286,0,57,1,0,0,0,2,59,1,0,0,0,4,79,1,0,0,0,6,92,1,0,0,0,8,95,1,0,0,0,
+  	10,105,1,0,0,0,12,141,1,0,0,0,14,162,1,0,0,0,16,164,1,0,0,0,18,166,1,
+  	0,0,0,20,178,1,0,0,0,22,208,1,0,0,0,24,218,1,0,0,0,26,220,1,0,0,0,28,
+  	222,1,0,0,0,30,237,1,0,0,0,32,252,1,0,0,0,34,254,1,0,0,0,36,256,1,0,0,
+  	0,38,262,1,0,0,0,40,264,1,0,0,0,42,43,5,9,0,0,43,44,3,2,1,0,44,45,5,0,
+  	0,1,45,58,1,0,0,0,46,47,5,9,0,0,47,48,5,19,0,0,48,49,3,10,5,0,49,50,5,
+  	14,0,0,50,51,3,10,5,0,51,52,5,20,0,0,52,53,5,21,0,0,53,54,3,2,1,0,54,
+  	55,5,22,0,0,55,56,5,0,0,1,56,58,1,0,0,0,57,42,1,0,0,0,57,46,1,0,0,0,58,
+  	1,1,0,0,0,59,60,3,4,2,0,60,61,5,11,0,0,61,62,3,4,2,0,62,3,1,0,0,0,63,
+  	64,6,2,-1,0,64,80,3,12,6,0,65,80,3,6,3,0,66,80,5,7,0,0,67,68,5,21,0,0,
+  	68,69,3,4,2,0,69,70,5,22,0,0,70,80,1,0,0,0,71,72,5,47,0,0,72,80,3,4,2,
+  	4,73,74,5,8,0,0,74,75,5,19,0,0,75,76,3,10,5,0,76,77,5,20,0,0,77,78,3,
+  	4,2,1,78,80,1,0,0,0,79,63,1,0,0,0,79,65,1,0,0,0,79,66,1,0,0,0,79,67,1,
+  	0,0,0,79,71,1,0,0,0,79,73,1,0,0,0,80,89,1,0,0,0,81,82,10,3,0,0,82,83,
   	5,45,0,0,83,88,3,4,2,4,84,85,10,2,0,0,85,86,5,46,0,0,86,88,3,4,2,3,87,
   	81,1,0,0,0,87,84,1,0,0,0,88,91,1,0,0,0,89,87,1,0,0,0,89,90,1,0,0,0,90,
   	5,1,0,0,0,91,89,1,0,0,0,92,93,5,1,0,0,93,94,5,24,0,0,94,7,1,0,0,0,95,
-  	96,5,2,0,0,96,99,5,24,0,0,97,99,3,10,5,0,98,95,1,0,0,0,98,97,1,0,0,0,
-  	99,9,1,0,0,0,100,101,6,5,-1,0,101,102,5,47,0,0,102,135,3,10,5,15,103,
-  	104,3,18,9,0,104,105,3,38,19,0,105,106,3,18,9,0,106,135,1,0,0,0,107,108,
-  	3,28,14,0,108,109,3,38,19,0,109,110,3,28,14,0,110,135,1,0,0,0,111,112,
-  	3,18,9,0,112,113,5,37,0,0,113,114,3,18,9,0,114,135,1,0,0,0,115,116,3,
-  	28,14,0,116,117,5,37,0,0,117,118,3,28,14,0,118,135,1,0,0,0,119,120,3,
-  	18,9,0,120,121,5,38,0,0,121,122,3,18,9,0,122,135,1,0,0,0,123,124,3,28,
-  	14,0,124,125,5,38,0,0,125,126,3,28,14,0,126,135,1,0,0,0,127,135,3,12,
-  	6,0,128,135,3,18,9,0,129,135,3,28,14,0,130,131,5,21,0,0,131,132,3,10,
-  	5,0,132,133,5,22,0,0,133,135,1,0,0,0,134,100,1,0,0,0,134,103,1,0,0,0,
-  	134,107,1,0,0,0,134,111,1,0,0,0,134,115,1,0,0,0,134,119,1,0,0,0,134,123,
-  	1,0,0,0,134,127,1,0,0,0,134,128,1,0,0,0,134,129,1,0,0,0,134,130,1,0,0,
-  	0,135,150,1,0,0,0,136,137,10,10,0,0,137,138,5,37,0,0,138,149,3,10,5,11,
-  	139,140,10,7,0,0,140,141,5,38,0,0,141,149,3,10,5,8,142,143,10,6,0,0,143,
-  	144,5,45,0,0,144,149,3,10,5,7,145,146,10,5,0,0,146,147,5,46,0,0,147,149,
-  	3,10,5,6,148,136,1,0,0,0,148,139,1,0,0,0,148,142,1,0,0,0,148,145,1,0,
-  	0,0,149,152,1,0,0,0,150,148,1,0,0,0,150,151,1,0,0,0,151,11,1,0,0,0,152,
-  	150,1,0,0,0,153,156,3,14,7,0,154,156,3,16,8,0,155,153,1,0,0,0,155,154,
-  	1,0,0,0,156,13,1,0,0,0,157,158,5,28,0,0,158,15,1,0,0,0,159,160,5,35,0,
-  	0,160,161,3,36,18,0,161,162,5,3,0,0,162,17,1,0,0,0,163,164,6,9,-1,0,164,
-  	165,5,42,0,0,165,172,3,18,9,11,166,172,3,22,11,0,167,168,5,21,0,0,168,
-  	169,3,18,9,0,169,170,5,22,0,0,170,172,1,0,0,0,171,163,1,0,0,0,171,166,
-  	1,0,0,0,171,167,1,0,0,0,172,198,1,0,0,0,173,174,10,9,0,0,174,175,7,0,
-  	0,0,175,197,3,18,9,10,176,177,10,8,0,0,177,178,7,1,0,0,178,197,3,18,9,
-  	9,179,180,10,7,0,0,180,181,5,43,0,0,181,197,3,18,9,8,182,183,10,6,0,0,
-  	183,184,5,44,0,0,184,197,3,18,9,7,185,186,10,5,0,0,186,187,5,39,0,0,187,
-  	197,3,18,9,6,188,189,10,4,0,0,189,190,5,41,0,0,190,197,3,18,9,5,191,192,
-  	10,3,0,0,192,193,5,40,0,0,193,197,3,18,9,4,194,195,10,10,0,0,195,197,
-  	3,20,10,0,196,173,1,0,0,0,196,176,1,0,0,0,196,179,1,0,0,0,196,182,1,0,
-  	0,0,196,185,1,0,0,0,196,188,1,0,0,0,196,191,1,0,0,0,196,194,1,0,0,0,197,
-  	200,1,0,0,0,198,196,1,0,0,0,198,199,1,0,0,0,199,19,1,0,0,0,200,198,1,
-  	0,0,0,201,202,5,19,0,0,202,205,5,24,0,0,203,204,5,13,0,0,204,206,5,24,
-  	0,0,205,203,1,0,0,0,205,206,1,0,0,0,206,207,1,0,0,0,207,208,5,20,0,0,
-  	208,21,1,0,0,0,209,212,3,24,12,0,210,212,3,26,13,0,211,209,1,0,0,0,211,
-  	210,1,0,0,0,212,23,1,0,0,0,213,214,7,2,0,0,214,25,1,0,0,0,215,216,5,35,
-  	0,0,216,217,3,36,18,0,217,218,5,4,0,0,218,219,5,16,0,0,219,220,5,14,0,
-  	0,220,221,5,24,0,0,221,222,5,5,0,0,222,27,1,0,0,0,223,224,6,14,-1,0,224,
-  	231,3,30,15,0,225,231,3,18,9,0,226,227,5,21,0,0,227,228,3,28,14,0,228,
-  	229,5,22,0,0,229,231,1,0,0,0,230,223,1,0,0,0,230,225,1,0,0,0,230,226,
-  	1,0,0,0,231,240,1,0,0,0,232,233,10,5,0,0,233,234,7,0,0,0,234,239,3,28,
-  	14,6,235,236,10,4,0,0,236,237,7,1,0,0,237,239,3,28,14,5,238,232,1,0,0,
-  	0,238,235,1,0,0,0,239,242,1,0,0,0,240,238,1,0,0,0,240,241,1,0,0,0,241,
-  	29,1,0,0,0,242,240,1,0,0,0,243,246,3,32,16,0,244,246,3,34,17,0,245,243,
-  	1,0,0,0,245,244,1,0,0,0,246,31,1,0,0,0,247,248,5,24,0,0,248,33,1,0,0,
-  	0,249,250,5,35,0,0,250,251,3,36,18,0,251,252,5,6,0,0,252,253,5,24,0,0,
-  	253,254,5,5,0,0,254,35,1,0,0,0,255,256,5,23,0,0,256,37,1,0,0,0,257,258,
-  	7,3,0,0,258,39,1,0,0,0,18,55,79,87,89,98,134,148,150,155,171,196,198,
-  	205,211,230,238,240,245
+  	96,5,2,0,0,96,97,5,24,0,0,97,9,1,0,0,0,98,99,3,8,4,0,99,100,5,14,0,0,
+  	100,101,3,8,4,0,101,106,1,0,0,0,102,103,5,24,0,0,103,104,5,14,0,0,104,
+  	106,5,24,0,0,105,98,1,0,0,0,105,102,1,0,0,0,106,11,1,0,0,0,107,108,6,
+  	6,-1,0,108,109,5,47,0,0,109,142,3,12,6,15,110,111,3,20,10,0,111,112,3,
+  	40,20,0,112,113,3,20,10,0,113,142,1,0,0,0,114,115,3,30,15,0,115,116,3,
+  	40,20,0,116,117,3,30,15,0,117,142,1,0,0,0,118,119,3,20,10,0,119,120,5,
+  	37,0,0,120,121,3,20,10,0,121,142,1,0,0,0,122,123,3,30,15,0,123,124,5,
+  	37,0,0,124,125,3,30,15,0,125,142,1,0,0,0,126,127,3,20,10,0,127,128,5,
+  	38,0,0,128,129,3,20,10,0,129,142,1,0,0,0,130,131,3,30,15,0,131,132,5,
+  	38,0,0,132,133,3,30,15,0,133,142,1,0,0,0,134,142,3,14,7,0,135,142,3,20,
+  	10,0,136,142,3,30,15,0,137,138,5,21,0,0,138,139,3,12,6,0,139,140,5,22,
+  	0,0,140,142,1,0,0,0,141,107,1,0,0,0,141,110,1,0,0,0,141,114,1,0,0,0,141,
+  	118,1,0,0,0,141,122,1,0,0,0,141,126,1,0,0,0,141,130,1,0,0,0,141,134,1,
+  	0,0,0,141,135,1,0,0,0,141,136,1,0,0,0,141,137,1,0,0,0,142,157,1,0,0,0,
+  	143,144,10,10,0,0,144,145,5,37,0,0,145,156,3,12,6,11,146,147,10,7,0,0,
+  	147,148,5,38,0,0,148,156,3,12,6,8,149,150,10,6,0,0,150,151,5,45,0,0,151,
+  	156,3,12,6,7,152,153,10,5,0,0,153,154,5,46,0,0,154,156,3,12,6,6,155,143,
+  	1,0,0,0,155,146,1,0,0,0,155,149,1,0,0,0,155,152,1,0,0,0,156,159,1,0,0,
+  	0,157,155,1,0,0,0,157,158,1,0,0,0,158,13,1,0,0,0,159,157,1,0,0,0,160,
+  	163,3,16,8,0,161,163,3,18,9,0,162,160,1,0,0,0,162,161,1,0,0,0,163,15,
+  	1,0,0,0,164,165,5,28,0,0,165,17,1,0,0,0,166,167,5,35,0,0,167,168,3,38,
+  	19,0,168,169,5,3,0,0,169,19,1,0,0,0,170,171,6,10,-1,0,171,172,5,42,0,
+  	0,172,179,3,20,10,11,173,179,3,24,12,0,174,175,5,21,0,0,175,176,3,20,
+  	10,0,176,177,5,22,0,0,177,179,1,0,0,0,178,170,1,0,0,0,178,173,1,0,0,0,
+  	178,174,1,0,0,0,179,205,1,0,0,0,180,181,10,9,0,0,181,182,7,0,0,0,182,
+  	204,3,20,10,10,183,184,10,8,0,0,184,185,7,1,0,0,185,204,3,20,10,9,186,
+  	187,10,7,0,0,187,188,5,43,0,0,188,204,3,20,10,8,189,190,10,6,0,0,190,
+  	191,5,44,0,0,191,204,3,20,10,7,192,193,10,5,0,0,193,194,5,39,0,0,194,
+  	204,3,20,10,6,195,196,10,4,0,0,196,197,5,41,0,0,197,204,3,20,10,5,198,
+  	199,10,3,0,0,199,200,5,40,0,0,200,204,3,20,10,4,201,202,10,10,0,0,202,
+  	204,3,22,11,0,203,180,1,0,0,0,203,183,1,0,0,0,203,186,1,0,0,0,203,189,
+  	1,0,0,0,203,192,1,0,0,0,203,195,1,0,0,0,203,198,1,0,0,0,203,201,1,0,0,
+  	0,204,207,1,0,0,0,205,203,1,0,0,0,205,206,1,0,0,0,206,21,1,0,0,0,207,
+  	205,1,0,0,0,208,209,5,19,0,0,209,212,5,24,0,0,210,211,5,13,0,0,211,213,
+  	5,24,0,0,212,210,1,0,0,0,212,213,1,0,0,0,213,214,1,0,0,0,214,215,5,20,
+  	0,0,215,23,1,0,0,0,216,219,3,26,13,0,217,219,3,28,14,0,218,216,1,0,0,
+  	0,218,217,1,0,0,0,219,25,1,0,0,0,220,221,7,2,0,0,221,27,1,0,0,0,222,223,
+  	5,35,0,0,223,224,3,38,19,0,224,225,5,4,0,0,225,226,5,16,0,0,226,227,5,
+  	14,0,0,227,228,5,24,0,0,228,229,5,5,0,0,229,29,1,0,0,0,230,231,6,15,-1,
+  	0,231,238,3,32,16,0,232,238,3,20,10,0,233,234,5,21,0,0,234,235,3,30,15,
+  	0,235,236,5,22,0,0,236,238,1,0,0,0,237,230,1,0,0,0,237,232,1,0,0,0,237,
+  	233,1,0,0,0,238,247,1,0,0,0,239,240,10,5,0,0,240,241,7,0,0,0,241,246,
+  	3,30,15,6,242,243,10,4,0,0,243,244,7,1,0,0,244,246,3,30,15,5,245,239,
+  	1,0,0,0,245,242,1,0,0,0,246,249,1,0,0,0,247,245,1,0,0,0,247,248,1,0,0,
+  	0,248,31,1,0,0,0,249,247,1,0,0,0,250,253,3,34,17,0,251,253,3,36,18,0,
+  	252,250,1,0,0,0,252,251,1,0,0,0,253,33,1,0,0,0,254,255,5,24,0,0,255,35,
+  	1,0,0,0,256,257,5,35,0,0,257,258,3,38,19,0,258,259,5,6,0,0,259,260,5,
+  	24,0,0,260,261,5,5,0,0,261,37,1,0,0,0,262,263,5,23,0,0,263,39,1,0,0,0,
+  	264,265,7,3,0,0,265,41,1,0,0,0,18,57,79,87,89,105,141,155,157,162,178,
+  	203,205,212,218,237,245,247,252
   };
   staticData->serializedATN = antlr4::atn::SerializedATNView(serializedATNSegment, sizeof(serializedATNSegment) / sizeof(serializedATNSegment[0]));
 
@@ -273,41 +277,41 @@ stlParser::FileContext* stlParser::file() {
     exitRule();
   });
   try {
-    setState(55);
+    setState(57);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 0, _ctx)) {
     case 1: {
       enterOuterAlt(_localctx, 1);
-      setState(40);
-      match(stlParser::STL_ALWAYS);
-      setState(41);
-      formula();
       setState(42);
+      match(stlParser::STL_ALWAYS);
+      setState(43);
+      formula();
+      setState(44);
       match(stlParser::EOF);
       break;
     }
 
     case 2: {
       enterOuterAlt(_localctx, 2);
-      setState(44);
-      match(stlParser::STL_ALWAYS);
-      setState(45);
-      match(stlParser::LCPAREN);
       setState(46);
-      interval();
+      match(stlParser::STL_ALWAYS);
       setState(47);
-      match(stlParser::COMMA);
+      match(stlParser::LCPAREN);
       setState(48);
       interval();
       setState(49);
-      match(stlParser::RCPAREN);
+      match(stlParser::COMMA);
       setState(50);
-      match(stlParser::LPAREN);
+      interval();
       setState(51);
-      formula();
+      match(stlParser::RCPAREN);
       setState(52);
-      match(stlParser::RPAREN);
+      match(stlParser::LPAREN);
       setState(53);
+      formula();
+      setState(54);
+      match(stlParser::RPAREN);
+      setState(55);
       match(stlParser::EOF);
       break;
     }
@@ -374,11 +378,11 @@ stlParser::FormulaContext* stlParser::formula() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(57);
-    tformula(0);
-    setState(58);
-    match(stlParser::IMPL);
     setState(59);
+    tformula(0);
+    setState(60);
+    match(stlParser::IMPL);
+    setState(61);
     tformula(0);
    
   }
@@ -437,16 +441,8 @@ tree::TerminalNode* stlParser::TformulaContext::LCPAREN() {
   return getToken(stlParser::LCPAREN, 0);
 }
 
-std::vector<stlParser::IntervalContext *> stlParser::TformulaContext::interval() {
-  return getRuleContexts<stlParser::IntervalContext>();
-}
-
-stlParser::IntervalContext* stlParser::TformulaContext::interval(size_t i) {
-  return getRuleContext<stlParser::IntervalContext>(i);
-}
-
-tree::TerminalNode* stlParser::TformulaContext::COMMA() {
-  return getToken(stlParser::COMMA, 0);
+stlParser::IntervalContext* stlParser::TformulaContext::interval() {
+  return getRuleContext<stlParser::IntervalContext>(0);
 }
 
 tree::TerminalNode* stlParser::TformulaContext::RCPAREN() {
@@ -508,50 +504,46 @@ stlParser::TformulaContext* stlParser::tformula(int precedence) {
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 1, _ctx)) {
     case 1: {
-      setState(62);
+      setState(64);
       boolean(0);
       break;
     }
 
     case 2: {
-      setState(63);
+      setState(65);
       placeholder();
       break;
     }
 
     case 3: {
-      setState(64);
+      setState(66);
       match(stlParser::DT_AND);
       break;
     }
 
     case 4: {
-      setState(65);
-      match(stlParser::LPAREN);
-      setState(66);
-      tformula(0);
       setState(67);
+      match(stlParser::LPAREN);
+      setState(68);
+      tformula(0);
+      setState(69);
       match(stlParser::RPAREN);
       break;
     }
 
     case 5: {
-      setState(69);
+      setState(71);
       match(stlParser::NOT);
-      setState(70);
+      setState(72);
       tformula(4);
       break;
     }
 
     case 6: {
-      setState(71);
-      match(stlParser::STL_EVENTUALLY);
-      setState(72);
-      match(stlParser::LCPAREN);
       setState(73);
-      interval();
+      match(stlParser::STL_EVENTUALLY);
       setState(74);
-      match(stlParser::COMMA);
+      match(stlParser::LCPAREN);
       setState(75);
       interval();
       setState(76);
@@ -674,18 +666,85 @@ stlParser::PlaceholderContext* stlParser::placeholder() {
   return _localctx;
 }
 
+//----------------- Interval_placeholderContext ------------------------------------------------------------------
+
+stlParser::Interval_placeholderContext::Interval_placeholderContext(ParserRuleContext *parent, size_t invokingState)
+  : ParserRuleContext(parent, invokingState) {
+}
+
+tree::TerminalNode* stlParser::Interval_placeholderContext::NUMERIC() {
+  return getToken(stlParser::NUMERIC, 0);
+}
+
+
+size_t stlParser::Interval_placeholderContext::getRuleIndex() const {
+  return stlParser::RuleInterval_placeholder;
+}
+
+void stlParser::Interval_placeholderContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<stlListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterInterval_placeholder(this);
+}
+
+void stlParser::Interval_placeholderContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<stlListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitInterval_placeholder(this);
+}
+
+stlParser::Interval_placeholderContext* stlParser::interval_placeholder() {
+  Interval_placeholderContext *_localctx = _tracker.createInstance<Interval_placeholderContext>(_ctx, getState());
+  enterRule(_localctx, 8, stlParser::RuleInterval_placeholder);
+
+#if __cplusplus > 201703L
+  auto onExit = finally([=, this] {
+#else
+  auto onExit = finally([=] {
+#endif
+    exitRule();
+  });
+  try {
+    enterOuterAlt(_localctx, 1);
+    setState(95);
+    match(stlParser::T__1);
+    setState(96);
+    match(stlParser::NUMERIC);
+   
+  }
+  catch (RecognitionException &e) {
+    _errHandler->reportError(this, e);
+    _localctx->exception = std::current_exception();
+    _errHandler->recover(this, _localctx->exception);
+  }
+
+  return _localctx;
+}
+
 //----------------- IntervalContext ------------------------------------------------------------------
 
 stlParser::IntervalContext::IntervalContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* stlParser::IntervalContext::NUMERIC() {
-  return getToken(stlParser::NUMERIC, 0);
+std::vector<stlParser::Interval_placeholderContext *> stlParser::IntervalContext::interval_placeholder() {
+  return getRuleContexts<stlParser::Interval_placeholderContext>();
 }
 
-stlParser::BooleanContext* stlParser::IntervalContext::boolean() {
-  return getRuleContext<stlParser::BooleanContext>(0);
+stlParser::Interval_placeholderContext* stlParser::IntervalContext::interval_placeholder(size_t i) {
+  return getRuleContext<stlParser::Interval_placeholderContext>(i);
+}
+
+tree::TerminalNode* stlParser::IntervalContext::COMMA() {
+  return getToken(stlParser::COMMA, 0);
+}
+
+std::vector<tree::TerminalNode *> stlParser::IntervalContext::NUMERIC() {
+  return getTokens(stlParser::NUMERIC);
+}
+
+tree::TerminalNode* stlParser::IntervalContext::NUMERIC(size_t i) {
+  return getToken(stlParser::NUMERIC, i);
 }
 
 
@@ -707,7 +766,7 @@ void stlParser::IntervalContext::exitRule(tree::ParseTreeListener *listener) {
 
 stlParser::IntervalContext* stlParser::interval() {
   IntervalContext *_localctx = _tracker.createInstance<IntervalContext>(_ctx, getState());
-  enterRule(_localctx, 8, stlParser::RuleInterval);
+  enterRule(_localctx, 10, stlParser::RuleInterval);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -717,30 +776,28 @@ stlParser::IntervalContext* stlParser::interval() {
     exitRule();
   });
   try {
-    setState(98);
+    setState(105);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case stlParser::T__1: {
         enterOuterAlt(_localctx, 1);
-        setState(95);
-        match(stlParser::T__1);
-        setState(96);
-        match(stlParser::NUMERIC);
+        setState(98);
+        interval_placeholder();
+        setState(99);
+        match(stlParser::COMMA);
+        setState(100);
+        interval_placeholder();
         break;
       }
 
-      case stlParser::LPAREN:
-      case stlParser::NUMERIC:
-      case stlParser::VERILOG_BINARY:
-      case stlParser::GCC_BINARY:
-      case stlParser::HEX:
-      case stlParser::BOOLEAN:
-      case stlParser::LT:
-      case stlParser::NEG:
-      case stlParser::NOT: {
+      case stlParser::NUMERIC: {
         enterOuterAlt(_localctx, 2);
-        setState(97);
-        boolean(0);
+        setState(102);
+        match(stlParser::NUMERIC);
+        setState(103);
+        match(stlParser::COMMA);
+        setState(104);
+        match(stlParser::NUMERIC);
         break;
       }
 
@@ -852,8 +909,8 @@ stlParser::BooleanContext* stlParser::boolean(int precedence) {
   stlParser::BooleanContext *_localctx = _tracker.createInstance<BooleanContext>(_ctx, parentState);
   stlParser::BooleanContext *previousContext = _localctx;
   (void)previousContext; // Silence compiler, in case the context is not used by generated code.
-  size_t startState = 10;
-  enterRecursionRule(_localctx, 10, stlParser::RuleBoolean, precedence);
+  size_t startState = 12;
+  enterRecursionRule(_localctx, 12, stlParser::RuleBoolean, precedence);
 
     
 
@@ -867,101 +924,101 @@ stlParser::BooleanContext* stlParser::boolean(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(134);
+    setState(141);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 5, _ctx)) {
     case 1: {
-      setState(101);
+      setState(108);
       match(stlParser::NOT);
-      setState(102);
+      setState(109);
       boolean(15);
       break;
     }
 
     case 2: {
-      setState(103);
+      setState(110);
       logic(0);
-      setState(104);
+      setState(111);
       relop();
-      setState(105);
+      setState(112);
       logic(0);
       break;
     }
 
     case 3: {
-      setState(107);
+      setState(114);
       numeric(0);
-      setState(108);
+      setState(115);
       relop();
-      setState(109);
+      setState(116);
       numeric(0);
       break;
     }
 
     case 4: {
-      setState(111);
+      setState(118);
       logic(0);
-      setState(112);
+      setState(119);
       match(stlParser::EQ);
-      setState(113);
+      setState(120);
       logic(0);
       break;
     }
 
     case 5: {
-      setState(115);
+      setState(122);
       numeric(0);
-      setState(116);
+      setState(123);
       match(stlParser::EQ);
-      setState(117);
+      setState(124);
       numeric(0);
       break;
     }
 
     case 6: {
-      setState(119);
+      setState(126);
       logic(0);
-      setState(120);
-      match(stlParser::NEQ);
-      setState(121);
-      logic(0);
-      break;
-    }
-
-    case 7: {
-      setState(123);
-      numeric(0);
-      setState(124);
-      match(stlParser::NEQ);
-      setState(125);
-      numeric(0);
-      break;
-    }
-
-    case 8: {
       setState(127);
-      booleanAtom();
-      break;
-    }
-
-    case 9: {
+      match(stlParser::NEQ);
       setState(128);
       logic(0);
       break;
     }
 
+    case 7: {
+      setState(130);
+      numeric(0);
+      setState(131);
+      match(stlParser::NEQ);
+      setState(132);
+      numeric(0);
+      break;
+    }
+
+    case 8: {
+      setState(134);
+      booleanAtom();
+      break;
+    }
+
+    case 9: {
+      setState(135);
+      logic(0);
+      break;
+    }
+
     case 10: {
-      setState(129);
+      setState(136);
       numeric(0);
       break;
     }
 
     case 11: {
-      setState(130);
+      setState(137);
       match(stlParser::LPAREN);
-      setState(131);
+      setState(138);
       boolean(0);
-      setState(132);
+      setState(139);
       match(stlParser::RPAREN);
       break;
     }
@@ -970,7 +1027,7 @@ stlParser::BooleanContext* stlParser::boolean(int precedence) {
       break;
     }
     _ctx->stop = _input->LT(-1);
-    setState(150);
+    setState(157);
     _errHandler->sync(this);
     alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 7, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
@@ -978,18 +1035,18 @@ stlParser::BooleanContext* stlParser::boolean(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(148);
+        setState(155);
         _errHandler->sync(this);
         switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 6, _ctx)) {
         case 1: {
           _localctx = _tracker.createInstance<BooleanContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleBoolean);
-          setState(136);
+          setState(143);
 
           if (!(precpred(_ctx, 10))) throw FailedPredicateException(this, "precpred(_ctx, 10)");
-          setState(137);
+          setState(144);
           match(stlParser::EQ);
-          setState(138);
+          setState(145);
           boolean(11);
           break;
         }
@@ -997,12 +1054,12 @@ stlParser::BooleanContext* stlParser::boolean(int precedence) {
         case 2: {
           _localctx = _tracker.createInstance<BooleanContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleBoolean);
-          setState(139);
+          setState(146);
 
           if (!(precpred(_ctx, 7))) throw FailedPredicateException(this, "precpred(_ctx, 7)");
-          setState(140);
+          setState(147);
           match(stlParser::NEQ);
-          setState(141);
+          setState(148);
           boolean(8);
           break;
         }
@@ -1010,12 +1067,12 @@ stlParser::BooleanContext* stlParser::boolean(int precedence) {
         case 3: {
           _localctx = _tracker.createInstance<BooleanContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleBoolean);
-          setState(142);
+          setState(149);
 
           if (!(precpred(_ctx, 6))) throw FailedPredicateException(this, "precpred(_ctx, 6)");
-          setState(143);
+          setState(150);
           antlrcpp::downCast<BooleanContext *>(_localctx)->booleanop = match(stlParser::AND);
-          setState(144);
+          setState(151);
           boolean(7);
           break;
         }
@@ -1023,12 +1080,12 @@ stlParser::BooleanContext* stlParser::boolean(int precedence) {
         case 4: {
           _localctx = _tracker.createInstance<BooleanContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleBoolean);
-          setState(145);
+          setState(152);
 
           if (!(precpred(_ctx, 5))) throw FailedPredicateException(this, "precpred(_ctx, 5)");
-          setState(146);
+          setState(153);
           antlrcpp::downCast<BooleanContext *>(_localctx)->booleanop = match(stlParser::OR);
-          setState(147);
+          setState(154);
           boolean(6);
           break;
         }
@@ -1037,7 +1094,7 @@ stlParser::BooleanContext* stlParser::boolean(int precedence) {
           break;
         } 
       }
-      setState(152);
+      setState(159);
       _errHandler->sync(this);
       alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 7, _ctx);
     }
@@ -1083,7 +1140,7 @@ void stlParser::BooleanAtomContext::exitRule(tree::ParseTreeListener *listener) 
 
 stlParser::BooleanAtomContext* stlParser::booleanAtom() {
   BooleanAtomContext *_localctx = _tracker.createInstance<BooleanAtomContext>(_ctx, getState());
-  enterRule(_localctx, 12, stlParser::RuleBooleanAtom);
+  enterRule(_localctx, 14, stlParser::RuleBooleanAtom);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -1093,19 +1150,19 @@ stlParser::BooleanAtomContext* stlParser::booleanAtom() {
     exitRule();
   });
   try {
-    setState(155);
+    setState(162);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case stlParser::BOOLEAN: {
         enterOuterAlt(_localctx, 1);
-        setState(153);
+        setState(160);
         booleanConstant();
         break;
       }
 
       case stlParser::LT: {
         enterOuterAlt(_localctx, 2);
-        setState(154);
+        setState(161);
         booleanVariable();
         break;
       }
@@ -1153,7 +1210,7 @@ void stlParser::BooleanConstantContext::exitRule(tree::ParseTreeListener *listen
 
 stlParser::BooleanConstantContext* stlParser::booleanConstant() {
   BooleanConstantContext *_localctx = _tracker.createInstance<BooleanConstantContext>(_ctx, getState());
-  enterRule(_localctx, 14, stlParser::RuleBooleanConstant);
+  enterRule(_localctx, 16, stlParser::RuleBooleanConstant);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -1164,7 +1221,7 @@ stlParser::BooleanConstantContext* stlParser::booleanConstant() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(157);
+    setState(164);
     match(stlParser::BOOLEAN);
    
   }
@@ -1210,7 +1267,7 @@ void stlParser::BooleanVariableContext::exitRule(tree::ParseTreeListener *listen
 
 stlParser::BooleanVariableContext* stlParser::booleanVariable() {
   BooleanVariableContext *_localctx = _tracker.createInstance<BooleanVariableContext>(_ctx, getState());
-  enterRule(_localctx, 16, stlParser::RuleBooleanVariable);
+  enterRule(_localctx, 18, stlParser::RuleBooleanVariable);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -1221,11 +1278,11 @@ stlParser::BooleanVariableContext* stlParser::booleanVariable() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(159);
+    setState(166);
     match(stlParser::LT);
-    setState(160);
+    setState(167);
     variable();
-    setState(161);
+    setState(168);
     match(stlParser::T__2);
    
   }
@@ -1336,8 +1393,8 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
   stlParser::LogicContext *_localctx = _tracker.createInstance<LogicContext>(_ctx, parentState);
   stlParser::LogicContext *previousContext = _localctx;
   (void)previousContext; // Silence compiler, in case the context is not used by generated code.
-  size_t startState = 18;
-  enterRecursionRule(_localctx, 18, stlParser::RuleLogic, precedence);
+  size_t startState = 20;
+  enterRecursionRule(_localctx, 20, stlParser::RuleLogic, precedence);
 
     size_t _la = 0;
 
@@ -1351,13 +1408,13 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(171);
+    setState(178);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case stlParser::NEG: {
-        setState(164);
+        setState(171);
         match(stlParser::NEG);
-        setState(165);
+        setState(172);
         logic(11);
         break;
       }
@@ -1367,17 +1424,17 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
       case stlParser::GCC_BINARY:
       case stlParser::HEX:
       case stlParser::LT: {
-        setState(166);
+        setState(173);
         logicAtom();
         break;
       }
 
       case stlParser::LPAREN: {
-        setState(167);
+        setState(174);
         match(stlParser::LPAREN);
-        setState(168);
+        setState(175);
         logic(0);
-        setState(169);
+        setState(176);
         match(stlParser::RPAREN);
         break;
       }
@@ -1386,7 +1443,7 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
       throw NoViableAltException(this);
     }
     _ctx->stop = _input->LT(-1);
-    setState(198);
+    setState(205);
     _errHandler->sync(this);
     alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 11, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
@@ -1394,16 +1451,16 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(196);
+        setState(203);
         _errHandler->sync(this);
         switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 10, _ctx)) {
         case 1: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(173);
+          setState(180);
 
           if (!(precpred(_ctx, 9))) throw FailedPredicateException(this, "precpred(_ctx, 9)");
-          setState(174);
+          setState(181);
           antlrcpp::downCast<LogicContext *>(_localctx)->artop = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == stlParser::TIMES
@@ -1415,7 +1472,7 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(175);
+          setState(182);
           logic(10);
           break;
         }
@@ -1423,10 +1480,10 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
         case 2: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(176);
+          setState(183);
 
           if (!(precpred(_ctx, 8))) throw FailedPredicateException(this, "precpred(_ctx, 8)");
-          setState(177);
+          setState(184);
           antlrcpp::downCast<LogicContext *>(_localctx)->artop = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == stlParser::PLUS
@@ -1438,7 +1495,7 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(178);
+          setState(185);
           logic(9);
           break;
         }
@@ -1446,12 +1503,12 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
         case 3: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(179);
+          setState(186);
 
           if (!(precpred(_ctx, 7))) throw FailedPredicateException(this, "precpred(_ctx, 7)");
-          setState(180);
+          setState(187);
           antlrcpp::downCast<LogicContext *>(_localctx)->logop = match(stlParser::LSHIFT);
-          setState(181);
+          setState(188);
           logic(8);
           break;
         }
@@ -1459,12 +1516,12 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
         case 4: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(182);
+          setState(189);
 
           if (!(precpred(_ctx, 6))) throw FailedPredicateException(this, "precpred(_ctx, 6)");
-          setState(183);
+          setState(190);
           antlrcpp::downCast<LogicContext *>(_localctx)->logop = match(stlParser::RSHIFT);
-          setState(184);
+          setState(191);
           logic(7);
           break;
         }
@@ -1472,12 +1529,12 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
         case 5: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(185);
+          setState(192);
 
           if (!(precpred(_ctx, 5))) throw FailedPredicateException(this, "precpred(_ctx, 5)");
-          setState(186);
+          setState(193);
           antlrcpp::downCast<LogicContext *>(_localctx)->logop = match(stlParser::BAND);
-          setState(187);
+          setState(194);
           logic(6);
           break;
         }
@@ -1485,12 +1542,12 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
         case 6: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(188);
+          setState(195);
 
           if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
-          setState(189);
+          setState(196);
           antlrcpp::downCast<LogicContext *>(_localctx)->logop = match(stlParser::BXOR);
-          setState(190);
+          setState(197);
           logic(5);
           break;
         }
@@ -1498,12 +1555,12 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
         case 7: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(191);
+          setState(198);
 
           if (!(precpred(_ctx, 3))) throw FailedPredicateException(this, "precpred(_ctx, 3)");
-          setState(192);
+          setState(199);
           antlrcpp::downCast<LogicContext *>(_localctx)->logop = match(stlParser::BOR);
-          setState(193);
+          setState(200);
           logic(4);
           break;
         }
@@ -1511,10 +1568,10 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
         case 8: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(194);
+          setState(201);
 
           if (!(precpred(_ctx, 10))) throw FailedPredicateException(this, "precpred(_ctx, 10)");
-          setState(195);
+          setState(202);
           bitSelect();
           break;
         }
@@ -1523,7 +1580,7 @@ stlParser::LogicContext* stlParser::logic(int precedence) {
           break;
         } 
       }
-      setState(200);
+      setState(207);
       _errHandler->sync(this);
       alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 11, _ctx);
     }
@@ -1581,7 +1638,7 @@ void stlParser::BitSelectContext::exitRule(tree::ParseTreeListener *listener) {
 
 stlParser::BitSelectContext* stlParser::bitSelect() {
   BitSelectContext *_localctx = _tracker.createInstance<BitSelectContext>(_ctx, getState());
-  enterRule(_localctx, 20, stlParser::RuleBitSelect);
+  enterRule(_localctx, 22, stlParser::RuleBitSelect);
   size_t _la = 0;
 
 #if __cplusplus > 201703L
@@ -1593,21 +1650,21 @@ stlParser::BitSelectContext* stlParser::bitSelect() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(201);
+    setState(208);
     match(stlParser::LCPAREN);
-    setState(202);
+    setState(209);
     match(stlParser::NUMERIC);
-    setState(205);
+    setState(212);
     _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == stlParser::COL) {
-      setState(203);
+      setState(210);
       match(stlParser::COL);
-      setState(204);
+      setState(211);
       match(stlParser::NUMERIC);
     }
-    setState(207);
+    setState(214);
     match(stlParser::RCPAREN);
    
   }
@@ -1653,7 +1710,7 @@ void stlParser::LogicAtomContext::exitRule(tree::ParseTreeListener *listener) {
 
 stlParser::LogicAtomContext* stlParser::logicAtom() {
   LogicAtomContext *_localctx = _tracker.createInstance<LogicAtomContext>(_ctx, getState());
-  enterRule(_localctx, 22, stlParser::RuleLogicAtom);
+  enterRule(_localctx, 24, stlParser::RuleLogicAtom);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -1663,7 +1720,7 @@ stlParser::LogicAtomContext* stlParser::logicAtom() {
     exitRule();
   });
   try {
-    setState(211);
+    setState(218);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case stlParser::NUMERIC:
@@ -1671,14 +1728,14 @@ stlParser::LogicAtomContext* stlParser::logicAtom() {
       case stlParser::GCC_BINARY:
       case stlParser::HEX: {
         enterOuterAlt(_localctx, 1);
-        setState(209);
+        setState(216);
         logicConstant();
         break;
       }
 
       case stlParser::LT: {
         enterOuterAlt(_localctx, 2);
-        setState(210);
+        setState(217);
         logicVariable();
         break;
       }
@@ -1738,7 +1795,7 @@ void stlParser::LogicConstantContext::exitRule(tree::ParseTreeListener *listener
 
 stlParser::LogicConstantContext* stlParser::logicConstant() {
   LogicConstantContext *_localctx = _tracker.createInstance<LogicConstantContext>(_ctx, getState());
-  enterRule(_localctx, 24, stlParser::RuleLogicConstant);
+  enterRule(_localctx, 26, stlParser::RuleLogicConstant);
   size_t _la = 0;
 
 #if __cplusplus > 201703L
@@ -1750,7 +1807,7 @@ stlParser::LogicConstantContext* stlParser::logicConstant() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(213);
+    setState(220);
     _la = _input->LA(1);
     if (!((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & 251658240) != 0))) {
@@ -1816,7 +1873,7 @@ void stlParser::LogicVariableContext::exitRule(tree::ParseTreeListener *listener
 
 stlParser::LogicVariableContext* stlParser::logicVariable() {
   LogicVariableContext *_localctx = _tracker.createInstance<LogicVariableContext>(_ctx, getState());
-  enterRule(_localctx, 26, stlParser::RuleLogicVariable);
+  enterRule(_localctx, 28, stlParser::RuleLogicVariable);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -1827,19 +1884,19 @@ stlParser::LogicVariableContext* stlParser::logicVariable() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(215);
+    setState(222);
     match(stlParser::LT);
-    setState(216);
+    setState(223);
     variable();
-    setState(217);
+    setState(224);
     match(stlParser::T__3);
-    setState(218);
+    setState(225);
     match(stlParser::SIGN);
-    setState(219);
+    setState(226);
     match(stlParser::COMMA);
-    setState(220);
+    setState(227);
     match(stlParser::NUMERIC);
-    setState(221);
+    setState(228);
     match(stlParser::T__4);
    
   }
@@ -1926,8 +1983,8 @@ stlParser::NumericContext* stlParser::numeric(int precedence) {
   stlParser::NumericContext *_localctx = _tracker.createInstance<NumericContext>(_ctx, parentState);
   stlParser::NumericContext *previousContext = _localctx;
   (void)previousContext; // Silence compiler, in case the context is not used by generated code.
-  size_t startState = 28;
-  enterRecursionRule(_localctx, 28, stlParser::RuleNumeric, precedence);
+  size_t startState = 30;
+  enterRecursionRule(_localctx, 30, stlParser::RuleNumeric, precedence);
 
     size_t _la = 0;
 
@@ -1941,27 +1998,27 @@ stlParser::NumericContext* stlParser::numeric(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(230);
+    setState(237);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 14, _ctx)) {
     case 1: {
-      setState(224);
+      setState(231);
       numericAtom();
       break;
     }
 
     case 2: {
-      setState(225);
+      setState(232);
       logic(0);
       break;
     }
 
     case 3: {
-      setState(226);
+      setState(233);
       match(stlParser::LPAREN);
-      setState(227);
+      setState(234);
       numeric(0);
-      setState(228);
+      setState(235);
       match(stlParser::RPAREN);
       break;
     }
@@ -1970,7 +2027,7 @@ stlParser::NumericContext* stlParser::numeric(int precedence) {
       break;
     }
     _ctx->stop = _input->LT(-1);
-    setState(240);
+    setState(247);
     _errHandler->sync(this);
     alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 16, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
@@ -1978,16 +2035,16 @@ stlParser::NumericContext* stlParser::numeric(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(238);
+        setState(245);
         _errHandler->sync(this);
         switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 15, _ctx)) {
         case 1: {
           _localctx = _tracker.createInstance<NumericContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleNumeric);
-          setState(232);
+          setState(239);
 
           if (!(precpred(_ctx, 5))) throw FailedPredicateException(this, "precpred(_ctx, 5)");
-          setState(233);
+          setState(240);
           antlrcpp::downCast<NumericContext *>(_localctx)->artop = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == stlParser::TIMES
@@ -1999,7 +2056,7 @@ stlParser::NumericContext* stlParser::numeric(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(234);
+          setState(241);
           numeric(6);
           break;
         }
@@ -2007,10 +2064,10 @@ stlParser::NumericContext* stlParser::numeric(int precedence) {
         case 2: {
           _localctx = _tracker.createInstance<NumericContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleNumeric);
-          setState(235);
+          setState(242);
 
           if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
-          setState(236);
+          setState(243);
           antlrcpp::downCast<NumericContext *>(_localctx)->artop = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == stlParser::PLUS
@@ -2022,7 +2079,7 @@ stlParser::NumericContext* stlParser::numeric(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(237);
+          setState(244);
           numeric(5);
           break;
         }
@@ -2031,7 +2088,7 @@ stlParser::NumericContext* stlParser::numeric(int precedence) {
           break;
         } 
       }
-      setState(242);
+      setState(249);
       _errHandler->sync(this);
       alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 16, _ctx);
     }
@@ -2077,7 +2134,7 @@ void stlParser::NumericAtomContext::exitRule(tree::ParseTreeListener *listener) 
 
 stlParser::NumericAtomContext* stlParser::numericAtom() {
   NumericAtomContext *_localctx = _tracker.createInstance<NumericAtomContext>(_ctx, getState());
-  enterRule(_localctx, 30, stlParser::RuleNumericAtom);
+  enterRule(_localctx, 32, stlParser::RuleNumericAtom);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -2087,19 +2144,19 @@ stlParser::NumericAtomContext* stlParser::numericAtom() {
     exitRule();
   });
   try {
-    setState(245);
+    setState(252);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case stlParser::NUMERIC: {
         enterOuterAlt(_localctx, 1);
-        setState(243);
+        setState(250);
         numericConstant();
         break;
       }
 
       case stlParser::LT: {
         enterOuterAlt(_localctx, 2);
-        setState(244);
+        setState(251);
         numericVariable();
         break;
       }
@@ -2147,7 +2204,7 @@ void stlParser::NumericConstantContext::exitRule(tree::ParseTreeListener *listen
 
 stlParser::NumericConstantContext* stlParser::numericConstant() {
   NumericConstantContext *_localctx = _tracker.createInstance<NumericConstantContext>(_ctx, getState());
-  enterRule(_localctx, 32, stlParser::RuleNumericConstant);
+  enterRule(_localctx, 34, stlParser::RuleNumericConstant);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -2158,7 +2215,7 @@ stlParser::NumericConstantContext* stlParser::numericConstant() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(247);
+    setState(254);
     match(stlParser::NUMERIC);
    
   }
@@ -2208,7 +2265,7 @@ void stlParser::NumericVariableContext::exitRule(tree::ParseTreeListener *listen
 
 stlParser::NumericVariableContext* stlParser::numericVariable() {
   NumericVariableContext *_localctx = _tracker.createInstance<NumericVariableContext>(_ctx, getState());
-  enterRule(_localctx, 34, stlParser::RuleNumericVariable);
+  enterRule(_localctx, 36, stlParser::RuleNumericVariable);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -2219,15 +2276,15 @@ stlParser::NumericVariableContext* stlParser::numericVariable() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(249);
+    setState(256);
     match(stlParser::LT);
-    setState(250);
+    setState(257);
     variable();
-    setState(251);
+    setState(258);
     match(stlParser::T__5);
-    setState(252);
+    setState(259);
     match(stlParser::NUMERIC);
-    setState(253);
+    setState(260);
     match(stlParser::T__4);
    
   }
@@ -2269,7 +2326,7 @@ void stlParser::VariableContext::exitRule(tree::ParseTreeListener *listener) {
 
 stlParser::VariableContext* stlParser::variable() {
   VariableContext *_localctx = _tracker.createInstance<VariableContext>(_ctx, getState());
-  enterRule(_localctx, 36, stlParser::RuleVariable);
+  enterRule(_localctx, 38, stlParser::RuleVariable);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -2280,7 +2337,7 @@ stlParser::VariableContext* stlParser::variable() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(255);
+    setState(262);
     match(stlParser::VARIABLE);
    
   }
@@ -2334,7 +2391,7 @@ void stlParser::RelopContext::exitRule(tree::ParseTreeListener *listener) {
 
 stlParser::RelopContext* stlParser::relop() {
   RelopContext *_localctx = _tracker.createInstance<RelopContext>(_ctx, getState());
-  enterRule(_localctx, 38, stlParser::RuleRelop);
+  enterRule(_localctx, 40, stlParser::RuleRelop);
   size_t _la = 0;
 
 #if __cplusplus > 201703L
@@ -2346,7 +2403,7 @@ stlParser::RelopContext* stlParser::relop() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(257);
+    setState(264);
     _la = _input->LA(1);
     if (!((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & 128849018880) != 0))) {
@@ -2370,9 +2427,9 @@ stlParser::RelopContext* stlParser::relop() {
 bool stlParser::sempred(RuleContext *context, size_t ruleIndex, size_t predicateIndex) {
   switch (ruleIndex) {
     case 2: return tformulaSempred(antlrcpp::downCast<TformulaContext *>(context), predicateIndex);
-    case 5: return booleanSempred(antlrcpp::downCast<BooleanContext *>(context), predicateIndex);
-    case 9: return logicSempred(antlrcpp::downCast<LogicContext *>(context), predicateIndex);
-    case 14: return numericSempred(antlrcpp::downCast<NumericContext *>(context), predicateIndex);
+    case 6: return booleanSempred(antlrcpp::downCast<BooleanContext *>(context), predicateIndex);
+    case 10: return logicSempred(antlrcpp::downCast<LogicContext *>(context), predicateIndex);
+    case 15: return numericSempred(antlrcpp::downCast<NumericContext *>(context), predicateIndex);
 
   default:
     break;

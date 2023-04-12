@@ -23,7 +23,7 @@ public:
 
   Hstring(std::string s, Stype t, expression::Proposition **pp = nullptr);
 
-  Hstring(std::string s, Stype t, size_t **intv = nullptr);
+  Hstring(std::string s, Stype t, std::pair<size_t,size_t> * intv = nullptr);
   
   Hstring();
 
@@ -57,7 +57,7 @@ public:
   expression::Proposition **_pp;
   int _offset;
   std::string _sep;
-  size_t ** _intv;
+  std::pair<size_t,size_t> * _intv;
 
 private:
   std::vector<Hstring> _append;

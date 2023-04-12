@@ -24,3 +24,4 @@ third_party/antlr4
 third_party/z3/
 tests/bl_master/bl_master100k.vcd
 .DS_Store
+antlr-4.12.0-complete.jar

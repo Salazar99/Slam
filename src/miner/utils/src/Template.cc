@@ -376,6 +376,7 @@ void Template::build() {
   _acphToProp.clear();
   _cphToProp.clear();
   _iToProp.clear();
+  _tokenToIntv.clear();
   _dtOp.first = "";
   _dtOp.second = nullptr;
   _constShift = 0;
@@ -417,7 +418,7 @@ void Template::build() {
       _aphToProp.insert({{e._s, e._pp}});
       antPhs.insert(e._s);
     } else if (e._t == Hstring::Stype::Intv){
-      _tokenToIntv[e._s] = e._intv; 
+      _tokenToIntv.insert({e._s,e._intv}); 
     } else if (e._t == Hstring::Stype::Inst) {
       _tokenToProp[e._s] = e._pp;
       _iToProp[e._s] = e._pp;
@@ -500,19 +501,16 @@ void Template::build() {
   std::vector<TemporalExp *> impant,impcon;
 
   //iter over hant to find each subformula
-  std::stack<std::string> phIntv;
   bool isEventually = false;
-  
+  std::stack<std::string> phIntv;
+
   for (size_t i = 0; i < hant.size(); i++){
     auto &s = hant[i];
     if(s._t == Hstring::Stype::Ph){
       if(isEventually){
-         std::string intval1 = phIntv.top();
+        std::string intval = phIntv.top();
         phIntv.pop();
-        std::string intval2 = phIntv.top();
-        phIntv.pop();
-        std::pair<size_t **, size_t **> interval(_tokenToIntv.at(intval1),_tokenToIntv.at(intval2));
-        impant.push_back(new StlEventually(new StlPlaceholder(s._pp), interval));
+        impant.push_back(new StlEventually(new StlPlaceholder(s._pp), _tokenToIntv.at(intval)));
       }
       else{
         impant.push_back(new StlPlaceholder(s._pp));
@@ -524,12 +522,9 @@ void Template::build() {
     }
     else if(s._t == Hstring::Stype::Inst){
       if(isEventually){
-        std::string intval1 = phIntv.top();
+        std::string intval = phIntv.top();
         phIntv.pop();
-        std::string intval2 = phIntv.top();
-        phIntv.pop();
-        std::pair<size_t **, size_t **> interval(_tokenToIntv.at(intval1),_tokenToIntv.at(intval2));
-        impant.push_back(new StlEventually(new StlInst(s._pp), interval));
+        impant.push_back(new StlEventually(new StlInst(s._pp),  _tokenToIntv.at(intval)));
       }
       else{
         impant.push_back(new StlInst(s._pp));
@@ -546,12 +541,9 @@ void Template::build() {
     auto &s = hcon[i];
     if(s._t == Hstring::Stype::Ph){
       if(isEventually){
-         std::string intval1 = phIntv.top();
+        std::string intval = phIntv.top();
         phIntv.pop();
-        std::string intval2 = phIntv.top();
-        phIntv.pop();
-        std::pair<size_t **, size_t **> interval(_tokenToIntv.at(intval1),_tokenToIntv.at(intval2));
-        impcon.push_back(new StlEventually(new StlPlaceholder(s._pp), interval));
+        impant.push_back(new StlEventually(new StlPlaceholder(s._pp), _tokenToIntv.at(intval)));
       }
       else{
         impcon.push_back(new StlPlaceholder(s._pp));
@@ -563,12 +555,9 @@ void Template::build() {
     }
     else if(s._t == Hstring::Stype::Inst){
       if(isEventually){
-        std::string intval1 = phIntv.top();
+        std::string intval = phIntv.top();
         phIntv.pop();
-        std::string intval2 = phIntv.top();
-        phIntv.pop();
-        std::pair<size_t **, size_t **> interval(_tokenToIntv.at(intval1),_tokenToIntv.at(intval2));
-        impcon.push_back(new StlEventually(new StlInst(s._pp), interval));
+        impant.push_back(new StlEventually(new StlInst(s._pp),  _tokenToIntv.at(intval)));
       }
       else{
         impcon.push_back(new StlInst(s._pp));
@@ -580,7 +569,6 @@ void Template::build() {
   }
 
   _impl = new StlImplication(impant,impcon);
-
 }
 
 void Template::genPermutations(const std::vector<Proposition *> &antP,

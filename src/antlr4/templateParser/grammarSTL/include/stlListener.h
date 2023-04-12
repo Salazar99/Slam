@@ -26,6 +26,9 @@ public:
   virtual void enterPlaceholder(stlParser::PlaceholderContext *ctx) = 0;
   virtual void exitPlaceholder(stlParser::PlaceholderContext *ctx) = 0;
 
+  virtual void enterInterval_placeholder(stlParser::Interval_placeholderContext *ctx) = 0;
+  virtual void exitInterval_placeholder(stlParser::Interval_placeholderContext *ctx) = 0;
+
   virtual void enterInterval(stlParser::IntervalContext *ctx) = 0;
   virtual void exitInterval(stlParser::IntervalContext *ctx) = 0;
 

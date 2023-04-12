@@ -37,6 +37,7 @@ Trinary StlImplication::evaluate_ant(size_t time){
 }
   
 Trinary StlImplication::evaluate_con(size_t time){
+  std::cout<<"evaluate_con at time:" <<time <<std::endl;
   for (auto p : _con) {
     //a subformula of _con is F, then all _con is F
     if (p->evaluate(time) == Trinary::F)
