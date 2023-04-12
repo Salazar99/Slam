@@ -2,17 +2,30 @@
 
 namespace harm {
 
-StlEventually::StlEventually(TemporalExp *operand, std::pair<size_t ** , size_t **> interval) : _operand(operand),_interval(interval){};
+StlEventually::StlEventually(TemporalExp *operand,
+                             std::pair<size_t **, size_t **> interval)
+    : _operand(operand), _interval(interval){};
 
 StlEventually::~StlEventually() {}
 
 Trinary StlEventually::evaluate(size_t time) {
-  if (time < **(_interval.first))
-    return Trinary::F;
-  else if (time > **(_interval.second))
+
+  if (time + **_interval.first > _trace->getLength()) {
     return Trinary::U;
-  else
-    return _operand->evaluate(time);
+  }
+
+  for (size_t i = time + **_interval.first; i <= time + **_interval.second;
+       i++) {
+
+    if (i == _trace->getLength()) {
+      return Trinary::U;
+    }
+
+    if (_operand->evaluate(time) == Trinary::T) {
+      return Trinary::T;
+    }
+  }
+  return Trinary::F;
 }
 
 void StlEventually::setInterval(std::pair<size_t **, size_t **> intv) {
