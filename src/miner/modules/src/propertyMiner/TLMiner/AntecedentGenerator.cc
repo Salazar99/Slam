@@ -396,46 +396,7 @@ void AntecedentGenerator::_runDecisionTree(
   if (template_dt->getNChoices() < template_dt->getLimits()._maxAll) {
     for (; candidate != unusedVars.end() ||
            candidateNumeric != unusedNumerics.end();) {
-      if (template_dt->isRandomConstructed()) {
-        //..#&.. ..##..
-        for (size_t i = 0; i < template_dt->getLimits()._maxDepth; i++) {
-          if (template_dt->canInsertAtDepth(i)) {
-            if (candidate != unusedVars.end())
-              findCandidates(*candidate, dcVariables, t, discLeaves, igs, i,
-                             currEntropy);
-
-            if (candidateNumeric != unusedNumerics.end())
-              findCandidatesNumeric(*candidateNumeric, numericCandidates, t,
-                                    discLeaves, igs, i, genProps, currEntropy);
-          }
-        }
-      } else {
-        //..#&.. ..##.. ..&&..
-        if (template_dt->isMultiDimensional()) {
-          //..#&..
-          if (template_dt->canInsertAtDepth(template_dt->getCurrentDepth())) {
-            if (candidate != unusedVars.end())
-              findCandidates(*candidate, dcVariables, t, discLeaves, igs,
-                             template_dt->getCurrentDepth(), currEntropy);
-
-            if (candidateNumeric != unusedNumerics.end())
-              findCandidatesNumeric(
-                  *candidateNumeric, numericCandidates, t, discLeaves, igs,
-                  template_dt->getCurrentDepth(), genProps, currEntropy);
-          }
-          if (template_dt->canInsertAtDepth(template_dt->getCurrentDepth() +
-                                            1)) {
-            if (candidate != unusedVars.end())
-              findCandidates(*candidate, dcVariables, t, discLeaves, igs,
-                             template_dt->getCurrentDepth() + 1, currEntropy);
-
-            if (candidateNumeric != unusedNumerics.end())
-              findCandidatesNumeric(
-                  *candidateNumeric, numericCandidates, t, discLeaves, igs,
-                  template_dt->getCurrentDepth() + 1, genProps, currEntropy);
-          }
-        } else {
-          //..##.. ..&&..
+      //..##.. ..&&..
           if (template_dt->canInsertAtDepth(-1)) {
             if (candidate != unusedVars.end())
               findCandidates(*candidate, dcVariables, t, discLeaves, igs, -1,
@@ -446,8 +407,6 @@ void AntecedentGenerator::_runDecisionTree(
                                     discLeaves, igs, -1, genProps, currEntropy);
             }
           }
-        }
-      }
 
       if (candidate != unusedVars.end())
         candidate++;

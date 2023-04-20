@@ -6,10 +6,12 @@
 #include "globals.hh"
 #include "templateParser.hh"
 #include <gtest/gtest.h>
+#include "propositionParser.hh"
+#include "propositionParsingUtils.hh"
 
 using namespace harm;
 using namespace expression;
-
+using namespace hparser;
 //FIXME: put new tests for harm-ex here
 //To properly test need to implement interval declared by user, or interval mining.
 
@@ -65,9 +67,10 @@ protected:
     //Create the _impl object
     std::vector<harm::TemporalExp *> ant,con;
 
-    ant.push_back(new StlEventually(new StlPlaceholder(_tokenToProp.at("v1")),_tokenToIntv.at("1,3")));
+    ant.push_back(new StlPlaceholder(_tokenToProp.at("v3")));
+    ant.push_back(new StlEventually(new StlPlaceholder(_tokenToProp.at("v1<5")),_tokenToIntv.at("1,3"),_trace));
 
-    con.push_back(new StlPlaceholder(_tokenToProp.at("v2")));
+    con.push_back(new StlEventually(new StlPlaceholder(_tokenToProp.at("v2")),_tokenToIntv.at("4,6"),_trace));
 
     _impl = new harm::StlImplication(ant,con);
   }
@@ -83,13 +86,14 @@ protected:
 
     for (size_t i = 0; i < _trace->getLength(); i++) {
       std::cout<< "Time:" << i <<std::endl;
-      //EXPECT_EQ(_t->evaluate_ant(i), evaluate_ant(i));
-      //EXPECT_EQ(_t->evaluate_con(i), evaluate_con(i));
-      //EXPECT_EQ(_t->evaluate(i), evaluate(i));
-      std::cout<< "_t->evaluate_ant: " << _t->evaluate_ant(i) << ", ";
-      std::cout<< "evaluate_ant: " << evaluate_ant(i) << std::endl;
+      EXPECT_EQ(_t->evaluate_ant(i), evaluate_ant(i));
+      EXPECT_EQ(_t->evaluate_con(i), evaluate_con(i));
+      EXPECT_EQ(_t->evaluate(i), evaluate(i));
+      //std::cout<< "_t->evaluate_ant: " << _t->evaluate_ant(i) << ", ";
+      //std::cout<< "evaluate_ant: " << evaluate_ant(i) << std::endl;
       //std::cout<< "_t->evaluate_con: " << _t->evaluate_con(i) << ", ";
       //std::cout<< "evaluate_con: " << evaluate_ant(i) << std::endl;
+      std::cout << "t_->evaluate: " << _t->evaluate(i) << std::endl;
     }
   }
 
@@ -118,14 +122,17 @@ TEST_F(EvalTest, t1) {
   _tr = new CSVtraceReader("/mnt/c/Users/danni/Desktop/Ex-harm/tests/input/EvalTest_t1.csv");
   _trace = _tr->readTrace();
 
-  _tokenToProp["v1"] = new Proposition *(_trace->getBooleanVariable("v1"));
+  _tokenToProp["v1<5"] = new Proposition *(hparser::parsePropositionAlreadyTyped("<v1,logic(s,32)> > 5", _trace));
   _tokenToProp["v2"] = new Proposition *(_trace->getBooleanVariable("v2"));
+  _tokenToProp["v3"] = new Proposition *(_trace->getBooleanVariable("v3"));
  
- std::pair<size_t,size_t> * ptri = new std::pair<size_t,size_t>(1,3); 
+  std::pair<size_t,size_t> * ptri = new std::pair<size_t,size_t>(1,3); 
   _tokenToIntv.insert({"1,3",ptri}); 
+  std::pair<size_t,size_t> * ptri1 = new std::pair<size_t,size_t>(4,6); 
+  _tokenToIntv.insert({"4,6",ptri1});
 
-  _tempStrAnt = "F[1,3]v1";
-  _tempStrCon = "v2";
+  _tempStrAnt = "v3 && F[1,3]v1 > 5";
+  _tempStrCon = "F[4,6]v2";
   _imp = "->";
 
   check();

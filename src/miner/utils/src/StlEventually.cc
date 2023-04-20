@@ -3,8 +3,8 @@
 namespace harm {
 
 StlEventually::StlEventually(TemporalExp *operand,
-                             std::pair<size_t , size_t > *interval)
-    : _operand(operand), _interval(interval){};
+                             std::pair<size_t , size_t > *interval, Trace * trace)
+    : _operand(operand), _interval(interval), _trace(trace){};
 
 StlEventually::~StlEventually() {}
 

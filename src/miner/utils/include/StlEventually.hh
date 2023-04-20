@@ -7,7 +7,7 @@ namespace harm {
 
 class StlEventually : public TemporalExp {
 public:
-  StlEventually(TemporalExp *operand, std::pair<size_t , size_t > *  interval);
+  StlEventually(TemporalExp *operand, std::pair<size_t , size_t > *  interval, Trace * trace);
 
   virtual ~StlEventually();
 

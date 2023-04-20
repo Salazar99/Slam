@@ -15,11 +15,11 @@
 #include <vector>
 
 template <typename T>
-std::vector<std::pair<T, T>> kmeans(std::vector<T> elements, size_t k) {
+std::vector<std::pair<T, T>> kmeans(std::vector<std::pair<T, T>> elements, size_t k) {
   // store data in the correct format
-  std::vector<std::array<T, 1>> data;
+  std::vector<std::array<T, 2>> data;
   for (size_t i = 0; i < elements.size(); i++) {
-    data.push_back(std::array<T, 1>({(T)(elements[i])}));
+    data.push_back(std::array<T, 2>({(T)(elements[i].first),(T)(elements[i].second)}));
   }
 
   std::vector<std::pair<T, T>> ranges;
@@ -42,6 +42,10 @@ std::vector<std::pair<T, T>> kmeans(std::vector<T> elements, size_t k) {
 
   return ranges;
 }
+
+
+
+
 
 template <typename T>
 std::vector<std::pair<T, T>> kmeansElbow(std::vector<T> elements, size_t max,

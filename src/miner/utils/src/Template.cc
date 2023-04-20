@@ -372,6 +372,7 @@ void Template::build() {
 
   // clear utility variables
   _tokenToProp.clear();
+  _tokenToIntv.clear();
   _aphToProp.clear();
   _acphToProp.clear();
   _cphToProp.clear();
@@ -384,18 +385,6 @@ void Template::build() {
 
   // init the dt operators
   for (auto &s : _templateFormula) {
-    if (s._t == Hstring::Stype::DTNextAnd) {
-      s._pp = new Proposition *(makeExpression<PropositionAnd>());
-      break;
-    }
-    if (s._t == Hstring::Stype::DTNext) {
-      s._pp = new Proposition *(new BooleanConstant(true, VarType::Bool, 1, 0));
-      break;
-    }
-    if (s._t == Hstring::Stype::DTNCReps) {
-      s._pp = new Proposition *(new BooleanConstant(true, VarType::Bool, 1, 0));
-      break;
-    }
     if (s._t == Hstring::Stype::DTAnd) {
       s._pp = new Proposition *(makeExpression<PropositionAnd>());
       break;
@@ -431,11 +420,6 @@ void Template::build() {
                e._t == Hstring::Stype::DTNextAnd) {
       _tokenToProp[e._s] = e._pp;
       e._offset = 0;
-    } else if (e._t == Hstring::Stype::DTNCReps) {
-      _tokenToProp["dtNCReps0"] = e._pp;
-      _tokenToProp["dtMock"] = new expression::Proposition *(
-          new BooleanConstant(true, VarType::Bool, 1, 0));
-      e._offset = 0;
     }
   }
 
@@ -456,10 +440,7 @@ void Template::build() {
     } else if (e._t == Hstring::Stype::Inst) {
       _tokenToProp[e._s] = e._pp;
       _iToProp[e._s] = e._pp;
-    } else if (e._t == Hstring::Stype::DTAnd ||
-               e._t == Hstring::Stype::DTNext ||
-               e._t == Hstring::Stype::DTNextAnd ||
-               e._t == Hstring::Stype::DTNCReps) {
+    } else if (e._t == Hstring::Stype::DTAnd) {
       messageError(
           "Binary decision tree operator is not allowed in the consequent");
     }
@@ -473,15 +454,6 @@ void Template::build() {
   if (imp == "->") {
     _constShift = 0;
     _applyDynamicShift = 0;
-  } else if (imp == "=>") {
-    _constShift = 1;
-    _applyDynamicShift = 0;
-  } else if (imp == "[]->" || imp == "|->") {
-    _constShift = 0;
-    _applyDynamicShift = 1;
-  } else if (imp == "[]=>" || imp == "|=>") {
-    _constShift = 1;
-    _applyDynamicShift = 1;
   } else {
     messageError("Unknown implication symbol: " + imp);
   }
@@ -510,7 +482,7 @@ void Template::build() {
       if(isEventually){
         std::string intval = phIntv.top();
         phIntv.pop();
-        impant.push_back(new StlEventually(new StlPlaceholder(s._pp), _tokenToIntv.at(intval)));
+        impant.push_back(new StlEventually(new StlPlaceholder(s._pp), _tokenToIntv.at(intval), _trace));
       }
       else{
         impant.push_back(new StlPlaceholder(s._pp));
@@ -524,7 +496,7 @@ void Template::build() {
       if(isEventually){
         std::string intval = phIntv.top();
         phIntv.pop();
-        impant.push_back(new StlEventually(new StlInst(s._pp),  _tokenToIntv.at(intval)));
+        impant.push_back(new StlEventually(new StlInst(s._pp),  _tokenToIntv.at(intval), _trace));
       }
       else{
         impant.push_back(new StlInst(s._pp));
@@ -543,7 +515,7 @@ void Template::build() {
       if(isEventually){
         std::string intval = phIntv.top();
         phIntv.pop();
-        impant.push_back(new StlEventually(new StlPlaceholder(s._pp), _tokenToIntv.at(intval)));
+        impant.push_back(new StlEventually(new StlPlaceholder(s._pp), _tokenToIntv.at(intval), _trace));
       }
       else{
         impcon.push_back(new StlPlaceholder(s._pp));
@@ -557,7 +529,7 @@ void Template::build() {
       if(isEventually){
         std::string intval = phIntv.top();
         phIntv.pop();
-        impant.push_back(new StlEventually(new StlInst(s._pp),  _tokenToIntv.at(intval)));
+        impcon.push_back(new StlEventually(new StlInst(s._pp),  _tokenToIntv.at(intval), _trace));
       }
       else{
         impcon.push_back(new StlInst(s._pp));
@@ -915,7 +887,7 @@ std::vector<Proposition *> Template::getLoadedPropositions() {
     } else {
       std::vector<Proposition *> items = _dtOp.second->getItems();
       ret.insert(ret.end(), items.begin(), items.end());
-    }
+    
   }
   return ret;
 }

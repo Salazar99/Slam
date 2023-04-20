@@ -228,8 +228,9 @@ std::string Hstring::toSpotString() {
 
 Hstring Hstring::getAnt() {
   Hstring ret;
-  //i == 5 because our G now have intervals
-  size_t i = 5;
+  //i == 4: 0 1   2   3 4
+  //        G [ x1,x2 ] ( ...
+  size_t i = 3;
   while (_append[i]._t != Stype::Imp) {
     ret._append.push_back(_append[i++]);
   }

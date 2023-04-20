@@ -2,7 +2,7 @@ grammar stl;
 import proposition;
 
 file : STL_ALWAYS formula EOF
-| STL_ALWAYS LCPAREN interval COMMA interval RCPAREN LPAREN formula RPAREN EOF
+| STL_ALWAYS LCPAREN interval RCPAREN LPAREN formula RPAREN EOF
 ;
 
 
