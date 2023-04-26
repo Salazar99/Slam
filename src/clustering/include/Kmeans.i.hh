@@ -45,8 +45,6 @@ std::vector<std::pair<T, T>> kmeans(std::vector<std::pair<T, T>> elements, size_
 
 
 
-
-
 template <typename T>
 std::vector<std::pair<T, T>> kmeansElbow(std::vector<T> elements, size_t max,
                                          double SDmin_red, bool keepOnlyBest) {

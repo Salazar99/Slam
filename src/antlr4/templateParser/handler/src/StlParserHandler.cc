@@ -24,10 +24,10 @@ void StlParserHandler::exitFile(stlParser::FileContext *ctx) {
   _intervalNames.pop();
   _subFormulas.pop();
 
-  auto STL_G = Hstring("G[", Hstring::Stype::G,(expression::Proposition**) nullptr)+ Hstring(G_interval, Hstring::Stype::G, _intervals.at(G_interval)) + Hstring("]", Hstring::Stype::G,(expression::Proposition**) nullptr);
+  auto STL_G = Hstring("G[", Hstring::Stype::G,(harm::TemporalExp**) nullptr)+ Hstring(G_interval, Hstring::Stype::G, _intervals.at(G_interval)) + Hstring("]", Hstring::Stype::G,(harm::TemporalExp**) nullptr);
 
-  _templateFormula = STL_G + Hstring("(", Hstring::Stype::G,(expression::Proposition**) nullptr) + formula +
-                     Hstring(")", Hstring::Stype::G,(expression::Proposition**) nullptr);
+  _templateFormula = STL_G + Hstring("(", Hstring::Stype::G,(harm::TemporalExp**) nullptr) + formula +
+                     Hstring(")", Hstring::Stype::G,(harm::TemporalExp**) nullptr);
   _errorMessages.clear();
 }
 
@@ -37,7 +37,7 @@ void StlParserHandler::exitFormula(stlParser::FormulaContext *ctx) {
     _subFormulas.pop();
     auto formulaAnt = _subFormulas.top();
     _subFormulas.pop();
-    _subFormulas.push(formulaAnt + Hstring(" -> ", Hstring::Stype::Imp,(expression::Proposition**) nullptr) +
+    _subFormulas.push(formulaAnt + Hstring(" -> ", Hstring::Stype::Imp,(harm::TemporalExp**) nullptr) +
                       formulaCon);
     return;
   }
@@ -52,36 +52,36 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
       std::string ph = "_inst_" + std::to_string(instCount++);
       _propStrToInst[pStr] = ph;
     }
-    if (_useCache) {
-      _subFormulas.push(Hstring(_propStrToInst.at(pStr), Hstring::Stype::Inst,
-                                new Proposition *(new CachedProposition(p))));
-    } else {
+    //if (_useCache) {
+    // _subFormulas.push(Hstring(_propStrToInst.at(pStr), Hstring::Stype::Inst,
+    //                            new Proposition *(new CachedProposition(p))));
+    //} else {
 
       _subFormulas.push(Hstring(_propStrToInst.at(pStr), Hstring::Stype::Inst,
-                                new Proposition *(p)));
-    }
+                                new harm::StlInst *(p)));
+    //}
     return;
   }
   if (ctx->placeholder() != nullptr) {
     std::string ph = "P" + ctx->placeholder()->NUMERIC()->getText();
     if (!_phToProp.count(ph)) {
-      _phToProp[ph] = new Proposition *(nullptr);
+      _phToProp[ph] = new harm::TemporalExp *(nullptr);
     }
-    _subFormulas.push(Hstring(ph, Hstring::Stype::Ph,(expression::Proposition**) _phToProp.at(ph)));
+    _subFormulas.push(Hstring(ph, Hstring::Stype::Ph,(harm::TemporalExp**) _phToProp.at(ph)));
     return;
   }
 
-  if (ctx->DT_AND() != nullptr) {
+  if (ctx->DT_ANDF() != nullptr) {
     messageErrorIf(dtCount > 0,
                    "More than one dt operator defined\n" + printErrorMessage());
-    std::string ph = "dtAnd" + std::to_string(dtCount++);
-    _subFormulas.push(Hstring(ph, Hstring::Stype::DTAnd,(expression::Proposition**) nullptr));
+    std::string ph = "dtAndF" + std::to_string(dtCount++);
+    _subFormulas.push(Hstring(ph, Hstring::Stype::DTAndF,(harm::TemporalExp**) nullptr));
     return;
   }
 
   if (ctx->tformula().size() == 2 && ctx->AND() != nullptr) {
     Hstring newFormula =
-        Hstring(" && ", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + _subFormulas.top();
+        Hstring(" && ", Hstring::Stype::Temp,(harm::TemporalExp **) nullptr) + _subFormulas.top();
     _subFormulas.pop();
     newFormula = _subFormulas.top() + newFormula;
     _subFormulas.pop();
@@ -91,7 +91,7 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 
    if (ctx->tformula().size() == 2 && ctx->OR() != nullptr) {
     Hstring newFormula =
-        Hstring(" || ", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + _subFormulas.top();
+        Hstring(" || ", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr) + _subFormulas.top();
     _subFormulas.pop();
     newFormula = _subFormulas.top() + newFormula;
     _subFormulas.pop();
@@ -107,7 +107,7 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 
     //Since intervals are another type of placeholder, reuse same structure
     Hstring newFormula =
-        Hstring("F[", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + Hstring(interval,Hstring::Stype::Intv, _intervals.at(interval)) + Hstring("]", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + _subFormulas.top();
+        Hstring("F[", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr) + Hstring(interval,Hstring::Stype::Intv, _intervals.at(interval)) + Hstring("]", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr) + _subFormulas.top();
     _subFormulas.pop();
     _subFormulas.push(newFormula);
     return;
@@ -115,9 +115,9 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 
   if (ctx->tformula().size() == 1 && ctx->LPAREN() != nullptr &&
       ctx->RPAREN() != nullptr) {
-    Hstring newFormula = Hstring("(", Hstring::Stype::Temp,(expression::Proposition**) nullptr) +
+    Hstring newFormula = Hstring("(", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr) +
                          _subFormulas.top() +
-                         Hstring(")", Hstring::Stype::Temp,(expression::Proposition**) nullptr);
+                         Hstring(")", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr);
     _subFormulas.pop();
     _subFormulas.push(newFormula);
     return;
@@ -125,7 +125,7 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 
   if (ctx->tformula().size() == 1 && ctx->NOT() != nullptr) {
     Hstring newFormula =
-        Hstring("!", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + _subFormulas.top();
+        Hstring("!", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr) + _subFormulas.top();
     _subFormulas.pop();
     _subFormulas.push(newFormula);
     return;

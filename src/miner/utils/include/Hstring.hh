@@ -2,6 +2,7 @@
 
 #include "colors.hh"
 #include "exp.hh"
+#include "TemporalExp.hh"
 
 #include <string>
 #include <vector>
@@ -14,16 +15,16 @@ public:
     Ph,
     Inst,
     Imp,
-    DTAnd,
+    DTAndF,
     DTNext,
     DTNCReps,
     DTNextAnd,
     G
   };
 
-  Hstring(std::string s, Stype t, expression::Proposition **pp = nullptr);
-
   Hstring(std::string s, Stype t, std::pair<size_t,size_t> * intv = nullptr);
+
+  Hstring(std::string s, Stype t, harm::TemporalExp ** te = nullptr);
   
   Hstring();
 
@@ -54,7 +55,7 @@ public:
 
   std::string _s;
   Stype _t;
-  expression::Proposition **_pp;
+  harm::TemporalExp ** _te;
   int _offset;
   std::string _sep;
   std::pair<size_t,size_t> * _intv;

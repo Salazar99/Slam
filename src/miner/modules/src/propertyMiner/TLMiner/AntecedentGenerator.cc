@@ -178,16 +178,18 @@ inline void AntecedentGenerator::findCandidates(
 
     // add the new proposition of a unused variable in the current
     // antecedent
-    template_dt->addItem(prop, depth);
+    std::pair<size_t, size_t> * intv = new std::pair<size_t,size_t>({0,0});
+    template_dt->addItem(prop, intv,depth);
 
     // ignore this prop if the template contains a known solution
+    /*
     if ((template_dt->isRandomConstructed() ||
          template_dt->isMultiDimensional()) &&
         isKnownSolution(template_dt->getItems(), template_dt, 1)) {
       template_dt->popItem(depth);
       continue;
     }
-
+  */
     MT::Result_DC res = MT::mean_MT(t);
 
     // is the new antecedent at least once satisfied? (avoid vacuity)
@@ -309,16 +311,18 @@ inline void AntecedentGenerator::findCandidatesNumeric(
 
     // add the new proposition of a unused variable in the current
     // antecedent
-    template_dt->addItem(prop, depth);
+    std::pair<size_t, size_t> * intv = new std::pair<size_t,size_t>({0,0});
+    template_dt->addItem(prop,intv, depth);
 
     // ignore this prop if the template contains a known solution
+    /*
     if ((template_dt->isRandomConstructed() ||
          template_dt->isMultiDimensional()) &&
         isKnownSolution(template_dt->getItems(), template_dt, 1)) {
       template_dt->popItem(depth);
       continue;
     }
-
+    */
     MT::Result_DC res = MT::mean_MT(t);
 
     // is the new antecedent at least once satisfied? (avoid vacuity)
@@ -354,7 +358,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
 bool AntecedentGenerator::isKnownSolution(
     const std::vector<Proposition *> &items, DTOperator *template_dt,
     bool checkOnly) {
-
+/*
   std::stringstream ss;
   if (template_dt->isMultiDimensional()) {
     for (auto &pack : items) {
@@ -376,6 +380,7 @@ bool AntecedentGenerator::isKnownSolution(
     knownSolutions.insert(ss.str());
   }
 
+  */
   return false;
 }
 void AntecedentGenerator::_runDecisionTree(
@@ -448,8 +453,9 @@ void AntecedentGenerator::_runDecisionTree(
 
       Proposition *prop = c_ig._props[0].first;
       size_t pos = c_ig._props[0].second;
-
-      template_dt->addItem(prop, c_ig._depth);
+      
+      std::pair<size_t, size_t> * intv = new std::pair<size_t,size_t>({0,0});
+      template_dt->addItem(prop, intv,c_ig._depth);
       template_dt->addLeaf(prop, c_ig._id, pos, c_ig._depth);
       discLeaves.push_back(DiscoveredLeaf(c_ig._id, pos, c_ig._depth));
 
@@ -484,8 +490,9 @@ void AntecedentGenerator::storeSolution(Template *t, bool isOffset) {
   }
 
   // Let's save the current propositions
-  std::vector<Proposition *> items = template_dt->minimize(isOffset);
-
+  //std::vector<Proposition *> items = template_dt->minimize(isOffset);
+  std::vector<Proposition *> items;
+/*
   if (isKnownSolution(items, template_dt)) {
     if (template_dt->isMultiDimensional()) {
       // delete the minimized container propositions
@@ -500,7 +507,7 @@ void AntecedentGenerator::storeSolution(Template *t, bool isOffset) {
   if (template_dt->isSolutionInconsequential(items)) {
     return;
   }
-
+*/
 #if printTree
   if (!nStateToAss.count(nStates)) {
     foundAss << nStates << "->a" << nStates << "[color=\"green4\"];\n";

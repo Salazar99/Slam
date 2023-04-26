@@ -8,7 +8,7 @@ file : STL_ALWAYS formula EOF
 
 formula : tformula IMPL tformula;
 
-tformula: boolean | placeholder | DT_AND
+tformula: boolean | placeholder | DT_ANDF
 	| LPAREN tformula RPAREN 
 	| NOT tformula 
 	| tformula AND tformula 
@@ -25,8 +25,8 @@ interval: interval_placeholder COMMA interval_placeholder
         ;
 
 
-DT_AND
-    : '..&&..'
+DT_ANDF
+    : '..F..'
     ;
 
 STL_EVENTUALLY: 'F'; 

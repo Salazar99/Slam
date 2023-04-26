@@ -39,13 +39,14 @@ Template::Template(const Template &original) {
   _trace = original._trace;
   for (auto &s : _templateFormula) {
     //we need to reinizializes/copy all the propositions in the templateFormula to the new copy of the template, two instances of the same template should not have overlapping memory
-    if (s._pp != nullptr) {
-      if (s._t == Hstring::Stype::Inst) {
-        s._pp = new Proposition *(new CachedProposition(copy(**s._pp)));
-      } else {
-        s._pp = new Proposition *(*s._pp);
-      }
-    }
+    //FIXME Hstring no longer have a Proposition pointer
+    //if (s._te != nullptr) {
+    //  if (s._t == Hstring::Stype::Inst) {
+    //    s._ = new Proposition *(new CachedProposition(copy(**s._pp)));
+    //  } else {
+    //    s._pp = new Proposition *(*s._pp);
+    //  }
+    //}
   }
   _buildTemplateFormula = _templateFormula;
   _max_length = original._max_length;
@@ -385,8 +386,8 @@ void Template::build() {
 
   // init the dt operators
   for (auto &s : _templateFormula) {
-    if (s._t == Hstring::Stype::DTAnd) {
-      s._pp = new Proposition *(makeExpression<PropositionAnd>());
+    if (s._t == Hstring::Stype::DTAndF) {
+      s._te = new TemporalExp *(new TemporalAnd());
       break;
     }
   }
@@ -403,22 +404,22 @@ void Template::build() {
   for (size_t i = 0; i < hant.size(); i++) {
     auto &e = hant[i];
     if (e._t == Hstring::Stype::Ph) {
-      _tokenToProp[e._s] = e._pp;
-      _aphToProp.insert({{e._s, e._pp}});
+      _tokenToProp[e._s] = e._te;
+      _aphToProp.insert({{e._s, e._te}});
       antPhs.insert(e._s);
     } else if (e._t == Hstring::Stype::Intv){
       _tokenToIntv.insert({e._s,e._intv}); 
     } else if (e._t == Hstring::Stype::Inst) {
-      _tokenToProp[e._s] = e._pp;
-      _iToProp[e._s] = e._pp;
-    } else if (e._t == Hstring::Stype::DTAnd) {
-      _tokenToProp[e._s] = e._pp;
+      _tokenToProp[e._s] = e._te;
+      _iToProp[e._s] = e._te;
+    } else if (e._t == Hstring::Stype::DTAndF) {
+      _tokenToProp[e._s] = e._te; //FIXME new map for temporalExp?
       _dtOp =
-          std::make_pair(e._s, new DTAnd(dynamic_cast<PropositionAnd *>(*e._pp),
+          std::make_pair(e._s, new DTAndF(e._te,
                                          this, _limits));
     } else if (e._t == Hstring::Stype::DTNext ||
                e._t == Hstring::Stype::DTNextAnd) {
-      _tokenToProp[e._s] = e._pp;
+      _tokenToProp[e._s] = e._te;
       e._offset = 0;
     }
   }
@@ -427,20 +428,20 @@ void Template::build() {
   for (size_t i = 0; i < hcon.size(); i++) {
     auto &e = hcon[i];
     if (e._t == Hstring::Stype::Ph) {
-      _tokenToProp[e._s] = e._pp;
+      _tokenToProp[e._s] = e._te;
       if (antPhs.count(e._s)) {
         // if a placeholder is found in both the antecedent and consequent than it is of type 'ac'
         _aphToProp.erase(e._s);
-        _acphToProp.insert({{e._s, e._pp}});
+        _acphToProp.insert({{e._s, e._te}});
       } else {
-        _cphToProp.insert({{e._s, e._pp}});
+        _cphToProp.insert({{e._s, e._te}});
       }
     } else if (e._t == Hstring::Stype::Intv){
       _tokenToIntv[e._s] = e._intv; 
     } else if (e._t == Hstring::Stype::Inst) {
-      _tokenToProp[e._s] = e._pp;
-      _iToProp[e._s] = e._pp;
-    } else if (e._t == Hstring::Stype::DTAnd) {
+      _tokenToProp[e._s] = e._te;
+      _iToProp[e._s] = e._te;
+    } else if (e._t == Hstring::Stype::DTAndF) {
       messageError(
           "Binary decision tree operator is not allowed in the consequent");
     }
@@ -470,7 +471,8 @@ void Template::build() {
     }
   }
 
-  std::vector<TemporalExp *> impant,impcon;
+  TemporalAnd * impant = new TemporalAnd();
+  TemporalAnd * impcon = new TemporalAnd();
 
   //iter over hant to find each subformula
   bool isEventually = false;
@@ -482,10 +484,10 @@ void Template::build() {
       if(isEventually){
         std::string intval = phIntv.top();
         phIntv.pop();
-        impant.push_back(new StlEventually(new StlPlaceholder(s._pp), _tokenToIntv.at(intval), _trace));
+        impant->addItem(new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
       }
       else{
-        impant.push_back(new StlPlaceholder(s._pp));
+        impant->addItem(*s._te);
       }  
       isEventually = false;
     }
@@ -496,15 +498,18 @@ void Template::build() {
       if(isEventually){
         std::string intval = phIntv.top();
         phIntv.pop();
-        impant.push_back(new StlEventually(new StlInst(s._pp),  _tokenToIntv.at(intval), _trace));
+        impant->addItem(new StlEventually(*s._te,  _tokenToIntv.at(intval), _trace));
       }
       else{
-        impant.push_back(new StlInst(s._pp));
+        impant->addItem(*s._te);
       }  
       isEventually = false;
     }
     else if(s._t == Hstring::Stype::Temp && s._s == "F[")
       isEventually = true;
+    else if(s._t == Hstring::Stype::DTAndF){
+      impant->addItem(*s._te);
+    }
   }
 
   isEventually = false;
@@ -515,10 +520,10 @@ void Template::build() {
       if(isEventually){
         std::string intval = phIntv.top();
         phIntv.pop();
-        impant.push_back(new StlEventually(new StlPlaceholder(s._pp), _tokenToIntv.at(intval), _trace));
+        impant->addItem(new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
       }
       else{
-        impcon.push_back(new StlPlaceholder(s._pp));
+        impcon->addItem(*s._te);
       }  
       isEventually = false;
     }
@@ -529,15 +534,17 @@ void Template::build() {
       if(isEventually){
         std::string intval = phIntv.top();
         phIntv.pop();
-        impcon.push_back(new StlEventually(new StlInst(s._pp),  _tokenToIntv.at(intval), _trace));
+        impcon->addItem(new StlEventually(*s._te,  _tokenToIntv.at(intval), _trace));
       }
       else{
-        impcon.push_back(new StlInst(s._pp));
+        impcon->addItem(*s._te);
       }  
       isEventually = false;
     }
     else if(s._t == Hstring::Stype::Temp && s._s == "F[")
       isEventually = true;
+    else if(s._t == Hstring::Stype::DTAndF)
+      messageError("DT operand is not allowed in the consequent");
   }
 
   _impl = new StlImplication(impant,impcon);
@@ -872,6 +879,7 @@ void Template::getPlaceholdersDepth(
   }
   depth--;
 }
+/*
 std::vector<Proposition *> Template::getLoadedPropositions() {
   std::vector<Proposition *> ret;
   for (auto &s : _templateFormula) {
@@ -882,15 +890,17 @@ std::vector<Proposition *> Template::getLoadedPropositions() {
   }
   if (_dtOp.second != nullptr) {
     if (_dtOp.second->isMultiDimensional()) {
-      std::vector<Proposition *> items = _dtOp.second->unpack();
+      std::vector<TemporalExp *> items = _dtOp.second->unpack();
       ret.insert(ret.end(), items.begin(), items.end());
     } else {
-      std::vector<Proposition *> items = _dtOp.second->getItems();
+      std::vector<TemporalExp *> items = _dtOp.second->getItems();
       ret.insert(ret.end(), items.begin(), items.end());
-    
+    }
   }
   return ret;
 }
+*/
+/*
 std::vector<Proposition *> Template::getLoadedPropositionsAnt() {
   std::vector<Proposition *> ret;
   for (auto &s : _templateFormula.getAnt()) {
@@ -900,6 +910,8 @@ std::vector<Proposition *> Template::getLoadedPropositionsAnt() {
     }
   }
   if (_dtOp.second != nullptr) {
+    //FIXME getLoadedProposition needs to be modified
+    
     if (_dtOp.second->isMultiDimensional()) {
       std::vector<Proposition *> items = _dtOp.second->unpack();
       ret.insert(ret.end(), items.begin(), items.end());
@@ -907,9 +919,11 @@ std::vector<Proposition *> Template::getLoadedPropositionsAnt() {
       std::vector<Proposition *> items = _dtOp.second->getItems();
       ret.insert(ret.end(), items.begin(), items.end());
     }
+    
   }
   return ret;
 }
+
 std::vector<Proposition *> Template::getLoadedPropositionsCon() {
   std::vector<Proposition *> ret;
   for (auto &s : _templateFormula.getCon()) {
@@ -937,6 +951,7 @@ bool Template::isFullyInstantiated() {
           getNumPlaceholders(harm::Location::AntCon)) == 0 &&
          _dtOp.second == nullptr;
 }
+*/
 Proposition *Template::getPropByToken(const std::string &token) {
   if (_tokenToProp.count(token)) {
     return *_tokenToProp.at(token);

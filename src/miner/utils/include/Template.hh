@@ -14,7 +14,7 @@
 #include <unordered_map>
 
 #include "Automaton.hh"
-#include "DTAnd.hh"
+#include "DTAndF.hh"
 #include "Hstring.hh"
 #include "Location.hh"
 #include "PermGenerator.hh"
@@ -312,19 +312,19 @@ private:
    * points to a nullptr
    */
   /// link of all placeholders to all instantiated propositions
-  std::unordered_map<std::string, Proposition **> _tokenToProp;
+  std::unordered_map<std::string, TemporalExp **> _tokenToProp;
   ///link to all interval placeholders
   std::unordered_map<std::string, std::pair<size_t,size_t>* > _tokenToIntv;
   /// link of all user instantiated placeholders to their respective
   /// propositions
-  std::unordered_map<std::string, Proposition **> _iToProp;
+  std::unordered_map<std::string, TemporalExp **> _iToProp;
   /// links all the dt operators to their respective propositions
   std::pair<std::string, DTOperator *> _dtOp = {"", nullptr};
 
   ///_aphToProp + _cphToProp + _acphToProp == _phToProp
-  std::map<std::string, Proposition **> _aphToProp;
-  std::map<std::string, Proposition **> _cphToProp;
-  std::map<std::string, Proposition **> _acphToProp;
+  std::map<std::string, TemporalExp **> _aphToProp;
+  std::map<std::string, TemporalExp **> _cphToProp;
+  std::map<std::string, TemporalExp **> _acphToProp;
   
   /* current proposition domains:
     the generator of permutations will use the following propositions to
@@ -388,6 +388,6 @@ private:
   /// available threads to implement level1 parallelism
   size_t _availThreads = 1;
 
-  friend DTAnd;
+  friend DTAndF;
 };
 } // namespace harm

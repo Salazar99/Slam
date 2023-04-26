@@ -13,6 +13,10 @@ public:
 
   virtual Trinary evaluate(size_t time) override;
 
+  virtual std::vector<expression::Proposition *> getItems() override;
+
+  virtual size_t size() override;
+
   void setInterval(std::pair<size_t , size_t > *  intv);
 
 private:

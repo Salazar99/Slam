@@ -1,95 +1,96 @@
 
-#include "DTAnd.hh"
+#include "DTAndF.hh"
 #include "DTUtils.hh"
 #include "ProgressBar.hpp"
 #include "Template.hh"
 #include "message.hh"
 #include "minerUtils.hh"
-#include <spot/tl/formula.hh>
-#include <spot/twaalgos/postproc.hh>
 #include <string>
 #include <unordered_set>
 #include <utility>
+#include "TemporalExp.hh"
 
 namespace harm {
-//--DTAnd---------------------------------------
-DTAnd::DTAnd(PropositionAnd *p, Template *t, const DTLimits &limits)
+//--DTAndF == ..F..---------------------------------------
+DTAndF::DTAndF(TemporalAnd *p, Template *t, const DTLimits &limits)
     : _choices(p), _t(t) {
   _limits = limits;
   _limits._maxDepth = -1;
 }
 
-DTAnd::~DTAnd() {
+DTAndF::~DTAndF() {
   removeItems();
   delete _choices;
 };
-bool DTAnd::isMultiDimensional() { return 0; }
-size_t DTAnd::getCurrentDepth() { return 0; }
-bool DTAnd::canInsertAtDepth(int depth) {
+bool DTAndF::isMultiDimensional() { return 0; }
+size_t DTAndF::getCurrentDepth() { return 0; }
+bool DTAndF::canInsertAtDepth(int depth) {
   return _choices->size() < _limits._maxWidth;
 }
-bool DTAnd::isRandomConstructed() { return false; }
-size_t DTAnd::getNChoices() { return _choices->size(); }
-bool DTAnd::isTaken(size_t id, bool second, int depth) {
+bool DTAndF::isRandomConstructed() { return false; }
+size_t DTAndF::getNChoices() { return _choices->size(); }
+bool DTAndF::isTaken(size_t id, bool second, int depth) {
   if (second) {
     return _leaves.count(id) && _leaves.at(id).second != nullptr;
   } else {
     return _leaves.count(id) && _leaves.at(id).first != nullptr;
   }
 }
-void DTAnd::removeLeaf(size_t id, bool second, int depth) {
-  if (second) {
+void DTAndF::removeLeaf(size_t id, int depth) {
     _leaves.at(id).second = nullptr;
-  } else {
     _leaves.at(id).first = nullptr;
-  }
 }
-void DTAnd::addLeaf(Proposition *p, size_t id, bool second, int depth) {
-  if (second) {
-    _leaves[id].second = p;
-  } else {
+void DTAndF::addLeaf(Proposition *p, std::pair<size_t,size_t> *intv, size_t id, int depth) {
     _leaves[id].first = p;
-  }
+    _leaves[id].second = intv;
+  
 }
-void DTAnd::removeItems() { _choices->removeItems(); }
-void DTAnd::addItem(Proposition *p, int depth) { _choices->addItem(p); }
-void DTAnd::popItem(int depth) { _choices->popItem(); }
-std::vector<Proposition *> DTAnd::getItems() { return _choices->getItems(); }
+void DTAndF::removeItems() { _choices->removeItems(); }
 
-std::vector<Proposition *> DTAnd::unpack() {
-  messageError("Can't unpack in unidimensional operator'");
-  return std::vector<Proposition *>();
-};
-std::vector<Proposition *> DTAnd::unpack(Proposition *pack) {
-  messageError("Can't unpack in unidimensional operator'");
-  return std::vector<Proposition *>();
-};
-std::vector<Proposition *> DTAnd::unpack(std::vector<Proposition *> &pack) {
-  messageError("Can't unpack in unidimensional operator'");
-  return std::vector<Proposition *>();
+void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> * interval, int depth) { 
+  expression::Proposition ** pp= new expression::Proposition *(p);
+  harm::TemporalExp * Fprop = new StlEventually(new StlPlaceholder(pp), interval, _t->_trace);
+  _choices->addItem(Fprop); 
 }
 
-void DTAnd::clearPack(Proposition *pack) {
+void DTAndF::popItem(int depth) { _choices->popItem(); }
+
+std::vector<expression::Proposition *> DTAndF::getItems() { return _choices->getItems(); }
+
+std::vector<TemporalExp *> DTAndF::unpack() {
+  messageError("Can't unpack in unidimensional operator'");
+  return std::vector<TemporalExp *>();
+};
+std::vector<TemporalExp *> DTAndF::unpack(TemporalExp *pack) {
+  messageError("Can't unpack in unidimensional operator'");
+  return std::vector<TemporalExp *>();
+};
+std::vector<TemporalExp *> DTAndF::unpack(std::vector<TemporalExp *> &pack) {
+  messageError("Can't unpack in unidimensional operator'");
+  return std::vector<TemporalExp *>();
+}
+
+void DTAndF::clearPack(TemporalExp *pack) {
   messageError("Can't clear pack in unidimensional operator'");
 }
-bool DTAnd::isSolutionInconsequential(std::vector<Proposition *> &sol) {
+bool DTAndF::isSolutionInconsequential(std::vector<TemporalExp *> &sol) {
   return 0;
 }
 
-void DTAnd::substitute(int depth, int width, Proposition *&sub) {
+void DTAndF::substitute(int depth, int width, expression::Proposition *&sub) {
   if (width == -1) {
     width = _choices->getItems().size() - 1;
   }
-  Proposition *tmp = _choices->getItems()[width];
+  expression::Proposition *tmp = _choices->getItems()[width];
   _choices->getItems()[width] = sub;
   sub = tmp;
 }
 
-const DTLimits &DTAnd::getLimits() { return _limits; }
+const DTLimits &DTAndF::getLimits() { return _limits; }
 
-std::vector<Proposition *> DTAnd::minimize(bool isOffset) {
+std::vector<TemporalExp *> DTAndF::minimize(bool isOffset) {
   std::vector<std::vector<size_t>> c;
-  std::vector<Proposition *> original = _choices->getItems();
+  std::vector<TemporalExp *> original = _choices->getItems();
   for (size_t i = 1; i <= original.size(); i++) {
     c.clear();
     comb(original.size(), i, c);
@@ -112,7 +113,7 @@ std::vector<Proposition *> DTAnd::minimize(bool isOffset) {
     }
   }
 end:;
-  std::vector<Proposition *> ret;
+  std::vector<TemporalExp *> ret;
   for (auto p : _choices->getItems()) {
     ret.push_back(p);
   }
@@ -120,12 +121,12 @@ end:;
   for (auto p : original) {
     _choices->addItem(p);
   }
-
-  sortPropositions(ret);
+  //FIXME
+  //sortPropositions(ret);
   return ret;
 }
 
-std::pair<std::string, std::string> DTAnd::prettyPrint(bool offset) {
+std::pair<std::string, std::string> DTAndF::prettyPrint(bool offset) {
 
   auto ant = _t->_templateFormula.getAnt();
   auto imp = _t->_templateFormula.getImp();

@@ -12,7 +12,7 @@
 class  stlParser : public antlr4::Parser {
 public:
   enum {
-    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, DT_AND = 7, 
+    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, DT_ANDF = 7, 
     STL_EVENTUALLY = 8, STL_ALWAYS = 9, RELEASE = 10, IMPL = 11, SCOL = 12, 
     COL = 13, COMMA = 14, FIRST_MATCH = 15, SIGN = 16, LGPAREN = 17, RGPAREN = 18, 
     LCPAREN = 19, RCPAREN = 20, LPAREN = 21, RPAREN = 22, VARIABLE = 23, 
@@ -111,7 +111,7 @@ public:
     virtual size_t getRuleIndex() const override;
     BooleanContext *boolean();
     PlaceholderContext *placeholder();
-    antlr4::tree::TerminalNode *DT_AND();
+    antlr4::tree::TerminalNode *DT_ANDF();
     antlr4::tree::TerminalNode *LPAREN();
     std::vector<TformulaContext *> tformula();
     TformulaContext* tformula(size_t i);

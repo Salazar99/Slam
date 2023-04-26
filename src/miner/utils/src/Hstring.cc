@@ -1,16 +1,16 @@
 
 #include "Hstring.hh"
 
-Hstring::Hstring(std::string s, Stype t, expression::Proposition **pp)
-    : _s(s), _t(t),_intv(nullptr),_pp(pp), _offset(-1) {
+Hstring::Hstring(std::string s, Stype t, std::pair<size_t,size_t> * intv)
+    : _s(s), _t(t), _intv(intv),_offset(-1) {
   _append.push_back(*this);
 }
-Hstring::Hstring(std::string s, Stype t, std::pair<size_t,size_t> * intv)
-    : _s(s), _t(t), _intv(intv),_pp(nullptr),_offset(-1) {
+Hstring::Hstring(std::string s, Stype t, harm::TemporalExp ** te)
+    : _s(s), _t(t), _intv(nullptr),_te(te),_offset(-1) {
   _append.push_back(*this);
 }
 
-Hstring::Hstring() : _s(""), _t(Stype::Temp), _intv(nullptr), _pp(nullptr), _offset(-1) {
+Hstring::Hstring() : _s(""), _t(Stype::Temp), _intv(nullptr),_te(nullptr),_offset(-1) {
   _append.push_back(*this);
 }
 Hstring Hstring::operator+(const Hstring &right) {
@@ -51,54 +51,20 @@ std::string Hstring::toColoredString(bool sub) {
       ret += TEMP(e._s);
       break;
     case Stype::Ph:
-      ret += VAR((sub ? prop2ColoredString(**e._pp) : e._s));
+      //FIXME Hstring no longer have a proposition pointer
+      //ret += VAR((sub ? prop2ColoredString(**e._pp) : e._s));
       break;
-    case Stype::DTAnd:
-      if (!sub || dynamic_cast<expression::PropositionAnd *>(*e._pp)->empty()) {
-        ret += BOOL("..&&..");
-      } else {
-        ret += prop2ColoredString(**e._pp);
-      }
-      break;
-    case Stype::DTNext:
-      if (sub) {
-        if (e._offset > 0) {
-          ret += TEMP(" ##" + std::to_string(e._offset) + " ");
-          ret += prop2ColoredString(**e._pp);
-        } else {
-          ret += prop2ColoredString(**e._pp);
-        }
-      } else {
-        ret += TEMP("..##..");
-      }
-      break;
-    case Stype::DTNCReps:
-      if (sub) {
-        ret += prop2ColoredString(**e._pp);
-        if (e._offset > 0) {
-          ret += TEMP(" [->" + std::to_string(e._offset) + "]; ");
-        } else {
-          ret +=
-              TEMP(" [->" + std::to_string(e._offset * (-1)) + "]:") + VAR("1");
-        }
-      } else {
-        ret += TEMP("..[->]" + e._sep + "..");
-      }
-      break;
-    case Stype::DTNextAnd:
-      if (sub) {
-        if (e._offset > 0) {
-          ret += TEMP(" ##" + std::to_string(e._offset) + " ");
-          ret += prop2ColoredString(**e._pp);
-        } else {
-          ret += prop2ColoredString(**e._pp);
-        }
-      } else {
-        ret += TEMP("..#&..");
-      }
+    case Stype::DTAndF:
+      //FIXME
+      //if (!sub || dynamic_cast<expression::PropositionAnd *>(*e._pp)->empty()) {
+      //  ret += BOOL("..F..");
+      //} else {
+      // ret += prop2ColoredString(**e._pp);
+      //}
       break;
     case Stype::Inst:
-      ret += prop2ColoredString(**e._pp);
+      //FIXME
+      //ret += prop2ColoredString(**e._pp);
       break;
     case Stype::Imp:
       ret += TIMPL(e._s);
@@ -121,53 +87,19 @@ std::string Hstring::toString(bool sub) {
       ret += e._s;
       break;
     case Stype::Ph:
-      ret += (sub ? prop2String(**e._pp) : e._s);
+      //FIXME
+      //ret += (sub ? prop2String(**e._pp) : e._s);
       break;
-    case Stype::DTAnd:
-      if (!sub || dynamic_cast<expression::PropositionAnd *>(*e._pp)->empty()) {
-        ret += "..&&..";
-      } else {
-        ret += prop2String(**e._pp);
-      }
-      break;
-    case Stype::DTNext:
-      if (sub) {
-        if (e._offset > 0) {
-          ret += (" ##" + std::to_string(e._offset) + " ");
-          ret += prop2String(**e._pp);
-        } else {
-          ret += prop2String(**e._pp);
-        }
-      } else {
-        ret += ("..##..");
-      }
-      break;
-    case Stype::DTNCReps:
-      if (sub) {
-        ret += prop2String(**e._pp);
-        if (e._offset > 0) {
-          ret += " [->" + std::to_string(e._offset) + "]; ";
-        } else {
-          ret += (" [->" + std::to_string(e._offset * (-1)) + "]:1");
-        }
-      } else {
-        ret += ("..[->]" + e._sep + "..");
-      }
-      break;
-    case Stype::DTNextAnd:
-      if (sub) {
-        if (e._offset > 0) {
-          ret += (" ##" + std::to_string(e._offset) + " ");
-          ret += prop2String(**e._pp);
-        } else {
-          ret += prop2String(**e._pp);
-        }
-      } else {
-        ret += ("..#&..");
-      }
+    case Stype::DTAndF:
+      //FIXME
+      //if (!sub || dynamic_cast<expression::PropositionAnd *>(*e._pp)->empty()) {
+      //  ret += "..F..";
+      //} else {
+      //  ret += prop2String(**e._pp);
+      //}
       break;
     case Stype::Inst:
-      ret += prop2String(**e._pp);
+      //ret += prop2String(**e._pp);
       break;
     case Stype::Imp:
       ret += e._s;
@@ -193,7 +125,7 @@ std::string Hstring::toSpotString() {
     case Stype::Ph:
       ret += e._s;
       break;
-    case Stype::DTAnd:
+    case Stype::DTAndF:
       ret += e._s;
       break;
     case Stype::DTNext:
@@ -267,7 +199,7 @@ std::vector<Hstring>::reverse_iterator Hstring::rend() {
 }
 bool Hstring::isDT(const Hstring &e) {
   switch (e._t) {
-  case Stype::DTAnd:
+  case Stype::DTAndF:
     return 1;
     break;
   case Stype::DTNext:
@@ -301,17 +233,8 @@ void Hstring::insert(std::vector<Hstring>::iterator where,
 std::ostream &operator<<(std::ostream &os, const Hstring::Stype &t) {
 
   switch (t) {
-  case Hstring::Stype::DTAnd:
-    os << "DTAnd";
-    break;
-  case Hstring::Stype::DTNext:
-    os << "DTNext";
-    break;
-  case Hstring::Stype::DTNCReps:
-    os << "DTNCReps";
-    break;
-  case Hstring::Stype::DTNextAnd:
-    os << "DTNextAnd";
+  case Hstring::Stype::DTAndF:
+    os << "DTAndF";
     break;
   case Hstring::Stype::G:
     os << "G";

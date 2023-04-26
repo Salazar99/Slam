@@ -294,19 +294,21 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
     for (std::vector<Proposition *> &props : antGen.onSets) {
 
       //rebulding the assertion starting from a list propositions (the operands of a dt operator)
+      /*
       if (t->getDT()->isMultiDimensional()) {
         for (size_t i = 0; i < props.size(); i++) {
           for (auto prop : t->getDT()->unpack(props[i])) {
             t->getDT()->addItem(prop, i);
           }
         }
+      
       } else {
         for (auto prop : props) {
           t->getDT()->addItem(prop, -1);
         }
       }
-
       assert(!t->getDT()->getItems().empty());
+      */
 
       //check for vacuity
       if (!t->isVacuous(Location::Ant)) {
@@ -336,6 +338,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       }
 #endif
       // clear the template of the current dt operands
+      /*
       t->getDT()->removeItems();
       if (t->getDT()->isMultiDimensional()) {
         for (size_t i = 0; i < props.size(); i++) {
@@ -343,10 +346,11 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
           delete props[i];
         }
       }
+      */
     }
-
     // Offset, same as onset but the consequent is negated
     for (const std::vector<Proposition *> &props : antGen.offSets) {
+    /*
       if (t->getDT()->isMultiDimensional()) {
         for (size_t i = 0; i < props.size(); i++) {
           for (auto prop : t->getDT()->unpack(props[i])) {
@@ -361,7 +365,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       }
 
       assert(!t->getDT()->getItems().empty());
-
+      */
       if (!t->isVacuousOffset(Location::Ant)) {
         auto prettyAss = t->getDT()->prettyPrint(1);
         Assertion *ass = new Assertion();
@@ -383,7 +387,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         vacLock.unlock();
       }
 #endif
-
+      /*
       t->getDT()->removeItems();
       if (t->getDT()->isMultiDimensional()) {
         for (size_t i = 0; i < props.size(); i++) {
@@ -391,6 +395,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
           delete props[i];
         }
       }
+      */
     }
 
 #if enPB

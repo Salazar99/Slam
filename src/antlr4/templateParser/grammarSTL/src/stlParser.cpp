@@ -51,14 +51,14 @@ void stlParserInitialize() {
     },
     std::vector<std::string>{
       "", "'P'", "'X'", "',bool>'", "',logic('", "')>'", "',numeric('", 
-      "'..&&..'", "'F'", "'G'", "'release'", "'->'", "';'", "':'", "','", 
+      "'..F..'", "'F'", "'G'", "'release'", "'->'", "';'", "':'", "','", 
       "'first_match'", "", "'{'", "'}'", "'['", "']'", "'('", "')'", "", 
       "", "", "", "", "", "'+'", "'-'", "'*'", "'/'", "'>'", "'>='", "'<'", 
       "'<='", "'=='", "'!='", "'&'", "'|'", "'^'", "'~'", "'<<'", "'>>'", 
       "'&&'", "'||'", "'!'"
     },
     std::vector<std::string>{
-      "", "", "", "", "", "", "", "DT_AND", "STL_EVENTUALLY", "STL_ALWAYS", 
+      "", "", "", "", "", "", "", "DT_ANDF", "STL_EVENTUALLY", "STL_ALWAYS", 
       "RELEASE", "IMPL", "SCOL", "COL", "COMMA", "FIRST_MATCH", "SIGN", 
       "LGPAREN", "RGPAREN", "LCPAREN", "RCPAREN", "LPAREN", "RPAREN", "VARIABLE", 
       "NUMERIC", "VERILOG_BINARY", "GCC_BINARY", "HEX", "BOOLEAN", "PLUS", 
@@ -396,8 +396,8 @@ stlParser::PlaceholderContext* stlParser::TformulaContext::placeholder() {
   return getRuleContext<stlParser::PlaceholderContext>(0);
 }
 
-tree::TerminalNode* stlParser::TformulaContext::DT_AND() {
-  return getToken(stlParser::DT_AND, 0);
+tree::TerminalNode* stlParser::TformulaContext::DT_ANDF() {
+  return getToken(stlParser::DT_ANDF, 0);
 }
 
 tree::TerminalNode* stlParser::TformulaContext::LPAREN() {
@@ -504,7 +504,7 @@ stlParser::TformulaContext* stlParser::tformula(int precedence) {
 
     case 3: {
       setState(64);
-      match(stlParser::DT_AND);
+      match(stlParser::DT_ANDF);
       break;
     }
 

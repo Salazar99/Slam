@@ -4,11 +4,12 @@
 
 namespace harm {
 
-class StlPlaceholder : public TemporalExp {
+class TemporalAnd : public TemporalExp {
 public:
-  StlPlaceholder(expression::Proposition **prop);
+  TemporalAnd();
+  TemporalAnd(TemporalExp *first);
 
-  virtual ~StlPlaceholder();
+  virtual ~TemporalAnd();
 
   virtual Trinary evaluate(size_t time) override;
 
@@ -16,8 +17,17 @@ public:
 
   virtual size_t size() override;
 
+  void addItem(TemporalExp * prop);
+
+  void popItem();
+
+  void removeItems();
+
+
+
 private:
-  expression::Proposition **_prop;
+  std::vector<TemporalExp *> _items;
+ 
 };
 
 }; // namespace harm
