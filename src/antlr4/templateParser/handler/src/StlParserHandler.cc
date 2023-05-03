@@ -1,4 +1,5 @@
 #include "StlParserHandler.hh"
+#include "StlPlaceholder.hh"
 #include "propositionParser.hh"
 #include "propositionParsingUtils.hh"
 #include <sstream>
@@ -58,14 +59,14 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
     //} else {
 
       _subFormulas.push(Hstring(_propStrToInst.at(pStr), Hstring::Stype::Inst,
-                                new harm::TemporalExp * (dynamic_cast<harm::TemporalExp*>(new harm::StlInst(new expression::Proposition *(p))))));
+                                new harm::TemporalExp * (new harm::StlInst(new expression::Proposition *(p)))));
     //}
     return;
   }
   if (ctx->placeholder() != nullptr) {
     std::string ph = "P" + ctx->placeholder()->NUMERIC()->getText();
     if (!_phToProp.count(ph)) {
-      _phToProp[ph] = new harm::TemporalExp *(nullptr);
+      _phToProp[ph] = new harm::TemporalExp *(new harm::StlPlaceholder(nullptr));
     }
     _subFormulas.push(Hstring(ph, Hstring::Stype::Ph,(harm::TemporalExp**) _phToProp.at(ph)));
     return;

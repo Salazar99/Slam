@@ -73,7 +73,6 @@ Template::~Template() {
 
   delete _impl;
 
-
   delete[] _antCachedValues;
   delete[] _conCachedValues;
 
@@ -100,7 +99,10 @@ Template::~Template() {
   }
 }
 
-size_t Template::nPermsGenerated() const { return _pg._size.first; }
+size_t Template::nPermsGenerated() const {
+    //return _pg._size.first; 
+    return _cProps.size();
+}
 
 std::string Template::getAssertion() { return _templateFormula.toString(true); }
 std::string Template::getColoredAssertion() {
@@ -147,12 +149,12 @@ bool Template::nextPerm() {
 
     if (where == harm::Location::Ant) {
       //fill the placeholder with the correct proposition _pg._perms[_permIndex][e.second] contains the index of the proposition to be inserted
-    //FIXME Completely broken due to Hstring modification
-    //  (*_aphToProp.at(e.first)) = _aProps[_pg._perms[_permIndex][e.second]];
-    //} else if (where == harm::Location::Con) {
-    //  (*_cphToProp.at(e.first)) = _cProps[_pg._perms[_permIndex][e.second]];
-    //} else {
-    //  (*_acphToProp.at(e.first)) = _acProps[_pg._perms[_permIndex][e.second]];
+      //FIXME Completely broken due to Hstring modification
+      //  (*_aphToProp.at(e.first)) = _aProps[_pg._perms[_permIndex][e.second]];
+      //} else if (where == harm::Location::Con) {
+      //  (*_cphToProp.at(e.first)) = _cProps[_pg._perms[_permIndex][e.second]];
+      //} else {
+      //  (*_acphToProp.at(e.first)) = _acProps[_pg._perms[_permIndex][e.second]];
     }
   }
   //go to the next permutation
@@ -177,19 +179,24 @@ void Template::loadPerm(size_t n) {
     //e.first is the string representation of a placeholder e.second is the column of the permutation's table _permIndex is the row of the permutation's table
 
     if (where == harm::Location::Ant) {
+        messageError("");
       //feel the placeholder with the correct proposition _pg._perms[_permIndex][e.second] contains the index of the proposition to be inserted
-    //FIXME Completely broken due to Hstring modification
-    //  (*_aphToProp.at(e.first)) = _aProps[_pg._perms[n][e.second]];
-    //} else if (where == harm::Location::Con) {
-    //  (*_cphToProp.at(e.first)) = _cProps[_pg._perms[n][e.second]];
-    //} else {
-    //  (*_acphToProp.at(e.first)) = _acProps[_pg._perms[n][e.second]];
+      //FIXME Completely broken due to Hstring modification
+      dynamic_cast<StlPlaceholder *>(*_aphToProp.at(e.first))
+          ->setProposition(_aProps[_pg._perms[n][e.second]]);
+    } else if (where == harm::Location::Con) {
+      //dynamic_cast<StlPlaceholder *>(*_cphToProp.at(e.first)) ->setProposition(_cProps[_pg._perms[n][e.second]]);
+      dynamic_cast<StlPlaceholder *>(*_cphToProp.at(e.first))
+          ->setProposition(_cProps[n]);
+    } else {
+        messageError("");
+      dynamic_cast<StlPlaceholder *>(*_acphToProp.at(e.first))
+          ->setProposition(_acProps[_pg._perms[n][e.second]]);
     }
   }
   // return to the first permutation if we have reached the end of the
   // available permutations
 }
-
 
 size_t Template::getNumPlaceholders(harm::Location where) {
   if (where == harm::Location::Ant) {
@@ -410,16 +417,15 @@ void Template::build() {
       _tokenToProp[e._s] = e._te;
       _aphToProp.insert({{e._s, e._te}});
       antPhs.insert(e._s);
-    } else if (e._t == Hstring::Stype::Intv){
-      _tokenToIntv.insert({e._s,e._intv}); 
+    } else if (e._t == Hstring::Stype::Intv) {
+      _tokenToIntv.insert({e._s, e._intv});
     } else if (e._t == Hstring::Stype::Inst) {
       _tokenToProp[e._s] = e._te;
       _iToProp[e._s] = e._te;
     } else if (e._t == Hstring::Stype::DTAndF) {
       _tokenToProp[e._s] = e._te; //FIXME new map for temporalExp?
-      _dtOp =
-          std::make_pair(e._s, new DTAndF(dynamic_cast<TemporalAnd*>(*e._te),
-                                         this, _limits));
+      _dtOp = std::make_pair(
+          e._s, new DTAndF(dynamic_cast<TemporalAnd *>(*e._te), this, _limits));
     } else if (e._t == Hstring::Stype::DTNext ||
                e._t == Hstring::Stype::DTNextAnd) {
       _tokenToProp[e._s] = e._te;
@@ -439,8 +445,8 @@ void Template::build() {
       } else {
         _cphToProp.insert({{e._s, e._te}});
       }
-    } else if (e._t == Hstring::Stype::Intv){
-      _tokenToIntv[e._s] = e._intv; 
+    } else if (e._t == Hstring::Stype::Intv) {
+      _tokenToIntv[e._s] = e._intv;
     } else if (e._t == Hstring::Stype::Inst) {
       _tokenToProp[e._s] = e._te;
       _iToProp[e._s] = e._te;
@@ -474,83 +480,77 @@ void Template::build() {
     }
   }
 
-  TemporalAnd * impant = new TemporalAnd();
-  TemporalAnd * impcon = new TemporalAnd();
+  TemporalAnd *impant = new TemporalAnd();
+  TemporalAnd *impcon = new TemporalAnd();
 
   //iter over hant to find each subformula
   bool isEventually = false;
   std::stack<std::string> phIntv;
 
-  for (size_t i = 0; i < hant.size(); i++){
+  for (size_t i = 0; i < hant.size(); i++) {
     auto &s = hant[i];
-    if(s._t == Hstring::Stype::Ph){
-      if(isEventually){
+    if (s._t == Hstring::Stype::Ph) {
+      if (isEventually) {
         std::string intval = phIntv.top();
         phIntv.pop();
-        impant->addItem(new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
-      }
-      else{
+        impant->addItem(
+            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
+      } else {
         impant->addItem(*s._te);
-      }  
+      }
       isEventually = false;
-    }
-    else if(s._t == Hstring::Stype::Intv){
+    } else if (s._t == Hstring::Stype::Intv) {
       phIntv.push(s._s);
-    }
-    else if(s._t == Hstring::Stype::Inst){
-      if(isEventually){
+    } else if (s._t == Hstring::Stype::Inst) {
+      if (isEventually) {
         std::string intval = phIntv.top();
         phIntv.pop();
-        impant->addItem(new StlEventually(*s._te,  _tokenToIntv.at(intval), _trace));
-      }
-      else{
+        impant->addItem(
+            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
+      } else {
         impant->addItem(*s._te);
-      }  
+      }
       isEventually = false;
-    }
-    else if(s._t == Hstring::Stype::Temp && s._s == "F[")
+    } else if (s._t == Hstring::Stype::Temp && s._s == "F[")
       isEventually = true;
-    else if(s._t == Hstring::Stype::DTAndF){
+    else if (s._t == Hstring::Stype::DTAndF) {
       impant->addItem(*s._te);
     }
   }
 
   isEventually = false;
 
-  for (size_t i = 0; i < hcon.size(); i++){
+  for (size_t i = 0; i < hcon.size(); i++) {
     auto &s = hcon[i];
-    if(s._t == Hstring::Stype::Ph){
-      if(isEventually){
+    if (s._t == Hstring::Stype::Ph) {
+      if (isEventually) {
         std::string intval = phIntv.top();
         phIntv.pop();
-        impant->addItem(new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
-      }
-      else{
+        impant->addItem(
+            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
+      } else {
         impcon->addItem(*s._te);
-      }  
+      }
       isEventually = false;
-    }
-    else if(s._t == Hstring::Stype::Intv){
+    } else if (s._t == Hstring::Stype::Intv) {
       phIntv.push(s._s);
-    }
-    else if(s._t == Hstring::Stype::Inst){
-      if(isEventually){
+    } else if (s._t == Hstring::Stype::Inst) {
+      if (isEventually) {
         std::string intval = phIntv.top();
         phIntv.pop();
-        impcon->addItem(new StlEventually(*s._te,  _tokenToIntv.at(intval), _trace));
-      }
-      else{
+        impcon->addItem(
+            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
+      } else {
         impcon->addItem(*s._te);
-      }  
+      }
       isEventually = false;
-    }
-    else if(s._t == Hstring::Stype::Temp && s._s == "F[")
+    } else if (s._t == Hstring::Stype::Temp && s._s == "F[")
       isEventually = true;
-    else if(s._t == Hstring::Stype::DTAndF)
+    else if (s._t == Hstring::Stype::DTAndF)
       messageError("DT operand is not allowed in the consequent");
   }
 
-  _impl = new StlImplication(impant,impcon);
+  _impl = new StlImplication(impant, impcon);
 }
 
 void Template::genPermutations(const std::vector<Proposition *> &antP,
@@ -584,7 +584,6 @@ void Template::genPermutations(const std::vector<Proposition *> &antP,
   //set to the first perm
   _permIndex = 0;
 }
-
 
 std::string Template::findCauseInProposition(Proposition *ep, size_t time,
                                              bool goal) {
@@ -778,26 +777,26 @@ void Template::check() {
   if (!assHoldsOnTrace(harm::Location::AntCon)) {
     printContingency();
     //     FIXME:broken until findCauseOfFailure is restored
-//     auto cause = findCauseOfFailure();
-  //  fort::utf8_table table;
-  //  table << fort::header << "Cause of Failure"
-  //        << "Impact" << fort::endr;
-  //  std::vector<std::string> sorted;
-  //  for (auto c : cause) {
-  //    sorted.push_back(c.first);
-  //  }
-  //  std::sort(sorted.begin(), sorted.end(),
-  //            [&cause](std::string &e1, std::string &e2) {
-  //              return cause.at(e1) > cause.at(e2);
-  //            });
-  //  for (auto c : sorted) {
-  //    table << c
-  //          << to_string_with_precision(
-  //                 ((double)cause.at(c) / (double)ct[0][1]) * 100, 2) +
-  //                 "%\n"
-  //          << fort::endr;
-  //  }
-  //  std::cout << table.to_string() << std::endl;
+    //     auto cause = findCauseOfFailure();
+    //  fort::utf8_table table;
+    //  table << fort::header << "Cause of Failure"
+    //        << "Impact" << fort::endr;
+    //  std::vector<std::string> sorted;
+    //  for (auto c : cause) {
+    //    sorted.push_back(c.first);
+    //  }
+    //  std::sort(sorted.begin(), sorted.end(),
+    //            [&cause](std::string &e1, std::string &e2) {
+    //              return cause.at(e1) > cause.at(e2);
+    //            });
+    //  for (auto c : sorted) {
+    //    table << c
+    //          << to_string_with_precision(
+    //                 ((double)cause.at(c) / (double)ct[0][1]) * 100, 2) +
+    //                 "%\n"
+    //          << fort::endr;
+    //  }
+    //  std::cout << table.to_string() << std::endl;
     std::cout << "Failing sub-traces:\n";
     for (size_t i = 0; i < _max_length; i++) {
       if (evaluate(i) == Trinary::F) {
@@ -805,14 +804,14 @@ void Template::check() {
                   << "\n";
         size_t shift = 0;
         if (_applyDynamicShift) {
-         // evalAutomatonDyShift(i, _ant, shift);
+          // evalAutomatonDyShift(i, _ant, shift);
         } else {
-         // evalAutomaton(i, _ant);
+          // evalAutomaton(i, _ant);
         }
 
         shift += _constShift;
 
-      //  evalAutomatonDyShift(shift, _con, shift);
+        //  evalAutomatonDyShift(shift, _con, shift);
         std::cout << "[" << i << "," << shift << "]"
                   << "\n";
         std::cout << _trace->printTrace(i, (shift - i) + 1) << "\n";
@@ -828,8 +827,8 @@ void Template::check() {
   if (_max_length < 30) {
     std::cout << "Ant: ";
     for (size_t i = 0; i < _max_length; i++) {
-        //FIXME
-//      std::cout << evaluate_ant(i) << "(" << i << ")" << " ";
+      //FIXME
+      //      std::cout << evaluate_ant(i) << "(" << i << ")" << " ";
     }
 
     std::cout << "\n";
@@ -848,7 +847,7 @@ void Template::check() {
 
     std::cout << "Con: ";
     for (size_t i = 0; i < _max_length; i++) {
-        //FIXME
+      //FIXME
       //std::cout << evaluate_con(i) << "(" << i << ")" << " ";
     }
     std::cout << "\n";

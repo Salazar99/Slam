@@ -1,8 +1,8 @@
 <harm>
 	<context name="default"> 
 		<prop exp="v1" loc="a, dt"/>
-		<prop exp="v3" loc="a, dt"/>
-		<prop exp="v2" loc="c, dt"/>
+		<prop exp="v2" loc="a, dt"/>
+		<prop exp="v3" loc="c, dt"/>
 
         <template dtLimits="3D,3W,3A,1E,R" exp="G[X1,X2](..F.. -> P0)" /> 
 	</context>

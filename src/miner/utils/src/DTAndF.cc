@@ -3,12 +3,12 @@
 #include "DTUtils.hh"
 #include "ProgressBar.hpp"
 #include "Template.hh"
+#include "TemporalExp.hh"
 #include "message.hh"
 #include "minerUtils.hh"
 #include <string>
 #include <unordered_set>
 #include <utility>
-#include "TemporalExp.hh"
 
 namespace harm {
 //--DTAndF == ..F..---------------------------------------
@@ -37,28 +37,32 @@ bool DTAndF::isTaken(size_t id, bool second, int depth) {
   }
 }
 void DTAndF::removeLeaf(size_t id, int depth) {
-    _leaves.at(id).second = nullptr;
-    _leaves.at(id).first = nullptr;
+  _leaves.at(id).second = nullptr;
+  _leaves.at(id).first = nullptr;
 }
-void DTAndF::addLeaf(Proposition *p, std::pair<size_t,size_t> *intv, size_t id, bool second, int depth) {
-    if(second){
-      _leaves[id].second = intv;
-    }else{
-      _leaves[id].first = p;
-    }
+void DTAndF::addLeaf(Proposition *p, std::pair<size_t, size_t> *intv, size_t id,
+                     bool second, int depth) {
+  if (second) {
+    _leaves[id].second = intv;
+  } else {
+    _leaves[id].first = p;
+  }
 }
 
 void DTAndF::removeItems() { _choices->removeItems(); }
 
-void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> * interval, int depth) { 
-  expression::Proposition ** pp= new expression::Proposition *(p);
-  harm::TemporalExp * Fprop = new StlEventually(new StlPlaceholder(pp), interval, _t->_trace);
-  _choices->addItem(Fprop); 
+void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> *interval,
+                     int depth) {
+  harm::TemporalExp *Fprop =
+      new StlEventually(new StlPlaceholder(p), interval, _t->_trace);
+  _choices->addItem(Fprop);
 }
 
 void DTAndF::popItem(int depth) { _choices->popItem(); }
 
-std::vector<expression::Proposition *> DTAndF::getItems() { return _choices->getItems(); }
+std::vector<expression::Proposition *> DTAndF::getItems() {
+  return _choices->getItems();
+}
 
 std::vector<TemporalExp *> DTAndF::unpack() {
   messageError("Can't unpack in unidimensional operator'");
@@ -92,41 +96,41 @@ void DTAndF::substitute(int depth, int width, expression::Proposition *&sub) {
 const DTLimits &DTAndF::getLimits() { return _limits; }
 
 std::vector<TemporalExp *> DTAndF::minimize(bool isOffset) {
-//
-//  std::vector<std::vector<size_t>> c;
-//  std::vector<expression::Proposition *> original = _choices->getItems();
-//  for (size_t i = 1; i <= original.size(); i++) {
-//    c.clear();
-//    comb(original.size(), i, c);
-//    for (auto &comb : c) {
-//      _choices->removeItems();
-//      for (auto &e : comb) {
-//        _choices->addItem(original[e]);
-//      }
-//      // check if this combination works
-//      if (isOffset) {
-//        if (_t->assHoldsOnTraceOffset(harm::Location::Ant)) {
-//          // we found a minimal solution
-//          goto end;
-//        }
-//      } else {
-//        if (_t->assHoldsOnTrace(harm::Location::Ant)) {
-//          goto end;
-//        }
-//      }
-//    }
-//  }
-//end:;
-std::vector<TemporalExp *> ret;
-//  for (auto p : _choices->getItems()) {
-//    ret.push_back(p);
-//  }
-//  _choices->removeItems();
-//  for (auto p : original) {
-//    _choices->addItem(p);
-//  }
-//  //FIXME
-//  //sortPropositions(ret);
+  //
+  //  std::vector<std::vector<size_t>> c;
+  //  std::vector<expression::Proposition *> original = _choices->getItems();
+  //  for (size_t i = 1; i <= original.size(); i++) {
+  //    c.clear();
+  //    comb(original.size(), i, c);
+  //    for (auto &comb : c) {
+  //      _choices->removeItems();
+  //      for (auto &e : comb) {
+  //        _choices->addItem(original[e]);
+  //      }
+  //      // check if this combination works
+  //      if (isOffset) {
+  //        if (_t->assHoldsOnTraceOffset(harm::Location::Ant)) {
+  //          // we found a minimal solution
+  //          goto end;
+  //        }
+  //      } else {
+  //        if (_t->assHoldsOnTrace(harm::Location::Ant)) {
+  //          goto end;
+  //        }
+  //      }
+  //    }
+  //  }
+  //end:;
+  std::vector<TemporalExp *> ret;
+  //  for (auto p : _choices->getItems()) {
+  //    ret.push_back(p);
+  //  }
+  //  _choices->removeItems();
+  //  for (auto p : original) {
+  //    _choices->addItem(p);
+  //  }
+  //  //FIXME
+  //  //sortPropositions(ret);
   return ret;
 }
 
@@ -138,13 +142,16 @@ std::pair<std::string, std::string> DTAndF::prettyPrint(bool offset) {
 
   if (offset) {
     //negate the consequent
-    con = Hstring("!(", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr) + con +
-          Hstring(")", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr);
+    con = Hstring("!(", Hstring::Stype::Temp, (harm::TemporalExp **)nullptr) +
+          con +
+          Hstring(")", Hstring::Stype::Temp, (harm::TemporalExp **)nullptr);
   }
 
   //compose the reduced template
-  auto reducedTemplate = Hstring("G(", Hstring::Stype::G,(harm::TemporalExp**) nullptr) + ant + imp + con +
-                         Hstring(")", Hstring::Stype::G,(harm::TemporalExp**) nullptr);
+  auto reducedTemplate =
+      Hstring("G(", Hstring::Stype::G, (harm::TemporalExp **)nullptr) + ant +
+      imp + con +
+      Hstring(")", Hstring::Stype::G, (harm::TemporalExp **)nullptr);
   return std::make_pair(reducedTemplate.toString(1),
                         reducedTemplate.toColoredString(1));
 }

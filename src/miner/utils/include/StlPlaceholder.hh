@@ -6,7 +6,7 @@ namespace harm {
 
 class StlPlaceholder : public TemporalExp {
 public:
-  StlPlaceholder(expression::Proposition **prop);
+  StlPlaceholder(expression::Proposition *prop);
 
   virtual ~StlPlaceholder();
 
@@ -16,8 +16,10 @@ public:
 
   virtual size_t size() override;
 
+  void setProposition(expression::Proposition *p);
+
 private:
-  expression::Proposition **_prop;
+  expression::Proposition *_prop=nullptr;
 };
 
 }; // namespace harm

@@ -45,15 +45,16 @@ struct Result_DC {
 };
 
 Result_DC mean_MT(Template *t) {
+  //std::cout << t->getAssertion() << "\n";
   Result_DC res{0, 0};
 
   t->setCacheAntFalse();
 
   for (size_t i = 0; i < t->_max_length; i++) {
-  //FIXME: evaluate_ant is undefined
-  //  if (t->evaluate_ant(i) != Trinary::T) {
-  //    continue;
-  //  }
+    //FIXME: evaluate_ant is undefined
+    //  if (t->evaluate_ant(i) != Trinary::T) {
+    //    continue;
+    //  }
     if (t->evaluate(i) == Trinary::T) {
       ++res.occGoal;
       ++res.occProposition;
@@ -155,33 +156,32 @@ inline void AntecedentGenerator::findCandidates(
   // std::cout <<"\t\t\t\t\t\t"
 
   // the 2 propositions of X
-  std::vector<Proposition *> propPtr;
+  //std::vector<Proposition *> propPtr;
   DTOperator *template_dt = t->getDT();
-  propPtr.push_back(dcVariables[candidate].first);
+  //  propPtr.push_back(dcVariables[candidate].first);
 
   // for each proposition that belongs to a unused variable
-  for (size_t propI = 0;
-       propI < (template_dt->getLimits()._useNegatedProps ? 2 : 1); ++propI) {
 
-    if (template_dt->isTaken(candidate, propI, depth))
-      continue;
+  //    if (template_dt->isTaken(candidate, 0, depth))
+  //      continue;
 
-    Proposition *prop = propPtr[propI];
+  //Proposition *prop = propPtr[0];
+  Proposition *prop = dcVariables[candidate].first;
 
-    //      debug
-    // std::cout << "-------------"
-    //          << "\n";
-    // std::cout << t->getColoredAssertion() << "\n";
-    // std::cout << "Candidate(" << depth << "): " << prop2String(*prop) <<
-    // "\n";
+  //      debug
+  // std::cout << "-------------"
+  //          << "\n";
+  // std::cout << t->getColoredAssertion() << "\n";
+  // std::cout << "Candidate(" << depth << "): " << prop2String(*prop) <<
+  // "\n";
 
-    // add the new proposition of a unused variable in the current
-    // antecedent
-    std::pair<size_t, size_t> * intv = new std::pair<size_t,size_t>({0,0});
-    template_dt->addItem(prop, intv,depth);
+  // add the new proposition of a unused variable in the current
+  // antecedent
+  std::pair<size_t, size_t> *intv = new std::pair<size_t, size_t>({0, 0});
+  template_dt->addItem(prop, intv, depth);
 
-    // ignore this prop if the template contains a known solution
-    /*
+  // ignore this prop if the template contains a known solution
+  /*
     if ((template_dt->isRandomConstructed() ||
          template_dt->isMultiDimensional()) &&
         isKnownSolution(template_dt->getItems(), template_dt, 1)) {
@@ -189,35 +189,37 @@ inline void AntecedentGenerator::findCandidates(
       continue;
     }
   */
-    MT::Result_DC res = MT::mean_MT(t);
+  MT::Result_DC res = MT::mean_MT(t);
 
-    // is the new antecedent at least once satisfied? (avoid vacuity)
+  // is the new antecedent at least once satisfied? (avoid vacuity)
 
-    if (res.occProposition > 0) {
-      //      debug
-      //      std::cout << "-------->" << prop2String(*prop) << "\n";
+  if (res.occProposition > 0) {
+    //      debug
+    //      std::cout << "-------->" << prop2String(*prop) << "\n";
 
-      if (res.occGoal == 0 || res.occGoal == res.occProposition) {
-        std::pair<size_t, size_t> * intv = new std::pair<size_t,size_t>({0,0});
-        template_dt->addLeaf(prop, intv, candidate, propI, depth);
-        discLeaves.push_back(DiscoveredLeaf(candidate, propI, depth));
+    if (res.occGoal == 0 || res.occGoal == res.occProposition) {
+      std::pair<size_t, size_t> *intv = new std::pair<size_t, size_t>({0, 0});
+      //template_dt->addLeaf(prop, intv, candidate, propI, depth);
+      //discLeaves.push_back(DiscoveredLeaf(candidate, propI, depth));
+      template_dt->addLeaf(prop, intv, candidate, 0, depth);
+      discLeaves.push_back(DiscoveredLeaf(candidate, 0, depth));
 
-        storeSolution(t, res.occGoal == 0);
-      } else {
-        double condEnt = getConditionalEntropy(res.occProposition, res.occGoal,
-                                               t->_max_length);
-        double IG = currEntropy - condEnt;
-        //        debug
-        //        if (IG<0) {
-        //         std::cout <<"********************************>"<<
-        //         currEntropy<<" - "<< condEnt<<" = "<<IG <<"\n";
-        //        }
-        igs.emplace_back(candidate, IG, depth, propPtr[propI], propI, condEnt);
-      }
+      storeSolution(t, res.occGoal == 0);
+    } else {
+      double condEnt = getConditionalEntropy(res.occProposition, res.occGoal,
+                                             t->_max_length);
+      double IG = currEntropy - condEnt;
+      //        debug
+      //        if (IG<0) {
+      //         std::cout <<"********************************>"<<
+      //         currEntropy<<" - "<< condEnt<<" = "<<IG <<"\n";
+      //        }
+      //igs.emplace_back(candidate, IG, depth, propPtr[0], 0, condEnt);
+      igs.emplace_back(candidate, IG, depth, prop, 0, condEnt);
     }
-
-    template_dt->popItem(depth);
   }
+
+  template_dt->popItem(depth);
 
   // debug
   // std::cout << "RIG: " << RIG << "\n";
@@ -231,8 +233,8 @@ AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
                                              int depth) {
   std::vector<size_t> ivs;
   for (size_t i = 0; i < t->_max_length; i++) {
-  //FIXME: gatherInterestingValue is undefined
-//    size_t iv = t->gatherInterestingValue(i, depth, -1);
+    //FIXME: gatherInterestingValue is undefined
+    //    size_t iv = t->gatherInterestingValue(i, depth, -1);
     //if (iv != (size_t)-1) {
     //  ivs.push_back(iv);
     //}
@@ -310,8 +312,8 @@ inline void AntecedentGenerator::findCandidatesNumeric(
 
     // add the new proposition of a unused variable in the current
     // antecedent
-    std::pair<size_t, size_t> * intv = new std::pair<size_t,size_t>({0,0});
-    template_dt->addItem(prop,intv, depth);
+    std::pair<size_t, size_t> *intv = new std::pair<size_t, size_t>({0, 0});
+    template_dt->addItem(prop, intv, depth);
 
     // ignore this prop if the template contains a known solution
     /*
@@ -350,7 +352,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
   }
 
   if (discLeaf) {
-    std::pair<size_t, size_t> * intv = new std::pair<size_t,size_t>({0,0});
+    std::pair<size_t, size_t> *intv = new std::pair<size_t, size_t>({0, 0});
     template_dt->addLeaf(nullptr, intv, candidate + numLeavesOffset, 0, depth);
     discLeaves.push_back(DiscoveredLeaf(candidate + numLeavesOffset, 0, depth));
   }
@@ -358,7 +360,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
 bool AntecedentGenerator::isKnownSolution(
     const std::vector<Proposition *> &items, DTOperator *template_dt,
     bool checkOnly) {
-/*
+  /*
   std::stringstream ss;
   if (template_dt->isMultiDimensional()) {
     for (auto &pack : items) {
@@ -402,16 +404,16 @@ void AntecedentGenerator::_runDecisionTree(
     for (; candidate != unusedVars.end() ||
            candidateNumeric != unusedNumerics.end();) {
       //..##.. ..&&..
-          if (template_dt->canInsertAtDepth(-1)) {
-            if (candidate != unusedVars.end())
-              findCandidates(*candidate, dcVariables, t, discLeaves, igs, -1,
-                             currEntropy);
+      if (template_dt->canInsertAtDepth(-1)) {
+        if (candidate != unusedVars.end())
+          findCandidates(*candidate, dcVariables, t, discLeaves, igs, -1,
+                         currEntropy);
 
-            if (candidateNumeric != unusedNumerics.end()) {
-              findCandidatesNumeric(*candidateNumeric, numericCandidates, t,
-                                    discLeaves, igs, -1, genProps, currEntropy);
-            }
-          }
+        if (candidateNumeric != unusedNumerics.end()) {
+          findCandidatesNumeric(*candidateNumeric, numericCandidates, t,
+                                discLeaves, igs, -1, genProps, currEntropy);
+        }
+      }
 
       if (candidate != unusedVars.end())
         candidate++;
@@ -453,10 +455,10 @@ void AntecedentGenerator::_runDecisionTree(
 
       Proposition *prop = c_ig._props[0].first;
       size_t pos = c_ig._props[0].second;
-      
-      std::pair<size_t, size_t> * intv = new std::pair<size_t,size_t>({0,0});
-      template_dt->addItem(prop, intv,c_ig._depth);
-      template_dt->addLeaf(prop, intv,c_ig._id, pos, c_ig._depth);
+
+      std::pair<size_t, size_t> *intv = new std::pair<size_t, size_t>({0, 0});
+      template_dt->addItem(prop, intv, c_ig._depth);
+      template_dt->addLeaf(prop, intv, c_ig._id, pos, c_ig._depth);
       discLeaves.push_back(DiscoveredLeaf(c_ig._id, pos, c_ig._depth));
 
 #if printTree
@@ -483,7 +485,7 @@ void AntecedentGenerator::_runDecisionTree(
 }
 void AntecedentGenerator::storeSolution(Template *t, bool isOffset) {
 
-  DTOperator *template_dt = t->getDT();
+  //DTOperator *template_dt = t->getDT();
 
   if (isOffset && !saveOffset) {
     return;
