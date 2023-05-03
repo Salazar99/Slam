@@ -4,6 +4,6 @@
 		<prop exp="v3" loc="a, dt"/>
 		<prop exp="v2" loc="c, dt"/>
 
-        <template dtLimits="3D,3W,3A,0.3E,R" exp="G[X1,X2](..&&..) -> P0)" /> 
+        <template dtLimits="3D,3W,3A,1E,R" exp="G[X1,X2](..F.. -> P0)" /> 
 	</context>
 </harm>

@@ -144,9 +144,11 @@ Qualifier::patchDiscardAssertions(std::vector<Assertion *> &inAssertions,
   for (auto a : inAssertions) {
     if (a->_ct[1][0] == 0) {
       auto assTemp = hparser::parseTemplate(a->_toString.first, trace);
-      auto antProps = assTemp->getLoadedPropositionsAnt();
+      //FIXME
+      std::vector<Proposition*> antProps; //= assTemp->getLoadedPropositionsAnt();
       if (antProps.size() == 1) {
-        auto conProps = assTemp->getLoadedPropositionsCon();
+        //FIXME
+        std::vector<Proposition*> conProps; //= assTemp->getLoadedPropositionsCon();
         if (conProps.size() == antProps.size()) {
           auto antPropStr = prop2String(*antProps.back());
           auto conPropStr = prop2String(*conProps.back());
@@ -648,7 +650,8 @@ void Qualifier::fbqUsingFaultOnTraceMode(std::vector<Assertion *> &selected,
         Template *fAss = nullptr;
 
         fAss = hparser::parseTemplate(a->_toString.first, ft);
-        fAss->setL1Threads(std::thread::hardware_concurrency() / 2);
+        //FIXME
+        //fAss->setL1Threads(std::thread::hardware_concurrency() / 2);
         if (!fAss->assHoldsOnTrace(Location::AntCon)) {
           // new fault covered
           _aToF[id].push_back(elabFault - 1);
@@ -711,7 +714,8 @@ void Qualifier::fbqUsingFaultyTraces(std::vector<Assertion *> &selected) {
       //new assertion with faulty trace
       Template *fAss = hparser::parseTemplate(a->_toString.first, ft);
       //exploit l1 parallelism
-      fAss->setL1Threads((l1Constants::MAX_THREADS + 1) / 2);
+      //FIXME
+      //fAss->setL1Threads((l1Constants::MAX_THREADS + 1) / 2);
       if (!fAss->assHoldsOnTrace(Location::AntCon)) {
         // new fault covered
         _aToF[i].push_back(j);

@@ -40,11 +40,14 @@ void DTAndF::removeLeaf(size_t id, int depth) {
     _leaves.at(id).second = nullptr;
     _leaves.at(id).first = nullptr;
 }
-void DTAndF::addLeaf(Proposition *p, std::pair<size_t,size_t> *intv, size_t id, int depth) {
-    _leaves[id].first = p;
-    _leaves[id].second = intv;
-  
+void DTAndF::addLeaf(Proposition *p, std::pair<size_t,size_t> *intv, size_t id, bool second, int depth) {
+    if(second){
+      _leaves[id].second = intv;
+    }else{
+      _leaves[id].first = p;
+    }
 }
+
 void DTAndF::removeItems() { _choices->removeItems(); }
 
 void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> * interval, int depth) { 
@@ -89,40 +92,41 @@ void DTAndF::substitute(int depth, int width, expression::Proposition *&sub) {
 const DTLimits &DTAndF::getLimits() { return _limits; }
 
 std::vector<TemporalExp *> DTAndF::minimize(bool isOffset) {
-  std::vector<std::vector<size_t>> c;
-  std::vector<TemporalExp *> original = _choices->getItems();
-  for (size_t i = 1; i <= original.size(); i++) {
-    c.clear();
-    comb(original.size(), i, c);
-    for (auto &comb : c) {
-      _choices->removeItems();
-      for (auto &e : comb) {
-        _choices->addItem(original[e]);
-      }
-      // check if this combination works
-      if (isOffset) {
-        if (_t->assHoldsOnTraceOffset(harm::Location::Ant)) {
-          // we found a minimal solution
-          goto end;
-        }
-      } else {
-        if (_t->assHoldsOnTrace(harm::Location::Ant)) {
-          goto end;
-        }
-      }
-    }
-  }
-end:;
-  std::vector<TemporalExp *> ret;
-  for (auto p : _choices->getItems()) {
-    ret.push_back(p);
-  }
-  _choices->removeItems();
-  for (auto p : original) {
-    _choices->addItem(p);
-  }
-  //FIXME
-  //sortPropositions(ret);
+//
+//  std::vector<std::vector<size_t>> c;
+//  std::vector<expression::Proposition *> original = _choices->getItems();
+//  for (size_t i = 1; i <= original.size(); i++) {
+//    c.clear();
+//    comb(original.size(), i, c);
+//    for (auto &comb : c) {
+//      _choices->removeItems();
+//      for (auto &e : comb) {
+//        _choices->addItem(original[e]);
+//      }
+//      // check if this combination works
+//      if (isOffset) {
+//        if (_t->assHoldsOnTraceOffset(harm::Location::Ant)) {
+//          // we found a minimal solution
+//          goto end;
+//        }
+//      } else {
+//        if (_t->assHoldsOnTrace(harm::Location::Ant)) {
+//          goto end;
+//        }
+//      }
+//    }
+//  }
+//end:;
+std::vector<TemporalExp *> ret;
+//  for (auto p : _choices->getItems()) {
+//    ret.push_back(p);
+//  }
+//  _choices->removeItems();
+//  for (auto p : original) {
+//    _choices->addItem(p);
+//  }
+//  //FIXME
+//  //sortPropositions(ret);
   return ret;
 }
 
@@ -134,13 +138,13 @@ std::pair<std::string, std::string> DTAndF::prettyPrint(bool offset) {
 
   if (offset) {
     //negate the consequent
-    con = Hstring("!(", Hstring::Stype::Temp,(expression::Proposition**) nullptr) + con +
-          Hstring(")", Hstring::Stype::Temp,(expression::Proposition**) nullptr);
+    con = Hstring("!(", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr) + con +
+          Hstring(")", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr);
   }
 
   //compose the reduced template
-  auto reducedTemplate = Hstring("G(", Hstring::Stype::G,(expression::Proposition**) nullptr) + ant + imp + con +
-                         Hstring(")", Hstring::Stype::G,(expression::Proposition**) nullptr);
+  auto reducedTemplate = Hstring("G(", Hstring::Stype::G,(harm::TemporalExp**) nullptr) + ant + imp + con +
+                         Hstring(")", Hstring::Stype::G,(harm::TemporalExp**) nullptr);
   return std::make_pair(reducedTemplate.toString(1),
                         reducedTemplate.toColoredString(1));
 }

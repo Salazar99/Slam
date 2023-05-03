@@ -158,7 +158,6 @@ inline void AntecedentGenerator::findCandidates(
   std::vector<Proposition *> propPtr;
   DTOperator *template_dt = t->getDT();
   propPtr.push_back(dcVariables[candidate].first);
-  propPtr.push_back(dcVariables[candidate].second);
 
   // for each proposition that belongs to a unused variable
   for (size_t propI = 0;
@@ -199,8 +198,8 @@ inline void AntecedentGenerator::findCandidates(
       //      std::cout << "-------->" << prop2String(*prop) << "\n";
 
       if (res.occGoal == 0 || res.occGoal == res.occProposition) {
-
-        template_dt->addLeaf(prop, candidate, propI, depth);
+        std::pair<size_t, size_t> * intv = new std::pair<size_t,size_t>({0,0});
+        template_dt->addLeaf(prop, intv, candidate, propI, depth);
         discLeaves.push_back(DiscoveredLeaf(candidate, propI, depth));
 
         storeSolution(t, res.occGoal == 0);
@@ -351,7 +350,8 @@ inline void AntecedentGenerator::findCandidatesNumeric(
   }
 
   if (discLeaf) {
-    template_dt->addLeaf(nullptr, candidate + numLeavesOffset, 0, depth);
+    std::pair<size_t, size_t> * intv = new std::pair<size_t,size_t>({0,0});
+    template_dt->addLeaf(nullptr, intv, candidate + numLeavesOffset, 0, depth);
     discLeaves.push_back(DiscoveredLeaf(candidate + numLeavesOffset, 0, depth));
   }
 }
@@ -456,7 +456,7 @@ void AntecedentGenerator::_runDecisionTree(
       
       std::pair<size_t, size_t> * intv = new std::pair<size_t,size_t>({0,0});
       template_dt->addItem(prop, intv,c_ig._depth);
-      template_dt->addLeaf(prop, c_ig._id, pos, c_ig._depth);
+      template_dt->addLeaf(prop, intv,c_ig._id, pos, c_ig._depth);
       discLeaves.push_back(DiscoveredLeaf(c_ig._id, pos, c_ig._depth));
 
 #if printTree
@@ -478,7 +478,7 @@ void AntecedentGenerator::_runDecisionTree(
   } // for igs
 
   for (auto &dl : discLeaves) {
-    template_dt->removeLeaf(dl._id, dl._second, dl._depth);
+    template_dt->removeLeaf(dl._id, dl._depth);
   }
 }
 void AntecedentGenerator::storeSolution(Template *t, bool isOffset) {

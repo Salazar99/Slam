@@ -60,10 +60,11 @@ public:
    * \param second if true the proposition is negated
    * \param depth depth of the leaf
    */
-  virtual void addLeaf(Proposition *p, std::pair<size_t,size_t> *intv, size_t id, int depth) = 0;
+  virtual void addLeaf(Proposition *p, std::pair<size_t,size_t> *intv, size_t id, bool second, int depth) = 0;
   /** \brief Remove a leaf of the decision tree
    * \param id Id of the leaf
    * \param intv interval of validity for the proposition
+   * \param second select part to add 
    * \param depth depth of the leaf
    */
   virtual void removeLeaf(size_t id, int depth) = 0;

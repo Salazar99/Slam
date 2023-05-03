@@ -113,13 +113,13 @@ std::string Template::getColoredTemplate() {
 
 DTOperator *Template::getDT() { return _dtOp.second; }
 
-std::map<std::string, Proposition **> &Template::get_aphToProp() {
+std::map<std::string, TemporalExp **> &Template::get_aphToProp() {
   return _aphToProp;
 }
-std::map<std::string, Proposition **> &Template::get_cphToProp() {
+std::map<std::string, TemporalExp **> &Template::get_cphToProp() {
   return _cphToProp;
 }
-std::map<std::string, Proposition **> &Template::get_acphToProp() {
+std::map<std::string, TemporalExp **> &Template::get_acphToProp() {
   return _acphToProp;
 }
 
@@ -147,12 +147,12 @@ bool Template::nextPerm() {
 
     if (where == harm::Location::Ant) {
       //fill the placeholder with the correct proposition _pg._perms[_permIndex][e.second] contains the index of the proposition to be inserted
-
-      (*_aphToProp.at(e.first)) = _aProps[_pg._perms[_permIndex][e.second]];
-    } else if (where == harm::Location::Con) {
-      (*_cphToProp.at(e.first)) = _cProps[_pg._perms[_permIndex][e.second]];
-    } else {
-      (*_acphToProp.at(e.first)) = _acProps[_pg._perms[_permIndex][e.second]];
+    //FIXME Completely broken due to Hstring modification
+    //  (*_aphToProp.at(e.first)) = _aProps[_pg._perms[_permIndex][e.second]];
+    //} else if (where == harm::Location::Con) {
+    //  (*_cphToProp.at(e.first)) = _cProps[_pg._perms[_permIndex][e.second]];
+    //} else {
+    //  (*_acphToProp.at(e.first)) = _acProps[_pg._perms[_permIndex][e.second]];
     }
   }
   //go to the next permutation
@@ -178,12 +178,12 @@ void Template::loadPerm(size_t n) {
 
     if (where == harm::Location::Ant) {
       //feel the placeholder with the correct proposition _pg._perms[_permIndex][e.second] contains the index of the proposition to be inserted
-
-      (*_aphToProp.at(e.first)) = _aProps[_pg._perms[n][e.second]];
-    } else if (where == harm::Location::Con) {
-      (*_cphToProp.at(e.first)) = _cProps[_pg._perms[n][e.second]];
-    } else {
-      (*_acphToProp.at(e.first)) = _acProps[_pg._perms[n][e.second]];
+    //FIXME Completely broken due to Hstring modification
+    //  (*_aphToProp.at(e.first)) = _aProps[_pg._perms[n][e.second]];
+    //} else if (where == harm::Location::Con) {
+    //  (*_cphToProp.at(e.first)) = _cProps[_pg._perms[n][e.second]];
+    //} else {
+    //  (*_acphToProp.at(e.first)) = _acProps[_pg._perms[n][e.second]];
     }
   }
   // return to the first permutation if we have reached the end of the
@@ -238,17 +238,20 @@ void Template::loadPropositions(std::vector<Proposition *> &props,
     _antInCache = false;
     // put the propositions in the antecedent's placeholders
     for (const auto &ph : _aphToProp) {
-      (*ph.second) = props[i++];
+      //FIXME
+      //(*ph.second) = props[i++];
     }
   } else if (where == harm::Location::Con) {
 
     for (const auto &ph : _cphToProp) {
-      (*ph.second) = props[i++];
+      //FIXME
+      //(*ph.second) = props[i++];
     }
     _conInCache = false;
   } else {
     for (const auto &ph : _acphToProp) {
-      (*ph.second) = props[i++];
+      //FIXME
+      //(*ph.second) = props[i++];
     }
     _conInCache = false;
     _antInCache = false;
@@ -415,7 +418,7 @@ void Template::build() {
     } else if (e._t == Hstring::Stype::DTAndF) {
       _tokenToProp[e._s] = e._te; //FIXME new map for temporalExp?
       _dtOp =
-          std::make_pair(e._s, new DTAndF(e._te,
+          std::make_pair(e._s, new DTAndF(dynamic_cast<TemporalAnd*>(*e._te),
                                          this, _limits));
     } else if (e._t == Hstring::Stype::DTNext ||
                e._t == Hstring::Stype::DTNextAnd) {
@@ -759,9 +762,10 @@ void Template::printContingency() {
   std::cout << table.to_string() << std::endl;
 }
 void Template::check() {
-  messageErrorIf(!isFullyInstantiated(),
-                 "Checking is available only for fully instantiated templates "
-                 "(assertions)!");
+  //FIXME
+  //messageErrorIf(!isFullyInstantiated(),
+  //               "Checking is available only for fully instantiated templates "
+  //               "(assertions)!");
   std::cout << "==============================================================="
                "==========="
             << "\n";
@@ -952,53 +956,24 @@ bool Template::isFullyInstantiated() {
          _dtOp.second == nullptr;
 }
 */
-Proposition *Template::getPropByToken(const std::string &token) {
+TemporalExp *Template::getPropByToken(const std::string &token) {
   if (_tokenToProp.count(token)) {
     return *_tokenToProp.at(token);
   }
   return nullptr;
 }
-Automaton *Template::buildDiamondAutomaton(bool conNegated) {
-  auto hant = _templateFormula.getAnt();
-  auto himpl = _templateFormula.getImp();
-  auto hcon = _templateFormula.getCon();
-
-  std::string imp = "";
-  if (_applyDynamicShift) {
-    if (_constShift) {
-      imp = hant.toSpotString() + "<>=>" + (conNegated ? "!(" : "") +
-            hcon.toSpotString() + (conNegated ? ")" : "");
-    } else {
-      imp = hant.toSpotString() + "<>->" + (conNegated ? "!(" : "") +
-            hcon.toSpotString() + (conNegated ? ")" : "");
-    }
-  } else {
-    if (_constShift) {
-      imp = hant.toSpotString() + " && " + (conNegated ? "!(" : "") + "X(" +
-            hcon.toSpotString() + ")" + (conNegated ? ")" : "");
-    } else {
-      imp = hant.toSpotString() + " && " + (conNegated ? "!(" : "") +
-            hcon.toSpotString() + (conNegated ? ")" : "");
-    }
-  }
-
-  spot::parsed_formula implication = spot::parse_infix_psl(imp);
-  messageErrorIf(implication.format_errors(std::cerr),
-                 "SpotLTL: Syntax errors in implication of assertion:\n" + imp);
-  auto spotAut = generateDeterministicSpotAutomaton(implication.f);
-  return buildAutomaton(spotAut, _tokenToProp);
-}
 
 void Template::subPropInAssertion(Proposition *original, Proposition *newProp) {
-  bool found = 0;
-  for (auto ph : _tokenToProp) {
-    if ((*ph.second) == original) {
-      (*ph.second) = newProp;
-      found = 1;
-    }
-  }
-  messageErrorIf(!found, "Did not find proposition '" + prop2String(*original) +
-                             "' in '" + getColoredAssertion() + "'");
+  //FIXME
+  //bool found = 0;
+  //for (auto ph : _tokenToProp) {
+  //  if ((*ph.second) == original) {
+  //    (*ph.second) = newProp;
+  //    found = 1;
+  //  }
+  //}
+  //messageErrorIf(!found, "Did not find proposition '" + prop2String(*original) +
+  //                           "' in '" + getColoredAssertion() + "'");
 }
 
 std::string Template::printAutomaton(Automaton *aut) {

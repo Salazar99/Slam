@@ -211,13 +211,13 @@ void TLMiner::l2Handler(
       for (auto &e : l2Instances) {
         if (e.second < l2MaxThread) {
           e.second++;
-          templs[instToTemplIndex.at(e.first)]->setL1Threads(e.second);
+          //templs[instToTemplIndex.at(e.first)]->setL1Threads(e.second);
           goto found;
         }
       }
       l2Instances.begin()->second++;
-      templs[instToTemplIndex.at(l2Instances.begin()->first)]->setL1Threads(
-          l2Instances.begin()->second);
+      //templs[instToTemplIndex.at(l2Instances.begin()->first)]->setL1Threads(
+      //    l2Instances.begin()->second);
       l2MaxThread++;
     found:;
     } else {
@@ -260,8 +260,6 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
     DecTreeVariables candidateVariables;
     for (size_t i = 0; i < _propsDT.size(); i++) {
       candidateVariables[i].first = _propsDT[i];
-      candidateVariables[i].second =
-          makeExpression<PropositionNot>(_propsDT[i]);
     }
 
     if (t->isVacuous(harm::Location::AntCon)) {
@@ -274,7 +272,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
 
     AntecedentGenerator antGen;
 
-    antGen.saveOffset = t->saveOffset();
+    //FIXME
+    //antGen.saveOffset = t->saveOffset();
 
     DecTreeVariables candidateVariables_copy;
     //creating a copy of candidateVariables to pass as parameter to decision tree algorithm
@@ -318,7 +317,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         Assertion *ass = new Assertion();
         t->fillContingency(ass->_ct, 0);
         ass->_toString = prettyAss;
-        auto loadedProps = t->getLoadedPropositions();
+        //FIXME
+        std::vector<Proposition*> loadedProps; //= t->getLoadedPropositions();
         ass->_complexity = getNumVariables(loadedProps);
         ass->_pRepetitions = getRepetitions(loadedProps);
         ass->fillValues(t);
@@ -371,7 +371,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         Assertion *ass = new Assertion();
         t->fillContingency(ass->_ct, 1);
         ass->_toString = prettyAss;
-        auto loadedProps = t->getLoadedPropositions();
+        //FIXME
+        std::vector<Proposition*> loadedProps;// = t->getLoadedPropositions();
         ass->_complexity = getNumVariables(loadedProps);
         ass->_pRepetitions = getRepetitions(loadedProps);
         ass->fillValuesOffset(t);
@@ -403,11 +404,12 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
     _progressBar.display();
 #endif
 
+    //FIXME no longer needed
     //deallocate memory for negated candidate variables
-    for (size_t i = 0; i < _propsDT.size(); i++) {
-      dynamic_cast<PropositionNot *>(candidateVariables[i].second)->popItem();
-      delete candidateVariables[i].second;
-    }
+    //for (size_t i = 0; i < _propsDT.size(); i++) {
+    //  dynamic_cast<PropositionNot *>(candidateVariables[i].second)->popItem();
+    //  delete candidateVariables[i].second;
+    //}
     candidateVariables.clear();
     //delete all generated propositions from numeric expressions and clustering
     for (auto p : genProps) {
@@ -427,7 +429,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       t->fillContingency(ass->_ct, 0);
       ass->_toString =
           std::make_pair(t->getAssertion(), t->getColoredAssertion());
-      auto loadedProps = t->getLoadedPropositions();
+      //FIXME
+      std::vector<Proposition*> loadedProps;// = t->getLoadedPropositions();
       ass->_complexity = getNumVariables(loadedProps);
       ass->_pRepetitions = getRepetitions(loadedProps);
       ass->fillValues(t);

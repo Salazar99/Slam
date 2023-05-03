@@ -114,9 +114,9 @@ public:
    */
   DTOperator *getDT();
 
-  std::map<std::string, Proposition **> &get_aphToProp();
-  std::map<std::string, Proposition **> &get_cphToProp();
-  std::map<std::string, Proposition **> &get_acphToProp();
+  std::map<std::string, TemporalExp **> &get_aphToProp();
+  std::map<std::string, TemporalExp **> &get_cphToProp();
+  std::map<std::string, TemporalExp **> &get_acphToProp();
 
   /** \brief 
    * \param where ant or con
@@ -281,8 +281,7 @@ public:
    */
   void check();
 
-  Proposition *getPropByToken(const std::string &token);
-  Automaton *buildDiamondAutomaton(bool conNegated = 0);
+  TemporalExp *getPropByToken(const std::string &token);
   Automaton *getAntecedentAutomaton();
 
   size_t gatherInterestingValue(size_t time, int depth, int width);

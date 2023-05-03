@@ -65,14 +65,14 @@ protected:
 
   void build(std::string tempStrAnt, std::string tempStrCon) {
     //Create the _impl object
-    std::vector<harm::TemporalExp *> ant,con;
-
-    ant.push_back(new StlPlaceholder(_tokenToProp.at("v3")));
-    ant.push_back(new StlEventually(new StlPlaceholder(_tokenToProp.at("v1<5")),_tokenToIntv.at("1,3"),_trace));
-
-    con.push_back(new StlEventually(new StlPlaceholder(_tokenToProp.at("v2")),_tokenToIntv.at("4,6"),_trace));
-
-    _impl = new harm::StlImplication(ant,con);
+    //std::vector<harm::TemporalExp *> ant,con;
+    //
+    //ant.push_back(new StlPlaceholder(_tokenToProp.at("v3")));
+    //ant.push_back(new StlEventually(new StlPlaceholder(_tokenToProp.at("v1<5")),_tokenToIntv.at("1,3"),_trace));
+    //
+    //con.push_back(new StlEventually(new StlPlaceholder(_tokenToProp.at("v2")),_tokenToIntv.at("4,6"),_trace));
+    //
+    //_impl = new harm::StlImplication(ant,con);
   }
 
   Trinary evaluate(size_t time) {return _impl->evaluate(time);}

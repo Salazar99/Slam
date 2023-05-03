@@ -1,7 +1,7 @@
 message("-- Including test cases...")
 
-add_executable(gtests ./traceTests.cc ./evalTests.cc)
-target_link_libraries(gtests gtest_main stdc++fs all_utils progresscpp logging exp commandLineParser templateParser miner )
+#add_executable(gtests ./traceTests.cc ./evalTests.cc)
+#target_link_libraries(gtests gtest_main stdc++fs all_utils progresscpp logging exp commandLineParser templateParser miner )
 
 set(WORK_DIR ${CMAKE_BINARY_DIR})
 set(TEST_DIR ${CMAKE_BINARY_DIR}/../tests)

@@ -58,7 +58,7 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
     //} else {
 
       _subFormulas.push(Hstring(_propStrToInst.at(pStr), Hstring::Stype::Inst,
-                                new harm::StlInst *(p)));
+                                new harm::TemporalExp * (dynamic_cast<harm::TemporalExp*>(new harm::StlInst(new expression::Proposition *(p))))));
     //}
     return;
   }
@@ -134,7 +134,6 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 
 //Interval_placeholder COMMA Interval_placeholder
 //NUMERIC COMMA NUMERIC 
-//FIXME
 void StlParserHandler::exitInterval(stlParser::IntervalContext * ctx){
   //Interval is made of 2 placeholders
   std::stack<std::string> intval;

@@ -5,6 +5,7 @@
 #include "exp.hh"
 #include "stlBaseListener.h"
 #include "stlLexer.h"
+#include "StlInst.hh"
 
 #include <cmath>
 #include <stack>

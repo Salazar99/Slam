@@ -190,7 +190,7 @@ nextCondition:;
   //FIXME: evaluate_con is undefined
   for (size_t i = 0; i < _max_length; i++) {
 //    if (evaluate_con(i) == Trinary::F) {
-//      return false;
+      return false;
 //    }
   }
   return true;
