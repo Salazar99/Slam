@@ -149,7 +149,7 @@ std::pair<std::string, std::string> DTAndF::prettyPrint(bool offset) {
 
   //compose the reduced template
   auto reducedTemplate =
-      Hstring("G(", Hstring::Stype::G, (harm::TemporalExp **)nullptr) + ant +
+      Hstring("G[", Hstring::Stype::G, (harm::TemporalExp **)nullptr) +Hstring("X1,X2",Hstring::Stype::Intv, (std::pair<size_t, size_t> *) nullptr) + Hstring("]", Hstring::Stype::G, (harm::TemporalExp **)nullptr) + Hstring("(", Hstring::Stype::G,(harm::TemporalExp**) nullptr) + ant +
       imp + con +
       Hstring(")", Hstring::Stype::G, (harm::TemporalExp **)nullptr);
   return std::make_pair(reducedTemplate.toString(1),

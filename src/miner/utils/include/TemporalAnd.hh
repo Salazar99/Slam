@@ -15,6 +15,8 @@ public:
 
   virtual std::vector<expression::Proposition *> getItems() override;
 
+  std::vector<TemporalExp *> getTempItems();
+
   virtual size_t size() override;
 
   void addItem(TemporalExp * prop);
@@ -22,8 +24,6 @@ public:
   void popItem();
 
   void removeItems();
-
-
 
 private:
   std::vector<TemporalExp *> _items;

@@ -16,9 +16,6 @@ public:
     Inst,
     Imp,
     DTAndF,
-    DTNext,
-    DTNCReps,
-    DTNextAnd,
     G
   };
 
@@ -47,6 +44,7 @@ public:
   bool exists(std::string toFind);
 
   std::string toColoredString(bool sub = false);
+  std::string intv2String(std::pair<size_t,size_t> * intv);
   std::string toString(bool sub = false);
   std::string toSpotString();
 
@@ -55,10 +53,10 @@ public:
 
   std::string _s;
   Stype _t;
+  std::pair<size_t,size_t> * _intv;
   harm::TemporalExp ** _te;
   int _offset;
   std::string _sep;
-  std::pair<size_t,size_t> * _intv;
 
 private:
   std::vector<Hstring> _append;

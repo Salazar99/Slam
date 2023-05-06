@@ -338,19 +338,19 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       }
 #endif
       // clear the template of the current dt operands
-      /*
+      
       t->getDT()->removeItems();
       if (t->getDT()->isMultiDimensional()) {
         for (size_t i = 0; i < props.size(); i++) {
-          t->getDT()->clearPack(props[i]);
+          //t->getDT()->clearPack(props[i]);
           delete props[i];
         }
       }
-      */
+      
     }
     // Offset, same as onset but the consequent is negated
-    for (const std::vector<Proposition *> &props : antGen.offSets) {
-    /*
+    /*for (const std::vector<Proposition *> &props : antGen.offSets) {
+    
       if (t->getDT()->isMultiDimensional()) {
         for (size_t i = 0; i < props.size(); i++) {
           for (auto prop : t->getDT()->unpack(props[i])) {
@@ -365,7 +365,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       }
 
       assert(!t->getDT()->getItems().empty());
-      */
+      
       if (!t->isVacuousOffset(Location::Ant)) {
         auto prettyAss = t->getDT()->prettyPrint(1);
         Assertion *ass = new Assertion();
@@ -388,7 +388,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         vacLock.unlock();
       }
 #endif
-      /*
+      
       t->getDT()->removeItems();
       if (t->getDT()->isMultiDimensional()) {
         for (size_t i = 0; i < props.size(); i++) {
@@ -396,9 +396,9 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
           delete props[i];
         }
       }
-      */
+      
     }
-
+*/
 #if enPB
     _progressBar.increment(l3InstId);
     _progressBar.display();

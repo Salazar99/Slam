@@ -169,7 +169,7 @@ inline void AntecedentGenerator::findCandidates(
   Proposition *prop = dcVariables[candidate].first;
 
   //      debug
-  // std::cout << "-------------"
+  // std::cout << "-------------"F
   //          << "\n";
   // std::cout << t->getColoredAssertion() << "\n";
   // std::cout << "Candidate(" << depth << "): " << prop2String(*prop) <<

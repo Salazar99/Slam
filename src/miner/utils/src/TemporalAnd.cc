@@ -35,6 +35,10 @@ std::vector<expression::Proposition *> TemporalAnd::getItems(){
     return ret;
   };
 
+std::vector<TemporalExp *> TemporalAnd::getTempItems(){
+  return _items;
+}
+
 size_t TemporalAnd::size(){return _items.size();}
 
 void TemporalAnd::popItem(){

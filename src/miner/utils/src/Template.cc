@@ -426,11 +426,7 @@ void Template::build() {
       _tokenToProp[e._s] = e._te; //FIXME new map for temporalExp?
       _dtOp = std::make_pair(
           e._s, new DTAndF(dynamic_cast<TemporalAnd *>(*e._te), this, _limits));
-    } else if (e._t == Hstring::Stype::DTNext ||
-               e._t == Hstring::Stype::DTNextAnd) {
-      _tokenToProp[e._s] = e._te;
-      e._offset = 0;
-    }
+    }  
   }
 
   // fill utility variables for the consequent

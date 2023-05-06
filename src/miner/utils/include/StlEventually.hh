@@ -19,6 +19,8 @@ public:
 
   void setInterval(std::pair<size_t , size_t > *  intv);
 
+  std::pair<size_t,size_t> * getInterval();
+
 private:
   TemporalExp *_operand;
   std::pair<size_t , size_t > * _interval;

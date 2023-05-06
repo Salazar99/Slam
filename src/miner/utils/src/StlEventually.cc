@@ -28,7 +28,6 @@ Trinary StlEventually::evaluate(size_t time) {
   return Trinary::F;
 }
 
-
 std::vector<expression::Proposition *> StlEventually::getItems(){
   std::vector<expression::Proposition *> ret;
   std::vector<expression::Proposition *> p = _operand->getItems();
@@ -42,5 +41,7 @@ size_t StlEventually::size(){return 1;}
 void StlEventually::setInterval(std::pair<size_t, size_t> * intv) {
   _interval = intv;
 }
+
+std::pair<size_t,size_t> * StlEventually::getInterval(){return _interval;}
 
 }; // namespace harm

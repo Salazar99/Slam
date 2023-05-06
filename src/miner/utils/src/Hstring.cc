@@ -1,5 +1,7 @@
 
 #include "Hstring.hh"
+#include "DTAndF.hh"
+#include "StlEventually.hh"
 
 Hstring::Hstring(std::string s, Stype t, std::pair<size_t,size_t> * intv)
     : _s(s), _t(t), _intv(intv),_offset(-1) {
@@ -51,20 +53,30 @@ std::string Hstring::toColoredString(bool sub) {
       ret += TEMP(e._s);
       break;
     case Stype::Ph:
-      //FIXME Hstring no longer have a proposition pointer
-      //ret += VAR((sub ? prop2ColoredString(**e._pp) : e._s));
+      //FIXME Hstring no longer have a proposition pointer, must get prop from TemporalExp
+      ret += VAR((sub ? prop2ColoredString(*((*e._te)->getItems().at(0))) : e._s));
       break;
     case Stype::DTAndF:
       //FIXME
-      //if (!sub || dynamic_cast<expression::PropositionAnd *>(*e._pp)->empty()) {
-      //  ret += BOOL("..F..");
-      //} else {
-      // ret += prop2ColoredString(**e._pp);
-      //}
+      if ((*e._te)->getItems().empty()) {
+        ret += BOOL("..F..");
+      } else {
+        std::vector<harm::TemporalExp *> tprops = (dynamic_cast<harm::TemporalAnd &>(**e._te)).getTempItems(); 
+        size_t i = 0;
+        for(auto tp : tprops){
+          if(i != 0)
+            ret += " && ";
+          ret += "F[" + intv2String((dynamic_cast<harm::StlEventually *>(tp))->getInterval()) + "]" + prop2ColoredString(*(tp->getItems().at(0)));
+          i++;
+        }          
+      }
       break;
     case Stype::Inst:
       //FIXME
-      //ret += prop2ColoredString(**e._pp);
+      ret += prop2ColoredString(*((*e._te)->getItems().at(0)));
+      break;
+    case Stype::Intv:
+      ret += e._s;
       break;
     case Stype::Imp:
       ret += TIMPL(e._s);
@@ -74,6 +86,12 @@ std::string Hstring::toColoredString(bool sub) {
   }
   return ret;
 }
+
+std::string Hstring::intv2String(std::pair<size_t,size_t> * intv){
+  std::string ret = std::to_string(intv->first) + "," + std::to_string(intv->second);
+  return ret;
+}
+
 std::string Hstring::toString(bool sub) {
     messageErrorIf(_append.empty(),"Attempted to print a char or an empty string");
 
@@ -87,19 +105,28 @@ std::string Hstring::toString(bool sub) {
       ret += e._s;
       break;
     case Stype::Ph:
-      //FIXME
-      //ret += (sub ? prop2String(**e._pp) : e._s);
+      ret += (sub ? prop2String(*((*e._te)->getItems().at(0))) : e._s);
       break;
     case Stype::DTAndF:
       //FIXME
-      //if (!sub || dynamic_cast<expression::PropositionAnd *>(*e._pp)->empty()) {
-      //  ret += "..F..";
-      //} else {
-      //  ret += prop2String(**e._pp);
-      //}
+      if ((*e._te)->getItems().empty()) {
+        ret += "..F..";
+      } else {
+        std::vector<harm::TemporalExp *> tprops = (dynamic_cast<harm::TemporalAnd &>(**e._te)).getTempItems(); 
+        size_t i = 0;
+        for(auto tp : tprops){
+          if(i != 0)
+            ret += " && ";
+          ret += "F[" + intv2String((dynamic_cast<harm::StlEventually *>(tp))->getInterval()) + "]" + prop2String(*(tp->getItems().at(0)));
+          i++;
+        }          
+      }
       break;
     case Stype::Inst:
-      //ret += prop2String(**e._pp);
+      ret += prop2String(*((*e._te)->getItems().at(0)));
+      break;
+    case Stype::Intv:
+      ret += e._s;
       break;
     case Stype::Imp:
       ret += e._s;
@@ -128,24 +155,6 @@ std::string Hstring::toSpotString() {
     case Stype::DTAndF:
       ret += e._s;
       break;
-    case Stype::DTNext:
-      if (e._offset > 0) {
-        ret += " ##" + std::to_string(e._offset) + " ";
-      }
-      ret += e._s;
-      break;
-    case Stype::DTNCReps:
-      ret += e._s;
-      if (e._offset > 0) {
-        ret += " [->" + std::to_string(e._offset) + "]; ";
-      }
-      break;
-    case Stype::DTNextAnd:
-      if (e._offset > 0) {
-        ret += " ##" + std::to_string(e._offset) + " ";
-      }
-      ret += e._s;
-      break;
     case Stype::Inst:
       ret += e._s;
       break;
@@ -162,7 +171,7 @@ Hstring Hstring::getAnt() {
   Hstring ret;
   //i == 4: 0 1   2   3 4
   //        G [ x1,x2 ] ( ...
-  size_t i = 3;
+  size_t i = 4;
   while (_append[i]._t != Stype::Imp) {
     ret._append.push_back(_append[i++]);
   }
@@ -200,15 +209,6 @@ std::vector<Hstring>::reverse_iterator Hstring::rend() {
 bool Hstring::isDT(const Hstring &e) {
   switch (e._t) {
   case Stype::DTAndF:
-    return 1;
-    break;
-  case Stype::DTNext:
-    return 1;
-    break;
-  case Stype::DTNCReps:
-    return 1;
-    break;
-  case Stype::DTNextAnd:
     return 1;
     break;
   default:

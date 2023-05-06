@@ -6,7 +6,7 @@ namespace harm {
 
 class StlInst : public TemporalExp {
 public:
-  StlInst(expression::Proposition **prop);
+  StlInst(expression::Proposition *prop);
 
   virtual ~StlInst();
 
@@ -17,7 +17,7 @@ public:
   virtual size_t size() override;
 
 private:
-  expression::Proposition **_prop;
+  expression::Proposition *_prop;
 };
 
 }; // namespace harm
