@@ -2,50 +2,49 @@
 
 namespace harm {
 
-TemporalAnd::TemporalAnd(TemporalExp * first){
-  _items.push_back(first);
-};
+TemporalAnd::TemporalAnd(TemporalExp *first) { _items.push_back(first); };
 TemporalAnd::TemporalAnd(){};
 
 TemporalAnd::~TemporalAnd(){};
 
 Trinary TemporalAnd::evaluate(size_t time) {
   //if one element is F, all AND is false
-  for(auto t : _items){
-    if(t->evaluate(time) == Trinary::T)
+  for (auto t : _items) {
+    if (t->evaluate(time) == Trinary::F)
       return Trinary::F;
-    else if(t->evaluate(time) == Trinary::U)
+    else if (t->evaluate(time) == Trinary::U)
       return Trinary::U;
   }
   return Trinary::T;
 }
 
-void TemporalAnd::addItem(TemporalExp * prop){
+void TemporalAnd::addItem(TemporalExp *prop) {
   //first element of the and is empty, can insert prop
   _items.push_back(prop);
 }
 
-std::vector<expression::Proposition *> TemporalAnd::getItems(){
+std::vector<expression::Proposition *> TemporalAnd::getItems() {
   std::vector<expression::Proposition *> ret;
-    for(auto texp : _items){
-      std::vector<expression::Proposition *> p = texp->getItems();
-      ret.insert(ret.end(),p.begin(), p.end());
-    }
-  
-    return ret;
-  };
 
-std::vector<TemporalExp *> TemporalAnd::getTempItems(){
-  return _items;
-}
+  for (auto texp : _items) {
+    std::vector<expression::Proposition *> p = texp->getItems();
+    ret.insert(ret.end(), p.begin(), p.end());
+  }
 
-size_t TemporalAnd::size(){return _items.size();}
+  return ret;
+};
 
-void TemporalAnd::popItem(){
+std::vector<TemporalExp *> TemporalAnd::getTempItems() { return _items; }
+
+size_t TemporalAnd::size() { return _items.size(); }
+
+void TemporalAnd::popItem() {
   //FIXME need a popItem?
+  _items.pop_back();
 }
 
-void TemporalAnd::removeItems(){
+void TemporalAnd::removeItems() {
+  _items.clear();
   //FIXME need a removeItems?
 }
 

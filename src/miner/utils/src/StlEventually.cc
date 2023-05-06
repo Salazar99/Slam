@@ -29,11 +29,7 @@ Trinary StlEventually::evaluate(size_t time) {
 }
 
 std::vector<expression::Proposition *> StlEventually::getItems(){
-  std::vector<expression::Proposition *> ret;
-  std::vector<expression::Proposition *> p = _operand->getItems();
-  ret.insert(ret.end(),p.begin(), p.end());
-  
-  return ret;
+  return _operand->getItems();
 }
 
 size_t StlEventually::size(){return 1;}

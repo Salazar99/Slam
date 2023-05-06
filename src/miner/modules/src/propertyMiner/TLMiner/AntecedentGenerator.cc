@@ -403,7 +403,6 @@ void AntecedentGenerator::_runDecisionTree(
   if (template_dt->getNChoices() < template_dt->getLimits()._maxAll) {
     for (; candidate != unusedVars.end() ||
            candidateNumeric != unusedNumerics.end();) {
-      //..##.. ..&&..
       if (template_dt->canInsertAtDepth(-1)) {
         if (candidate != unusedVars.end())
           findCandidates(*candidate, dcVariables, t, discLeaves, igs, -1,
@@ -485,15 +484,18 @@ void AntecedentGenerator::_runDecisionTree(
 }
 void AntecedentGenerator::storeSolution(Template *t, bool isOffset) {
 
-  //DTOperator *template_dt = t->getDT();
 
   if (isOffset && !saveOffset) {
     return;
   }
 
+  DTOperator *template_dt = t->getDT();
+
   // Let's save the current propositions
   //std::vector<Proposition *> items = template_dt->minimize(isOffset);
-  std::vector<Proposition *> items;
+  std::vector<Proposition *> items = template_dt->getItems();
+
+  messageErrorIf(items.empty(),"Solution is empry");
 /*
   if (isKnownSolution(items, template_dt)) {
     if (template_dt->isMultiDimensional()) {

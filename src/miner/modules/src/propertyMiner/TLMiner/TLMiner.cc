@@ -293,21 +293,19 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
     for (std::vector<Proposition *> &props : antGen.onSets) {
 
       //rebulding the assertion starting from a list propositions (the operands of a dt operator)
-      /*
-      if (t->getDT()->isMultiDimensional()) {
-        for (size_t i = 0; i < props.size(); i++) {
-          for (auto prop : t->getDT()->unpack(props[i])) {
-            t->getDT()->addItem(prop, i);
-          }
-        }
-      
-      } else {
-        for (auto prop : props) {
-          t->getDT()->addItem(prop, -1);
-        }
+      //if (t->getDT()->isMultiDimensional()) {
+      //  for (size_t i = 0; i < props.size(); i++) {
+      //    for (auto prop : t->getDT()->unpack(props[i])) {
+      //      t->getDT()->addItem(prop, i);
+      //    }
+      //  }
+      //
+      //} else {
+      for (auto prop : props) {
+        t->getDT()->addItem(prop, new std::pair<size_t, size_t>(), -1);
       }
+      //}
       assert(!t->getDT()->getItems().empty());
-      */
 
       //check for vacuity
       if (!t->isVacuous(Location::Ant)) {
@@ -318,7 +316,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         t->fillContingency(ass->_ct, 0);
         ass->_toString = prettyAss;
         //FIXME
-        std::vector<Proposition*> loadedProps; //= t->getLoadedPropositions();
+        std::vector<Proposition *> loadedProps; //= t->getLoadedPropositions();
         ass->_complexity = getNumVariables(loadedProps);
         ass->_pRepetitions = getRepetitions(loadedProps);
         ass->fillValues(t);
@@ -338,7 +336,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       }
 #endif
       // clear the template of the current dt operands
-      
+
       t->getDT()->removeItems();
       if (t->getDT()->isMultiDimensional()) {
         for (size_t i = 0; i < props.size(); i++) {
@@ -346,7 +344,6 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
           delete props[i];
         }
       }
-      
     }
     // Offset, same as onset but the consequent is negated
     /*for (const std::vector<Proposition *> &props : antGen.offSets) {
@@ -430,7 +427,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       ass->_toString =
           std::make_pair(t->getAssertion(), t->getColoredAssertion());
       //FIXME
-      std::vector<Proposition*> loadedProps;// = t->getLoadedPropositions();
+      std::vector<Proposition *> loadedProps; // = t->getLoadedPropositions();
       ass->_complexity = getNumVariables(loadedProps);
       ass->_pRepetitions = getRepetitions(loadedProps);
       ass->fillValues(t);
