@@ -290,7 +290,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
                            genProps);
 
     // Onset
-    for (std::vector<Proposition *> &props : antGen.onSets) {
+    for (std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+             &props : antGen.onSets) {
 
       //rebulding the assertion starting from a list propositions (the operands of a dt operator)
       //if (t->getDT()->isMultiDimensional()) {
@@ -302,7 +303,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       //
       //} else {
       for (auto prop : props) {
-        t->getDT()->addItem(prop, new std::pair<size_t, size_t>(), -1);
+        t->getDT()->addItem(prop.first,
+                            new std::pair<size_t, size_t>(prop.second), -1);
       }
       //}
       assert(!t->getDT()->getItems().empty());
@@ -341,7 +343,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       if (t->getDT()->isMultiDimensional()) {
         for (size_t i = 0; i < props.size(); i++) {
           //t->getDT()->clearPack(props[i]);
-          delete props[i];
+          //          delete props[i];
         }
       }
     }

@@ -2,26 +2,30 @@
 #include "Hstring.hh"
 #include "DTAndF.hh"
 #include "StlEventually.hh"
+#include "StlInst.hh"
+#include "StlPlaceholder.hh"
+#include "TemporalAnd.hh"
 
-Hstring::Hstring(std::string s, Stype t, std::pair<size_t,size_t> * intv)
-    : _s(s), _t(t), _intv(intv),_offset(-1) {
+Hstring::Hstring(std::string s, Stype t, std::pair<size_t, size_t> *intv)
+    : _s(s), _t(t), _intv(intv), _offset(-1) {
   _append.push_back(*this);
 }
-Hstring::Hstring(std::string s, Stype t, harm::TemporalExp ** te)
-    : _s(s), _t(t), _intv(nullptr),_te(te),_offset(-1) {
+Hstring::Hstring(std::string s, Stype t, harm::TemporalExp **te)
+    : _s(s), _t(t), _intv(nullptr), _te(te), _offset(-1) {
   _append.push_back(*this);
 }
 
-Hstring::Hstring() : _s(""), _t(Stype::Temp), _intv(nullptr),_te(nullptr),_offset(-1) {
+Hstring::Hstring()
+    : _s(""), _t(Stype::Temp), _intv(nullptr), _te(nullptr), _offset(-1) {
   _append.push_back(*this);
 }
 Hstring Hstring::operator+(const Hstring &right) {
   auto left = *this;
   if (right._append.empty()) {
-      //single char
+    //single char
     left._append.push_back(right);
   } else {
-      //string
+    //string
     for (const auto &i : right._append) {
       left._append.push_back(i);
     }
@@ -42,7 +46,8 @@ bool Hstring::exists(std::string toFind) {
 }
 
 std::string Hstring::toColoredString(bool sub) {
-    messageErrorIf(_append.empty(),"Attempted to print a char or an empty string");
+  messageErrorIf(_append.empty(),
+                 "Attempted to print a char or an empty string");
   std::string ret = "";
   for (auto &e : _append) {
     switch (e._t) {
@@ -53,27 +58,37 @@ std::string Hstring::toColoredString(bool sub) {
       ret += TEMP(e._s);
       break;
     case Stype::Ph:
-      //FIXME Hstring no longer have a proposition pointer, must get prop from TemporalExp
-      ret += VAR((sub ? prop2ColoredString(*((*e._te)->getItems().at(0))) : e._s));
+      ret += VAR((
+          sub ? prop2ColoredString(*dynamic_cast<harm::StlPlaceholder *>(*e._te)
+                                        ->getProposition())
+              : e._s));
       break;
     case Stype::DTAndF:
       //FIXME
       if ((*e._te)->getItems().empty()) {
         ret += BOOL("..F..");
       } else {
-        std::vector<harm::TemporalExp *> tprops = (dynamic_cast<harm::TemporalAnd &>(**e._te)).getTempItems(); 
+        std::vector<harm::TemporalExp *> tprops =
+            (dynamic_cast<harm::TemporalAnd *>(*e._te))->getItems();
         size_t i = 0;
-        for(auto tp : tprops){
-          if(i != 0)
+        for (auto tp : tprops) {
+          if (i != 0)
             ret += " && ";
-          ret += "F[" + intv2String((dynamic_cast<harm::StlEventually *>(tp))->getInterval()) + "]" + prop2ColoredString(*(tp->getItems().at(0)));
+          ret += TEMP("F[") +
+                 intv2String(
+                     (dynamic_cast<harm::StlEventually *>(tp))->getInterval()) +
+                 TEMP("]") +
+                 prop2ColoredString(
+                     *dynamic_cast<harm::StlInst *>(tp->getItems().front())
+                          ->getProposition());
           i++;
-        }          
+        }
       }
       break;
     case Stype::Inst:
       //FIXME
-      ret += prop2ColoredString(*((*e._te)->getItems().at(0)));
+      ret += prop2ColoredString(
+          *dynamic_cast<harm::StlInst *>(*e._te)->getProposition());
       break;
     case Stype::Intv:
       ret += e._s;
@@ -87,13 +102,15 @@ std::string Hstring::toColoredString(bool sub) {
   return ret;
 }
 
-std::string Hstring::intv2String(std::pair<size_t,size_t> * intv){
-  std::string ret = std::to_string(intv->first) + "," + std::to_string(intv->second);
+std::string Hstring::intv2String(std::pair<size_t, size_t> *intv) {
+  std::string ret =
+      std::to_string(intv->first) + "," + std::to_string(intv->second);
   return ret;
 }
 
 std::string Hstring::toString(bool sub) {
-    messageErrorIf(_append.empty(),"Attempted to print a char or an empty string");
+  messageErrorIf(_append.empty(),
+                 "Attempted to print a char or an empty string");
 
   std::string ret = "";
   for (auto &e : _append) {
@@ -105,25 +122,36 @@ std::string Hstring::toString(bool sub) {
       ret += e._s;
       break;
     case Stype::Ph:
-      ret += (sub ? prop2String(*((*e._te)->getItems().at(0))) : e._s);
+      ret += (sub ? prop2String(*dynamic_cast<harm::StlPlaceholder *>(*e._te)
+                                     ->getProposition())
+                  : e._s);
       break;
     case Stype::DTAndF:
       //FIXME
       if ((*e._te)->getItems().empty()) {
         ret += "..F..";
       } else {
-        std::vector<harm::TemporalExp *> tprops = (dynamic_cast<harm::TemporalAnd &>(**e._te)).getTempItems(); 
+        std::vector<harm::TemporalExp *> tprops =
+            (dynamic_cast<harm::TemporalAnd *>(*e._te))->getItems();
         size_t i = 0;
-        for(auto tp : tprops){
-          if(i != 0)
+        for (auto tp : tprops) {
+          if (i != 0)
             ret += " && ";
-          ret += "F[" + intv2String((dynamic_cast<harm::StlEventually *>(tp))->getInterval()) + "]" + prop2String(*(tp->getItems().at(0)));
+
+          ret +=
+              "F[" +
+              intv2String(
+                  (dynamic_cast<harm::StlEventually *>(tp))->getInterval()) +
+              "]" +
+              prop2String(*dynamic_cast<harm::StlInst *>(tp->getItems().front())
+                               ->getProposition());
           i++;
-        }          
+        }
       }
       break;
     case Stype::Inst:
-      ret += prop2String(*((*e._te)->getItems().at(0)));
+      ret +=
+          prop2String(*dynamic_cast<harm::StlInst *>(*e._te)->getProposition());
       break;
     case Stype::Intv:
       ret += e._s;

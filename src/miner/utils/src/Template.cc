@@ -39,14 +39,21 @@ Template::Template(const Template &original) {
   _trace = original._trace;
   for (auto &s : _templateFormula) {
     //we need to reinizializes/copy all the propositions in the templateFormula to the new copy of the template, two instances of the same template should not have overlapping memory
-    //FIXME Hstring no longer have a Proposition pointer
-    //if (s._te != nullptr) {
-    //  if (s._t == Hstring::Stype::Inst) {
-    //    s._ = new Proposition *(new CachedProposition(copy(**s._pp)));
-    //  } else {
-    //    s._pp = new Proposition *(*s._pp);
-    //  }
-    //}
+    if (s._te != nullptr) {
+      if (s._t == Hstring::Stype::Inst) {
+        Proposition *p =
+            dynamic_cast<StlInst *>(*s._te)->getProposition();
+        s._te = new TemporalExp *(new StlInst(
+            p != nullptr ? new CachedProposition(copy(*p)) : nullptr,
+            dynamic_cast<StlInst *>(*s._te)->getName()));
+      } else if (s._t == Hstring::Stype::Ph) {
+        Proposition *p =
+            dynamic_cast<StlPlaceholder *>(*s._te)->getProposition();
+        s._te = new TemporalExp *(new StlPlaceholder(
+            p != nullptr ? new CachedProposition(copy(*p)) : nullptr,
+            dynamic_cast<StlPlaceholder *>(*s._te)->getName()));
+      }
+    }
   }
   _buildTemplateFormula = _templateFormula;
   _max_length = original._max_length;
@@ -100,8 +107,8 @@ Template::~Template() {
 }
 
 size_t Template::nPermsGenerated() const {
-    //return _pg._size.first; 
-    return _cProps.size();
+  return _pg._size.first;
+  //return _cProps.size();
 }
 
 std::string Template::getAssertion() { return _templateFormula.toString(true); }
@@ -179,17 +186,17 @@ void Template::loadPerm(size_t n) {
     //e.first is the string representation of a placeholder e.second is the column of the permutation's table _permIndex is the row of the permutation's table
 
     if (where == harm::Location::Ant) {
-        messageError("");
+      //        messageError("");
       //feel the placeholder with the correct proposition _pg._perms[_permIndex][e.second] contains the index of the proposition to be inserted
       //FIXME Completely broken due to Hstring modification
       dynamic_cast<StlPlaceholder *>(*_aphToProp.at(e.first))
           ->setProposition(_aProps[_pg._perms[n][e.second]]);
     } else if (where == harm::Location::Con) {
-      //dynamic_cast<StlPlaceholder *>(*_cphToProp.at(e.first)) ->setProposition(_cProps[_pg._perms[n][e.second]]);
       dynamic_cast<StlPlaceholder *>(*_cphToProp.at(e.first))
-          ->setProposition(_cProps[n]);
+          ->setProposition(_cProps[_pg._perms[n][e.second]]);
+      //      dynamic_cast<StlPlaceholder *>(*_cphToProp.at(e.first)) ->setProposition(_cProps[n]);
     } else {
-        messageError("");
+      //       messageError("");
       dynamic_cast<StlPlaceholder *>(*_acphToProp.at(e.first))
           ->setProposition(_acProps[_pg._perms[n][e.second]]);
     }
@@ -245,20 +252,17 @@ void Template::loadPropositions(std::vector<Proposition *> &props,
     _antInCache = false;
     // put the propositions in the antecedent's placeholders
     for (const auto &ph : _aphToProp) {
-      //FIXME
-      //(*ph.second) = props[i++];
+      dynamic_cast<StlPlaceholder *>(*ph.second)->setProposition(props[i++]);
     }
   } else if (where == harm::Location::Con) {
 
     for (const auto &ph : _cphToProp) {
-      //FIXME
-      //(*ph.second) = props[i++];
+      dynamic_cast<StlPlaceholder *>(*ph.second)->setProposition(props[i++]);
     }
     _conInCache = false;
   } else {
     for (const auto &ph : _acphToProp) {
-      //FIXME
-      //(*ph.second) = props[i++];
+      dynamic_cast<StlPlaceholder *>(*ph.second)->setProposition(props[i++]);
     }
     _conInCache = false;
     _antInCache = false;
@@ -423,10 +427,10 @@ void Template::build() {
       _tokenToProp[e._s] = e._te;
       _iToProp[e._s] = e._te;
     } else if (e._t == Hstring::Stype::DTAndF) {
-      _tokenToProp[e._s] = e._te; //FIXME new map for temporalExp?
+      _tokenToProp[e._s] = e._te;
       _dtOp = std::make_pair(
           e._s, new DTAndF(dynamic_cast<TemporalAnd *>(*e._te), this, _limits));
-    }  
+    }
   }
 
   // fill utility variables for the consequent
@@ -464,87 +468,98 @@ void Template::build() {
     messageError("Unknown implication symbol: " + imp);
   }
 
-  if (_applyDynamicShift) {
-    //allocate more memory to keep track of dynamic shitfs
-    _dynamicShiftCachedValues = new size_t[_max_length];
-    std::fill_n(_dynamicShiftCachedValues, _max_length, 0);
-    _cachedDynShiftsP = new size_t *[l1Constants::MAX_THREADS];
+  //  if (_applyDynamicShift) {
+  //    //allocate more memory to keep track of dynamic shitfs
+  //    _dynamicShiftCachedValues = new size_t[_max_length];
+  //    std::fill_n(_dynamicShiftCachedValues, _max_length, 0);
+  //    _cachedDynShiftsP = new size_t *[l1Constants::MAX_THREADS];
+  //
+  //    for (size_t i = 0; i < l1Constants::MAX_THREADS; i++) {
+  //      _cachedDynShiftsP[i] = new size_t[_max_length];
+  //      std::fill_n(_cachedDynShiftsP[i], _max_length, 0);
+  //    }
+  //  }
 
-    for (size_t i = 0; i < l1Constants::MAX_THREADS; i++) {
-      _cachedDynShiftsP[i] = new size_t[_max_length];
-      std::fill_n(_cachedDynShiftsP[i], _max_length, 0);
-    }
-  }
-
-  TemporalAnd *impant = new TemporalAnd();
-  TemporalAnd *impcon = new TemporalAnd();
-
-  //iter over hant to find each subformula
-  bool isEventually = false;
-  std::stack<std::string> phIntv;
-
+  TemporalAnd *impant = nullptr;
   for (size_t i = 0; i < hant.size(); i++) {
     auto &s = hant[i];
-    if (s._t == Hstring::Stype::Ph) {
-      if (isEventually) {
-        std::string intval = phIntv.top();
-        phIntv.pop();
-        impant->addItem(
-            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
-      } else {
-        impant->addItem(*s._te);
-      }
-      isEventually = false;
-    } else if (s._t == Hstring::Stype::Intv) {
-      phIntv.push(s._s);
-    } else if (s._t == Hstring::Stype::Inst) {
-      if (isEventually) {
-        std::string intval = phIntv.top();
-        phIntv.pop();
-        impant->addItem(
-            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
-      } else {
-        impant->addItem(*s._te);
-      }
-      isEventually = false;
-    } else if (s._t == Hstring::Stype::Temp && s._s == "F[")
-      isEventually = true;
-    else if (s._t == Hstring::Stype::DTAndF) {
-      impant->addItem(*s._te);
+    if (s._t == Hstring::Stype::DTAndF) {
+      impant = dynamic_cast<TemporalAnd *>(*s._te);
     }
   }
-
-  isEventually = false;
-
-  for (size_t i = 0; i < hcon.size(); i++) {
-    auto &s = hcon[i];
-    if (s._t == Hstring::Stype::Ph) {
-      if (isEventually) {
-        std::string intval = phIntv.top();
-        phIntv.pop();
-        impant->addItem(
-            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
-      } else {
-        impcon->addItem(*s._te);
-      }
-      isEventually = false;
-    } else if (s._t == Hstring::Stype::Intv) {
-      phIntv.push(s._s);
-    } else if (s._t == Hstring::Stype::Inst) {
-      if (isEventually) {
-        std::string intval = phIntv.top();
-        phIntv.pop();
-        impcon->addItem(
-            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
-      } else {
-        impcon->addItem(*s._te);
-      }
-      isEventually = false;
-    } else if (s._t == Hstring::Stype::Temp && s._s == "F[")
-      isEventually = true;
-    else if (s._t == Hstring::Stype::DTAndF)
-      messageError("DT operand is not allowed in the consequent");
+  TemporalAnd *conAnd = new TemporalAnd();
+  for (auto &cte : _cphToProp) {
+    conAnd->addItem(*cte.second);
   }
+  TemporalExp *impcon =
+      new StlEventually(conAnd, new std::pair<size_t, size_t>(0, 0), _trace);
+
+  //iter over hant to find each subformula
+  //bool isEventually = false;
+  //  std::stack<std::string> phIntv;
+
+  //  for (size_t i = 0; i < hant.size(); i++) {
+  //    auto &s = hant[i];
+  //    if (s._t == Hstring::Stype::Ph) {
+  //      if (isEventually) {
+  //        std::string intval = phIntv.top();
+  //        phIntv.pop();
+  //        impant->addItem(
+  //            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
+  //      } else {
+  //        impant->addItem(*s._te);
+  //      }
+  //      isEventually = false;
+  //    } else if (s._t == Hstring::Stype::Intv) {
+  //      phIntv.push(s._s);
+  //    } else if (s._t == Hstring::Stype::Inst) {
+  //      if (isEventually) {
+  //        std::string intval = phIntv.top();
+  //        phIntv.pop();
+  //        impant->addItem(
+  //            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
+  //      } else {
+  //        impant->addItem(*s._te);
+  //      }
+  //      isEventually = false;
+  //    } else if (s._t == Hstring::Stype::Temp && s._s == "F[")
+  //      isEventually = true;
+  //    else if (s._t == Hstring::Stype::DTAndF) {
+  //      impant->addItem(*s._te);
+  //    }
+  //  }
+  //
+  //  isEventually = false;
+  //
+  //  for (size_t i = 0; i < hcon.size(); i++) {
+  //    auto &s = hcon[i];
+  //    if (s._t == Hstring::Stype::Ph) {
+  //      if (isEventually) {
+  //        std::string intval = phIntv.top();
+  //        phIntv.pop();
+  //        impant->addItem(
+  //            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
+  //      } else {
+  //        impcon->addItem(*s._te);
+  //      }
+  //      isEventually = false;
+  //    } else if (s._t == Hstring::Stype::Intv) {
+  //      phIntv.push(s._s);
+  //    } else if (s._t == Hstring::Stype::Inst) {
+  //      if (isEventually) {
+  //        std::string intval = phIntv.top();
+  //        phIntv.pop();
+  //        impcon->addItem(
+  //            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
+  //      } else {
+  //        impcon->addItem(*s._te);
+  //      }
+  //      isEventually = false;
+  //    } else if (s._t == Hstring::Stype::Temp && s._s == "F[")
+  //      isEventually = true;
+  //    else if (s._t == Hstring::Stype::DTAndF)
+  //      messageError("DT operand is not allowed in the consequent");
+  //  }
 
   _impl = new StlImplication(impant, impcon);
 }
@@ -575,7 +590,7 @@ void Template::genPermutations(const std::vector<Proposition *> &antP,
   //generate only if there are not any previously generated perms
   if (_pg._perms == nullptr) {
     _pg.genPermutations(_aProps.size(), _cProps.size(), _acProps.size(),
-                        _templateFormula);
+                        _templateFormula, _impl);
   }
   //set to the first perm
   _permIndex = 0;

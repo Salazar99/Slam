@@ -54,14 +54,23 @@ void DTAndF::removeItems() { _choices->removeItems(); }
 void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> *interval,
                      int depth) {
   harm::TemporalExp *Fprop =
-      new StlEventually(new StlPlaceholder(p), interval, _t->_trace);
+      new StlEventually(new StlInst(p, ""), interval, _t->_trace);
   _choices->addItem(Fprop);
 }
 
 void DTAndF::popItem(int depth) { _choices->popItem(); }
 
-std::vector<expression::Proposition *> DTAndF::getItems() {
-  return _choices->getItems();
+std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+DTAndF::getItems() {
+std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>ret;
+for (auto &ti : _choices->getItems()) {
+    
+    ret.push_back(std::make_pair(
+                dynamic_cast<StlInst*>((dynamic_cast<StlEventually*>(ti)->getOperand()))->getProposition(),
+                *dynamic_cast<StlEventually*>(ti)->getInterval()
+                ));
+}
+  return ret;
 }
 
 std::vector<TemporalExp *> DTAndF::unpack() {
@@ -85,12 +94,12 @@ bool DTAndF::isSolutionInconsequential(std::vector<TemporalExp *> &sol) {
 }
 
 void DTAndF::substitute(int depth, int width, expression::Proposition *&sub) {
-  if (width == -1) {
-    width = _choices->getItems().size() - 1;
-  }
-  expression::Proposition *tmp = _choices->getItems()[width];
-  _choices->getItems()[width] = sub;
-  sub = tmp;
+//  if (width == -1) {
+//    width = _choices->getItems().size() - 1;
+//  }
+//  expression::Proposition *tmp = _choices->getItems()[width];
+//  _choices->getItems()[width] = sub;
+//  sub = tmp;
 }
 
 const DTLimits &DTAndF::getLimits() { return _limits; }
@@ -149,7 +158,11 @@ std::pair<std::string, std::string> DTAndF::prettyPrint(bool offset) {
 
   //compose the reduced template
   auto reducedTemplate =
-      Hstring("G[", Hstring::Stype::G, (harm::TemporalExp **)nullptr) +Hstring("X1,X2",Hstring::Stype::Intv, (std::pair<size_t, size_t> *) nullptr) + Hstring("]", Hstring::Stype::G, (harm::TemporalExp **)nullptr) + Hstring("(", Hstring::Stype::G,(harm::TemporalExp**) nullptr) + ant +
+      Hstring("G[", Hstring::Stype::G, (harm::TemporalExp **)nullptr) +
+      Hstring("X1,X2", Hstring::Stype::Intv,
+              (std::pair<size_t, size_t> *)nullptr) +
+      Hstring("]", Hstring::Stype::G, (harm::TemporalExp **)nullptr) +
+      Hstring("(", Hstring::Stype::G, (harm::TemporalExp **)nullptr) + ant +
       imp + con +
       Hstring(")", Hstring::Stype::G, (harm::TemporalExp **)nullptr);
   return std::make_pair(reducedTemplate.toString(1),

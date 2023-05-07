@@ -13,9 +13,8 @@ public:
 
   virtual Trinary evaluate(size_t time) override;
 
-  virtual std::vector<expression::Proposition *> getItems() override;
+  virtual std::vector<TemporalExp *> getItems() override;
 
-  std::vector<TemporalExp *> getTempItems();
 
   virtual size_t size() override;
 

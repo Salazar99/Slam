@@ -13,7 +13,7 @@ using namespace expression;
 namespace hparser {
 
 void StlParserHandler::enterFile(__attribute__((unused))
-                                  stlParser::FileContext *ctx) {
+                                 stlParser::FileContext *ctx) {
   _abort = false;
 }
 StlParserHandler::StlParserHandler(harm::Trace *trace)
@@ -25,10 +25,14 @@ void StlParserHandler::exitFile(stlParser::FileContext *ctx) {
   _intervalNames.pop();
   _subFormulas.pop();
 
-  auto STL_G = Hstring("G[", Hstring::Stype::G,(harm::TemporalExp**) nullptr)+ Hstring(G_interval, Hstring::Stype::G, _intervals.at(G_interval)) + Hstring("]", Hstring::Stype::G,(harm::TemporalExp**) nullptr);
+  auto STL_G =
+      Hstring("G[", Hstring::Stype::G, (harm::TemporalExp **)nullptr) +
+      Hstring(G_interval, Hstring::Stype::G, _intervals.at(G_interval)) +
+      Hstring("]", Hstring::Stype::G, (harm::TemporalExp **)nullptr);
 
-  _templateFormula = STL_G + Hstring("(", Hstring::Stype::G,(harm::TemporalExp**) nullptr) + formula +
-                     Hstring(")", Hstring::Stype::G,(harm::TemporalExp**) nullptr);
+  _templateFormula =
+      STL_G + Hstring("(", Hstring::Stype::G, (harm::TemporalExp **)nullptr) +
+      formula + Hstring(")", Hstring::Stype::G, (harm::TemporalExp **)nullptr);
   _errorMessages.clear();
 }
 
@@ -38,8 +42,10 @@ void StlParserHandler::exitFormula(stlParser::FormulaContext *ctx) {
     _subFormulas.pop();
     auto formulaAnt = _subFormulas.top();
     _subFormulas.pop();
-    _subFormulas.push(formulaAnt + Hstring(" -> ", Hstring::Stype::Imp,(harm::TemporalExp**) nullptr) +
-                      formulaCon);
+    _subFormulas.push(
+        formulaAnt +
+        Hstring(" -> ", Hstring::Stype::Imp, (harm::TemporalExp **)nullptr) +
+        formulaCon);
     return;
   }
 }
@@ -58,17 +64,20 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
     //                            new Proposition *(new CachedProposition(p))));
     //} else {
 
-      _subFormulas.push(Hstring(_propStrToInst.at(pStr), Hstring::Stype::Inst,
-                                new harm::TemporalExp * (new harm::StlInst(p))));
+    _subFormulas.push(
+        Hstring(_propStrToInst.at(pStr), Hstring::Stype::Inst,
+                new harm::TemporalExp *(new harm::StlInst(p, _propStrToInst.at(pStr)))));
     //}
     return;
   }
   if (ctx->placeholder() != nullptr) {
     std::string ph = "P" + ctx->placeholder()->NUMERIC()->getText();
     if (!_phToProp.count(ph)) {
-      _phToProp[ph] = new harm::TemporalExp *(new harm::StlPlaceholder(nullptr));
+      _phToProp[ph] =
+          new harm::TemporalExp *(new harm::StlPlaceholder(nullptr, ph));
     }
-    _subFormulas.push(Hstring(ph, Hstring::Stype::Ph,(harm::TemporalExp**) _phToProp.at(ph)));
+    _subFormulas.push(Hstring(ph, Hstring::Stype::Ph,
+                              (harm::TemporalExp **)_phToProp.at(ph)));
     return;
   }
 
@@ -76,13 +85,15 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
     messageErrorIf(dtCount > 0,
                    "More than one dt operator defined\n" + printErrorMessage());
     std::string ph = "dtAndF" + std::to_string(dtCount++);
-    _subFormulas.push(Hstring(ph, Hstring::Stype::DTAndF,(harm::TemporalExp**) nullptr));
+    _subFormulas.push(
+        Hstring(ph, Hstring::Stype::DTAndF, (harm::TemporalExp **)nullptr));
     return;
   }
 
   if (ctx->tformula().size() == 2 && ctx->AND() != nullptr) {
     Hstring newFormula =
-        Hstring(" && ", Hstring::Stype::Temp,(harm::TemporalExp **) nullptr) + _subFormulas.top();
+        Hstring(" && ", Hstring::Stype::Temp, (harm::TemporalExp **)nullptr) +
+        _subFormulas.top();
     _subFormulas.pop();
     newFormula = _subFormulas.top() + newFormula;
     _subFormulas.pop();
@@ -90,9 +101,10 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
     return;
   }
 
-   if (ctx->tformula().size() == 2 && ctx->OR() != nullptr) {
+  if (ctx->tformula().size() == 2 && ctx->OR() != nullptr) {
     Hstring newFormula =
-        Hstring(" || ", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr) + _subFormulas.top();
+        Hstring(" || ", Hstring::Stype::Temp, (harm::TemporalExp **)nullptr) +
+        _subFormulas.top();
     _subFormulas.pop();
     newFormula = _subFormulas.top() + newFormula;
     _subFormulas.pop();
@@ -103,12 +115,15 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
   //If we are exiting a tformula rule that gives STL_eventually operator
   if (ctx->tformula().size() == 1 && ctx->STL_EVENTUALLY() != nullptr) {
     //Get last interval member found, end of interval
-    std::string interval = _intervalNames.top(); 
+    std::string interval = _intervalNames.top();
     _intervalNames.pop();
 
     //Since intervals are another type of placeholder, reuse same structure
     Hstring newFormula =
-        Hstring("F[", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr) + Hstring(interval,Hstring::Stype::Intv, _intervals.at(interval)) + Hstring("]", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr) + _subFormulas.top();
+        Hstring("F[", Hstring::Stype::Temp, (harm::TemporalExp **)nullptr) +
+        Hstring(interval, Hstring::Stype::Intv, _intervals.at(interval)) +
+        Hstring("]", Hstring::Stype::Temp, (harm::TemporalExp **)nullptr) +
+        _subFormulas.top();
     _subFormulas.pop();
     _subFormulas.push(newFormula);
     return;
@@ -116,9 +131,10 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 
   if (ctx->tformula().size() == 1 && ctx->LPAREN() != nullptr &&
       ctx->RPAREN() != nullptr) {
-    Hstring newFormula = Hstring("(", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr) +
-                         _subFormulas.top() +
-                         Hstring(")", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr);
+    Hstring newFormula =
+        Hstring("(", Hstring::Stype::Temp, (harm::TemporalExp **)nullptr) +
+        _subFormulas.top() +
+        Hstring(")", Hstring::Stype::Temp, (harm::TemporalExp **)nullptr);
     _subFormulas.pop();
     _subFormulas.push(newFormula);
     return;
@@ -126,7 +142,8 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 
   if (ctx->tformula().size() == 1 && ctx->NOT() != nullptr) {
     Hstring newFormula =
-        Hstring("!", Hstring::Stype::Temp,(harm::TemporalExp**) nullptr) + _subFormulas.top();
+        Hstring("!", Hstring::Stype::Temp, (harm::TemporalExp **)nullptr) +
+        _subFormulas.top();
     _subFormulas.pop();
     _subFormulas.push(newFormula);
     return;
@@ -134,12 +151,12 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 }
 
 //Interval_placeholder COMMA Interval_placeholder
-//NUMERIC COMMA NUMERIC 
-void StlParserHandler::exitInterval(stlParser::IntervalContext * ctx){
+//NUMERIC COMMA NUMERIC
+void StlParserHandler::exitInterval(stlParser::IntervalContext *ctx) {
   //Interval is made of 2 placeholders
   std::stack<std::string> intval;
-  if(ctx->interval_placeholder().size() == 2){
-    for(auto boundary : ctx->interval_placeholder()){
+  if (ctx->interval_placeholder().size() == 2) {
+    for (auto boundary : ctx->interval_placeholder()) {
       std::string bound = "X" + boundary->NUMERIC()->getText();
       intval.push(bound);
     }
@@ -155,33 +172,33 @@ void StlParserHandler::exitInterval(stlParser::IntervalContext * ctx){
     _intervalNames.push(intervalname);
   }
   //Interval is defined
-  else{
-    for(auto boundary : ctx->NUMERIC()){
+  else {
+    for (auto boundary : ctx->NUMERIC()) {
       std::string bound = boundary->getText();
       intval.push(bound);
     }
-      //sstream magic to get size_t from numeric
-      std::string rightb = intval.top();
-      intval.pop();
-      std::string leftb = intval.top();
-      intval.pop();
-      std::stringstream r(rightb);
-      std::stringstream l(leftb);
+    //sstream magic to get size_t from numeric
+    std::string rightb = intval.top();
+    intval.pop();
+    std::string leftb = intval.top();
+    intval.pop();
+    std::stringstream r(rightb);
+    std::stringstream l(leftb);
 
-      size_t rightval;
-      size_t leftval;
-      r >> rightval;
-      l >> leftval;
+    size_t rightval;
+    size_t leftval;
+    r >> rightval;
+    l >> leftval;
 
-      std::string intervalname = leftb + "," + rightb;
+    std::string intervalname = leftb + "," + rightb;
 
-      std::pair<size_t,size_t> * interval = new std::pair<size_t,size_t>(leftval,rightval);
+    std::pair<size_t, size_t> *interval =
+        new std::pair<size_t, size_t>(leftval, rightval);
 
-      _intervals[intervalname] = interval;
-      _intervalNames.push(intervalname);
+    _intervals[intervalname] = interval;
+    _intervalNames.push(intervalname);
   }
 }
-
 
 std::string StlParserHandler::printErrorMessage() {
   std::stringstream ss;
@@ -192,7 +209,7 @@ std::string StlParserHandler::printErrorMessage() {
 }
 
 void StlParserHandler::visitErrorNode(__attribute__((unused))
-                                       antlr4::tree::ErrorNode *node) {
+                                      antlr4::tree::ErrorNode *node) {
   messageError("Antlr parse error: " + node->getText() + "\n" +
                printErrorMessage());
 }

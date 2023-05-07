@@ -23,29 +23,30 @@ void TemporalAnd::addItem(TemporalExp *prop) {
   _items.push_back(prop);
 }
 
-std::vector<expression::Proposition *> TemporalAnd::getItems() {
-  std::vector<expression::Proposition *> ret;
-
-  for (auto texp : _items) {
-    std::vector<expression::Proposition *> p = texp->getItems();
-    ret.insert(ret.end(), p.begin(), p.end());
-  }
-
-  return ret;
+std::vector<TemporalExp *> TemporalAnd::getItems() {
+  return _items;
 };
 
-std::vector<TemporalExp *> TemporalAnd::getTempItems() { return _items; }
+//std::vector<expression::Proposition *> TemporalAnd::getPropositions() {
+//  std::vector<expression::Proposition *> ret;
+//
+//  for (auto texp : _items) {
+//    std::vector<expression::Proposition *> p = texp->getItems();
+//    ret.insert(ret.end(), p.begin(), p.end());
+//  }
+//
+//  return ret;
+//};
+
 
 size_t TemporalAnd::size() { return _items.size(); }
 
 void TemporalAnd::popItem() {
-  //FIXME need a popItem?
   _items.pop_back();
 }
 
 void TemporalAnd::removeItems() {
   _items.clear();
-  //FIXME need a removeItems?
 }
 
 }; // namespace harm

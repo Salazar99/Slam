@@ -1,7 +1,7 @@
 #pragma once
 
-#include "TemporalExp.hh"
 #include "TemporalAnd.hh"
+#include "TemporalExp.hh"
 #include <vector>
 
 namespace harm {
@@ -9,23 +9,22 @@ namespace harm {
 class StlImplication : public TemporalExp {
 
 private:
-  TemporalAnd * _ant;
-  TemporalAnd * _con;
+  TemporalExp *_ant;
+  TemporalExp *_con;
 
 public:
-  StlImplication( TemporalAnd * ant,
-                  TemporalAnd * con);
+  StlImplication(TemporalExp *ant, TemporalExp *con);
 
   virtual ~StlImplication();
 
   virtual Trinary evaluate(size_t time) override;
 
-  virtual std::vector<expression::Proposition *> getItems() override;
+  virtual std::vector<TemporalExp *> getItems() override;
 
   virtual size_t size() override;
 
   Trinary evaluate_ant(size_t time);
-  
+
   Trinary evaluate_con(size_t time);
 };
 } //namespace harm

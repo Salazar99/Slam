@@ -493,7 +493,7 @@ void AntecedentGenerator::storeSolution(Template *t, bool isOffset) {
 
   // Let's save the current propositions
   //std::vector<Proposition *> items = template_dt->minimize(isOffset);
-  std::vector<Proposition *> items = template_dt->getItems();
+  std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> items = template_dt->getItems();
 
   messageErrorIf(items.empty(),"Solution is empry");
 /*

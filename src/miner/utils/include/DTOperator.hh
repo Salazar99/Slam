@@ -84,7 +84,7 @@ public:
   virtual bool isMultiDimensional() = 0;
   virtual bool isSolutionInconsequential(std::vector<TemporalExp *> &sol) = 0;
 
-  virtual std::vector<Proposition *> getItems() = 0;
+  virtual std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> getItems() = 0;
   /** \brief Returns the current number of choices in the decision tree
    */
   virtual size_t getNChoices() = 0;

@@ -74,9 +74,9 @@ public:
   size_t maxPropositions;
 
   /// the algorithm's result (onset, ant -> con):
-  std::vector<std::vector<Proposition *>> onSets;
+  std::vector<std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>> onSets;
   /// the algorithm's result (offset, ant -> !con):
-  std::vector<std::vector<Proposition *>> offSets;
+  std::vector<std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>> offSets;
 
   ///if true, it prompts the algo to save the offset
   bool saveOffset;
