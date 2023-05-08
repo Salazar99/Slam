@@ -21,6 +21,8 @@ public:
       return _prop;
   }
 
+  void acceptVisitor(ExpVisitor &vis) override;
+
 private:
   expression::Proposition *_prop;
   std::string _name = "";

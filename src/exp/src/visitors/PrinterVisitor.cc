@@ -85,7 +85,7 @@
 
 namespace expression {
 
-PrinterVisitor::PrinterVisitor() : ExpVisitor(), _ss() {
+PrinterVisitor::PrinterVisitor(bool subPlaceholders) : ExpVisitor(), _ss(), _subPlaceholders(subPlaceholders) {
   // proposition
   operators[ope::PropositionNot] = std::string("!");
   operators[ope::PropositionAnd] = std::string("&&");
@@ -215,5 +215,48 @@ TYPE_CAST(LogicToNumeric)
 TYPE_CAST(LogicToBool)
 EXPRESSION(LogicLShift)
 EXPRESSION(LogicRShift)
+
+//temporal
+void PrinterVisitor::visit(Placeholder &o) {
+  if (o.getProposition() == nullptr || !_subPlaceholders) {
+    _ss << o.getName();
+  } else {
+    o.getProposition()->acceptVisitor(*this);
+  }
+}
+
+void PrinterVisitor::visit(TemporalInst &o) {
+  if (o.getProposition() == nullptr ||
+      (!_subPlaceholders && o.getName() != "")) {
+    _ss << o.getName();
+  } else {
+    o.getProposition()->acceptVisitor(*this);
+  }
+}
+
+void PrinterVisitor::visit(TemporalAnd &o) {
+  if (o.getItems().empty()) {
+    _ss << BOOL("true");
+  } else {
+    o.getItems()[0]->acceptVisitor(*this);
+    for (size_t i = 1; i < o.getItems().size(); i++) {
+      _ss << " && ";
+      auto item = o.getItems()[i];
+      item->acceptVisitor(*this);
+    }
+  }
+}
+void PrinterVisitor::visit(Implication &o) {
+  o.getItems()[0]->acceptVisitor(*this);
+  _ss << " -> ";
+  o.getItems()[1]->acceptVisitor(*this);
+}
+void PrinterVisitor::visit(Eventually &o) {
+  _ss << "F[" << o.getInterval()->first << ","
+      << o.getInterval()->first << "](";
+  o.getItems()[0]->acceptVisitor(*this);
+  _ss << ")";
+}
+
 
 } // namespace expression

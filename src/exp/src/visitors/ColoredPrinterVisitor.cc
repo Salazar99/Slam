@@ -9,9 +9,9 @@
 #define LOGIC_CONSTANT(LEAF)                                                   \
   void ColoredPrinterVisitor::visit(LEAF &o) {                                 \
     if (o.getType().first == VarType::ULogic) {                                \
-      _ss << VAR(std::to_string((ULogic)o.evaluate(0)));                     \
+      _ss << VAR(std::to_string((ULogic)o.evaluate(0)));                       \
     } else {                                                                   \
-      _ss << VAR(std::to_string((SLogic)o.evaluate(0)));                      \
+      _ss << VAR(std::to_string((SLogic)o.evaluate(0)));                       \
     }                                                                          \
   }
 
@@ -52,15 +52,15 @@
     o.getItem().acceptVisitor(*this);                                          \
     _ss << "";                                                                 \
   }
-#define TYPE_CAST_TO_NUMERIC(NODE)                                             \
-  void ColoredPrinterVisitor::visit(expression::NODE &o) {                     \
+#define TYPE_CAST_TO_NUMERIC(NODE)                                               \
+  void ColoredPrinterVisitor::visit(expression::NODE &o) {                       \
     /*	if(o.getType().second==32){                                             \
                     _ss << BOOL("(float)");                                    \
             }else{                                                             \
                     _ss << BOOL("(double)");                                   \
             }                                                                  \
-            */                                                                 \
-    o.getItem().acceptVisitor(*this);                                          \
+            */ \
+    o.getItem().acceptVisitor(*this);                                            \
   }
 
 #define EXPRESSION_LOGIC_BIT_SELECTION(NODE)                                   \
@@ -90,7 +90,8 @@
 
 namespace expression {
 
-ColoredPrinterVisitor::ColoredPrinterVisitor() : ExpVisitor(), _ss() {
+ColoredPrinterVisitor::ColoredPrinterVisitor(bool subPlaceholders)
+    : ExpVisitor(), _ss(), _subPlaceholders(subPlaceholders) {
   // proposition
   operators[ope::PropositionNot] = std::string("!");
   operators[ope::PropositionAnd] = std::string("&&");
@@ -198,5 +199,47 @@ TYPE_CAST_TO_NUMERIC(LogicToNumeric)
 TYPE_CAST_TO_BOOL(LogicToBool)
 EXPRESSION(LogicLShift)
 EXPRESSION(LogicRShift)
+
+//temporal
+void ColoredPrinterVisitor::visit(Placeholder &o) {
+  if (o.getProposition() == nullptr || !_subPlaceholders) {
+    _ss << VAR(o.getName());
+  } else {
+    o.getProposition()->acceptVisitor(*this);
+  }
+}
+
+void ColoredPrinterVisitor::visit(TemporalInst &o) {
+  if (o.getProposition() == nullptr ||
+      (!_subPlaceholders && o.getName() != "")) {
+    _ss << VAR(o.getName());
+  } else {
+    o.getProposition()->acceptVisitor(*this);
+  }
+}
+
+void ColoredPrinterVisitor::visit(TemporalAnd &o) {
+  if (o.getItems().empty()) {
+    _ss << BOOL("true");
+  } else {
+    o.getItems()[0]->acceptVisitor(*this);
+    for (size_t i = 1; i < o.getItems().size(); i++) {
+      _ss << BOOL(" && ");
+      auto item = o.getItems()[i];
+      item->acceptVisitor(*this);
+    }
+  }
+}
+void ColoredPrinterVisitor::visit(Implication &o) {
+  o.getItems()[0]->acceptVisitor(*this);
+  _ss << TIMPL(" -> ");
+  o.getItems()[1]->acceptVisitor(*this);
+}
+void ColoredPrinterVisitor::visit(Eventually &o) {
+  _ss << TEMP("F[") << o.getInterval()->first << TEMP(",")
+      << o.getInterval()->first << TEMP("](");
+  o.getItems()[0]->acceptVisitor(*this);
+  _ss << TEMP(")");
+}
 
 } // namespace expression

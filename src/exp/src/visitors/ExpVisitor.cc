@@ -2,23 +2,23 @@
 
 //------------------------------------------------------------------------------
 #define LEAF_NODE(LEAF)                                                        \
-    void ExpVisitor::visit(LEAF &) {}
+  void ExpVisitor::visit(LEAF &) {}
 
 #define EXPRESSION_NODE_1(NODE)                                                \
-    void ExpVisitor::visit(NODE &o) {                                         \
-        auto &propositions = o.getItems();                                     \
-        for (auto *prop : propositions)                                        \
-            prop->acceptVisitor(*this);                                        \
-    }
+  void ExpVisitor::visit(NODE &o) {                                            \
+    auto &propositions = o.getItems();                                         \
+    for (auto *prop : propositions)                                            \
+      prop->acceptVisitor(*this);                                              \
+  }
 
 #define EXPRESSION_NODE_2(NODE)                                                \
-    void ExpVisitor::visit(NODE &o) { o.getItem().acceptVisitor(*this); }
+  void ExpVisitor::visit(NODE &o) { o.getItem().acceptVisitor(*this); }
 
 #define EXPRESSION_NODE_3(NODE)                                                \
-    void ExpVisitor::visit(NODE &o) {                                         \
-        o.getItem1().acceptVisitor(*this);                                     \
-        o.getItem2().acceptVisitor(*this);                                     \
-    }
+  void ExpVisitor::visit(NODE &o) {                                            \
+    o.getItem1().acceptVisitor(*this);                                         \
+    o.getItem2().acceptVisitor(*this);                                         \
+  }
 //------------------------------------------------------------------------------
 
 namespace expression {
@@ -71,4 +71,25 @@ EXPRESSION_NODE_1(LogicRShift)
 EXPRESSION_NODE_2(LogicBitSelector)
 EXPRESSION_NODE_2(LogicToNumeric)
 
-} 
+//temporal
+
+#define TEMPORAL_NODE(NODE)                                                    \
+  void ExpVisitor::visit(NODE &o) {                                            \
+    for (auto &item : o.getItems()) {                                          \
+      item->acceptVisitor(*this);                                              \
+    }                                                                          \
+  }
+
+TEMPORAL_NODE(TemporalAnd)
+TEMPORAL_NODE(Implication)
+TEMPORAL_NODE(Eventually)
+
+void ExpVisitor::visit(TemporalInst &o) {
+  o.getProposition()->acceptVisitor(*this);
+}
+void ExpVisitor::visit(Placeholder &o) {
+  if (o.getProposition() != nullptr) {
+    o.getProposition()->acceptVisitor(*this);
+  }
+}
+} // namespace expression

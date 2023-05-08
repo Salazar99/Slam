@@ -6,6 +6,9 @@
 #include <vector>
 
 namespace expression {
+
+class ExpVisitor;
+
 class TemporalExp {
 public:
   virtual ~TemporalExp() {}
@@ -15,5 +18,7 @@ public:
   virtual std::vector<TemporalExp *> getItems() = 0;
 
   virtual size_t size() = 0;
+
+  virtual void acceptVisitor(ExpVisitor &vis) = 0;
 };
 }; // namespace expression

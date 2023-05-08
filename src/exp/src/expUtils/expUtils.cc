@@ -1,5 +1,6 @@
-#include "classes/atom/Atom.hh"
 #include "expUtils/expUtils.hh"
+#include "classes/atom/Atom.hh"
+#include "classes/temporal/TemporalExp.hh"
 #include "visitors/ColoredPrinterVisitor.hh"
 #include "visitors/CopyVisitor.hh"
 #include "visitors/CounterVisitor.hh"
@@ -37,6 +38,16 @@ std::string prop2ColoredString(expression::Proposition &p) {
   expression::ColoredPrinterVisitor printer;
   p.acceptVisitor(printer);
   return printer.get();
+}
+std::string temp2String(expression::TemporalExp &p, bool subPlaceholders) {
+  expression::PrinterVisitor printer(subPlaceholders);
+  p.acceptVisitor(printer);
+    return printer.get();
+}
+std::string temp2ColoredString(expression::TemporalExp &p, bool subPlaceholders) {
+  expression::ColoredPrinterVisitor printer(subPlaceholders);
+  p.acceptVisitor(printer);
+    return printer.get();
 }
 std::string allNum2String(expression::CachedAllNumeric &all) {
   expression::PrinterVisitor printer;

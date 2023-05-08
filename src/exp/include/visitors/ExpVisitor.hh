@@ -65,6 +65,14 @@ class ExpVisitor {
     virtual void visit(LogicLShift &o);
    virtual void visit(LogicRShift &o);
 
+   //Temporal
+   virtual void visit(TemporalAnd &o);
+   virtual void visit(TemporalInst &o);
+   virtual void visit(Placeholder &o);
+   virtual void visit(Eventually &o);
+   virtual void visit(Implication &o);
+
+
   protected:
     /// @brief Constructor
     ExpVisitor() = default;

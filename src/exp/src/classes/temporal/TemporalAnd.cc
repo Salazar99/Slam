@@ -1,4 +1,5 @@
 #include "classes/temporal/TemporalAnd.hh"
+#include "visitors/ExpVisitor.hh"
 
 namespace expression {
 
@@ -23,9 +24,7 @@ void TemporalAnd::addItem(TemporalExp *prop) {
   _items.push_back(prop);
 }
 
-std::vector<TemporalExp *> TemporalAnd::getItems() {
-  return _items;
-};
+std::vector<TemporalExp *> TemporalAnd::getItems() { return _items; };
 
 //std::vector<expression::Proposition *> TemporalAnd::getPropositions() {
 //  std::vector<expression::Proposition *> ret;
@@ -38,15 +37,11 @@ std::vector<TemporalExp *> TemporalAnd::getItems() {
 //  return ret;
 //};
 
-
 size_t TemporalAnd::size() { return _items.size(); }
 
-void TemporalAnd::popItem() {
-  _items.pop_back();
-}
+void TemporalAnd::popItem() { _items.pop_back(); }
 
-void TemporalAnd::removeItems() {
-  _items.clear();
-}
+void TemporalAnd::removeItems() { _items.clear(); }
 
+void TemporalAnd::acceptVisitor(ExpVisitor &vis) { vis.visit(*this); }
 }; // namespace expression

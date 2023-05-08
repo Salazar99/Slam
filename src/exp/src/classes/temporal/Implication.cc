@@ -1,4 +1,5 @@
 #include "classes/temporal/Implication.hh"
+#include "visitors/ExpVisitor.hh"
 
 namespace expression {
 
@@ -25,5 +26,6 @@ size_t Implication::size() { return 2; }
 Trinary Implication::evaluate_ant(size_t time) { return _ant->evaluate(time); }
 
 Trinary Implication::evaluate_con(size_t time) { return _con->evaluate(time); }
+void Implication::acceptVisitor(ExpVisitor &vis) { vis.visit(*this); }
 
 }; // namespace expression

@@ -1,4 +1,5 @@
 #include "classes/temporal/Placeholder.hh"
+#include "visitors/ExpVisitor.hh"
 
 namespace expression {
 
@@ -19,4 +20,6 @@ std::vector<TemporalExp *> Placeholder::getItems() {
 size_t Placeholder::size() { return 0; }
 
 void Placeholder::setProposition(expression::Proposition *p) { _prop = p; }
+
+void Placeholder::acceptVisitor(ExpVisitor &vis) { vis.visit(*this); }
 }; // namespace expression

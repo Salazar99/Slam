@@ -23,6 +23,8 @@ public:
 
   std::string getName() { return _name; }
 
+  void acceptVisitor(ExpVisitor &vis) override;
+
 private:
   expression::Proposition *_prop = nullptr;
   std::string _name = "";

@@ -8,7 +8,6 @@ class Trace;
 
 namespace expression {
 
-
 class Eventually : public TemporalExp {
 public:
   Eventually(TemporalExp *operand, std::pair<size_t, size_t> *interval,
@@ -27,6 +26,8 @@ public:
   void setInterval(std::pair<size_t, size_t> *intv);
 
   std::pair<size_t, size_t> *getInterval();
+
+  void acceptVisitor(ExpVisitor &vis) override;
 
 private:
   TemporalExp *_operand;

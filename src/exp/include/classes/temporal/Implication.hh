@@ -26,5 +26,7 @@ public:
   Trinary evaluate_ant(size_t time);
 
   Trinary evaluate_con(size_t time);
+
+  void acceptVisitor(ExpVisitor &vis) override;
 };
 } //namespace expression

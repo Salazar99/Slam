@@ -10,7 +10,7 @@ namespace expression {
 class PrinterVisitor : public ExpVisitor {
 public:
   /// @brief Constructor.
-  PrinterVisitor();
+  PrinterVisitor(bool subPlaceholders=0);
 
   /// @brief Destructor.
   ~PrinterVisitor() override = default;
@@ -70,6 +70,13 @@ public:
   void visit(LogicLShift &o) override;
   void visit(LogicRShift &o) override;
 
+  //Temporal
+  void visit(Placeholder &o);
+  void visit(TemporalInst &o);
+  void visit(TemporalAnd &o);
+  void visit(Implication &o);
+  void visit(Eventually &o);
+
 protected:
   enum ope : int {
     PropositionNot = 0,
@@ -112,6 +119,7 @@ protected:
 
   std::string operators[40];
   std::stringstream _ss;
+  bool _subPlaceholders=0;
 };
 
 } // namespace expression

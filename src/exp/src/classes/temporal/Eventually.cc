@@ -1,4 +1,5 @@
 #include "classes/temporal/Eventually.hh"
+#include "visitors/ExpVisitor.hh"
 #include "Trace.hh"
 
 namespace expression {
@@ -39,5 +40,6 @@ void Eventually::setInterval(std::pair<size_t, size_t> *intv) {
 }
 
 std::pair<size_t, size_t> *Eventually::getInterval() { return _interval; }
+void Eventually::acceptVisitor(ExpVisitor &vis) { vis.visit(*this); }
 
 }; // namespace expression

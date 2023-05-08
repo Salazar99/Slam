@@ -1,10 +1,10 @@
 #pragma once
 
+#include "VarType.hh"
 #include "cConversion.hh"
 #include "classes/atom/Atom.hh"
-#include "exp.hh"
-#include "VarType.hh"
 #include "classes/atom/CachedAllNumeric.hh"
+#include "exp.hh"
 
 std::ostream &operator<<(std::ostream &os, expression::Proposition &p);
 std::string prop2String(expression::Proposition &p);
@@ -12,7 +12,10 @@ std::string num2String(expression::NumericExpression &n);
 std::string log2String(expression::LogicExpression &l);
 std::string prop2ColoredString(expression::Proposition &p);
 std::string allNum2String(expression::CachedAllNumeric &all);
+std::string temp2String(expression::TemporalExp &p, bool subPlaceholders = 0);
 
+std::string temp2ColoredString(expression::TemporalExp &p,
+                               bool subPlaceholders = 0);
 expression::Proposition *copy(expression::Proposition &p);
 expression::LogicExpression *copy(expression::LogicExpression &le);
 expression::NumericExpression *copy(expression::NumericExpression &ne);

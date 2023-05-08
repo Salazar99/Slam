@@ -24,7 +24,7 @@
 #include "exp.hh"
 
 namespace harm {
-    class EdgeProposition;
+class EdgeProposition;
 
 /*! \class Template
     \brief Class representing an assertion template, the template can be
@@ -177,8 +177,6 @@ private:
    */
   void build();
 
-
-
   /** \brief evaluates the formula implemented by the custom automaton
    */
   Trinary evalAutomaton(size_t time, Automaton *root) const;
@@ -203,7 +201,6 @@ private:
    */
   std::string findCauseInProposition(Proposition *ep, size_t time, bool goal);
 
-
   /*! \structure Range
     \brief utility data structure for cuts and threads in the evaluation algorithm
 */
@@ -215,7 +212,6 @@ private:
     size_t _start;
     size_t _length;
   };
-
 
   /** \brief evaluation: 1. this function handles the update of cached values and the dynamic or non-dynamic shift case 
    * \param what specifies if the function has to update the cached values of ant/con/both/none
@@ -255,7 +251,6 @@ private:
                 const Range &threadsRange);
 
 public:
-
   /** \brief fill the contingency table with the cached values
    * \param ct is a pointer to a suitable matrix
    */
@@ -283,6 +278,7 @@ public:
 
   void subPropInAssertion(Proposition *original, Proposition *newProp);
 
+  TemporalExp *getImplication() { return _impl; }
 
 private:
   // printers
@@ -308,7 +304,7 @@ private:
   /// link of all placeholders to all instantiated propositions
   std::unordered_map<std::string, TemporalExp **> _tokenToProp;
   ///link to all interval placeholders
-  std::unordered_map<std::string, std::pair<size_t,size_t>* > _tokenToIntv;
+  std::unordered_map<std::string, std::pair<size_t, size_t> *> _tokenToIntv;
   /// link of all user instantiated placeholders to their respective
   /// propositions
   std::unordered_map<std::string, TemporalExp **> _iToProp;
@@ -319,7 +315,7 @@ private:
   std::map<std::string, TemporalExp **> _aphToProp;
   std::map<std::string, TemporalExp **> _cphToProp;
   std::map<std::string, TemporalExp **> _acphToProp;
-  
+
   /* current proposition domains:
     the generator of permutations will use the following propositions to
     generate the permutations
