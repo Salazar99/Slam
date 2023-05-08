@@ -23,5 +23,5 @@ target_include_directories(${NAME} PUBLIC
     ../grammar/include
     ${ANTLR4CPP_INCLUDE_DIRS}
 )
-target_link_libraries(${NAME} ${ANTLR4_RUNTIME} antlr4StlParserGrammar antlr4SpotParserGrammar antlr4SVAParserGrammar exp miner_utils propositionParser)
+target_link_libraries(${NAME} ${ANTLR4_RUNTIME} antlr4StlParserGrammar exp miner_utils propositionParser)
 

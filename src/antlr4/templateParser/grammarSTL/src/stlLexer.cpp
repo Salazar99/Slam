@@ -1,5 +1,5 @@
 
-// Generated from stl.g4 by ANTLR 4.12.0
+// Generated from stl.g4 by ANTLR 4.10.1
 
 
 #include "stlLexer.h"
@@ -41,7 +41,7 @@ struct StlLexerStaticData final {
   std::unique_ptr<antlr4::atn::ATN> atn;
 };
 
-::antlr4::internal::OnceFlag stllexerLexerOnceFlag;
+std::once_flag stllexerLexerOnceFlag;
 StlLexerStaticData *stllexerLexerStaticData = nullptr;
 
 void stllexerLexerInitialize() {
@@ -244,5 +244,5 @@ const atn::ATN& stlLexer::getATN() const {
 
 
 void stlLexer::initialize() {
-  ::antlr4::internal::call_once(stllexerLexerOnceFlag, stllexerLexerInitialize);
+  std::call_once(stllexerLexerOnceFlag, stllexerLexerInitialize);
 }

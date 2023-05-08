@@ -16,7 +16,7 @@ harm::Template *parseTemplate(std::string formula, harm::Trace *trace,
 
   // parse typed propositions
   if (language == "stl") {
-    hparser::StlParserHandler listener(trace);
+    hparser::StlParserHandler listener(trace, limits);
     listener.addErrorMessage("\t\t\tIn formula: " + formula);
     listener._useCache = useCache;
     antlr4::ANTLRInputStream input(formula);
@@ -25,14 +25,13 @@ harm::Template *parseTemplate(std::string formula, harm::Trace *trace,
     stlParser parser(&tokens);
     antlr4::tree::ParseTree *treeFragAnt = parser.file();
     antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, treeFragAnt);
-    Hstring templateFormula = listener.getTemplateFormula();
-    
+
     /*DEBUG
     std::cout << treeFragAnt->toStringTree(&parser) << "\n";
     std::cout << formula << "\n";
   exit(0);
     */
-    return new harm::Template(templateFormula, trace, limits);
+    return listener.getTemplate();
   } else {
     messageError("Unknown language: '" + language + "'");
   }

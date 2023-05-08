@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hstring.hh"
+#include "DTLimits.hh"
 #include "Trace.hh"
 #include "exp.hh"
 #include "stlBaseListener.h"
@@ -14,16 +14,19 @@
 namespace harm {
 class Template;
 }
+
 namespace hparser {
 
 class StlParserHandler : public stlBaseListener {
 
 public:
-  explicit StlParserHandler(harm::Trace *trace);
+  explicit StlParserHandler(harm::Trace *trace, harm::DTLimits limits);
 
   ~StlParserHandler() override = default;
 
-  Hstring &getTemplateFormula();
+  harm::Template *getTemplate() {
+     
+      return _template; }
   void addErrorMessage(const std::string &msg);
 
   bool _useCache = 1;
@@ -31,16 +34,17 @@ public:
 private:
   bool _abort;
 
-  std::stack<Hstring> _subFormulas;
+  std::stack<expression::TemporalExp *> _tfStack;
   std::stack<std::string> _intervalNames;
   std::unordered_map<std::string, std::pair<size_t, size_t> *> _intervals;
   harm::Trace *_trace;
-  Hstring _templateFormula;
+  harm::Template *_template;
   std::unordered_map<std::string, expression::TemporalExp **> _phToProp;
   std::unordered_map<std::string, std::string> _propStrToInst;
   size_t dtCount = 0;
   size_t instCount = 0;
   std::vector<std::string> _errorMessages;
+
   std::string printErrorMessage();
 
   void enterFile(stlParser::FileContext *ctx) override;
@@ -48,7 +52,7 @@ private:
   virtual void exitFormula(stlParser::FormulaContext *ctx) override;
   virtual void visitErrorNode(antlr4::tree::ErrorNode *node) override;
   virtual void exitTformula(stlParser::TformulaContext *ctx) override;
-  virtual void exitInterval(stlParser::IntervalContext * ctx) override;
-  };
+  virtual void exitInterval(stlParser::IntervalContext *ctx) override;
+};
 
 } // namespace hparser

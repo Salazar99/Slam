@@ -1,7 +1,10 @@
 #include "StlParserHandler.hh"
+#include "Template.hh"
+#include "exp.hh"
 #include "propositionParser.hh"
 #include "propositionParsingUtils.hh"
 #include <sstream>
+#include <utility>
 
 using namespace expression;
 
@@ -15,36 +18,24 @@ void StlParserHandler::enterFile(__attribute__((unused))
                                  stlParser::FileContext *ctx) {
   _abort = false;
 }
-StlParserHandler::StlParserHandler(harm::Trace *trace)
-    : _abort(false), _trace(trace) {}
+StlParserHandler::StlParserHandler(harm::Trace *trace, harm::DTLimits limits)
+    : _abort(false), _trace(trace) {
+  _template = new harm::Template(trace, limits);
+}
 
 void StlParserHandler::exitFile(stlParser::FileContext *ctx) {
-  auto formula = _subFormulas.top();
-  auto G_interval = _intervalNames.top();
-  _intervalNames.pop();
-  _subFormulas.pop();
-
-  auto STL_G =
-      Hstring("G[", Hstring::Stype::G, (expression::TemporalExp **)nullptr) +
-      Hstring(G_interval, Hstring::Stype::G, _intervals.at(G_interval)) +
-      Hstring("]", Hstring::Stype::G, (expression::TemporalExp **)nullptr);
-
-  _templateFormula =
-      STL_G + Hstring("(", Hstring::Stype::G, (expression::TemporalExp **)nullptr) +
-      formula + Hstring(")", Hstring::Stype::G, (expression::TemporalExp **)nullptr);
-  _errorMessages.clear();
+  auto teFormula = _tfStack.top();
+  _tfStack.pop();
+  _template->_impl = dynamic_cast<Implication *>(teFormula);
 }
 
 void StlParserHandler::exitFormula(stlParser::FormulaContext *ctx) {
   if (ctx->tformula().size() == 2 && ctx->IMPL() != nullptr) {
-    auto formulaCon = _subFormulas.top();
-    _subFormulas.pop();
-    auto formulaAnt = _subFormulas.top();
-    _subFormulas.pop();
-    _subFormulas.push(
-        formulaAnt +
-        Hstring(" -> ", Hstring::Stype::Imp, (expression::TemporalExp **)nullptr) +
-        formulaCon);
+    auto teformulaCon = _tfStack.top();
+    _tfStack.pop();
+    auto teformulaAnt = _tfStack.top();
+    _tfStack.pop();
+    _tfStack.push(new Implication(teformulaAnt, teformulaCon));
     return;
   }
 }
@@ -54,97 +45,74 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
   if (ctx->boolean() != nullptr) {
     Proposition *p = parsePropositionAlreadyTyped(ctx->getText(), _trace);
     std::string pStr = prop2String(*p);
-    if (!_propStrToInst.count(pStr)) {
-      std::string ph = "_inst_" + std::to_string(instCount++);
-      _propStrToInst[pStr] = ph;
-    }
-    //if (_useCache) {
-    // _subFormulas.push(Hstring(_propStrToInst.at(pStr), Hstring::Stype::Inst,
-    //                            new Proposition *(new CachedProposition(p))));
-    //} else {
 
-    _subFormulas.push(
-        Hstring(_propStrToInst.at(pStr), Hstring::Stype::Inst,
-                new expression::TemporalExp *(new expression::TemporalInst(p, _propStrToInst.at(pStr)))));
-    //}
+    std::string ph = "_inst_" + std::to_string(instCount++);
+    _propStrToInst[pStr] = ph;
+    expression::TemporalExp *te = new expression::TemporalInst(p, ph);
+    _template->_iToProp[ph] = te;
+    _template->_tokenToProp[ph] = te;
+    _tfStack.push(te);
+
     return;
   }
   if (ctx->placeholder() != nullptr) {
     std::string ph = "P" + ctx->placeholder()->NUMERIC()->getText();
-    if (!_phToProp.count(ph)) {
-      _phToProp[ph] =
-          new expression::TemporalExp *(new expression::Placeholder(nullptr, ph));
-    }
-    _subFormulas.push(Hstring(ph, Hstring::Stype::Ph,
-                              (expression::TemporalExp **)_phToProp.at(ph)));
+    messageErrorIf(_template->_tokenToProp.count(ph),
+                   "Repeated Placeholder not allowed");
+
+    TemporalExp *p = new expression::Placeholder(nullptr, ph);
+    _template->_tokenToProp[ph] = p;
+    _template->_cphToProp[ph] = p;
+
+    _tfStack.push(p);
+
     return;
   }
 
   if (ctx->DT_ANDF() != nullptr) {
     messageErrorIf(dtCount > 0,
                    "More than one dt operator defined\n" + printErrorMessage());
-    std::string ph = "dtAndF" + std::to_string(dtCount++);
-    _subFormulas.push(
-        Hstring(ph, Hstring::Stype::DTAndF, (expression::TemporalExp **)nullptr));
+    std::string ph = "dtAndF";
+    dtCount++;
+    TemporalExp *te = new TemporalAnd();
+    _template->_dtOp =
+        std::make_pair(ph, new harm::DTAndF(dynamic_cast<TemporalAnd *>(te),
+                                            _template, _template->_limits));
+    _tfStack.push(te);
+
     return;
   }
 
   if (ctx->tformula().size() == 2 && ctx->AND() != nullptr) {
-    Hstring newFormula =
-        Hstring(" && ", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr) +
-        _subFormulas.top();
-    _subFormulas.pop();
-    newFormula = _subFormulas.top() + newFormula;
-    _subFormulas.pop();
-    _subFormulas.push(newFormula);
+    TemporalAnd *p = new TemporalAnd();
+    p->addItem(_tfStack.top());
+    _tfStack.pop();
+    p->addItem(_tfStack.top());
+    _tfStack.pop();
+    _tfStack.push(p);
+
     return;
   }
 
   if (ctx->tformula().size() == 2 && ctx->OR() != nullptr) {
-    Hstring newFormula =
-        Hstring(" || ", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr) +
-        _subFormulas.top();
-    _subFormulas.pop();
-    newFormula = _subFormulas.top() + newFormula;
-    _subFormulas.pop();
-    _subFormulas.push(newFormula);
     return;
   }
 
   //If we are exiting a tformula rule that gives STL_eventually operator
   if (ctx->tformula().size() == 1 && ctx->STL_EVENTUALLY() != nullptr) {
-    //Get last interval member found, end of interval
-    std::string interval = _intervalNames.top();
-    _intervalNames.pop();
-
-    //Since intervals are another type of placeholder, reuse same structure
-    Hstring newFormula =
-        Hstring("F[", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr) +
-        Hstring(interval, Hstring::Stype::Intv, _intervals.at(interval)) +
-        Hstring("]", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr) +
-        _subFormulas.top();
-    _subFormulas.pop();
-    _subFormulas.push(newFormula);
+    Eventually *p =
+        new Eventually(_tfStack.top(), std::pair<size_t, size_t>(0, 0), _trace);
+    _tfStack.pop();
+    _tfStack.push(p);
     return;
   }
 
   if (ctx->tformula().size() == 1 && ctx->LPAREN() != nullptr &&
       ctx->RPAREN() != nullptr) {
-    Hstring newFormula =
-        Hstring("(", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr) +
-        _subFormulas.top() +
-        Hstring(")", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr);
-    _subFormulas.pop();
-    _subFormulas.push(newFormula);
     return;
   }
 
   if (ctx->tformula().size() == 1 && ctx->NOT() != nullptr) {
-    Hstring newFormula =
-        Hstring("!", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr) +
-        _subFormulas.top();
-    _subFormulas.pop();
-    _subFormulas.push(newFormula);
     return;
   }
 }
@@ -215,6 +183,5 @@ void StlParserHandler::visitErrorNode(__attribute__((unused))
 void StlParserHandler::addErrorMessage(const std::string &msg) {
   _errorMessages.push_back(msg);
 }
-Hstring &StlParserHandler::getTemplateFormula() { return _templateFormula; }
 
 } // namespace hparser

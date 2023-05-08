@@ -1,4 +1,5 @@
 #include "PermGenerator.hh"
+#include "Template.hh"
 #include "colors.hh"
 #include "message.hh"
 
@@ -107,7 +108,7 @@ PermGenerator::~PermGenerator() {
     delete[] _perms;
   }
 }
-PermGenerator::PermUnit *PermGenerator::generatePermUnit(TemporalExp *&templ) {
+PermGenerator::PermUnit *PermGenerator::generatePermUnit(TemporalExp *templ) {
   std::unordered_set<std::string> foundPH;
   return generatePermUnit(templ, foundPH);
 }
@@ -343,58 +344,64 @@ bool PermGenerator::compare(TemporalExp *f1, TemporalExp *f2) {
   return true;
 }
 void PermGenerator::genPermutations(size_t antP, size_t conP, size_t antConP,
-                                    Hstring &templateFormula,
-                                    TemporalExp *impl) {
+                                    Template *templ) {
   // set the domains
   _aProps = antP;
   _cProps = conP;
   _acProps = antConP;
 
-  auto hcon = templateFormula.getCon();
-  auto hant = templateFormula.getAnt();
-
   size_t index = 0;
-  // retrieve placeholders to location
-  std::unordered_set<std::string> antPhs;
-  for (size_t i = 0; i < hant.size(); i++) {
-    auto &e = hant[i];
-    if (e._t == Hstring::Stype::Ph) {
-      _phToLoc.insert({{e._s, harm::Location::Ant}});
-      antPhs.insert(e._s);
-
-      if (!_phToIndex.count(e._s)) {
-        _phToIndex[e._s] = index;
-      } else {
-        // repeated placeholders are stored elsewhere
-        auto phName = e._s + "_" + std::to_string(_mPhs.at(e._s));
-        _rphToIndex[phName] = index;
-      }
-      // count placeholders occurrences
-      _mPhs[e._s]++;
-      index++;
-    }
+  for (auto &[ph, p] : templ->_cphToProp) {
+    _phToLoc.insert({{ph, harm::Location::Con}});
+    _phToIndex[ph] = index++;
+    _mPhs[ph]++;
   }
 
-  for (size_t i = 0; i < hcon.size(); i++) {
-    auto &e = hcon[i];
-    if (e._t == Hstring::Stype::Ph) {
-      if (antPhs.count(e._s)) {
-        _phToLoc.at(e._s) = harm::Location::AntCon;
-      } else {
-        _phToLoc.insert({{e._s, harm::Location::Con}});
-      }
-      if (!_phToIndex.count(e._s)) {
-        _phToIndex[e._s] = index;
-      } else {
-        // repeated placeholders are stored elsewhere
-        auto phName = e._s + "_" + std::to_string(_mPhs.at(e._s));
-        _rphToIndex[phName] = index;
-      }
-      // count placeholders occurrences
-      _mPhs[e._s]++;
-      index++;
-    }
-  }
+  //  auto hcon = templateFormula.getCon();
+  //  auto hant = templateFormula.getAnt();
+  //
+  //  size_t index = 0;
+  //  // retrieve placeholders to location
+  //  std::unordered_set<std::string> antPhs;
+  //  for (size_t i = 0; i < hant.size(); i++) {
+  //    auto &e = hant[i];
+  //    if (e._t == Hstring::Stype::Ph) {
+  //      _phToLoc.insert({{e._s, harm::Location::Ant}});
+  //      antPhs.insert(e._s);
+  //
+  //      if (!_phToIndex.count(e._s)) {
+  //        _phToIndex[e._s] = index;
+  //      } else {
+  //        // repeated placeholders are stored elsewhere
+  //        auto phName = e._s + "_" + std::to_string(_mPhs.at(e._s));
+  //        _rphToIndex[phName] = index;
+  //      }
+  //      // count placeholders occurrences
+  //      _mPhs[e._s]++;
+  //      index++;
+  //    }
+  //  }
+  //
+  //  for (size_t i = 0; i < hcon.size(); i++) {
+  //    auto &e = hcon[i];
+  //    if (e._t == Hstring::Stype::Ph) {
+  //      if (antPhs.count(e._s)) {
+  //        _phToLoc.at(e._s) = harm::Location::AntCon;
+  //      } else {
+  //        _phToLoc.insert({{e._s, harm::Location::Con}});
+  //      }
+  //      if (!_phToIndex.count(e._s)) {
+  //        _phToIndex[e._s] = index;
+  //      } else {
+  //        // repeated placeholders are stored elsewhere
+  //        auto phName = e._s + "_" + std::to_string(_mPhs.at(e._s));
+  //        _rphToIndex[phName] = index;
+  //      }
+  //      // count placeholders occurrences
+  //      _mPhs[e._s]++;
+  //      index++;
+  //    }
+  //  }
 
   // assign an index to each placeholders
   //  size_t index = 0;
@@ -421,7 +428,7 @@ void PermGenerator::genPermutations(size_t antP, size_t conP, size_t antConP,
   //  messageErrorIf(wholeForm.is_constant(), "The template is a constant!");
 
   // find the dimensions and structure of the permutations
-  PermUnit *pu = generatePermUnit(impl);
+  PermUnit *pu = generatePermUnit(templ->_impl);
   //    debug
   // printPermUnit(pu);
 

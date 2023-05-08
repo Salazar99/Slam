@@ -30,27 +30,28 @@ bool DTAndF::isRandomConstructed() { return false; }
 size_t DTAndF::getNChoices() { return _choices->size(); }
 bool DTAndF::isTaken(size_t id, bool second, int depth) {
   if (second) {
-    return _leaves.count(id) && _leaves.at(id).second != nullptr;
+    return _leaves.count(id) && _leaves.at(id).first!=nullptr;
   } else {
     return _leaves.count(id) && _leaves.at(id).first != nullptr;
   }
 }
 void DTAndF::removeLeaf(size_t id, int depth) {
-  _leaves.at(id).second = nullptr;
+  //_leaves.at(id).second = nullptr;
   _leaves.at(id).first = nullptr;
 }
-void DTAndF::addLeaf(Proposition *p, std::pair<size_t, size_t> *intv, size_t id,
-                     bool second, int depth) {
-  if (second) {
-    _leaves[id].second = intv;
-  } else {
+void DTAndF::addLeaf(Proposition *p, std::pair<size_t, size_t> intv, size_t id, bool second, int depth) {
+  //if (second) {
+  //  _leaves[id].second = intv;
+  //} else {
+  //  _leaves[id].first = p;
+  //}
     _leaves[id].first = p;
-  }
+    _leaves[id].second = intv;
 }
 
 void DTAndF::removeItems() { _choices->removeItems(); }
 
-void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> *interval,
+void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> interval,
                      int depth) {
   expression::TemporalExp *Fprop =
       new Eventually(new TemporalInst(p, ""), interval, _t->_trace);
@@ -66,7 +67,7 @@ for (auto &ti : _choices->getItems()) {
     
     ret.push_back(std::make_pair(
                 dynamic_cast<TemporalInst*>((dynamic_cast<Eventually*>(ti)->getOperand()))->getProposition(),
-                *dynamic_cast<Eventually*>(ti)->getInterval()
+                dynamic_cast<Eventually*>(ti)->getInterval()
                 ));
 }
   return ret;
@@ -144,27 +145,27 @@ std::vector<TemporalExp *> DTAndF::minimize(bool isOffset) {
 
 std::pair<std::string, std::string> DTAndF::prettyPrint(bool offset) {
 
-  auto ant = _t->_templateFormula.getAnt();
-  auto imp = _t->_templateFormula.getImp();
-  auto con = _t->_templateFormula.getCon();
-
-  if (offset) {
-    //negate the consequent
-    con = Hstring("!(", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr) +
-          con +
-          Hstring(")", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr);
-  }
-
-  //compose the reduced template
-  auto reducedTemplate =
-      Hstring("G[", Hstring::Stype::G, (expression::TemporalExp **)nullptr) +
-      Hstring("X1,X2", Hstring::Stype::Intv,
-              (std::pair<size_t, size_t> *)nullptr) +
-      Hstring("]", Hstring::Stype::G, (expression::TemporalExp **)nullptr) +
-      Hstring("(", Hstring::Stype::G, (expression::TemporalExp **)nullptr) + ant +
-      imp + con +
-      Hstring(")", Hstring::Stype::G, (expression::TemporalExp **)nullptr);
-  return std::make_pair(reducedTemplate.toString(1),
-                        reducedTemplate.toColoredString(1));
+//  auto ant = _t->_templateFormula.getAnt();
+//  auto imp = _t->_templateFormula.getImp();
+//  auto con = _t->_templateFormula.getCon();
+//
+//  if (offset) {
+//    //negate the consequent
+//    con = Hstring("!(", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr) +
+//          con +
+//          Hstring(")", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr);
+//  }
+//
+//  //compose the reduced template
+//  auto reducedTemplate =
+//      Hstring("G[", Hstring::Stype::G, (expression::TemporalExp **)nullptr) +
+//      Hstring("X1,X2", Hstring::Stype::Intv,
+//              (std::pair<size_t, size_t> *)nullptr) +
+//      Hstring("]", Hstring::Stype::G, (expression::TemporalExp **)nullptr) +
+//      Hstring("(", Hstring::Stype::G, (expression::TemporalExp **)nullptr) + ant +
+//      imp + con +
+//      Hstring(")", Hstring::Stype::G, (expression::TemporalExp **)nullptr);
+//  return std::make_pair(reducedTemplate.toString(1),
+//                        reducedTemplate.toColoredString(1));
 }
 } // namespace harm

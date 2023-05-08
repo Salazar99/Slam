@@ -236,8 +236,8 @@ void ColoredPrinterVisitor::visit(Implication &o) {
   o.getItems()[1]->acceptVisitor(*this);
 }
 void ColoredPrinterVisitor::visit(Eventually &o) {
-  _ss << TEMP("F[") << o.getInterval()->first << TEMP(",")
-      << o.getInterval()->first << TEMP("](");
+  _ss << TEMP("F[") << o.getInterval().first << TEMP(",")
+      << o.getInterval().first << TEMP("](");
   o.getItems()[0]->acceptVisitor(*this);
   _ss << TEMP(")");
 }

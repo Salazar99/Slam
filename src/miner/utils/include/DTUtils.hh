@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "DTUtils.hh"
-#include "Hstring.hh"
 #include <spot/tl/formula.hh>
 #include <spot/twaalgos/postproc.hh>
 

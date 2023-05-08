@@ -17,10 +17,10 @@ public:
   virtual size_t getNChoices() override;
   virtual bool isTaken(size_t id, bool second, int depth) override;
   virtual void removeLeaf(size_t id, int depth) override;
-  virtual void addLeaf(Proposition *p, std::pair<size_t, size_t> *intv,
+  virtual void addLeaf(Proposition *p, std::pair<size_t, size_t> intv,
                        size_t id, bool second, int depth) override;
   virtual void removeItems() override;
-  virtual void addItem(Proposition *p, std::pair<size_t, size_t> *interval, int depth) override;
+  virtual void addItem(Proposition *p, std::pair<size_t, size_t> interval, int depth) override;
 
   virtual void popItem(int depth) override;
   virtual std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>

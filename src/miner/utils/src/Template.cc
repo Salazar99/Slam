@@ -26,36 +26,32 @@
 #include <utility>
 namespace harm {
 
-Template::Template(Hstring &templateFormula, harm::Trace *trace,
-                   DTLimits limits)
-    : _templateFormula(templateFormula), _buildTemplateFormula(templateFormula),
-      _max_length(trace->getLength()), _limits(limits), _trace(trace) {
+Template::Template(harm::Trace *trace, DTLimits limits) : _max_length(trace->getLength()), _limits(limits), _trace(trace) {
 
   build();
 }
 
 Template::Template(const Template &original) {
-  _templateFormula = original._buildTemplateFormula;
   _trace = original._trace;
-  for (auto &s : _templateFormula) {
-    //we need to reinizializes/copy all the propositions in the templateFormula to the new copy of the template, two instances of the same template should not have overlapping memory
-    if (s._te != nullptr) {
-      if (s._t == Hstring::Stype::Inst) {
-        Proposition *p =
-            dynamic_cast<TemporalInst *>(*s._te)->getProposition();
-        s._te = new TemporalExp *(new TemporalInst(
-            p != nullptr ? new CachedProposition(copy(*p)) : nullptr,
-            dynamic_cast<TemporalInst *>(*s._te)->getName()));
-      } else if (s._t == Hstring::Stype::Ph) {
-        Proposition *p =
-            dynamic_cast<Placeholder *>(*s._te)->getProposition();
-        s._te = new TemporalExp *(new Placeholder(
-            p != nullptr ? new CachedProposition(copy(*p)) : nullptr,
-            dynamic_cast<Placeholder *>(*s._te)->getName()));
-      }
-    }
-  }
-  _buildTemplateFormula = _templateFormula;
+  //for (auto &s : _templateFormula) {
+  //  //we need to reinizializes/copy all the propositions in the templateFormula to the new copy of the template, two instances of the same template should not have overlapping memory
+  //  if (s._te != nullptr) {
+  //    if (s._t == Hstring::Stype::Inst) {
+  //      Proposition *p =
+  //          dynamic_cast<TemporalInst *>(*s._te)->getProposition();
+  //      s._te = new TemporalExp *(new TemporalInst(
+  //          p != nullptr ? new CachedProposition(copy(*p)) : nullptr,
+  //          dynamic_cast<TemporalInst *>(*s._te)->getName()));
+  //    } else if (s._t == Hstring::Stype::Ph) {
+  //      Proposition *p =
+  //          dynamic_cast<Placeholder *>(*s._te)->getProposition();
+  //      s._te = new TemporalExp *(new Placeholder(
+  //          p != nullptr ? new CachedProposition(copy(*p)) : nullptr,
+  //          dynamic_cast<Placeholder *>(*s._te)->getName()));
+  //    }
+  //  }
+  //}
+  //_buildTemplateFormula = _templateFormula;
   _max_length = original._max_length;
   _limits = original._limits;
   _check = original._check;
@@ -63,10 +59,19 @@ Template::Template(const Template &original) {
   //rebuild the template
   build();
 
+  _tokenToProp = original._tokenToProp;
+  _tokenToIntv = original._tokenToIntv;
+  _aphToProp = original._aphToProp;
+  _acphToProp = original._acphToProp;
+  _cphToProp = original._cphToProp;
+  _iToProp = original._iToProp;
+  _tokenToIntv = original._tokenToIntv;
+  _dtOp = original._dtOp;
+  _impl = original._impl;
+
   //shallow copy, need to configure and copy the data
   _pg = original._pg;
 
-  //only to bring _pg to the starting point, no permutations generated here
   genPermutations(original._aProps, original._cProps, original._acProps);
 
   //if the original contains permutations we simply copy the permutation matrix to _pg
@@ -88,17 +93,17 @@ Template::~Template() {
   }
   delete[] _cachedValuesP;
 
-  if (_applyDynamicShift) {
-    delete[] _dynamicShiftCachedValues;
-    for (size_t i = 0; i < l1Constants::MAX_THREADS; i++) {
-      delete[] _cachedDynShiftsP[i];
-    }
-    delete[] _cachedDynShiftsP;
-  }
+//  if (_applyDynamicShift) {
+//    delete[] _dynamicShiftCachedValues;
+//    for (size_t i = 0; i < l1Constants::MAX_THREADS; i++) {
+//      delete[] _cachedDynShiftsP[i];
+//    }
+//    delete[] _cachedDynShiftsP;
+//  }
 
   // inst props are used only in a specific template: must be deleted in all instances of a template
   for (auto &ph_pp : _iToProp) {
-    delete *ph_pp.second;
+    delete ph_pp.second;
   }
 
   for (auto &ph_pp : _tokenToProp) {
@@ -111,29 +116,33 @@ size_t Template::nPermsGenerated() const {
   //return _cProps.size();
 }
 
-std::string Template::getAssertion() { return _templateFormula.toString(true); }
-std::string Template::getColoredAssertion() {
-  return _templateFormula.toColoredString(true);
+std::string Template::getAssertion() {
+        return  "G(" + temp2String(*_impl, 1) + ")";
 }
-std::string Template::getTemplate() { return _templateFormula.toString(false); }
+std::string Template::getColoredAssertion() {
+        return  GLOB("G(") + temp2ColoredString(*_impl, 1) + GLOB(")");
+}
+std::string Template::getTemplate() {
+        return  "G(" + temp2String(*_impl, 0) + ")";
+}
 std::string Template::getColoredTemplate() {
-  return _templateFormula.toColoredString(false);
+        return  GLOB("G(") + temp2ColoredString(*_impl, 0) + GLOB(")");
 }
 
 DTOperator *Template::getDT() { return _dtOp.second; }
 
-std::map<std::string, TemporalExp **> &Template::get_aphToProp() {
+std::map<std::string, TemporalExp *> &Template::get_aphToProp() {
   return _aphToProp;
 }
-std::map<std::string, TemporalExp **> &Template::get_cphToProp() {
+std::map<std::string, TemporalExp *> &Template::get_cphToProp() {
   return _cphToProp;
 }
-std::map<std::string, TemporalExp **> &Template::get_acphToProp() {
+std::map<std::string, TemporalExp *> &Template::get_acphToProp() {
   return _acphToProp;
 }
 
 std::string Template::getSpotFormula() {
-  return _templateFormula.toSpotString();
+    return "";
 }
 
 bool Template::nextPerm() {
@@ -189,15 +198,15 @@ void Template::loadPerm(size_t n) {
       //        messageError("");
       //feel the placeholder with the correct proposition _pg._perms[_permIndex][e.second] contains the index of the proposition to be inserted
       //FIXME Completely broken due to Hstring modification
-      dynamic_cast<Placeholder *>(*_aphToProp.at(e.first))
+      dynamic_cast<Placeholder *>(_aphToProp.at(e.first))
           ->setProposition(_aProps[_pg._perms[n][e.second]]);
     } else if (where == harm::Location::Con) {
-      dynamic_cast<Placeholder *>(*_cphToProp.at(e.first))
+      dynamic_cast<Placeholder *>(_cphToProp.at(e.first))
           ->setProposition(_cProps[_pg._perms[n][e.second]]);
       //      dynamic_cast<Placeholder *>(*_cphToProp.at(e.first)) ->setProposition(_cProps[n]);
     } else {
       //       messageError("");
-      dynamic_cast<Placeholder *>(*_acphToProp.at(e.first))
+      dynamic_cast<Placeholder *>(_acphToProp.at(e.first))
           ->setProposition(_acProps[_pg._perms[n][e.second]]);
     }
   }
@@ -252,17 +261,17 @@ void Template::loadPropositions(std::vector<Proposition *> &props,
     _antInCache = false;
     // put the propositions in the antecedent's placeholders
     for (const auto &ph : _aphToProp) {
-      dynamic_cast<Placeholder *>(*ph.second)->setProposition(props[i++]);
+      dynamic_cast<Placeholder *>(ph.second)->setProposition(props[i++]);
     }
   } else if (where == harm::Location::Con) {
 
     for (const auto &ph : _cphToProp) {
-      dynamic_cast<Placeholder *>(*ph.second)->setProposition(props[i++]);
+      dynamic_cast<Placeholder *>(ph.second)->setProposition(props[i++]);
     }
     _conInCache = false;
   } else {
     for (const auto &ph : _acphToProp) {
-      dynamic_cast<Placeholder *>(*ph.second)->setProposition(props[i++]);
+      dynamic_cast<Placeholder *>(ph.second)->setProposition(props[i++]);
     }
     _conInCache = false;
     _antInCache = false;
@@ -368,9 +377,9 @@ void Template::setCacheConFalse() { _conInCache = false; }
 
 void Template::build() {
 
-  //allocate memory for truth values of the template on the trace note that due to parallelism, we allocate N times the required memory where N is the maximum number of threads at level 1 (l1Constants::MAX_THREADS)
-
-  //working memory: used by linearEval
+//  //allocate memory for truth values of the template on the trace note that due to parallelism, we allocate N times the required memory where N is the maximum number of threads at level 1 (l1Constants::MAX_THREADS)
+//
+//  //working memory: used by linearEval
   _cachedValuesP = new Trinary *[l1Constants::MAX_THREADS];
 
   for (size_t i = 0; i < l1Constants::MAX_THREADS; i++) {
@@ -378,190 +387,190 @@ void Template::build() {
     //init
     std::fill_n(_cachedValuesP[i], _max_length, Trinary::U);
   }
-
-  //final truth values memory: final result of linearEval
+//
+//  //final truth values memory: final result of linearEval
   _antCachedValues = new Trinary[_max_length];
   std::fill_n(_antCachedValues, _max_length, Trinary::U);
   _conCachedValues = new Trinary[_max_length];
   std::fill_n(_conCachedValues, _max_length, Trinary::U);
-
-  // clear utility variables
-  _tokenToProp.clear();
-  _tokenToIntv.clear();
-  _aphToProp.clear();
-  _acphToProp.clear();
-  _cphToProp.clear();
-  _iToProp.clear();
-  _tokenToIntv.clear();
-  _dtOp.first = "";
-  _dtOp.second = nullptr;
-  _constShift = 0;
-  _applyDynamicShift = 0;
-
-  // init the dt operators
-  for (auto &s : _templateFormula) {
-    if (s._t == Hstring::Stype::DTAndF) {
-      s._te = new TemporalExp *(new TemporalAnd());
-      break;
-    }
-  }
-
-  // retrieve the different parts of the assertion
-  auto hant = _templateFormula.getAnt();
-  auto himpl = _templateFormula.getImp();
-  auto hcon = _templateFormula.getCon();
-
-  //ant placeholders
-  std::unordered_set<std::string> antPhs;
-
-  // fill utility variables for the antecedent
-  for (size_t i = 0; i < hant.size(); i++) {
-    auto &e = hant[i];
-    if (e._t == Hstring::Stype::Ph) {
-      _tokenToProp[e._s] = e._te;
-      _aphToProp.insert({{e._s, e._te}});
-      antPhs.insert(e._s);
-    } else if (e._t == Hstring::Stype::Intv) {
-      _tokenToIntv.insert({e._s, e._intv});
-    } else if (e._t == Hstring::Stype::Inst) {
-      _tokenToProp[e._s] = e._te;
-      _iToProp[e._s] = e._te;
-    } else if (e._t == Hstring::Stype::DTAndF) {
-      _tokenToProp[e._s] = e._te;
-      _dtOp = std::make_pair(
-          e._s, new DTAndF(dynamic_cast<TemporalAnd *>(*e._te), this, _limits));
-    }
-  }
-
-  // fill utility variables for the consequent
-  for (size_t i = 0; i < hcon.size(); i++) {
-    auto &e = hcon[i];
-    if (e._t == Hstring::Stype::Ph) {
-      _tokenToProp[e._s] = e._te;
-      if (antPhs.count(e._s)) {
-        // if a placeholder is found in both the antecedent and consequent than it is of type 'ac'
-        _aphToProp.erase(e._s);
-        _acphToProp.insert({{e._s, e._te}});
-      } else {
-        _cphToProp.insert({{e._s, e._te}});
-      }
-    } else if (e._t == Hstring::Stype::Intv) {
-      _tokenToIntv[e._s] = e._intv;
-    } else if (e._t == Hstring::Stype::Inst) {
-      _tokenToProp[e._s] = e._te;
-      _iToProp[e._s] = e._te;
-    } else if (e._t == Hstring::Stype::DTAndF) {
-      messageError(
-          "Binary decision tree operator is not allowed in the consequent");
-    }
-  }
-
-  //retrieve the implication of the template
-  std::string imp = himpl._s;
-  // remove unwanted spaces in the string representation of the implication
-  imp.erase(remove_if(imp.begin(), imp.end(), isspace), imp.end());
-  // set the shifts according to the type of implication
-  if (imp == "->") {
-    _constShift = 0;
-    _applyDynamicShift = 0;
-  } else {
-    messageError("Unknown implication symbol: " + imp);
-  }
-
-  //  if (_applyDynamicShift) {
-  //    //allocate more memory to keep track of dynamic shitfs
-  //    _dynamicShiftCachedValues = new size_t[_max_length];
-  //    std::fill_n(_dynamicShiftCachedValues, _max_length, 0);
-  //    _cachedDynShiftsP = new size_t *[l1Constants::MAX_THREADS];
-  //
-  //    for (size_t i = 0; i < l1Constants::MAX_THREADS; i++) {
-  //      _cachedDynShiftsP[i] = new size_t[_max_length];
-  //      std::fill_n(_cachedDynShiftsP[i], _max_length, 0);
-  //    }
-  //  }
-
-  TemporalAnd *impant = nullptr;
-  for (size_t i = 0; i < hant.size(); i++) {
-    auto &s = hant[i];
-    if (s._t == Hstring::Stype::DTAndF) {
-      impant = dynamic_cast<TemporalAnd *>(*s._te);
-    }
-  }
-  TemporalAnd *conAnd = new TemporalAnd();
-  for (auto &cte : _cphToProp) {
-    conAnd->addItem(*cte.second);
-  }
-  TemporalExp *impcon =
-      new Eventually(conAnd, new std::pair<size_t, size_t>(0, 0), _trace);
-
-  //iter over hant to find each subformula
-  //bool isEventually = false;
-  //  std::stack<std::string> phIntv;
-
-  //  for (size_t i = 0; i < hant.size(); i++) {
-  //    auto &s = hant[i];
-  //    if (s._t == Hstring::Stype::Ph) {
-  //      if (isEventually) {
-  //        std::string intval = phIntv.top();
-  //        phIntv.pop();
-  //        impant->addItem(
-  //            new Eventually(*s._te, _tokenToIntv.at(intval), _trace));
-  //      } else {
-  //        impant->addItem(*s._te);
-  //      }
-  //      isEventually = false;
-  //    } else if (s._t == Hstring::Stype::Intv) {
-  //      phIntv.push(s._s);
-  //    } else if (s._t == Hstring::Stype::Inst) {
-  //      if (isEventually) {
-  //        std::string intval = phIntv.top();
-  //        phIntv.pop();
-  //        impant->addItem(
-  //            new Eventually(*s._te, _tokenToIntv.at(intval), _trace));
-  //      } else {
-  //        impant->addItem(*s._te);
-  //      }
-  //      isEventually = false;
-  //    } else if (s._t == Hstring::Stype::Temp && s._s == "F[")
-  //      isEventually = true;
-  //    else if (s._t == Hstring::Stype::DTAndF) {
-  //      impant->addItem(*s._te);
-  //    }
-  //  }
-  //
-  //  isEventually = false;
-  //
-  //  for (size_t i = 0; i < hcon.size(); i++) {
-  //    auto &s = hcon[i];
-  //    if (s._t == Hstring::Stype::Ph) {
-  //      if (isEventually) {
-  //        std::string intval = phIntv.top();
-  //        phIntv.pop();
-  //        impant->addItem(
-  //            new Eventually(*s._te, _tokenToIntv.at(intval), _trace));
-  //      } else {
-  //        impcon->addItem(*s._te);
-  //      }
-  //      isEventually = false;
-  //    } else if (s._t == Hstring::Stype::Intv) {
-  //      phIntv.push(s._s);
-  //    } else if (s._t == Hstring::Stype::Inst) {
-  //      if (isEventually) {
-  //        std::string intval = phIntv.top();
-  //        phIntv.pop();
-  //        impcon->addItem(
-  //            new Eventually(*s._te, _tokenToIntv.at(intval), _trace));
-  //      } else {
-  //        impcon->addItem(*s._te);
-  //      }
-  //      isEventually = false;
-  //    } else if (s._t == Hstring::Stype::Temp && s._s == "F[")
-  //      isEventually = true;
-  //    else if (s._t == Hstring::Stype::DTAndF)
-  //      messageError("DT operand is not allowed in the consequent");
-  //  }
-
-  _impl = new Implication(impant, impcon);
+//
+//  // clear utility variables
+//  _tokenToProp.clear();
+//  _tokenToIntv.clear();
+//  _aphToProp.clear();
+//  _acphToProp.clear();
+//  _cphToProp.clear();
+//  _iToProp.clear();
+//  _tokenToIntv.clear();
+//  _dtOp.first = "";
+//  _dtOp.second = nullptr;
+//  _constShift = 0;
+//  _applyDynamicShift = 0;
+//
+//  // init the dt operators
+//  for (auto &s : _templateFormula) {
+//    if (s._t == Hstring::Stype::DTAndF) {
+//      s._te = new TemporalExp *(new TemporalAnd());
+//      break;
+//    }
+//  }
+//
+//  // retrieve the different parts of the assertion
+//  auto hant = _templateFormula.getAnt();
+//  auto himpl = _templateFormula.getImp();
+//  auto hcon = _templateFormula.getCon();
+//
+//  //ant placeholders
+//  std::unordered_set<std::string> antPhs;
+//
+//  // fill utility variables for the antecedent
+//  for (size_t i = 0; i < hant.size(); i++) {
+//    auto &e = hant[i];
+//    if (e._t == Hstring::Stype::Ph) {
+//      _tokenToProp[e._s] = e._te;
+//      _aphToProp.insert({{e._s, e._te}});
+//      antPhs.insert(e._s);
+//    } else if (e._t == Hstring::Stype::Intv) {
+//      _tokenToIntv.insert({e._s, e._intv});
+//    } else if (e._t == Hstring::Stype::Inst) {
+//      _tokenToProp[e._s] = e._te;
+//      _iToProp[e._s] = e._te;
+//    } else if (e._t == Hstring::Stype::DTAndF) {
+//      _tokenToProp[e._s] = e._te;
+//      _dtOp = std::make_pair(
+//          e._s, new DTAndF(dynamic_cast<TemporalAnd *>(*e._te), this, _limits));
+//    }
+//  }
+//
+//  // fill utility variables for the consequent
+//  for (size_t i = 0; i < hcon.size(); i++) {
+//    auto &e = hcon[i];
+//    if (e._t == Hstring::Stype::Ph) {
+//      _tokenToProp[e._s] = e._te;
+//      if (antPhs.count(e._s)) {
+//        // if a placeholder is found in both the antecedent and consequent than it is of type 'ac'
+//        _aphToProp.erase(e._s);
+//        _acphToProp.insert({{e._s, e._te}});
+//      } else {
+//        _cphToProp.insert({{e._s, e._te}});
+//      }
+//    } else if (e._t == Hstring::Stype::Intv) {
+//      _tokenToIntv[e._s] = e._intv;
+//    } else if (e._t == Hstring::Stype::Inst) {
+//      _tokenToProp[e._s] = e._te;
+//      _iToProp[e._s] = e._te;
+//    } else if (e._t == Hstring::Stype::DTAndF) {
+//      messageError(
+//          "Binary decision tree operator is not allowed in the consequent");
+//    }
+//  }
+//
+//  //retrieve the implication of the template
+//  std::string imp = himpl._s;
+//  // remove unwanted spaces in the string representation of the implication
+//  imp.erase(remove_if(imp.begin(), imp.end(), isspace), imp.end());
+//  // set the shifts according to the type of implication
+//  if (imp == "->") {
+//    _constShift = 0;
+//    _applyDynamicShift = 0;
+//  } else {
+//    messageError("Unknown implication symbol: " + imp);
+//  }
+//
+//  //  if (_applyDynamicShift) {
+//  //    //allocate more memory to keep track of dynamic shitfs
+//  //    _dynamicShiftCachedValues = new size_t[_max_length];
+//  //    std::fill_n(_dynamicShiftCachedValues, _max_length, 0);
+//  //    _cachedDynShiftsP = new size_t *[l1Constants::MAX_THREADS];
+//  //
+//  //    for (size_t i = 0; i < l1Constants::MAX_THREADS; i++) {
+//  //      _cachedDynShiftsP[i] = new size_t[_max_length];
+//  //      std::fill_n(_cachedDynShiftsP[i], _max_length, 0);
+//  //    }
+//  //  }
+//
+//  TemporalAnd *impant = nullptr;
+//  for (size_t i = 0; i < hant.size(); i++) {
+//    auto &s = hant[i];
+//    if (s._t == Hstring::Stype::DTAndF) {
+//      impant = dynamic_cast<TemporalAnd *>(*s._te);
+//    }
+//  }
+//  TemporalAnd *conAnd = new TemporalAnd();
+//  for (auto &cte : _cphToProp) {
+//    conAnd->addItem(*cte.second);
+//  }
+//  TemporalExp *impcon =
+//      new Eventually(conAnd, new std::pair<size_t, size_t>(0, 0), _trace);
+//
+//  //iter over hant to find each subformula
+//  //bool isEventually = false;
+//  //  std::stack<std::string> phIntv;
+//
+//  //  for (size_t i = 0; i < hant.size(); i++) {
+//  //    auto &s = hant[i];
+//  //    if (s._t == Hstring::Stype::Ph) {
+//  //      if (isEventually) {
+//  //        std::string intval = phIntv.top();
+//  //        phIntv.pop();
+//  //        impant->addItem(
+//  //            new Eventually(*s._te, _tokenToIntv.at(intval), _trace));
+//  //      } else {
+//  //        impant->addItem(*s._te);
+//  //      }
+//  //      isEventually = false;
+//  //    } else if (s._t == Hstring::Stype::Intv) {
+//  //      phIntv.push(s._s);
+//  //    } else if (s._t == Hstring::Stype::Inst) {
+//  //      if (isEventually) {
+//  //        std::string intval = phIntv.top();
+//  //        phIntv.pop();
+//  //        impant->addItem(
+//  //            new Eventually(*s._te, _tokenToIntv.at(intval), _trace));
+//  //      } else {
+//  //        impant->addItem(*s._te);
+//  //      }
+//  //      isEventually = false;
+//  //    } else if (s._t == Hstring::Stype::Temp && s._s == "F[")
+//  //      isEventually = true;
+//  //    else if (s._t == Hstring::Stype::DTAndF) {
+//  //      impant->addItem(*s._te);
+//  //    }
+//  //  }
+//  //
+//  //  isEventually = false;
+//  //
+//  //  for (size_t i = 0; i < hcon.size(); i++) {
+//  //    auto &s = hcon[i];
+//  //    if (s._t == Hstring::Stype::Ph) {
+//  //      if (isEventually) {
+//  //        std::string intval = phIntv.top();
+//  //        phIntv.pop();
+//  //        impant->addItem(
+//  //            new Eventually(*s._te, _tokenToIntv.at(intval), _trace));
+//  //      } else {
+//  //        impcon->addItem(*s._te);
+//  //      }
+//  //      isEventually = false;
+//  //    } else if (s._t == Hstring::Stype::Intv) {
+//  //      phIntv.push(s._s);
+//  //    } else if (s._t == Hstring::Stype::Inst) {
+//  //      if (isEventually) {
+//  //        std::string intval = phIntv.top();
+//  //        phIntv.pop();
+//  //        impcon->addItem(
+//  //            new Eventually(*s._te, _tokenToIntv.at(intval), _trace));
+//  //      } else {
+//  //        impcon->addItem(*s._te);
+//  //      }
+//  //      isEventually = false;
+//  //    } else if (s._t == Hstring::Stype::Temp && s._s == "F[")
+//  //      isEventually = true;
+//  //    else if (s._t == Hstring::Stype::DTAndF)
+//  //      messageError("DT operand is not allowed in the consequent");
+//  //  }
+//
+//  _impl = new Implication(impant, impcon);
 }
 
 void Template::genPermutations(const std::vector<Proposition *> &antP,
@@ -589,8 +598,7 @@ void Template::genPermutations(const std::vector<Proposition *> &antP,
 
   //generate only if there are not any previously generated perms
   if (_pg._perms == nullptr) {
-    _pg.genPermutations(_aProps.size(), _cProps.size(), _acProps.size(),
-                        _templateFormula, _impl);
+    _pg.genPermutations(_aProps.size(), _cProps.size(), _acProps.size(), this);
   }
   //set to the first perm
   _permIndex = 0;
@@ -875,10 +883,6 @@ void Template::check() {
                "==========="
             << "\n";
 }
-Hstring Template::getTemplateFormula() {
-  return _templateFormula;
-  ;
-}
 
 void Template::getPlaceholdersDepth(
     spot::formula f, std::vector<std::pair<std::string, size_t>> &phToDepth) {
@@ -968,7 +972,7 @@ bool Template::isFullyInstantiated() {
 */
 TemporalExp *Template::getPropByToken(const std::string &token) {
   if (_tokenToProp.count(token)) {
-    return *_tokenToProp.at(token);
+    return _tokenToProp.at(token);
   }
   return nullptr;
 }

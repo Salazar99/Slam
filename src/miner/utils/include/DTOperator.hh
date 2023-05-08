@@ -2,7 +2,6 @@
 
 #include "DTLimits.hh"
 #include "DTUtils.hh"
-#include "Hstring.hh"
 #include "exp.hh"
 
 #include <map>
@@ -18,7 +17,7 @@ class Automaton;
 
 using namespace expression;
 using DecTreeVariables =
-    std::map<size_t, std::pair<Proposition *, std::pair<size_t,size_t>*>>;
+    std::map<size_t, std::pair<Proposition *, std::pair<size_t,size_t>>>;
 
 /*! \class DTOperator
     \brief Class representing a decision tree operator
@@ -30,7 +29,7 @@ public:
    * \param Proposition the proposition representing the operand
    * \param depth the temporal depth in the dt operator where to insert the operand
    */
-  virtual void addItem(Proposition *p, std::pair<size_t,size_t> * interval, int depth) = 0;
+  virtual void addItem(Proposition *p, std::pair<size_t,size_t> interval, int depth) = 0;
   /** \brief Removes an operands at depth 'depth'
    */
   virtual void popItem(int depth) = 0;
@@ -60,7 +59,7 @@ public:
    * \param second if true the proposition is negated
    * \param depth depth of the leaf
    */
-  virtual void addLeaf(Proposition *p, std::pair<size_t,size_t> *intv, size_t id, bool second, int depth) = 0;
+  virtual void addLeaf(Proposition *p, std::pair<size_t,size_t> intv, size_t id, bool second, int depth) = 0;
   /** \brief Remove a leaf of the decision tree
    * \param id Id of the leaf
    * \param intv interval of validity for the proposition

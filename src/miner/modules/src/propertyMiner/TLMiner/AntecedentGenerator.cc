@@ -129,7 +129,7 @@ void AntecedentGenerator::makeAntecedents(
   std::ofstream fs("tree.dot", ios_base::app);
   fs << "digraph G {"
      << "\n";
-  fs << "label=\"" << t->getTemplateFormula().getCon().toString(1)
+  fs << "label=\"" << t->getAssertion()
      << "\"\n\n\n";
   fs << "labelloc=\"t\"\n";
   fs << tree.str() << "\n";
@@ -177,7 +177,7 @@ inline void AntecedentGenerator::findCandidates(
 
   // add the new proposition of a unused variable in the current
   // antecedent
-  std::pair<size_t, size_t> *intv = new std::pair<size_t, size_t>({0, 0});
+  std::pair<size_t, size_t> intv = std::pair<size_t, size_t>({0, 0});
   template_dt->addItem(prop, intv, depth);
 
   // ignore this prop if the template contains a known solution
@@ -198,9 +198,7 @@ inline void AntecedentGenerator::findCandidates(
     //      std::cout << "-------->" << prop2String(*prop) << "\n";
 
     if (res.occGoal == 0 || res.occGoal == res.occProposition) {
-      std::pair<size_t, size_t> *intv = new std::pair<size_t, size_t>({0, 0});
-      //template_dt->addLeaf(prop, intv, candidate, propI, depth);
-      //discLeaves.push_back(DiscoveredLeaf(candidate, propI, depth));
+      std::pair<size_t, size_t> intv = std::pair<size_t, size_t>({0, 0});
       template_dt->addLeaf(prop, intv, candidate, 0, depth);
       discLeaves.push_back(DiscoveredLeaf(candidate, 0, depth));
 
@@ -312,7 +310,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
 
     // add the new proposition of a unused variable in the current
     // antecedent
-    std::pair<size_t, size_t> *intv = new std::pair<size_t, size_t>({0, 0});
+    std::pair<size_t, size_t> intv = std::pair<size_t, size_t>({0, 0});
     template_dt->addItem(prop, intv, depth);
 
     // ignore this prop if the template contains a known solution
@@ -352,7 +350,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
   }
 
   if (discLeaf) {
-    std::pair<size_t, size_t> *intv = new std::pair<size_t, size_t>({0, 0});
+    std::pair<size_t, size_t> intv = std::pair<size_t, size_t>({0, 0});
     template_dt->addLeaf(nullptr, intv, candidate + numLeavesOffset, 0, depth);
     discLeaves.push_back(DiscoveredLeaf(candidate + numLeavesOffset, 0, depth));
   }
@@ -455,7 +453,7 @@ void AntecedentGenerator::_runDecisionTree(
       Proposition *prop = c_ig._props[0].first;
       size_t pos = c_ig._props[0].second;
 
-      std::pair<size_t, size_t> *intv = new std::pair<size_t, size_t>({0, 0});
+      std::pair<size_t, size_t> intv = std::pair<size_t, size_t>({0, 0});
       template_dt->addItem(prop, intv, c_ig._depth);
       template_dt->addLeaf(prop, intv, c_ig._id, pos, c_ig._depth);
       discLeaves.push_back(DiscoveredLeaf(c_ig._id, pos, c_ig._depth));
@@ -482,6 +480,7 @@ void AntecedentGenerator::_runDecisionTree(
     template_dt->removeLeaf(dl._id, dl._depth);
   }
 }
+
 void AntecedentGenerator::storeSolution(Template *t, bool isOffset) {
 
 

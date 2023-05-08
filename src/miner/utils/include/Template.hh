@@ -15,7 +15,6 @@
 
 #include "Automaton.hh"
 #include "DTAndF.hh"
-#include "Hstring.hh"
 #include "Location.hh"
 #include "PermGenerator.hh"
 #include "Semaphore.hh"
@@ -23,6 +22,9 @@
 #include "Trinary.hh"
 #include "exp.hh"
 
+namespace hparser {
+class StlParserHandler;
+}
 namespace harm {
 class EdgeProposition;
 
@@ -37,7 +39,7 @@ public:
    * \param templateFormula representation of a template as a PSL formula
    * \param max_length length of the trace
    */
-  Template(Hstring &templateFormula, harm::Trace *trace, DTLimits limits);
+  Template(harm::Trace *trace, DTLimits limits);
 
   /** \brief Copy Constructor
    */
@@ -99,7 +101,6 @@ public:
 
   /** \brief returns a typed string representation of the template
    */
-  Hstring getTemplateFormula();
 
   /** \brief returns a spot-compatible string representation of the template
    */
@@ -109,9 +110,9 @@ public:
    */
   DTOperator *getDT();
 
-  std::map<std::string, TemporalExp **> &get_aphToProp();
-  std::map<std::string, TemporalExp **> &get_cphToProp();
-  std::map<std::string, TemporalExp **> &get_acphToProp();
+  std::map<std::string, TemporalExp *> &get_aphToProp();
+  std::map<std::string, TemporalExp *> &get_cphToProp();
+  std::map<std::string, TemporalExp *> &get_acphToProp();
 
   /** \brief 
    * \param where ant or con
@@ -289,10 +290,8 @@ private:
   std::mutex _l1Guard;
 
   /// current employed templated
-  Hstring _templateFormula;
 
   /// original templated with the dt operator uninstantiated
-  Hstring _buildTemplateFormula;
 
   /// used to generate the permutations
   PermGenerator _pg;
@@ -302,19 +301,19 @@ private:
    * points to a nullptr
    */
   /// link of all placeholders to all instantiated propositions
-  std::unordered_map<std::string, TemporalExp **> _tokenToProp;
+  std::unordered_map<std::string, TemporalExp *> _tokenToProp;
   ///link to all interval placeholders
   std::unordered_map<std::string, std::pair<size_t, size_t> *> _tokenToIntv;
   /// link of all user instantiated placeholders to their respective
   /// propositions
-  std::unordered_map<std::string, TemporalExp **> _iToProp;
+  std::unordered_map<std::string, TemporalExp *> _iToProp;
   /// links all the dt operators to their respective propositions
   std::pair<std::string, DTOperator *> _dtOp = {"", nullptr};
 
   ///_aphToProp + _cphToProp + _acphToProp == _phToProp
-  std::map<std::string, TemporalExp **> _aphToProp;
-  std::map<std::string, TemporalExp **> _cphToProp;
-  std::map<std::string, TemporalExp **> _acphToProp;
+  std::map<std::string, TemporalExp *> _aphToProp;
+  std::map<std::string, TemporalExp *> _cphToProp;
+  std::map<std::string, TemporalExp *> _acphToProp;
 
   /* current proposition domains:
     the generator of permutations will use the following propositions to
@@ -379,5 +378,7 @@ private:
   size_t _availThreads = 1;
 
   friend DTAndF;
+  friend PermGenerator;
+  friend hparser::StlParserHandler;
 };
 } // namespace harm

@@ -304,7 +304,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       //} else {
       for (auto prop : props) {
         t->getDT()->addItem(prop.first,
-                            new std::pair<size_t, size_t>(prop.second), -1);
+                            std::pair<size_t, size_t>(prop.second), -1);
       }
       //}
       assert(!t->getDT()->getItems().empty());
@@ -315,11 +315,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         //create a new assertion by making a snapshot of a template
         //auto prettyAssOld = t->getDT()->prettyPrint(0);
         std::pair<std::string, std::string> prettyAss;
-        prettyAss.second = GLOB("G(") +
-                           temp2ColoredString(*t->getImplication(), 1) +
-                           GLOB(")");
-        prettyAss.first = "G[0,0](" +
-                           temp2String(*t->getImplication(), 1) + ")";
+        prettyAss.first = t->getAssertion();
+        prettyAss.second = t->getColoredAssertion();
         Assertion *ass = new Assertion();
         t->fillContingency(ass->_ct, 0);
         ass->_toString = prettyAss;

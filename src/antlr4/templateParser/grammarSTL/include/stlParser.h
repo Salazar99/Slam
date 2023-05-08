@@ -1,5 +1,5 @@
 
-// Generated from stl.g4 by ANTLR 4.12.0
+// Generated from stl.g4 by ANTLR 4.10.1
 
 #pragma once
 
@@ -75,13 +75,13 @@ public:
     FileContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *STL_ALWAYS();
+    antlr4::tree::TerminalNode *LPAREN();
     FormulaContext *formula();
+    antlr4::tree::TerminalNode *RPAREN();
     antlr4::tree::TerminalNode *EOF();
     antlr4::tree::TerminalNode *LCPAREN();
     IntervalContext *interval();
     antlr4::tree::TerminalNode *RCPAREN();
-    antlr4::tree::TerminalNode *LPAREN();
-    antlr4::tree::TerminalNode *RPAREN();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

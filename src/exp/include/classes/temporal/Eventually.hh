@@ -10,7 +10,7 @@ namespace expression {
 
 class Eventually : public TemporalExp {
 public:
-  Eventually(TemporalExp *operand, std::pair<size_t, size_t> *interval,
+  Eventually(TemporalExp *operand, const std::pair<size_t, size_t> &interval,
              harm::Trace *trace);
 
   virtual ~Eventually();
@@ -23,15 +23,15 @@ public:
 
   virtual size_t size() override;
 
-  void setInterval(std::pair<size_t, size_t> *intv);
+  void setInterval(const std::pair<size_t, size_t> &intv);
 
-  std::pair<size_t, size_t> *getInterval();
+  std::pair<size_t, size_t> &getInterval();
 
   void acceptVisitor(ExpVisitor &vis) override;
 
 private:
   TemporalExp *_operand;
-  std::pair<size_t, size_t> *_interval;
+  std::pair<size_t, size_t> _interval;
   harm::Trace *_trace;
 };
 

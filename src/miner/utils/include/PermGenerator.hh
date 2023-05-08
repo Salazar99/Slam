@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Hstring.hh"
 #include "Location.hh"
 #include "minerUtils.hh"
 
@@ -32,8 +31,7 @@ public:
 
   ~PermGenerator();
 
-  void genPermutations(size_t antP, size_t conP, size_t antConP,
-                       Hstring &templateFormula, expression::TemporalExp *impl);
+  void genPermutations(size_t antP, size_t conP, size_t antConP,Template *temp);
 
 private:
   enum class PermOperator { Mul, Bin, Com, Ph };
@@ -47,7 +45,7 @@ private:
   Matrix visitPermUnit(PermGenerator::PermUnit *pu);
   PermGenerator::PermUnit *
   generatePermUnit(expression::TemporalExp* templ, std::unordered_set<std::string> &foundPH);
-  PermGenerator::PermUnit *generatePermUnit(expression::TemporalExp* &templ);
+  PermGenerator::PermUnit *generatePermUnit(expression::TemporalExp* templ);
   void printPermUnit(PermGenerator::PermUnit *pu);
   void deletePermUnit(PermGenerator::PermUnit *pu);
 
