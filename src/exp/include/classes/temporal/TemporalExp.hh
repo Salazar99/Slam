@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Trinary.hh"
-#include "exp.hh"
+#include "classes/atom/Atom.hh"
+#include "message.hh"
+#include <vector>
 
-namespace harm {
+namespace expression {
 class TemporalExp {
 public:
   virtual ~TemporalExp() {}
@@ -14,4 +16,4 @@ public:
 
   virtual size_t size() = 0;
 };
-}; // namespace harm
+}; // namespace expression

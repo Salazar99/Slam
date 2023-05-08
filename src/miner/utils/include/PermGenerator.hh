@@ -3,7 +3,6 @@
 #include "Hstring.hh"
 #include "Location.hh"
 #include "minerUtils.hh"
-#include "TemporalExp.hh"
 
 // spot
 #include "spot/tl/parse.hh"
@@ -34,7 +33,7 @@ public:
   ~PermGenerator();
 
   void genPermutations(size_t antP, size_t conP, size_t antConP,
-                       Hstring &templateFormula, TemporalExp *impl);
+                       Hstring &templateFormula, expression::TemporalExp *impl);
 
 private:
   enum class PermOperator { Mul, Bin, Com, Ph };
@@ -44,11 +43,11 @@ private:
     std::vector<PermUnit *> _children;
   };
 
-  bool compare(TemporalExp* f1, TemporalExp* f2);
+  bool compare(expression::TemporalExp* f1, expression::TemporalExp* f2);
   Matrix visitPermUnit(PermGenerator::PermUnit *pu);
   PermGenerator::PermUnit *
-  generatePermUnit(TemporalExp* templ, std::unordered_set<std::string> &foundPH);
-  PermGenerator::PermUnit *generatePermUnit(TemporalExp* &templ);
+  generatePermUnit(expression::TemporalExp* templ, std::unordered_set<std::string> &foundPH);
+  PermGenerator::PermUnit *generatePermUnit(expression::TemporalExp* &templ);
   void printPermUnit(PermGenerator::PermUnit *pu);
   void deletePermUnit(PermGenerator::PermUnit *pu);
 

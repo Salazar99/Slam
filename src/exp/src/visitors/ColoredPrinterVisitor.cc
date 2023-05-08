@@ -130,7 +130,6 @@ ColoredPrinterVisitor::ColoredPrinterVisitor() : ExpVisitor(), _ss() {
   operators[ope::LogicRShift] = std::string(">>");
 
   // temporal
-  operators[ope::Past] = std::string("$past");
 }
 
 void ColoredPrinterVisitor::clear() {
@@ -152,7 +151,6 @@ EXPRESSION(PropositionOr)
 EXPRESSION(PropositionXor)
 EXPRESSION(PropositionEq)
 EXPRESSION(PropositionNeq)
-EXPRESSION_PAST(PropositionPast)
 
 void ColoredPrinterVisitor::visit(expression::PropositionNot &o) {
   _ss << BOOL(operators[ope::PropositionNot]);
@@ -177,7 +175,6 @@ EXPRESSION(NumericGreater)
 EXPRESSION(NumericGreaterEq)
 EXPRESSION(NumericLess)
 EXPRESSION(NumericLessEq)
-EXPRESSION_PAST(NumericPast)
 TYPE_CAST_TO_BOOL(NumericToBool)
 
 // logic
@@ -196,7 +193,6 @@ EXPRESSION(LogicGreater)
 EXPRESSION(LogicGreaterEq)
 EXPRESSION(LogicLess)
 EXPRESSION(LogicLessEq)
-EXPRESSION_PAST(LogicPast)
 EXPRESSION_LOGIC_BIT_SELECTION(LogicBitSelector)
 TYPE_CAST_TO_NUMERIC(LogicToNumeric)
 TYPE_CAST_TO_BOOL(LogicToBool)

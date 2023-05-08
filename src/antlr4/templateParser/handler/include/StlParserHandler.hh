@@ -5,7 +5,6 @@
 #include "exp.hh"
 #include "stlBaseListener.h"
 #include "stlLexer.h"
-#include "StlInst.hh"
 
 #include <cmath>
 #include <stack>
@@ -37,7 +36,7 @@ private:
   std::unordered_map<std::string, std::pair<size_t, size_t> *> _intervals;
   harm::Trace *_trace;
   Hstring _templateFormula;
-  std::unordered_map<std::string, harm::TemporalExp **> _phToProp;
+  std::unordered_map<std::string, expression::TemporalExp **> _phToProp;
   std::unordered_map<std::string, std::string> _propStrToInst;
   size_t dtCount = 0;
   size_t instCount = 0;

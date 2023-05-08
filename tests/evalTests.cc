@@ -65,14 +65,14 @@ protected:
 
   void build(std::string tempStrAnt, std::string tempStrCon) {
     //Create the _impl object
-    //std::vector<harm::TemporalExp *> ant,con;
+    //std::vector<expression::TemporalExp *> ant,con;
     //
-    //ant.push_back(new StlPlaceholder(_tokenToProp.at("v3")));
-    //ant.push_back(new StlEventually(new StlPlaceholder(_tokenToProp.at("v1<5")),_tokenToIntv.at("1,3"),_trace));
+    //ant.push_back(new Placeholder(_tokenToProp.at("v3")));
+    //ant.push_back(new Eventually(new Placeholder(_tokenToProp.at("v1<5")),_tokenToIntv.at("1,3"),_trace));
     //
-    //con.push_back(new StlEventually(new StlPlaceholder(_tokenToProp.at("v2")),_tokenToIntv.at("4,6"),_trace));
+    //con.push_back(new Eventually(new Placeholder(_tokenToProp.at("v2")),_tokenToIntv.at("4,6"),_trace));
     //
-    //_impl = new harm::StlImplication(ant,con);
+    //_impl = new harm::Implication(ant,con);
   }
 
   Trinary evaluate(size_t time) {return _impl->evaluate(time);}
@@ -109,7 +109,7 @@ public:
   Trace *_trace = nullptr;
   size_t _max_length = 0;
   size_t _constShift = 0;
-  StlImplication * _impl = nullptr;
+  Implication * _impl = nullptr;
   Template *_t = nullptr;
   std::unordered_map<std::string, expression::Proposition **> _tokenToProp;
   std::unordered_map<std::string, std::pair<size_t,size_t> *> _tokenToIntv;

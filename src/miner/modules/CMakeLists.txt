@@ -53,8 +53,7 @@ add_library(propertyQualification ${CR_SRC} )
 target_link_libraries(propertyQualification metricParser templateParser fort
     traceReader miner_utils propositionParser varParser )
 
-target_include_directories(propertyQualification PUBLIC include/propertyQualification/interface/
-	include/propertyQualification/qualifier/)
+target_include_directories(propertyQualification PUBLIC include/propertyQualification/interface/ include/propertyQualification/qualifier/ ${Z3_INCLUDE_DIRS})
 
 target_link_libraries(propertyQualification ${Z3_LIBRARY})
 

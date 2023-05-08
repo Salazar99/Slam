@@ -3,7 +3,6 @@
 #include "DTUtils.hh"
 #include "ProgressBar.hpp"
 #include "Template.hh"
-#include "TemporalExp.hh"
 #include "message.hh"
 #include "minerUtils.hh"
 #include <string>
@@ -53,8 +52,8 @@ void DTAndF::removeItems() { _choices->removeItems(); }
 
 void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> *interval,
                      int depth) {
-  harm::TemporalExp *Fprop =
-      new StlEventually(new StlInst(p, ""), interval, _t->_trace);
+  expression::TemporalExp *Fprop =
+      new Eventually(new TemporalInst(p, ""), interval, _t->_trace);
   _choices->addItem(Fprop);
 }
 
@@ -66,8 +65,8 @@ std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>ret;
 for (auto &ti : _choices->getItems()) {
     
     ret.push_back(std::make_pair(
-                dynamic_cast<StlInst*>((dynamic_cast<StlEventually*>(ti)->getOperand()))->getProposition(),
-                *dynamic_cast<StlEventually*>(ti)->getInterval()
+                dynamic_cast<TemporalInst*>((dynamic_cast<Eventually*>(ti)->getOperand()))->getProposition(),
+                *dynamic_cast<Eventually*>(ti)->getInterval()
                 ));
 }
   return ret;
@@ -151,20 +150,20 @@ std::pair<std::string, std::string> DTAndF::prettyPrint(bool offset) {
 
   if (offset) {
     //negate the consequent
-    con = Hstring("!(", Hstring::Stype::Temp, (harm::TemporalExp **)nullptr) +
+    con = Hstring("!(", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr) +
           con +
-          Hstring(")", Hstring::Stype::Temp, (harm::TemporalExp **)nullptr);
+          Hstring(")", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr);
   }
 
   //compose the reduced template
   auto reducedTemplate =
-      Hstring("G[", Hstring::Stype::G, (harm::TemporalExp **)nullptr) +
+      Hstring("G[", Hstring::Stype::G, (expression::TemporalExp **)nullptr) +
       Hstring("X1,X2", Hstring::Stype::Intv,
               (std::pair<size_t, size_t> *)nullptr) +
-      Hstring("]", Hstring::Stype::G, (harm::TemporalExp **)nullptr) +
-      Hstring("(", Hstring::Stype::G, (harm::TemporalExp **)nullptr) + ant +
+      Hstring("]", Hstring::Stype::G, (expression::TemporalExp **)nullptr) +
+      Hstring("(", Hstring::Stype::G, (expression::TemporalExp **)nullptr) + ant +
       imp + con +
-      Hstring(")", Hstring::Stype::G, (harm::TemporalExp **)nullptr);
+      Hstring(")", Hstring::Stype::G, (expression::TemporalExp **)nullptr);
   return std::make_pair(reducedTemplate.toString(1),
                         reducedTemplate.toColoredString(1));
 }

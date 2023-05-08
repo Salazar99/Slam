@@ -1,6 +1,5 @@
 #pragma once
 #include "DTOperator.hh"
-#include "TemporalAnd.hh"
 
 namespace harm {
 /*! \class DTAndF

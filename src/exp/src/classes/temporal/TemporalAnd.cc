@@ -1,6 +1,6 @@
-#include "TemporalAnd.hh"
+#include "classes/temporal/TemporalAnd.hh"
 
-namespace harm {
+namespace expression {
 
 TemporalAnd::TemporalAnd(TemporalExp *first) { _items.push_back(first); };
 TemporalAnd::TemporalAnd(){};
@@ -49,4 +49,4 @@ void TemporalAnd::removeItems() {
   _items.clear();
 }
 
-}; // namespace harm
+}; // namespace expression

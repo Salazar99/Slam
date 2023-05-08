@@ -2,7 +2,6 @@
 
 #include "colors.hh"
 #include "exp.hh"
-#include "TemporalExp.hh"
 
 #include <string>
 #include <vector>
@@ -21,7 +20,7 @@ public:
 
   Hstring(std::string s, Stype t, std::pair<size_t,size_t> * intv = nullptr);
 
-  Hstring(std::string s, Stype t, harm::TemporalExp ** te = nullptr);
+  Hstring(std::string s, Stype t, expression::TemporalExp ** te = nullptr);
   
   Hstring();
 
@@ -54,7 +53,7 @@ public:
   std::string _s;
   Stype _t;
   std::pair<size_t,size_t> * _intv;
-  harm::TemporalExp ** _te;
+  expression::TemporalExp ** _te;
   int _offset;
   std::string _sep;
 

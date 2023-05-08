@@ -1,13 +1,13 @@
 #pragma once
 
 #include "TemporalExp.hh"
-namespace harm {
+namespace expression {
 
-class StlPlaceholder : public TemporalExp {
+class Placeholder : public TemporalExp {
 public:
-  StlPlaceholder(expression::Proposition *prop, const std::string &name);
+  Placeholder(expression::Proposition *prop, const std::string &name);
 
-  virtual ~StlPlaceholder();
+  virtual ~Placeholder();
 
   virtual Trinary evaluate(size_t time) override;
 
@@ -28,4 +28,4 @@ private:
   std::string _name = "";
 };
 
-}; // namespace harm
+}; // namespace expression

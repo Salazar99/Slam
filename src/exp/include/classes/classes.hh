@@ -1,5 +1,4 @@
 #pragma once
-
 #include "atom/Atom.hh"
 #include "atom/CachedAllNumeric.hh"
 #include "atom/CachedProposition.hh"

@@ -34,7 +34,6 @@ public:
   void visit(PropositionEq &o) override;
   void visit(PropositionNeq &o) override;
   void visit(PropositionNot &o) override;
-  void visit(PropositionPast &o) override;
   void visit(LogicToBool &o) override;
 
   // numeric
@@ -44,7 +43,6 @@ public:
   void visit(NumericSub &o) override;
   void visit(NumericMul &o) override;
   void visit(NumericDiv &o) override;
-  void visit(NumericPast &o) override;
   void visit(NumericEq &o) override;
   void visit(NumericNeq &o) override;
   void visit(NumericGreater &o) override;
@@ -65,7 +63,6 @@ public:
   void visit(LogicBXor &o) override;
   void visit(LogicNot &o) override;
   void visit(LogicBitSelector &o) override;
-  void visit(LogicPast &o) override;
   void visit(LogicEq &o) override;
   void visit(LogicNeq &o) override;
   void visit(LogicGreater &o) override;

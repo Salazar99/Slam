@@ -2,13 +2,13 @@
 
 #include "TemporalExp.hh"
 
-namespace harm {
+namespace expression {
 
-class StlInst : public TemporalExp {
+class TemporalInst : public TemporalExp {
 public:
-  StlInst(expression::Proposition *prop,const std::string &name);
+  TemporalInst(expression::Proposition *prop,const std::string &name);
 
-  virtual ~StlInst();
+  virtual ~TemporalInst();
 
   virtual Trinary evaluate(size_t time) override;
 
@@ -26,4 +26,4 @@ private:
   std::string _name = "";
 };
 
-}; // namespace harm
+}; // namespace expression

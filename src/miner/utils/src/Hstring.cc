@@ -1,16 +1,12 @@
 
 #include "Hstring.hh"
 #include "DTAndF.hh"
-#include "StlEventually.hh"
-#include "StlInst.hh"
-#include "StlPlaceholder.hh"
-#include "TemporalAnd.hh"
 
 Hstring::Hstring(std::string s, Stype t, std::pair<size_t, size_t> *intv)
     : _s(s), _t(t), _intv(intv), _offset(-1) {
   _append.push_back(*this);
 }
-Hstring::Hstring(std::string s, Stype t, harm::TemporalExp **te)
+Hstring::Hstring(std::string s, Stype t, expression::TemporalExp **te)
     : _s(s), _t(t), _intv(nullptr), _te(te), _offset(-1) {
   _append.push_back(*this);
 }
@@ -59,7 +55,7 @@ std::string Hstring::toColoredString(bool sub) {
       break;
     case Stype::Ph:
       ret += VAR((
-          sub ? prop2ColoredString(*dynamic_cast<harm::StlPlaceholder *>(*e._te)
+          sub ? prop2ColoredString(*dynamic_cast<harm::Placeholder *>(*e._te)
                                         ->getProposition())
               : e._s));
       break;
@@ -68,7 +64,7 @@ std::string Hstring::toColoredString(bool sub) {
       if ((*e._te)->getItems().empty()) {
         ret += BOOL("..F..");
       } else {
-        std::vector<harm::TemporalExp *> tprops =
+        std::vector<expression::TemporalExp *> tprops =
             (dynamic_cast<harm::TemporalAnd *>(*e._te))->getItems();
         size_t i = 0;
         for (auto tp : tprops) {
@@ -76,10 +72,10 @@ std::string Hstring::toColoredString(bool sub) {
             ret += " && ";
           ret += TEMP("F[") +
                  intv2String(
-                     (dynamic_cast<harm::StlEventually *>(tp))->getInterval()) +
+                     (dynamic_cast<harm::Eventually *>(tp))->getInterval()) +
                  TEMP("]") +
                  prop2ColoredString(
-                     *dynamic_cast<harm::StlInst *>(tp->getItems().front())
+                     *dynamic_cast<harm::TemporalInst *>(tp->getItems().front())
                           ->getProposition());
           i++;
         }
@@ -88,7 +84,7 @@ std::string Hstring::toColoredString(bool sub) {
     case Stype::Inst:
       //FIXME
       ret += prop2ColoredString(
-          *dynamic_cast<harm::StlInst *>(*e._te)->getProposition());
+          *dynamic_cast<harm::TemporalInst *>(*e._te)->getProposition());
       break;
     case Stype::Intv:
       ret += e._s;
@@ -122,7 +118,7 @@ std::string Hstring::toString(bool sub) {
       ret += e._s;
       break;
     case Stype::Ph:
-      ret += (sub ? prop2String(*dynamic_cast<harm::StlPlaceholder *>(*e._te)
+      ret += (sub ? prop2String(*dynamic_cast<harm::Placeholder *>(*e._te)
                                      ->getProposition())
                   : e._s);
       break;
@@ -131,7 +127,7 @@ std::string Hstring::toString(bool sub) {
       if ((*e._te)->getItems().empty()) {
         ret += "..F..";
       } else {
-        std::vector<harm::TemporalExp *> tprops =
+        std::vector<expression::TemporalExp *> tprops =
             (dynamic_cast<harm::TemporalAnd *>(*e._te))->getItems();
         size_t i = 0;
         for (auto tp : tprops) {
@@ -141,9 +137,9 @@ std::string Hstring::toString(bool sub) {
           ret +=
               "F[" +
               intv2String(
-                  (dynamic_cast<harm::StlEventually *>(tp))->getInterval()) +
+                  (dynamic_cast<harm::Eventually *>(tp))->getInterval()) +
               "]" +
-              prop2String(*dynamic_cast<harm::StlInst *>(tp->getItems().front())
+              prop2String(*dynamic_cast<harm::TemporalInst *>(tp->getItems().front())
                                ->getProposition());
           i++;
         }
@@ -151,7 +147,7 @@ std::string Hstring::toString(bool sub) {
       break;
     case Stype::Inst:
       ret +=
-          prop2String(*dynamic_cast<harm::StlInst *>(*e._te)->getProposition());
+          prop2String(*dynamic_cast<harm::TemporalInst *>(*e._te)->getProposition());
       break;
     case Stype::Intv:
       ret += e._s;

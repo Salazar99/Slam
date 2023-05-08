@@ -17,11 +17,6 @@ SET(MINER_UTILS_SRC src/Trace.cc src/DataType.cc src/Template.cc
     src/Context.cc
     src/Assertion.cc
     src/DTUtils.cc
-    src/StlImplication.cc
-    src/StlEventually.cc
-    src/StlInst.cc
-    src/StlPlaceholder.cc
-    src/TemporalAnd
     )
 
 #############################################

@@ -124,8 +124,6 @@ PrinterVisitor::PrinterVisitor() : ExpVisitor(), _ss() {
   operators[ope::LogicLShift] = std::string("<<");
   operators[ope::LogicRShift] = std::string(">>");
 
-  // temporal
-  operators[ope::Past] = std::string("$past");
 }
 
 void PrinterVisitor::clear() {
@@ -146,7 +144,6 @@ EXPRESSION(PropositionOr)
 EXPRESSION(PropositionXor)
 EXPRESSION(PropositionEq)
 EXPRESSION(PropositionNeq)
-EXPRESSION_PAST(PropositionPast)
 
 void PrinterVisitor::visit(expression::PropositionAnd &o) {
 
@@ -195,7 +192,6 @@ EXPRESSION(NumericGreater)
 EXPRESSION(NumericGreaterEq)
 EXPRESSION(NumericLess)
 EXPRESSION(NumericLessEq)
-EXPRESSION_PAST(NumericPast)
 TYPE_CAST(NumericToBool)
 
 // logic
@@ -214,7 +210,6 @@ EXPRESSION(LogicGreater)
 EXPRESSION(LogicGreaterEq)
 EXPRESSION(LogicLess)
 EXPRESSION(LogicLessEq)
-EXPRESSION_PAST(LogicPast)
 EXPRESSION_LOGIC_BIT_SELECTION(LogicBitSelector)
 TYPE_CAST(LogicToNumeric)
 TYPE_CAST(LogicToBool)

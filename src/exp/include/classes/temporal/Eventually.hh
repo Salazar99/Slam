@@ -1,16 +1,20 @@
 #pragma once
 
 #include "TemporalExp.hh"
-#include "Trace.hh"
 
 namespace harm {
+class Trace;
+}
 
-class StlEventually : public TemporalExp {
+namespace expression {
+
+
+class Eventually : public TemporalExp {
 public:
-  StlEventually(TemporalExp *operand, std::pair<size_t, size_t> *interval,
-                Trace *trace);
+  Eventually(TemporalExp *operand, std::pair<size_t, size_t> *interval,
+             harm::Trace *trace);
 
-  virtual ~StlEventually();
+  virtual ~Eventually();
 
   virtual Trinary evaluate(size_t time) override;
 
@@ -27,7 +31,7 @@ public:
 private:
   TemporalExp *_operand;
   std::pair<size_t, size_t> *_interval;
-  Trace *_trace;
+  harm::Trace *_trace;
 };
 
-}; // namespace harm
+}; // namespace expression

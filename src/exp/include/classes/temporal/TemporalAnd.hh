@@ -2,7 +2,7 @@
 
 #include "TemporalExp.hh"
 
-namespace harm {
+namespace expression {
 
 class TemporalAnd : public TemporalExp {
 public:
@@ -29,4 +29,4 @@ private:
  
 };
 
-}; // namespace harm
+}; // namespace expression

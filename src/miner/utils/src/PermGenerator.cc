@@ -1,7 +1,4 @@
 #include "PermGenerator.hh"
-#include "StlInst.hh"
-#include "StlPlaceholder.hh"
-#include "TemporalAnd.hh"
 #include "colors.hh"
 #include "message.hh"
 
@@ -10,6 +7,7 @@
 #include <utility>
 
 namespace harm {
+using namespace expression;
 Row operator*(const Row &r1, const Row &r2) {
   Row ret = r1;
   for (auto e : r2) {
@@ -86,12 +84,12 @@ Matrix genCommutatives(Matrix in, size_t k) {
   return ret;
 }
 bool checkKind(TemporalExp *f1, TemporalExp *f2) {
-  if (dynamic_cast<StlInst *>(f1) != nullptr &&
-      dynamic_cast<StlInst *>(f2) != nullptr) {
+  if (dynamic_cast<TemporalInst *>(f1) != nullptr &&
+      dynamic_cast<TemporalInst *>(f2) != nullptr) {
     return 1;
   }
-  if (dynamic_cast<StlPlaceholder *>(f1) != nullptr &&
-      dynamic_cast<StlPlaceholder *>(f2) != nullptr) {
+  if (dynamic_cast<Placeholder *>(f1) != nullptr &&
+      dynamic_cast<Placeholder *>(f2) != nullptr) {
     return 1;
   }
   if (dynamic_cast<TemporalAnd *>(f1) != nullptr &&
@@ -124,7 +122,7 @@ PermGenerator::generatePermUnit(TemporalExp *templ,
 
   if (dynamic_cast<TemporalAnd *>(templ) !=
       nullptr /*|| templ.is(spot::op::Or)*/) {
-//      std::cout << "And:"<<templ->size() << "\n";
+    //      std::cout << "And:"<<templ->size() << "\n";
     // retrieve equivalent operands
     std::map<size_t, std::vector<size_t>> equals;
     std::unordered_set<size_t> used;
@@ -175,19 +173,19 @@ PermGenerator::generatePermUnit(TemporalExp *templ,
       ret->_dim.second += i->_dim.second;
     }
 
-  } else if (dynamic_cast<StlPlaceholder *>(templ)!=nullptr) {
+  } else if (dynamic_cast<Placeholder *>(templ) != nullptr) {
 
- //     std::cout << "PH" << "\n";
+    //     std::cout << "PH" << "\n";
     harm::Location loc =
-        _phToLoc.at(dynamic_cast<StlPlaceholder *>(templ)->getName());
+        _phToLoc.at(dynamic_cast<Placeholder *>(templ)->getName());
     PermUnit *ph = new PermUnit();
     ph->_op = PermOperator::Ph;
-    if (foundPH.count(dynamic_cast<StlPlaceholder *>(templ)->getName())) {
+    if (foundPH.count(dynamic_cast<Placeholder *>(templ)->getName())) {
       // this is a repeated placeholder
       ph->_dim.first = 1;
       ph->_dim.second = 1;
     } else {
-      foundPH.insert(dynamic_cast<StlPlaceholder *>(templ)->getName());
+      foundPH.insert(dynamic_cast<Placeholder *>(templ)->getName());
       // set the correct domain
       if (loc == harm::Location::Ant) {
         ph->_dim.first = _aProps;
@@ -222,9 +220,9 @@ PermGenerator::generatePermUnit(TemporalExp *templ,
     //      ret->_dim.second += i->_dim.second;
     //    }
     //
-  } else if (dynamic_cast<StlPlaceholder *>(templ) == nullptr &&
-             dynamic_cast<StlInst *>(templ) == nullptr) {
-  //    std::cout << "Rest" << "\n";
+  } else if (dynamic_cast<Placeholder *>(templ) == nullptr &&
+             dynamic_cast<TemporalInst *>(templ) == nullptr) {
+    //    std::cout << "Rest" << "\n";
     ret->_op = PermOperator::Mul;
     ret->_dim.first = 1;
     for (size_t i = 0; i < templ->size(); i++) {
@@ -241,7 +239,7 @@ PermGenerator::generatePermUnit(TemporalExp *templ,
     }
   }
 
-   //   std::cout << ret->_dim.first << "x" << ret->_dim.second << "\n";
+  //   std::cout << ret->_dim.first << "x" << ret->_dim.second << "\n";
   return ret;
 }
 void PermGenerator::deletePermUnit(PermGenerator::PermUnit *pu) {
@@ -316,27 +314,26 @@ bool PermGenerator::compare(TemporalExp *f1, TemporalExp *f2) {
     return false;
   }
 
-  if (dynamic_cast<StlInst *>(f1) != nullptr &&
-      dynamic_cast<StlInst *>(f2) != nullptr) {
-    return dynamic_cast<StlInst *>(f1)->getName() ==
-           dynamic_cast<StlInst *>(f2)->getName();
+  if (dynamic_cast<TemporalInst *>(f1) != nullptr &&
+      dynamic_cast<TemporalInst *>(f2) != nullptr) {
+    return dynamic_cast<TemporalInst *>(f1)->getName() ==
+           dynamic_cast<TemporalInst *>(f2)->getName();
   }
 
-  if ((dynamic_cast<StlPlaceholder *>(f1) != nullptr &&
-       (_mPhs.at(dynamic_cast<StlPlaceholder *>(f1)->getName()) > 1))) {
-    return dynamic_cast<StlPlaceholder *>(f1)->getName() ==
-           dynamic_cast<StlPlaceholder *>(f2)->getName();
+  if ((dynamic_cast<Placeholder *>(f1) != nullptr &&
+       (_mPhs.at(dynamic_cast<Placeholder *>(f1)->getName()) > 1))) {
+    return dynamic_cast<Placeholder *>(f1)->getName() ==
+           dynamic_cast<Placeholder *>(f2)->getName();
   }
-  if ((dynamic_cast<StlPlaceholder *>(f2) != nullptr &&
-       (_mPhs.at(dynamic_cast<StlPlaceholder *>(f2)->getName()) > 1))) {
-    return dynamic_cast<StlPlaceholder *>(f1)->getName() ==
-           dynamic_cast<StlPlaceholder *>(f2)->getName();
+  if ((dynamic_cast<Placeholder *>(f2) != nullptr &&
+       (_mPhs.at(dynamic_cast<Placeholder *>(f2)->getName()) > 1))) {
+    return dynamic_cast<Placeholder *>(f1)->getName() ==
+           dynamic_cast<Placeholder *>(f2)->getName();
   }
 
   if (f1->size() != f2->size()) {
     return false;
   }
-
 
   for (size_t i = 0; i < f1->size(); i++) {
     if (!compare(f1->getItems()[i], f2->getItems()[i])) {

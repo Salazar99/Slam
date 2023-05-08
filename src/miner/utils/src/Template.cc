@@ -42,16 +42,16 @@ Template::Template(const Template &original) {
     if (s._te != nullptr) {
       if (s._t == Hstring::Stype::Inst) {
         Proposition *p =
-            dynamic_cast<StlInst *>(*s._te)->getProposition();
-        s._te = new TemporalExp *(new StlInst(
+            dynamic_cast<TemporalInst *>(*s._te)->getProposition();
+        s._te = new TemporalExp *(new TemporalInst(
             p != nullptr ? new CachedProposition(copy(*p)) : nullptr,
-            dynamic_cast<StlInst *>(*s._te)->getName()));
+            dynamic_cast<TemporalInst *>(*s._te)->getName()));
       } else if (s._t == Hstring::Stype::Ph) {
         Proposition *p =
-            dynamic_cast<StlPlaceholder *>(*s._te)->getProposition();
-        s._te = new TemporalExp *(new StlPlaceholder(
+            dynamic_cast<Placeholder *>(*s._te)->getProposition();
+        s._te = new TemporalExp *(new Placeholder(
             p != nullptr ? new CachedProposition(copy(*p)) : nullptr,
-            dynamic_cast<StlPlaceholder *>(*s._te)->getName()));
+            dynamic_cast<Placeholder *>(*s._te)->getName()));
       }
     }
   }
@@ -189,15 +189,15 @@ void Template::loadPerm(size_t n) {
       //        messageError("");
       //feel the placeholder with the correct proposition _pg._perms[_permIndex][e.second] contains the index of the proposition to be inserted
       //FIXME Completely broken due to Hstring modification
-      dynamic_cast<StlPlaceholder *>(*_aphToProp.at(e.first))
+      dynamic_cast<Placeholder *>(*_aphToProp.at(e.first))
           ->setProposition(_aProps[_pg._perms[n][e.second]]);
     } else if (where == harm::Location::Con) {
-      dynamic_cast<StlPlaceholder *>(*_cphToProp.at(e.first))
+      dynamic_cast<Placeholder *>(*_cphToProp.at(e.first))
           ->setProposition(_cProps[_pg._perms[n][e.second]]);
-      //      dynamic_cast<StlPlaceholder *>(*_cphToProp.at(e.first)) ->setProposition(_cProps[n]);
+      //      dynamic_cast<Placeholder *>(*_cphToProp.at(e.first)) ->setProposition(_cProps[n]);
     } else {
       //       messageError("");
-      dynamic_cast<StlPlaceholder *>(*_acphToProp.at(e.first))
+      dynamic_cast<Placeholder *>(*_acphToProp.at(e.first))
           ->setProposition(_acProps[_pg._perms[n][e.second]]);
     }
   }
@@ -252,17 +252,17 @@ void Template::loadPropositions(std::vector<Proposition *> &props,
     _antInCache = false;
     // put the propositions in the antecedent's placeholders
     for (const auto &ph : _aphToProp) {
-      dynamic_cast<StlPlaceholder *>(*ph.second)->setProposition(props[i++]);
+      dynamic_cast<Placeholder *>(*ph.second)->setProposition(props[i++]);
     }
   } else if (where == harm::Location::Con) {
 
     for (const auto &ph : _cphToProp) {
-      dynamic_cast<StlPlaceholder *>(*ph.second)->setProposition(props[i++]);
+      dynamic_cast<Placeholder *>(*ph.second)->setProposition(props[i++]);
     }
     _conInCache = false;
   } else {
     for (const auto &ph : _acphToProp) {
-      dynamic_cast<StlPlaceholder *>(*ph.second)->setProposition(props[i++]);
+      dynamic_cast<Placeholder *>(*ph.second)->setProposition(props[i++]);
     }
     _conInCache = false;
     _antInCache = false;
@@ -492,7 +492,7 @@ void Template::build() {
     conAnd->addItem(*cte.second);
   }
   TemporalExp *impcon =
-      new StlEventually(conAnd, new std::pair<size_t, size_t>(0, 0), _trace);
+      new Eventually(conAnd, new std::pair<size_t, size_t>(0, 0), _trace);
 
   //iter over hant to find each subformula
   //bool isEventually = false;
@@ -505,7 +505,7 @@ void Template::build() {
   //        std::string intval = phIntv.top();
   //        phIntv.pop();
   //        impant->addItem(
-  //            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
+  //            new Eventually(*s._te, _tokenToIntv.at(intval), _trace));
   //      } else {
   //        impant->addItem(*s._te);
   //      }
@@ -517,7 +517,7 @@ void Template::build() {
   //        std::string intval = phIntv.top();
   //        phIntv.pop();
   //        impant->addItem(
-  //            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
+  //            new Eventually(*s._te, _tokenToIntv.at(intval), _trace));
   //      } else {
   //        impant->addItem(*s._te);
   //      }
@@ -538,7 +538,7 @@ void Template::build() {
   //        std::string intval = phIntv.top();
   //        phIntv.pop();
   //        impant->addItem(
-  //            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
+  //            new Eventually(*s._te, _tokenToIntv.at(intval), _trace));
   //      } else {
   //        impcon->addItem(*s._te);
   //      }
@@ -550,7 +550,7 @@ void Template::build() {
   //        std::string intval = phIntv.top();
   //        phIntv.pop();
   //        impcon->addItem(
-  //            new StlEventually(*s._te, _tokenToIntv.at(intval), _trace));
+  //            new Eventually(*s._te, _tokenToIntv.at(intval), _trace));
   //      } else {
   //        impcon->addItem(*s._te);
   //      }
@@ -561,7 +561,7 @@ void Template::build() {
   //      messageError("DT operand is not allowed in the consequent");
   //  }
 
-  _impl = new StlImplication(impant, impcon);
+  _impl = new Implication(impant, impcon);
 }
 
 void Template::genPermutations(const std::vector<Proposition *> &antP,

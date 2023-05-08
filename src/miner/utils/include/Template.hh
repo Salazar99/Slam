@@ -22,11 +22,6 @@
 #include "Trace.hh"
 #include "Trinary.hh"
 #include "exp.hh"
-#include "StlImplication.hh"
-#include "StlEventually.hh"
-#include "StlPlaceholder.hh"
-#include "StlInst.hh"
-#include "TemporalExp.hh"
 
 namespace harm {
     class EdgeProposition;
@@ -335,7 +330,7 @@ private:
   std::vector<Proposition *> _acProps;
 
   ///Represents template implication
-  StlImplication *_impl;
+  Implication *_impl;
 
 public:
   /// length of the trace

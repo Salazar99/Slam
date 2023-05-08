@@ -4,18 +4,18 @@
 #include "TemporalExp.hh"
 #include <vector>
 
-namespace harm {
+namespace expression {
 
-class StlImplication : public TemporalExp {
+class Implication : public TemporalExp {
 
 private:
   TemporalExp *_ant;
   TemporalExp *_con;
 
 public:
-  StlImplication(TemporalExp *ant, TemporalExp *con);
+  Implication(TemporalExp *ant, TemporalExp *con);
 
-  virtual ~StlImplication();
+  virtual ~Implication();
 
   virtual Trinary evaluate(size_t time) override;
 
@@ -27,4 +27,4 @@ public:
 
   Trinary evaluate_con(size_t time);
 };
-} //namespace harm
+} //namespace expression
