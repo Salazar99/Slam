@@ -6,7 +6,11 @@ namespace expression {
 Implication::Implication(TemporalExp *ant, TemporalExp *con)
     : _ant(ant), _con(con){};
 
-Implication::~Implication(){};
+Implication::~Implication(){
+    delete _ant;
+    delete _con;
+
+};
 
 Trinary Implication::evaluate(size_t time) {
   if (_ant->evaluate(time) == Trinary::T)

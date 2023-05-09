@@ -17,6 +17,7 @@ std::string temp2String(expression::TemporalExp &p, bool subPlaceholders = 0);
 std::string temp2ColoredString(expression::TemporalExp &p,
                                bool subPlaceholders = 0);
 expression::Proposition *copy(expression::Proposition &p);
+expression::TemporalExp *copy(expression::TemporalExp &p) ;
 expression::LogicExpression *copy(expression::LogicExpression &le);
 expression::NumericExpression *copy(expression::NumericExpression &ne);
 

@@ -5,6 +5,7 @@ namespace expression {
 
 class Placeholder : public TemporalExp {
 public:
+  Placeholder(){}
   Placeholder(expression::Proposition *prop, const std::string &name);
 
   virtual ~Placeholder();

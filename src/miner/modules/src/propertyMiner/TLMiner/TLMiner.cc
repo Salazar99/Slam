@@ -5,6 +5,8 @@
 #include "globals.hh"
 #include "minerUtils.hh"
 #include "supportMethods.hh"
+#include "templateParser.hh"
+#include "templateParsingUtils.hh"
 
 #include <algorithm>
 #include <chrono>
@@ -190,7 +192,9 @@ void TLMiner::l2Handler(
         busyTemplates.push_back(templs.size());
         templIndexTol2Inst[templs.size()] = toBeServed;
         instToTemplIndex[toBeServed] = templs.size();
-        templs.push_back(new Template(*t));
+        Template *newTemp = hparser::parseTemplate(t->getTemplate(), t->_trace);
+        newTemp->transferPermutations(*t);
+        templs.push_back(newTemp);
         nextTemp = templs.back();
       } else {
         // reuse old copy
@@ -303,8 +307,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       //
       //} else {
       for (auto prop : props) {
-        t->getDT()->addItem(prop.first,
-                            std::pair<size_t, size_t>(prop.second), -1);
+        t->getDT()->addItem(prop.first, std::pair<size_t, size_t>(prop.second),
+                            -1);
       }
       //}
       assert(!t->getDT()->getItems().empty());

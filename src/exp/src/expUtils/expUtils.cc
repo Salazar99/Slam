@@ -59,6 +59,11 @@ expression::Proposition *copy(expression::Proposition &p) {
   p.acceptVisitor(copier);
   return copier.get();
 }
+expression::TemporalExp *copy(expression::TemporalExp &p) {
+  expression::CopyVisitor copier;
+  p.acceptVisitor(copier);
+  return copier.getTemporal();
+}
 expression::LogicExpression *copy(expression::LogicExpression &le) {
   expression::CopyVisitor copier;
   le.acceptVisitor(copier);

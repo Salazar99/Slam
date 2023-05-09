@@ -25,6 +25,7 @@ public:
 
   void acceptVisitor(ExpVisitor &vis) override;
 
+
 private:
   std::vector<TemporalExp *> _items;
 };

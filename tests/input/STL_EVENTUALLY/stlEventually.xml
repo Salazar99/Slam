@@ -3,7 +3,8 @@
 		<prop exp="v1" loc="dt"/>
 		<prop exp="v2" loc="dt"/>
 		<prop exp="v3" loc="c"/>
+		<prop exp="v4" loc="c"/>
 
-        <template dtLimits="2D,2W,2A,0E" exp="G( ..F.. -> F[0,0](P0) )" /> 
+        <template dtLimits="2D,2W,2A,0E" exp="G( (..F..) -> F[0,0](P0 && P1) )" /> 
 	</context>
 </harm>

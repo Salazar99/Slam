@@ -24,6 +24,7 @@ public:
   Proposition *get();
   LogicExpression *getLogic();
   NumericExpression *getNumeric();
+  TemporalExp *getTemporal() { return _te; }
 
   // proposition
   void visit(BooleanConstant &o) override;
@@ -73,10 +74,18 @@ public:
   void visit(LogicLShift &o) override;
   void visit(LogicRShift &o) override;
 
+  //Temporal
+  virtual void visit(TemporalAnd &o) override;
+  virtual void visit(TemporalInst &o) override;
+  virtual void visit(Placeholder &o) override;
+  virtual void visit(Eventually &o) override;
+  virtual void visit(Implication &o) override;
+
 private:
   Proposition *_proposition;
   NumericExpression *_numeric;
   LogicExpression *_logic;
+  TemporalExp *_te;
 };
 
 } // namespace expression

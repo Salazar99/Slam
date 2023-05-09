@@ -17,8 +17,8 @@ public:
   virtual void enterFile(stlParser::FileContext *ctx) = 0;
   virtual void exitFile(stlParser::FileContext *ctx) = 0;
 
-  virtual void enterFormula(stlParser::FormulaContext *ctx) = 0;
-  virtual void exitFormula(stlParser::FormulaContext *ctx) = 0;
+  virtual void enterImplication(stlParser::ImplicationContext *ctx) = 0;
+  virtual void exitImplication(stlParser::ImplicationContext *ctx) = 0;
 
   virtual void enterTformula(stlParser::TformulaContext *ctx) = 0;
   virtual void exitTformula(stlParser::TformulaContext *ctx) = 0;

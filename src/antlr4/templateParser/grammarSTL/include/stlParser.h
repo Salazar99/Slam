@@ -23,7 +23,7 @@ public:
   };
 
   enum {
-    RuleFile = 0, RuleFormula = 1, RuleTformula = 2, RulePlaceholder = 3, 
+    RuleFile = 0, RuleImplication = 1, RuleTformula = 2, RulePlaceholder = 3, 
     RuleInterval_placeholder = 4, RuleInterval = 5, RuleBoolean = 6, RuleBooleanAtom = 7, 
     RuleBooleanConstant = 8, RuleBooleanVariable = 9, RuleLogic = 10, RuleBitSelect = 11, 
     RuleLogicAtom = 12, RuleLogicConstant = 13, RuleLogicVariable = 14, 
@@ -49,7 +49,7 @@ public:
 
 
   class FileContext;
-  class FormulaContext;
+  class ImplicationContext;
   class TformulaContext;
   class PlaceholderContext;
   class Interval_placeholderContext;
@@ -76,7 +76,7 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *STL_ALWAYS();
     antlr4::tree::TerminalNode *LPAREN();
-    FormulaContext *formula();
+    ImplicationContext *implication();
     antlr4::tree::TerminalNode *RPAREN();
     antlr4::tree::TerminalNode *EOF();
     antlr4::tree::TerminalNode *LCPAREN();
@@ -90,20 +90,25 @@ public:
 
   FileContext* file();
 
-  class  FormulaContext : public antlr4::ParserRuleContext {
+  class  ImplicationContext : public antlr4::ParserRuleContext {
   public:
-    FormulaContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    ImplicationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *DT_ANDF();
+    antlr4::tree::TerminalNode *IMPL();
+    antlr4::tree::TerminalNode *STL_EVENTUALLY();
+    antlr4::tree::TerminalNode *LCPAREN();
+    IntervalContext *interval();
+    antlr4::tree::TerminalNode *RCPAREN();
     std::vector<TformulaContext *> tformula();
     TformulaContext* tformula(size_t i);
-    antlr4::tree::TerminalNode *IMPL();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
    
   };
 
-  FormulaContext* formula();
+  ImplicationContext* implication();
 
   class  TformulaContext : public antlr4::ParserRuleContext {
   public:
@@ -111,7 +116,6 @@ public:
     virtual size_t getRuleIndex() const override;
     BooleanContext *boolean();
     PlaceholderContext *placeholder();
-    antlr4::tree::TerminalNode *DT_ANDF();
     antlr4::tree::TerminalNode *LPAREN();
     std::vector<TformulaContext *> tformula();
     TformulaContext* tformula(size_t i);

@@ -8,7 +8,9 @@ Eventually::Eventually(TemporalExp *operand,
                              const std::pair<size_t, size_t> &interval, harm::Trace *trace)
     : _operand(operand), _interval(interval), _trace(trace){};
 
-Eventually::~Eventually() {}
+Eventually::~Eventually() {
+    delete _operand;
+}
 
 Trinary Eventually::evaluate(size_t time) {
 

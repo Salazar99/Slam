@@ -19,8 +19,8 @@ public:
   virtual void enterFile(stlParser::FileContext * /*ctx*/) override { }
   virtual void exitFile(stlParser::FileContext * /*ctx*/) override { }
 
-  virtual void enterFormula(stlParser::FormulaContext * /*ctx*/) override { }
-  virtual void exitFormula(stlParser::FormulaContext * /*ctx*/) override { }
+  virtual void enterImplication(stlParser::ImplicationContext * /*ctx*/) override { }
+  virtual void exitImplication(stlParser::ImplicationContext * /*ctx*/) override { }
 
   virtual void enterTformula(stlParser::TformulaContext * /*ctx*/) override { }
   virtual void exitTformula(stlParser::TformulaContext * /*ctx*/) override { }

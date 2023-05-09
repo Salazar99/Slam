@@ -210,8 +210,7 @@ void ColoredPrinterVisitor::visit(Placeholder &o) {
 }
 
 void ColoredPrinterVisitor::visit(TemporalInst &o) {
-  if (o.getProposition() == nullptr ||
-      (!_subPlaceholders && o.getName() != "")) {
+  if (o.getProposition() == nullptr) {
     _ss << VAR(o.getName());
   } else {
     o.getProposition()->acceptVisitor(*this);

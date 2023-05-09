@@ -2,9 +2,7 @@
 
 //------------------------------------------------------------------------------
 #define LEAF_NODE(LEAF, DEST)                                                  \
-  void CopyVisitor::visit(LEAF &o) {                                           \
-    DEST = new LEAF(o);                                                        \
-  }
+  void CopyVisitor::visit(LEAF &o) { DEST = new LEAF(o); }
 
 #define EXPRESSION(OPERATOR, OPERAND, RESULT)                                  \
   void CopyVisitor::visit(OPERATOR &o) {                                       \
@@ -54,7 +52,6 @@ EXPRESSION(PropositionXor, _proposition, _proposition)
 EXPRESSION(PropositionEq, _proposition, _proposition)
 EXPRESSION(PropositionNeq, _proposition, _proposition)
 EXPRESSION(PropositionNot, _proposition, _proposition)
-
 
 void CopyVisitor::visit(LogicToBool &o) {
   o.getItem().acceptVisitor(*this);
@@ -107,6 +104,57 @@ void CopyVisitor::visit(LogicBitSelector &o) {
 void CopyVisitor::visit(NumericToBool &o) {
   o.getItem().acceptVisitor(*this);
   _proposition = new NumericToBool(_numeric);
+}
+
+//temporal
+void CopyVisitor::visit(Placeholder &o) {
+  auto *copy = new Placeholder();
+  if (o.getProposition() != nullptr) {
+    o.getProposition()->acceptVisitor(*this);
+    copy->setProposition(_proposition);
+  }
+  _te = copy;
+}
+
+void CopyVisitor::visit(TemporalInst &o) {
+  auto *copy = new TemporalInst();
+  if (o.getProposition() != nullptr) {
+    o.getProposition()->acceptVisitor(*this);
+    copy->setProposition(_proposition);
+  }
+  _te = copy;
+}
+
+void CopyVisitor::visit(TemporalAnd &o) {
+  auto *copy = new TemporalAnd();
+  auto items = o.getItems();
+  for (auto *item : items) {
+    item->acceptVisitor(*this);
+    copy->addItem(_te);
+  }
+  _te = copy;
+}
+
+void CopyVisitor::visit(Implication &o) {
+  auto *copy = new Implication();
+  auto items = o.getItems();
+
+  //ant
+  items[0]->acceptVisitor(*this);
+  copy->setAnt(_te);
+  //con
+  items[1]->acceptVisitor(*this);
+  copy->setCon(_te);
+
+  _te = copy;
+}
+
+void CopyVisitor::visit(Eventually &o) {
+  auto item = o.getOperand();
+  auto *copy = new Eventually(o);
+  item->acceptVisitor(*this);
+  copy->setOperand(_te);
+  _te = copy;
 }
 
 } // namespace expression

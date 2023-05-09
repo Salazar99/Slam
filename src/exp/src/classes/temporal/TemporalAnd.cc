@@ -6,7 +6,13 @@ namespace expression {
 TemporalAnd::TemporalAnd(TemporalExp *first) { _items.push_back(first); };
 TemporalAnd::TemporalAnd(){};
 
-TemporalAnd::~TemporalAnd(){};
+TemporalAnd::~TemporalAnd(){
+
+    for (auto item : _items) {
+        delete item;
+    }
+
+};
 
 Trinary TemporalAnd::evaluate(size_t time) {
   //if one element is F, all AND is false

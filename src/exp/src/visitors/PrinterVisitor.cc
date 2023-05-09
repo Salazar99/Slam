@@ -226,8 +226,7 @@ void PrinterVisitor::visit(Placeholder &o) {
 }
 
 void PrinterVisitor::visit(TemporalInst &o) {
-  if (o.getProposition() == nullptr ||
-      (!_subPlaceholders && o.getName() != "")) {
+  if (o.getProposition() == nullptr) {
     _ss << o.getName();
   } else {
     o.getProposition()->acceptVisitor(*this);

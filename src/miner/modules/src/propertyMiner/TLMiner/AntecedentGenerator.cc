@@ -162,8 +162,9 @@ inline void AntecedentGenerator::findCandidates(
 
   // for each proposition that belongs to a unused variable
 
-  //    if (template_dt->isTaken(candidate, 0, depth))
-  //      continue;
+      if (template_dt->isTaken(candidate, 0, depth))
+        return;
+        //continue;
 
   //Proposition *prop = propPtr[0];
   Proposition *prop = dcVariables[candidate].first;

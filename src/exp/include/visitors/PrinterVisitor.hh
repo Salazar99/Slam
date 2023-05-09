@@ -71,11 +71,11 @@ public:
   void visit(LogicRShift &o) override;
 
   //Temporal
-  void visit(Placeholder &o);
-  void visit(TemporalInst &o);
-  void visit(TemporalAnd &o);
-  void visit(Implication &o);
-  void visit(Eventually &o);
+  void visit(Placeholder &o) override;
+  void visit(TemporalInst &o) override;
+  void visit(TemporalAnd &o) override;
+  void visit(Implication &o) override;
+  void visit(Eventually &o) override;
 
 protected:
   enum ope : int {

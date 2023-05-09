@@ -13,6 +13,8 @@ private:
   TemporalExp *_con;
 
 public:
+  Implication() {}
+
   Implication(TemporalExp *ant, TemporalExp *con);
 
   virtual ~Implication();
@@ -26,6 +28,9 @@ public:
   Trinary evaluate_ant(size_t time);
 
   Trinary evaluate_con(size_t time);
+
+  void setAnt(TemporalExp *ant) { _ant = ant; }
+  void setCon(TemporalExp *con) { _con = con; }
 
   void acceptVisitor(ExpVisitor &vis) override;
 };

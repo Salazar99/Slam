@@ -30,7 +30,7 @@ bool DTAndF::isRandomConstructed() { return false; }
 size_t DTAndF::getNChoices() { return _choices->size(); }
 bool DTAndF::isTaken(size_t id, bool second, int depth) {
   if (second) {
-    return _leaves.count(id) && _leaves.at(id).first!=nullptr;
+    return _leaves.count(id) && _leaves.at(id).first != nullptr;
   } else {
     return _leaves.count(id) && _leaves.at(id).first != nullptr;
   }
@@ -39,37 +39,54 @@ void DTAndF::removeLeaf(size_t id, int depth) {
   //_leaves.at(id).second = nullptr;
   _leaves.at(id).first = nullptr;
 }
-void DTAndF::addLeaf(Proposition *p, std::pair<size_t, size_t> intv, size_t id, bool second, int depth) {
+void DTAndF::addLeaf(Proposition *p, std::pair<size_t, size_t> intv, size_t id,
+                     bool second, int depth) {
   //if (second) {
   //  _leaves[id].second = intv;
   //} else {
   //  _leaves[id].first = p;
   //}
-    _leaves[id].first = p;
-    _leaves[id].second = intv;
+  _leaves[id].first = p;
+  _leaves[id].second = intv;
 }
 
 void DTAndF::removeItems() { _choices->removeItems(); }
 
 void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> interval,
                      int depth) {
-  expression::TemporalExp *Fprop =
-      new Eventually(new TemporalInst(p, ""), interval, _t->_trace);
-  _choices->addItem(Fprop);
+  if (_choices->size() != 0) {
+    expression::TemporalExp *Fprop =
+        new Eventually(new TemporalInst(p, ""), interval, _t->_trace);
+    _choices->addItem(Fprop);
+  } else {
+    expression::TemporalExp *Fprop = new TemporalInst(p, "");
+    _t->setConsequentInterval(interval);
+    _choices->addItem(Fprop);
+  }
 }
 
-void DTAndF::popItem(int depth) { _choices->popItem(); }
+void DTAndF::popItem(int depth) {
+    delete _choices->getItems().back();
+    _choices->popItem();
+}
 
 std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
 DTAndF::getItems() {
-std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>ret;
-for (auto &ti : _choices->getItems()) {
-    
-    ret.push_back(std::make_pair(
-                dynamic_cast<TemporalInst*>((dynamic_cast<Eventually*>(ti)->getOperand()))->getProposition(),
-                dynamic_cast<Eventually*>(ti)->getInterval()
-                ));
-}
+  std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> ret;
+
+  ret.push_back(
+      std::make_pair(dynamic_cast<TemporalInst *>(_choices->getItems()[0])->getProposition(),
+                     _t->getConsequentInterval()));
+
+  for (size_t i = 1; i < _choices->size(); i++) {
+    auto ti = _choices->getItems()[i];
+    ret.push_back(
+        std::make_pair(dynamic_cast<TemporalInst *>(
+                           (dynamic_cast<Eventually *>(ti)->getOperand()))
+                           ->getProposition(),
+                       dynamic_cast<Eventually *>(ti)->getInterval()));
+  }
+
   return ret;
 }
 
@@ -94,12 +111,12 @@ bool DTAndF::isSolutionInconsequential(std::vector<TemporalExp *> &sol) {
 }
 
 void DTAndF::substitute(int depth, int width, expression::Proposition *&sub) {
-//  if (width == -1) {
-//    width = _choices->getItems().size() - 1;
-//  }
-//  expression::Proposition *tmp = _choices->getItems()[width];
-//  _choices->getItems()[width] = sub;
-//  sub = tmp;
+  //  if (width == -1) {
+  //    width = _choices->getItems().size() - 1;
+  //  }
+  //  expression::Proposition *tmp = _choices->getItems()[width];
+  //  _choices->getItems()[width] = sub;
+  //  sub = tmp;
 }
 
 const DTLimits &DTAndF::getLimits() { return _limits; }
@@ -145,27 +162,27 @@ std::vector<TemporalExp *> DTAndF::minimize(bool isOffset) {
 
 std::pair<std::string, std::string> DTAndF::prettyPrint(bool offset) {
 
-//  auto ant = _t->_templateFormula.getAnt();
-//  auto imp = _t->_templateFormula.getImp();
-//  auto con = _t->_templateFormula.getCon();
-//
-//  if (offset) {
-//    //negate the consequent
-//    con = Hstring("!(", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr) +
-//          con +
-//          Hstring(")", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr);
-//  }
-//
-//  //compose the reduced template
-//  auto reducedTemplate =
-//      Hstring("G[", Hstring::Stype::G, (expression::TemporalExp **)nullptr) +
-//      Hstring("X1,X2", Hstring::Stype::Intv,
-//              (std::pair<size_t, size_t> *)nullptr) +
-//      Hstring("]", Hstring::Stype::G, (expression::TemporalExp **)nullptr) +
-//      Hstring("(", Hstring::Stype::G, (expression::TemporalExp **)nullptr) + ant +
-//      imp + con +
-//      Hstring(")", Hstring::Stype::G, (expression::TemporalExp **)nullptr);
-//  return std::make_pair(reducedTemplate.toString(1),
-//                        reducedTemplate.toColoredString(1));
+  //  auto ant = _t->_templateFormula.getAnt();
+  //  auto imp = _t->_templateFormula.getImp();
+  //  auto con = _t->_templateFormula.getCon();
+  //
+  //  if (offset) {
+  //    //negate the consequent
+  //    con = Hstring("!(", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr) +
+  //          con +
+  //          Hstring(")", Hstring::Stype::Temp, (expression::TemporalExp **)nullptr);
+  //  }
+  //
+  //  //compose the reduced template
+  //  auto reducedTemplate =
+  //      Hstring("G[", Hstring::Stype::G, (expression::TemporalExp **)nullptr) +
+  //      Hstring("X1,X2", Hstring::Stype::Intv,
+  //              (std::pair<size_t, size_t> *)nullptr) +
+  //      Hstring("]", Hstring::Stype::G, (expression::TemporalExp **)nullptr) +
+  //      Hstring("(", Hstring::Stype::G, (expression::TemporalExp **)nullptr) + ant +
+  //      imp + con +
+  //      Hstring(")", Hstring::Stype::G, (expression::TemporalExp **)nullptr);
+  //  return std::make_pair(reducedTemplate.toString(1),
+  //                        reducedTemplate.toColoredString(1));
 }
 } // namespace harm

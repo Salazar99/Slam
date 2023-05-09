@@ -1,14 +1,17 @@
 grammar stl;
 import proposition;
 
-file : STL_ALWAYS LPAREN formula RPAREN EOF
-| STL_ALWAYS LCPAREN interval RCPAREN LPAREN formula RPAREN EOF
+file : STL_ALWAYS LPAREN implication RPAREN EOF
+| STL_ALWAYS LCPAREN interval RCPAREN LPAREN implication RPAREN EOF
 ;
 
 
-formula : tformula IMPL tformula;
+implication :
+ DT_ANDF IMPL STL_EVENTUALLY LCPAREN interval RCPAREN tformula |
+ tformula IMPL STL_EVENTUALLY LCPAREN interval RCPAREN tformula
+;
 
-tformula: boolean | placeholder | DT_ANDF
+tformula: boolean | placeholder
 	| LPAREN tformula RPAREN 
 	| NOT tformula 
 	| tformula AND tformula 
@@ -26,7 +29,7 @@ interval: interval_placeholder COMMA interval_placeholder
 
 
 DT_ANDF
-    : '..F..'
+    : '('? '..F..' ')'?
     ;
 
 STL_EVENTUALLY: 'F'; 

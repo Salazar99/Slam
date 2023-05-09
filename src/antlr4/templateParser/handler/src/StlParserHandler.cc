@@ -29,13 +29,30 @@ void StlParserHandler::exitFile(stlParser::FileContext *ctx) {
   _template->_impl = dynamic_cast<Implication *>(teFormula);
 }
 
-void StlParserHandler::exitFormula(stlParser::FormulaContext *ctx) {
-  if (ctx->tformula().size() == 2 && ctx->IMPL() != nullptr) {
-    auto teformulaCon = _tfStack.top();
+void StlParserHandler::exitImplication(stlParser::ImplicationContext *ctx) {
+
+  if (ctx->tformula().size() == 1 && ctx->DT_ANDF() != nullptr) {
+    //..F..
+    TemporalExp *te = new TemporalAnd();
+    TemporalExp *teformulaCon =
+        new Eventually(_tfStack.top(), std::pair<size_t, size_t>(0, 0), _trace);
     _tfStack.pop();
-    auto teformulaAnt = _tfStack.top();
+
+    std::string ph = "dtAndF";
+    _template->_dtOp =
+        std::make_pair(ph, new harm::DTAndF(dynamic_cast<TemporalAnd *>(te),
+                                            _template, _template->_limits));
+    _tfStack.push(new Implication(te, teformulaCon));
+    return;
+  } else if (ctx->tformula().size() == 2) {
+    TemporalExp *teformulaCon =
+        new Eventually(_tfStack.top(), std::pair<size_t, size_t>(0, 0), _trace);
     _tfStack.pop();
-    _tfStack.push(new Implication(teformulaAnt, teformulaCon));
+
+    TemporalExp *teFormulaAnt = _tfStack.top();
+    _tfStack.pop();
+
+    _tfStack.push(new Implication(teFormulaAnt, teformulaCon));
     return;
   }
 }
@@ -65,20 +82,6 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
     _template->_cphToProp[ph] = p;
 
     _tfStack.push(p);
-
-    return;
-  }
-
-  if (ctx->DT_ANDF() != nullptr) {
-    messageErrorIf(dtCount > 0,
-                   "More than one dt operator defined\n" + printErrorMessage());
-    std::string ph = "dtAndF";
-    dtCount++;
-    TemporalExp *te = new TemporalAnd();
-    _template->_dtOp =
-        std::make_pair(ph, new harm::DTAndF(dynamic_cast<TemporalAnd *>(te),
-                                            _template, _template->_limits));
-    _tfStack.push(te);
 
     return;
   }
