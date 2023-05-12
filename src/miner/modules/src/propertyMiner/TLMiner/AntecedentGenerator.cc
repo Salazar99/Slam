@@ -156,70 +156,72 @@ inline void AntecedentGenerator::findCandidates(
   // std::cout <<"\t\t\t\t\t\t"
 
   // the 2 propositions of X
-  //std::vector<Proposition *> propPtr;
+  std::vector<Proposition *> propPtr;
   DTOperator *template_dt = t->getDT();
-  //  propPtr.push_back(dcVariables[candidate].first);
+  propPtr.push_back(dcVariables[candidate].first.first);
+  propPtr.push_back(dcVariables[candidate].first.second);
 
   // for each proposition that belongs to a unused variable
+  for (size_t propI = 0; propI < (template_dt->getLimits()._useNegatedProps ? 2 : 1); ++propI) {
 
-      if (template_dt->isTaken(candidate, 0, depth))
-        return;
-        //continue;
-
-  //Proposition *prop = propPtr[0];
-  Proposition *prop = dcVariables[candidate].first;
-
-  //      debug
-  // std::cout << "-------------"F
-  //          << "\n";
-  // std::cout << t->getColoredAssertion() << "\n";
-  // std::cout << "Candidate(" << depth << "): " << prop2String(*prop) <<
-  // "\n";
-
-  // add the new proposition of a unused variable in the current
-  // antecedent
-  std::pair<size_t, size_t> intv = std::pair<size_t, size_t>({0, 0});
-  template_dt->addItem(prop, intv, depth);
-
-  // ignore this prop if the template contains a known solution
-  /*
-    if ((template_dt->isRandomConstructed() ||
-         template_dt->isMultiDimensional()) &&
-        isKnownSolution(template_dt->getItems(), template_dt, 1)) {
-      template_dt->popItem(depth);
+    if (template_dt->isTaken(candidate, 0, depth))
       continue;
-    }
-  */
-  MT::Result_DC res = MT::mean_MT(t);
+        
+    Proposition *prop = propPtr[propI];
+    //Proposition *prop = dcVariables[candidate].first.first;
 
-  // is the new antecedent at least once satisfied? (avoid vacuity)
-
-  if (res.occProposition > 0) {
     //      debug
-    //      std::cout << "-------->" << prop2String(*prop) << "\n";
+    // std::cout << "-------------"F
+    //          << "\n";
+    // std::cout << t->getColoredAssertion() << "\n";
+    // std::cout << "Candidate(" << depth << "): " << prop2String(*prop) <<
+    // "\n";
 
-    if (res.occGoal == 0 || res.occGoal == res.occProposition) {
-      std::pair<size_t, size_t> intv = std::pair<size_t, size_t>({0, 0});
-      template_dt->addLeaf(prop, intv, candidate, 0, depth);
-      discLeaves.push_back(DiscoveredLeaf(candidate, 0, depth));
+    // add the new proposition of a unused variable in the current
+    // antecedent
+    std::pair<size_t, size_t> intv = std::pair<size_t, size_t>({0, 0});
+    template_dt->addItem(prop, intv, depth);
 
-      storeSolution(t, res.occGoal == 0);
-    } else {
-      double condEnt = getConditionalEntropy(res.occProposition, res.occGoal,
-                                             t->_max_length);
-      double IG = currEntropy - condEnt;
-      //        debug
-      //        if (IG<0) {
-      //         std::cout <<"********************************>"<<
-      //         currEntropy<<" - "<< condEnt<<" = "<<IG <<"\n";
-      //        }
-      //igs.emplace_back(candidate, IG, depth, propPtr[0], 0, condEnt);
-      igs.emplace_back(candidate, IG, depth, prop, 0, condEnt);
+    // ignore this prop if the template contains a known solution
+    /*
+      if ((template_dt->isRandomConstructed() ||
+           template_dt->isMultiDimensional()) &&
+          isKnownSolution(template_dt->getItems(), template_dt, 1)) {
+        template_dt->popItem(depth);
+        continue;
+      }
+    */
+    MT::Result_DC res = MT::mean_MT(t);
+
+    // is the new antecedent at least once satisfied? (avoid vacuity)
+
+    if (res.occProposition > 0) {
+      //      debug
+      //      std::cout << "-------->" << prop2String(*prop) << "\n";
+
+      if (res.occGoal == 0 || res.occGoal == res.occProposition) {
+
+        std::pair<size_t, size_t> intv = std::pair<size_t, size_t>({0, 0});
+        template_dt->addLeaf(prop, intv, candidate, propI, depth);
+        discLeaves.push_back(DiscoveredLeaf(candidate, propI, depth));
+
+        storeSolution(t, res.occGoal == 0);
+      } else {
+        double condEnt = getConditionalEntropy(res.occProposition, res.occGoal,
+                                               t->_max_length);
+        double IG = currEntropy - condEnt;
+        //        debug
+        //        if (IG<0) {
+        //         std::cout <<"********************************>"<<
+        //         currEntropy<<" - "<< condEnt<<" = "<<IG <<"\n";
+        //        }
+        //igs.emplace_back(candidate, IG, depth, propPtr[0], 0, condEnt);
+        igs.emplace_back(candidate, IG, depth, propPtr[propI], propI, condEnt);
+      }
     }
+
+    template_dt->popItem(depth);
   }
-
-  template_dt->popItem(depth);
-
   // debug
   // std::cout << "RIG: " << RIG << "\n";
   // std::cout << "_condEnt: " << condEnt << "\n";
@@ -241,35 +243,6 @@ AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
   return ivs;
 }
 
-// template <typename T>
-// inline std::vector<std::pair<T, T>> kmeansMerge(std::vector<T> &elements,
-//                                                size_t modes) {
-//
-//  std::vector<std::pair<T, T>> merged;
-//  if (modes == 2) {
-//    std::vector<std::pair<T, T>> clusters = kmeans<T>(elements, 3);
-//    std::sort(clusters.begin(), clusters.end(),
-//              [](const std::pair<T, T> &e1, const std::pair<T, T> &e2) {
-//                return e1.first < e2.first;
-//              });
-//
-//    // debug
-//    for (auto m : clusters) {
-//      std::cout << "-------->\t\t\t\t\t\t" << m.first << ", " << m.second
-//                << "\n";
-//    }
-//    if (clusters.size() != 3) {
-//      return merged;
-//    }
-//    merged.emplace_back(clusters[0].first, clusters[1].second);
-//    merged.emplace_back(clusters[1].first, clusters[2].second);
-//  }
-//  //  debug
-//  for (auto m : merged) {
-//    std::cout << "\t\t\t\t\t\t" << m.first << ", " << m.second << "\n";
-//  }
-//  return merged;
-//}
 
 inline std::vector<Proposition *>
 AntecedentGenerator::gatherPropositionsFromNumerics(

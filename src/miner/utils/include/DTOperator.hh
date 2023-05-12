@@ -17,7 +17,10 @@ class Automaton;
 
 using namespace expression;
 using DecTreeVariables =
-    std::map<size_t, std::pair<Proposition *, std::pair<size_t,size_t>>>;
+    std::map<size_t, std::pair<
+      std::pair<Proposition *,Proposition *>, 
+      std::pair<size_t,size_t>>
+      >;
 
 /*! \class DTOperator
     \brief Class representing a decision tree operator

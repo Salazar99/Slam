@@ -30,23 +30,22 @@ bool DTAndF::isRandomConstructed() { return false; }
 size_t DTAndF::getNChoices() { return _choices->size(); }
 bool DTAndF::isTaken(size_t id, bool second, int depth) {
   if (second) {
-    return _leaves.count(id) && _leaves.at(id).first != nullptr;
+    return _leaves.count(id) && _leaves.at(id).first.second != nullptr;
   } else {
-    return _leaves.count(id) && _leaves.at(id).first != nullptr;
+    return _leaves.count(id) && _leaves.at(id).first.second != nullptr;
   }
 }
 void DTAndF::removeLeaf(size_t id, int depth) {
-  //_leaves.at(id).second = nullptr;
-  _leaves.at(id).first = nullptr;
+  _leaves.at(id).first.first = nullptr;
+  _leaves.at(id).first.second = nullptr;
 }
 void DTAndF::addLeaf(Proposition *p, std::pair<size_t, size_t> intv, size_t id,
                      bool second, int depth) {
-  //if (second) {
-  //  _leaves[id].second = intv;
-  //} else {
-  //  _leaves[id].first = p;
-  //}
-  _leaves[id].first = p;
+  if (second) {
+    _leaves[id].first.second = p;
+  } else {
+    _leaves[id].first.first = p;
+  }
   _leaves[id].second = intv;
 }
 

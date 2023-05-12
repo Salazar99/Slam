@@ -10,7 +10,7 @@
 namespace harm {
 
 // For the decision tree algorithm variables are enumerated. Each variable is a proposition splitting the search space.
-using DecTreeVariables = std::map<size_t, std::pair<Proposition *, std::pair<size_t,size_t>>>;
+using DecTreeVariables = std::map<size_t,std::pair< std::pair<Proposition *,Proposition *>, std::pair<size_t,size_t>>>;
 using NumericDecTreeExp = std::map<size_t, CachedAllNumeric *>;
 
 /*! \struct DiscoveredLeaf

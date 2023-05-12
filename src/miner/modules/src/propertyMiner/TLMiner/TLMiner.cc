@@ -263,7 +263,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
 
     DecTreeVariables candidateVariables;
     for (size_t i = 0; i < _propsDT.size(); i++) {
-      candidateVariables[i].first = _propsDT[i];
+      candidateVariables[i].first.first = _propsDT[i];
+      candidateVariables[i].first.second = makeExpression<PropositionNot>(_propsDT[i]);
     }
 
     if (t->isVacuous(harm::Location::AntCon)) {
@@ -324,7 +325,6 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         Assertion *ass = new Assertion();
         t->fillContingency(ass->_ct, 0);
         ass->_toString = prettyAss;
-        //FIXME
         std::vector<Proposition *> loadedProps; //= t->getLoadedPropositions();
         ass->_complexity = getNumVariables(loadedProps);
         ass->_pRepetitions = getRepetitions(loadedProps);
@@ -355,20 +355,20 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       }
     }
     // Offset, same as onset but the consequent is negated
-    /*for (const std::vector<Proposition *> &props : antGen.offSets) {
-    
+    for (std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> &props : antGen.offSets) {
+      /*
       if (t->getDT()->isMultiDimensional()) {
         for (size_t i = 0; i < props.size(); i++) {
           for (auto prop : t->getDT()->unpack(props[i])) {
             t->getDT()->addItem(prop, i);
           }
         }
-
       } else {
+      */
         for (auto prop : props) {
-          t->getDT()->addItem(prop, -1);
+          t->getDT()->addItem(prop.first, std::pair<size_t, size_t>(prop.second),-1);
         }
-      }
+      //}
 
       assert(!t->getDT()->getItems().empty());
       
@@ -396,26 +396,24 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
 #endif
       
       t->getDT()->removeItems();
-      if (t->getDT()->isMultiDimensional()) {
-        for (size_t i = 0; i < props.size(); i++) {
-          t->getDT()->clearPack(props[i]);
-          delete props[i];
-        }
-      }
-      
+      //if (t->getDT()->isMultiDimensional()) {
+      //  for (size_t i = 0; i < props.size(); i++) {
+      //    t->getDT()->clearPack(props[i]);
+      //    delete props[i];
+      //  }
+      //}
     }
-*/
+
 #if enPB
     _progressBar.increment(l3InstId);
     _progressBar.display();
 #endif
 
-    //FIXME no longer needed
     //deallocate memory for negated candidate variables
-    //for (size_t i = 0; i < _propsDT.size(); i++) {
-    //  dynamic_cast<PropositionNot *>(candidateVariables[i].second)->popItem();
-    //  delete candidateVariables[i].second;
-    //}
+    for (size_t i = 0; i < _propsDT.size(); i++) {
+      dynamic_cast<PropositionNot *>(candidateVariables[i].first.second)->popItem();
+      delete candidateVariables[i].first.second;
+    }
     candidateVariables.clear();
     //delete all generated propositions from numeric expressions and clustering
     for (auto p : genProps) {
