@@ -226,10 +226,12 @@ void ManualDefinition::mineContexts(Trace *trace,
             for (size_t i = 0; i < trace->getLength(); i++) {
               ivs.push_back(i);
             }
-            auto props = genPropsThroughClustering(ivs, nn, trace->getLength());
-            for (auto p : props) {
-              context->_props.emplace_back(p, loc);
-            }
+
+            //FIXME: ret type of genPropsThroughClustering is not correct
+            //auto props = genPropsThroughClustering(ivs, nn, trace->getLength());
+            //for (auto p : props) {
+            //  context->_props.emplace_back(p, loc);
+            //}
           } else {
             context->_numerics.push_back(nn);
           }

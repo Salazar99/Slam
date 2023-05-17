@@ -186,8 +186,10 @@ std::vector<std::pair<std::pair<T, T>,std::pair<size_t,size_t>>> clsElbow(std::v
   return clusters;
 }
 
-std::vector<std::pair<Proposition *,std::pair<size_t,size_t>>> genPropsThroughClustering(std::vector<std::pair<harm::EvalRet,size_t>> &ivs,
-                                                     CachedAllNumeric *cn,
+std::vector<std::pair<Proposition *,std::pair<size_t,size_t>>>
+genPropsThroughClustering(
+        std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> &ivs
+        , CachedAllNumeric *cn,
                                                      size_t max_length) {
 
   std::vector<std::pair<Proposition *,std::pair<size_t,size_t>>> ret;

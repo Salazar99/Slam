@@ -22,17 +22,13 @@
 #include "Trinary.hh"
 #include "exp.hh"
 #include "misc.hh"
+#include "classes/atom/CachedAllNumeric.hh"
 
 namespace hparser {
 class StlParserHandler;
 }
+
 namespace harm {
-union EvalRet {
-   double _d;
-   float _f;
-   ULogic _u;
-   SLogic _s;
- };
 
 /*! \class Template
     \brief Class representing an assertion template, the template can be
@@ -198,7 +194,9 @@ public:
 
   size_t gatherInterestingValue(size_t time, int depth, int width);
 
-  std::vector<std::pair<EvalRet,size_t>> gatherInterestingValue(size_t time, CachedAllNumeric * cn ,int depth, int width);
+  std::vector<std::pair<expression::CachedAllNumeric::EvalRet, size_t>>
+  gatherInterestingValue(size_t time, CachedAllNumeric *cn, int depth,
+                         int width);
 
   void subPropInAssertion(Proposition *original, Proposition *newProp);
 

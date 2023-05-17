@@ -537,7 +537,7 @@ bool Template::isFullyInstantiated() {
          _dtOp.second == nullptr;
 }
 */
-std::vector<std::pair<harm::EvalRet,size_t>> Template::gatherInterestingValue(size_t time, CachedAllNumeric *cn, int depth, int width) {
+std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInterestingValue(size_t time, CachedAllNumeric *cn, int depth, int width) {
 
   DTOperator *template_dt = _dtOp.second;
 
@@ -569,9 +569,9 @@ std::vector<std::pair<harm::EvalRet,size_t>> Template::gatherInterestingValue(si
   template_dt->popItem(depth);
   //now we have a vector of interesting values for the already instantiated part of the template
   //iterate on cn trace values, to get {value,time} pairs
-  std::vector<std::pair<harm::EvalRet,size_t>> ret;
+  std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> ret;
   for(currTime = time; currTime < _max_length; currTime++){
-      harm::EvalRet value = cn->evaluate(currTime);
+      CachedAllNumeric::EvalRet value = cn->evaluate(currTime);
       for(size_t iv : iv_suffix){
         if(iv > currTime){
           ret.push_back(std::make_pair(value,(size_t)iv-currTime));

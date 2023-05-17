@@ -10,7 +10,9 @@
 namespace harm {
 
 // For the decision tree algorithm variables are enumerated. Each variable is a proposition splitting the search space.
-using DecTreeVariables = std::map<size_t,std::pair< std::pair<Proposition *,Proposition *>, std::pair<size_t,size_t>>>;
+using DecTreeVariables =
+    std::map<size_t, std::pair<std::pair<Proposition *, Proposition *>,
+                               std::pair<size_t, size_t>>>;
 using NumericDecTreeExp = std::map<size_t, CachedAllNumeric *>;
 
 /*! \struct DiscoveredLeaf
@@ -74,9 +76,11 @@ public:
   size_t maxPropositions;
 
   /// the algorithm's result (onset, ant -> con):
-  std::vector<std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>> onSets;
+  std::vector<std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>>
+      onSets;
   /// the algorithm's result (offset, ant -> !con):
-  std::vector<std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>> offSets;
+  std::vector<std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>>
+      offSets;
 
   ///if true, it prompts the algo to save the offset
   bool saveOffset;
@@ -114,19 +118,18 @@ private:
                                     double currEntropy);
 
   /// @brief find choices through clustering, uses gatherPropositionsFromNumerics
-  inline std::vector<Proposition *>
+  inline std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
   gatherPropositionsFromNumerics(CachedAllNumeric *cn, Template *t, int depth,
                                  std::vector<Proposition *> &genProps);
 
   /// @brief analyse the trace to find a set of values on which to perform the clustering
-  inline std::vector<std::pair<size_t,size_t>>
+  inline std::vector<std::pair<CachedAllNumeric::EvalRet, size_t>>
   gatherInterestingValues(Template *t, CachedAllNumeric *cn, int depth);
 
   bool isKnownSolution(const std::vector<Proposition *> &items,
                        DTOperator *template_dt, bool checkOnly = false);
 
   void storeSolution(Template *t, bool isOffset);
-
 
   //debug
 #if printTree

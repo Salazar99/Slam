@@ -4,6 +4,7 @@
 #include "ClsOp.hh"
 namespace expression {
 class CachedAllNumeric {
+public:
   union EvalRet {
     double _d;
     float _f;
@@ -15,7 +16,6 @@ class CachedAllNumeric {
     LogicExpression *_le;
   };
 
-public:
   CachedAllNumeric(NumericExpression *nume, double clsEffort = 1.0f,
                    const std::unordered_set<harm::ClsOp> &clsOps =
                        std::unordered_set<harm::ClsOp>({harm::ClsOp::Range,

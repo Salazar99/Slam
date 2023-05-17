@@ -230,7 +230,7 @@ inline void AntecedentGenerator::findCandidates(
   // <<__func__<<"<---------"<<t->getColoredAssertion() << "\n";
 }
 
-inline std::vector<std::pair<EvalRet,size_t>>
+inline std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>>
 AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
                                              int depth) {
   //FIXME: antecedentGenerator::gatherInterestingValue does absolutely nothing at the moment
@@ -243,11 +243,11 @@ inline std::vector<std::pair<Proposition *,std::pair<size_t,size_t>>>
 AntecedentGenerator::gatherPropositionsFromNumerics(
     CachedAllNumeric *cn, Template *t, int depth,
     std::vector<Proposition *> &genProps) {
-  std::vector<std::pair<Proposition *,std::pair<size_t,size_t>>> propsWintv;
 
   // 1. Gather IV
-  std::vector<std::pair<harm::EvalRet,size_t>> ivs = gatherInterestingValues(t, cn, depth);
+  std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> ivs = gatherInterestingValues(t, cn, depth);
   // 2. Generation of propositions
+  std::vector<std::pair<Proposition *,std::pair<size_t,size_t>>> propsWintv;
   if (!ivs.empty()) {
     propsWintv = genPropsThroughClustering(ivs, cn, t->_max_length);
   }
@@ -273,7 +273,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
   bool discLeaf = 0;
 
   // retrieve the propositions (props)
-  std::vector<Proposition *,std::pair<size_t,size_t>> props = gatherPropositionsFromNumerics(
+  std::vector<std::pair<Proposition *,std::pair<size_t,size_t>>> props = gatherPropositionsFromNumerics(
       dcVariables.at(candidate), t, depth, genProps);
 
   for (auto prop : props) {
