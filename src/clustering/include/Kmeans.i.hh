@@ -117,7 +117,7 @@ std::vector<std::pair<T, T>> kmeansElbow(std::vector<T> elements, size_t max,
 }
 
 template <typename T>
-std::vector<std::pair<T, T>> kmeansElbowStl(std::vector<std::pair<T,T>> elements, size_t max,
+std::vector<std::pair<std::pair<T, T>,std::pair<size_t,size_t>>> kmeansElbowStl(std::vector<std::pair<T,T>> elements, size_t max,
                                          double SDmin_red, bool keepOnlyBest) {
   // store data in the correct format
   std::vector<std::array<T, 2>> data;
@@ -125,17 +125,17 @@ std::vector<std::pair<T, T>> kmeansElbowStl(std::vector<std::pair<T,T>> elements
     data.push_back(std::array<T, 2>({(T)(elements[i].first),(T)(elements[i].second)}));
   }
 
-  std::vector<std::pair<T, T>> ranges;
+  std::vector<std::pair<std::pair<T, T>,std::pair<size_t,size_t>>> ranges;
   double prevSD = DBL_MAX;
   for (size_t i = 1; i <= max && i <= elements.size(); i++) {
     // generate the clusters
     auto cluster_data = dkm::kmeans_lloyd(data, i, 100);
 
     // group the clusters by label
-    std::unordered_map<size_t, std::vector<T>> labelToValues;
+    std::unordered_map<size_t, std::vector<std::array<T,2>>> labelToValues;
     for (size_t j = 0; j < std::get<1>(cluster_data).size(); j++) {
       auto label = std::get<1>(cluster_data)[j];
-      labelToValues[label].push_back(data[j][0]);
+      labelToValues[label].push_back(data[j]);
     }
 
     // compute the standard deviation
@@ -145,7 +145,7 @@ std::vector<std::pair<T, T>> kmeansElbowStl(std::vector<std::pair<T,T>> elements
       double mean = means[k][0];
       double currSD = 0.f;
       for (auto &v : labelToValues[k]) {
-        currSD += std::pow(mean - (double)v, 2);
+        currSD += std::pow(mean - (double)v[0], 2);
       }
       currSD = std::sqrt(currSD / (double)elements.size());
       totSD += currSD;
@@ -157,7 +157,7 @@ std::vector<std::pair<T, T>> kmeansElbowStl(std::vector<std::pair<T,T>> elements
       break;
     }
     // translate the clusters into ranges [min, max]
-    auto rr = toRanges<T>(labelToValues);
+    auto rr = toRanges2D<T>(labelToValues);
     // add the ranges to the final list
     if (keepOnlyBest) {
       ranges.clear();
@@ -168,20 +168,23 @@ std::vector<std::pair<T, T>> kmeansElbowStl(std::vector<std::pair<T,T>> elements
   }
 
   // remove redundant ranges
-  std::set<std::pair<T, T>> uniqueRanges;
-  for (auto &lr : ranges) {
-    uniqueRanges.insert(lr);
-  }
+  std::sort(ranges.begin(), ranges.end());
+  auto last = std::unique(ranges.begin(), ranges.end());
+  ranges.erase(last,ranges.end());
+  //std::vector<std::pair<std::pair<T, T>,std::pair<size_t,size_t>>> uniqueRanges;
+  //for (auto &lr : ranges) {
+  //  uniqueRanges.insert(lr);
+  //}
 
-  std::vector<std::pair<T, T>> ret;
-
+  std::vector<std::pair<std::pair<T, T>,std::pair<size_t,size_t>>> ret;
   //translate the ranges into the output format
-  for (auto &lr : uniqueRanges) {
+  for (auto &lr : ranges) {
     ret.push_back(lr);
   }
+
   std::sort(ret.begin(), ret.end(),
-            [](const std::pair<T, T> &e1, const std::pair<T, T> &e2) {
-              return e1.second <= e2.first;
+            [](const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &e1, const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &e2) {
+              return e1.first.second <= e2.first.first;
             });
 
   return ret;

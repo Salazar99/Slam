@@ -537,6 +537,54 @@ bool Template::isFullyInstantiated() {
          _dtOp.second == nullptr;
 }
 */
+std::vector<std::pair<harm::EvalRet,size_t>> Template::gatherInterestingValue(size_t time, CachedAllNumeric *cn, int depth, int width) {
+
+  DTOperator *template_dt = _dtOp.second;
+
+  Proposition *tc = new BooleanConstant(true, VarType::Bool, 1, 0);
+  Proposition *fc = new BooleanConstant(false, VarType::Bool, 1, 0);
+  template_dt->addItem(tc,{0,0},depth);
+  std::vector<size_t> iv_suffix;  
+
+  //Automaton::Node *cn = _ant->_root;
+  harm::Implication * impl = _impl;
+  size_t currTime = time;
+  while (currTime < _max_length) {
+    //template evaluated to T
+    if(impl->evaluate(currTime) == Trinary::T){
+      //Substitute fc and evaluate
+      template_dt->popItem(depth);
+      template_dt->addItem(fc,{0,0},depth); 
+      //before was true, now is false, currTime is an interesting value 
+      if(impl->evaluate(currTime) == Trinary::F){
+        iv_suffix.push_back(currTime);
+      }
+      //restore tc for next time
+      template_dt->popItem(depth);
+      template_dt->addItem(tc,{0,0},depth);
+    }
+    // each currTime we change state, currTime increases by 1
+    currTime++;
+  }
+  template_dt->popItem(depth);
+  //now we have a vector of interesting values for the already instantiated part of the template
+  //iterate on cn trace values, to get {value,time} pairs
+  std::vector<std::pair<harm::EvalRet,size_t>> ret;
+  for(currTime = time; currTime < _max_length; currTime++){
+      harm::EvalRet value = cn->evaluate(currTime);
+      for(size_t iv : iv_suffix){
+        if(iv > currTime){
+          ret.push_back(std::make_pair(value,(size_t)iv-currTime));
+        }
+      }
+  }
+
+  delete tc;
+  delete fc;
+  return ret;
+  
+}
+
 TemporalExp *Template::getPropByToken(const std::string &token) {
   if (_tokenToProp.count(token)) {
     return _tokenToProp.at(token);

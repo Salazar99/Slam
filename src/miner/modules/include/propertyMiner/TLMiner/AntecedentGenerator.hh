@@ -119,7 +119,7 @@ private:
                                  std::vector<Proposition *> &genProps);
 
   /// @brief analyse the trace to find a set of values on which to perform the clustering
-  inline std::vector<size_t>
+  inline std::vector<std::pair<size_t,size_t>>
   gatherInterestingValues(Template *t, CachedAllNumeric *cn, int depth);
 
   bool isKnownSolution(const std::vector<Proposition *> &items,

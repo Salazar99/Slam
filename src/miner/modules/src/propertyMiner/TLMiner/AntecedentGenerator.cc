@@ -168,7 +168,8 @@ inline void AntecedentGenerator::findCandidates(
       continue;
         
     Proposition *prop = propPtr[propI];
-    //Proposition *prop = dcVariables[candidate].first.first;
+    //retrieve intervals for this prop through clustering 
+    //std::vector<std::pair<size_t,size_t>> prop_intv = gatherIntervalsFromTemp(prop, t, depth, genProps);
 
     //      debug
     // std::cout << "-------------"F
@@ -229,38 +230,34 @@ inline void AntecedentGenerator::findCandidates(
   // <<__func__<<"<---------"<<t->getColoredAssertion() << "\n";
 }
 
-inline std::vector<size_t>
+inline std::vector<std::pair<EvalRet,size_t>>
 AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
                                              int depth) {
-  std::vector<size_t> ivs;
-  for (size_t i = 0; i < t->_max_length; i++) {
-    //FIXME: gatherInterestingValue is undefined
-    //    size_t iv = t->gatherInterestingValue(i, depth, -1);
-    //if (iv != (size_t)-1) {
-    //  ivs.push_back(iv);
-    //}
-  }
-  return ivs;
+  //FIXME: antecedentGenerator::gatherInterestingValue does absolutely nothing at the moment
+  //everything is done at template side 
+  return t->gatherInterestingValue(0, cn ,depth, -1);
 }
 
 
-inline std::vector<Proposition *>
+inline std::vector<std::pair<Proposition *,std::pair<size_t,size_t>>>
 AntecedentGenerator::gatherPropositionsFromNumerics(
     CachedAllNumeric *cn, Template *t, int depth,
     std::vector<Proposition *> &genProps) {
-  std::vector<Proposition *> props;
+  std::vector<std::pair<Proposition *,std::pair<size_t,size_t>>> propsWintv;
 
   // 1. Gather IV
-  std::vector<size_t> ivs = gatherInterestingValues(t, cn, depth);
+  std::vector<std::pair<harm::EvalRet,size_t>> ivs = gatherInterestingValues(t, cn, depth);
   // 2. Generation of propositions
   if (!ivs.empty()) {
-    props = genPropsThroughClustering(ivs, cn, t->_max_length);
+    propsWintv = genPropsThroughClustering(ivs, cn, t->_max_length);
   }
   // keep track of generated props to know what to delete
-  genProps.insert(genProps.end(), props.begin(), props.end());
+  for(auto &item : propsWintv)
+    genProps.push_back(item.first);
+  
   // 3. Selection of best candidates
 
-  return props;
+  return propsWintv;
 }
 
 inline void AntecedentGenerator::findCandidatesNumeric(
@@ -276,7 +273,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
   bool discLeaf = 0;
 
   // retrieve the propositions (props)
-  std::vector<Proposition *> props = gatherPropositionsFromNumerics(
+  std::vector<Proposition *,std::pair<size_t,size_t>> props = gatherPropositionsFromNumerics(
       dcVariables.at(candidate), t, depth, genProps);
 
   for (auto prop : props) {
@@ -284,8 +281,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
 
     // add the new proposition of a unused variable in the current
     // antecedent
-    std::pair<size_t, size_t> intv = std::pair<size_t, size_t>({0, 0});
-    template_dt->addItem(prop, intv, depth);
+    template_dt->addItem(prop.first, prop.second, depth);
 
     // ignore this prop if the template contains a known solution
     /*
@@ -316,7 +312,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
         double IG = currEntropy - condEnt;
 
         if (!taken) {
-          igs.emplace_back(candidate, IG, depth, prop, 0, condEnt);
+          igs.emplace_back(candidate, IG, depth, prop.first, 0, condEnt);
         }
       }
     }

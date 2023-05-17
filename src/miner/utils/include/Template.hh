@@ -27,6 +27,12 @@ namespace hparser {
 class StlParserHandler;
 }
 namespace harm {
+union EvalRet {
+   double _d;
+   float _f;
+   ULogic _u;
+   SLogic _s;
+ };
 
 /*! \class Template
     \brief Class representing an assertion template, the template can be
@@ -191,6 +197,8 @@ public:
   Automaton *getAntecedentAutomaton();
 
   size_t gatherInterestingValue(size_t time, int depth, int width);
+
+  std::vector<std::pair<EvalRet,size_t>> gatherInterestingValue(size_t time, CachedAllNumeric * cn ,int depth, int width);
 
   void subPropInAssertion(Proposition *original, Proposition *newProp);
 
