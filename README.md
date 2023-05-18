@@ -81,7 +81,7 @@ make
 ```
 
 ### Mac OS only
-* Install the libraries (specify a proper path usig cmake) 
+* Install the libraries (specify a proper path using cmake) 
 ```
 make install
 ```
