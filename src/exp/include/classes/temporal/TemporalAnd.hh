@@ -21,6 +21,10 @@ public:
 
   void popItem();
 
+  Proposition * popLastItem();
+
+  void updateIntervals(std::pair<size_t,size_t> new_interval);
+
   void removeItems();
 
   void acceptVisitor(ExpVisitor &vis) override;

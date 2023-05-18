@@ -222,16 +222,16 @@ void ManualDefinition::mineContexts(Trace *trace,
         for (auto &loc : locs) {
           if (loc != Location::DecTree) {
             //generate props though clustering using the whole trace
-            std::vector<size_t> ivs;
+            std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> ivs;
             for (size_t i = 0; i < trace->getLength(); i++) {
-              ivs.push_back(i);
+              ivs.push_back(std::make_pair(nn->evaluate(i),i));
             }
 
             //FIXME: ret type of genPropsThroughClustering is not correct
-            //auto props = genPropsThroughClustering(ivs, nn, trace->getLength());
-            //for (auto p : props) {
-            //  context->_props.emplace_back(p, loc);
-            //}
+            auto props = genPropsThroughClustering(ivs, nn, trace->getLength());
+            for (auto p : props) {
+              context->_props.emplace_back(p.first, loc);
+            }
           } else {
             context->_numerics.push_back(nn);
           }

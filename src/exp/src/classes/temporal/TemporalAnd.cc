@@ -26,7 +26,6 @@ Trinary TemporalAnd::evaluate(size_t time) {
 }
 
 void TemporalAnd::addItem(TemporalExp *prop) {
-  //first element of the and is empty, can insert prop
   _items.push_back(prop);
 }
 
@@ -46,6 +45,26 @@ std::vector<TemporalExp *> TemporalAnd::getItems() { return _items; };
 size_t TemporalAnd::size() { return _items.size(); }
 
 void TemporalAnd::popItem() { _items.pop_back(); }
+
+Proposition * TemporalAnd::popLastItem(){
+  auto prop = dynamic_cast<TemporalInst *>(_items.back())->getProposition();
+  _items.pop_back();
+  return prop;
+}
+
+void TemporalAnd::updateIntervals(std::pair<size_t,size_t> new_interval){
+  for(auto &item :_items){
+    //last item is always an Inst
+    if(item != _items.back()){
+      auto intv = dynamic_cast<Eventually *>(item)->getInterval();
+      //shift interval according to the new one
+      intv.first += new_interval.first;
+      intv.second += new_interval.second;
+      dynamic_cast<Eventually *>(item)->setInterval(intv);
+    }      
+  }
+}
+
 
 void TemporalAnd::removeItems() { _items.clear(); }
 

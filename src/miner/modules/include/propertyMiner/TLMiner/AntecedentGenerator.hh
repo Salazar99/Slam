@@ -33,6 +33,12 @@ struct DiscoveredLeaf {
 struct CandidateDec {
 
   CandidateDec() {}
+  CandidateDec(size_t id, double ig, int depth, Proposition *p, std::pair<size_t,size_t> intv, bool offSet,
+               double entropy = 1.f)
+      : _id(id), _ig(ig), _depth(depth), _entropy(entropy) {
+    _props.emplace_back(p, offSet);
+    _intv.emplace_back(intv,offSet);
+  }
   CandidateDec(size_t id, double ig, int depth, Proposition *p, bool offSet,
                double entropy = 1.f)
       : _id(id), _ig(ig), _depth(depth), _entropy(entropy) {
@@ -48,6 +54,7 @@ struct CandidateDec {
   double _ig;
   int _depth;
   double _entropy;
+  std::vector<std::pair<std::pair<size_t,size_t>,size_t>> _intv;
   std::vector<std::pair<Proposition *, size_t>> _props;
 };
 

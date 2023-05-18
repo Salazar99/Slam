@@ -54,9 +54,24 @@ void DTAndF::removeItems() { _choices->removeItems(); }
 void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> interval,
                      int depth) {
   if (_choices->size() != 0) {
+    //need to: add new prop as Inst, make olt Inst into Eventually, modify all intervals
+    //Pop and get the previous TemporalInst added, which is at the back of the _choices's items
+    Proposition * lastItem = _choices->popLastItem();
+    //lastItem is added as an Eventually
     expression::TemporalExp *Fprop =
-        new Eventually(new TemporalInst(p, ""), interval, _t->_trace);
+        new Eventually(new TemporalInst(lastItem, ""), interval, _t->_trace);
     _choices->addItem(Fprop);
+    //new proposition is added as a TemporalInst
+    expression::TemporalExp *Iprop = new TemporalInst(p, "");
+    _choices->addItem(Iprop);
+
+    //Update consequent interval
+    std::pair<size_t, size_t> consequent_intv = _t->getConsequentInterval();
+    consequent_intv.first += interval.first;
+    consequent_intv.second += interval.second;
+    _t->setConsequentInterval(consequent_intv);
+    //Update Fprops intervals
+    _choices->updateIntervals(interval);
   } else {
     expression::TemporalExp *Fprop = new TemporalInst(p, "");
     _t->setConsequentInterval(interval);
@@ -67,6 +82,17 @@ void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> interval,
 void DTAndF::popItem(int depth) {
     delete _choices->getItems().back();
     _choices->popItem();
+    //I'm deleting the Inst, no the previous one must become Inst
+    Eventually * lastF = dynamic_cast<Eventually *>(_choices->getItems().back());
+    //get interval to subtract from others
+    std::pair<size_t,size_t> sub_intv = lastF->getInterval();
+    sub_intv.first = -sub_intv.first;
+    sub_intv.second = -sub_intv.second;
+    //get new TemporalInst to add to items
+    TemporalInst * newInst = dynamic_cast<TemporalInst *>(lastF->getOperand());
+    _choices->addItem(newInst); 
+    //Update intervals of choices using the negated of the interval
+    _choices->updateIntervals(sub_intv);
 }
 
 std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
@@ -74,10 +100,10 @@ DTAndF::getItems() {
   std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> ret;
 
   ret.push_back(
-      std::make_pair(dynamic_cast<TemporalInst *>(_choices->getItems()[0])->getProposition(),
+      std::make_pair(dynamic_cast<TemporalInst *>(_choices->getItems().back())->getProposition(),
                      _t->getConsequentInterval()));
 
-  for (size_t i = 1; i < _choices->size(); i++) {
+  for (size_t i = 0; i < _choices->size()-1; i++) {
     auto ti = _choices->getItems()[i];
     ret.push_back(
         std::make_pair(dynamic_cast<TemporalInst *>(

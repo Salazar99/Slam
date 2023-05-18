@@ -312,7 +312,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
         double IG = currEntropy - condEnt;
 
         if (!taken) {
-          igs.emplace_back(candidate, IG, depth, prop.first, 0, condEnt);
+          igs.emplace_back(candidate, IG, depth, prop.first, prop.second, 0, condEnt);
         }
       }
     }
@@ -423,10 +423,9 @@ void AntecedentGenerator::_runDecisionTree(
       Proposition *prop = c_ig._props[0].first;
       size_t pos = c_ig._props[0].second;
 
-      std::pair<size_t, size_t> intv = std::pair<size_t, size_t>({0, 0});
-      template_dt->addItem(prop, intv, c_ig._depth);
-      template_dt->addLeaf(prop, intv, c_ig._id, pos, c_ig._depth);
-      discLeaves.push_back(DiscoveredLeaf(c_ig._id, pos, c_ig._depth));
+      template_dt->addItem(prop, c_ig._intv[0].first, c_ig._depth);
+      template_dt->addLeaf(prop, c_ig._intv[0].first, c_ig._id, pos, c_ig._depth);
+      discLeaves.push_back(DiscoveredLeaf(c_ig._id, pos, c_ig._depth)); 
 
 #if printTree
       tree << currState << " -> " << ++nStates << "[label= \""
