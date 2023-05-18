@@ -81,7 +81,7 @@ make
 ```
 
 ### Mac OS only
-* Install the libraries (specify a proper path usig cmake) 
+* Install the libraries (specify a proper path using cmake) 
 ```
 make install
 ```
@@ -100,7 +100,7 @@ ctest -V -R
 # How to use the miner  
 HARM has two main inputs, a trace in the form of a vcd/csv file and a set of hints.
 Hints consist of a set of propositions, templates and metrics; they are defined in a separate xml configuration file. 
-The user can find several working examples in the "tests" directory .
+The user can find several working examples in the "tests" directory.
 
 ## Run with a vcd trace
 
@@ -140,7 +140,7 @@ For csv:
 ./harm --csv trace.csv --conf path/to/newConfig.xml --generate-config
 ```
 
- HARM will create the configuration file on the path given as argument.
+ HARM will create the configuration file on the path given as an argument.
 
 #  The configuration file
  It is recommended to always start from an automatically generated configuration file (using the --generate-config option).
@@ -165,7 +165,7 @@ For csv:
 </harm>
 ```
 #### Proposition
- Propositions are non-temporal boolean expressions used to fill the empty spots (placeholders) of the templates;  metrics are used to perform the final ranking of assertions. Propositions can be written using all boolean, relational an arithmetic operators of the C/C++ language.
+ Propositions are non-temporal boolean expressions used to fill the empty spots (placeholders) of the templates;  metrics are used to perform the final ranking of assertions. Propositions can be written using all boolean, relational and arithmetic operators of the C/C++ language.
 For the full grammar of propositions, check "src/antl4/propositionParser/grammar/proposition.g4".
 	
 A proposition is defined inside the "exp" attribute
@@ -173,7 +173,7 @@ A proposition is defined inside the "exp" attribute
 * Do not include the prefix common to all variables in the vcd, ex. If all design's variables are contained inside the global scope "test1", then variable "a" must be referenced as "modn::a"
 
 Propositions are labelled (using the 'loc' attribute of 'prop') with "a", "c", "ac" and "dt"
-* "a" propositions will be used only to fill antecedent's placeholders (not the dt operator)
+* "a" propositions will be used only to fill the antecedent's placeholders
 * "c" propositions will be used only to fill consequent's placeholders (not the decision tree operators)
 * "ac" propositions will be used only in placeholders appearing in both the antecedent and the consequent.
 * "dt" propositions will be used only to fill decision tree operators 
@@ -184,15 +184,18 @@ The user can specify a set of tuples N = \{(ne\_i, loc\_i, th\_i) | i =1, ..., k
 * loc\_i is a location label (among 'a', 'c', 'ac', and 'dt', following the same meaning as in a proposition, "loc" attribute). 
 * th\_i is a numeric threshold (from 0 to 1, "clsEffort" attribute) that is used to specify how much effort the tool must put in to generate propositions including the numeric expression ne\_i (for technical reasons, a threshold close to 0 is considered high effort while a threshold close to 1 is low effort).
 
-
+See the paper below to know more about how the procedure is carried out in harm.
+```
+S. Germiniani and G. Pravadelli, "Exploiting clustering and decision-tree algorithms to mine LTL assertions containing non-boolean expressions," 2022 IFIP/IEEE 30th International Conference on Very Large Scale Integration (VLSI-SoC), Patras, Greece, 2022, pp. 1-6, doi: 10.1109/VLSI-SoC54400.2022.9939640.
+```
 
 #### Template
 
 
-Templates can be written using all LTL operators, they must follow the form "G(antecedente -> consequent)"; all variables (inside the template) of the form P\<N\> are considered  placeholders. For instance, template "G(P0 && P1 -> P2 U P3)" has 4 placeholders.
+Templates can be written using all LTL operators, they must follow the form "G(antecedent -> consequent)"; all variables (inside the template) of the form P\<N\> are considered placeholders. For instance, template "G(P0 && P1 -> P2 U P3)" has 4 placeholders.
 For the full grammar of templates, check "src/antl4/templateParser/grammar/temporal.g4".
  
- There are three special placeholders: ..&&.., ..##\<N>.. and ..#\<N>&..;  when  employed, the miner will try to replace them with a corresponding expression using a decision tree (DT) algorithm.
+ There are three special placeholders: ..&&.., ..##\<N>.. and ..#\<N>&..;  when employed, the miner will try to replace them with a corresponding expression using a decision tree (DT) algorithm.
  
  * ..&&..  will be replaced with an expression of type v1 && v2 && .. && vn
  * ..##1..  will be replaced with an expression of type v1 ##1 v2 ##1 .. ##1 vn
