@@ -547,7 +547,7 @@ std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInteres
   std::vector<size_t> iv_suffix;  
 
   //Automaton::Node *cn = _ant->_root;
-  //harm::Implication * impl = _impl;
+  harm::Implication * impl = _impl;
   size_t currTime = time;
   while (currTime < _max_length) {
     //template evaluated to T
@@ -556,8 +556,8 @@ std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInteres
     //  template_dt->popItem(depth);
     //  template_dt->addItem(fc,{0,0},depth); 
     //  //before was true, now is false, currTime is an interesting value 
-    //  if(impl->evaluate_ant(currTime) == Trinary::F && impl->evaluate(currTime) == Trinary::T){
-    iv_suffix.push_back(currTime);
+    if(impl->evaluate_ant(currTime) == Trinary::T && impl->evaluate_con(currTime) == Trinary::T)
+      iv_suffix.push_back(currTime);
     //  }
     //  //restore tc for next time
     //  template_dt->popItem(depth);

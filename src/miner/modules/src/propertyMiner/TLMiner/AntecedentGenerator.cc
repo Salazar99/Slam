@@ -235,7 +235,12 @@ AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
                                              int depth) {
   //FIXME: antecedentGenerator::gatherInterestingValue does absolutely nothing at the moment
   //everything is done at template side 
-  return t->gatherInterestingValue(0, cn ,depth, -1);
+  auto ret = t->gatherInterestingValue(0, cn ,depth, -1);
+  std::cout << "Numeric: " << allNum2String(*cn) << std::endl;
+  for(auto &pair : ret){
+    std::cout <<"value: " <<pair.first._d << " ,time: " << pair.second.first << "," << pair.second.second <<std::endl;
+  } 
+  return ret;
 }
 
 
@@ -283,6 +288,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
     // antecedent
     template_dt->addItem(prop.first, prop.second, depth);
 
+    std::cout << "Proposition: " << prop2String(*prop.first) << "Interval: " <<prop.second.first << " , " << prop.second.second <<std::endl;
     // ignore this prop if the template contains a known solution
     /*
     if ((template_dt->isRandomConstructed() ||
