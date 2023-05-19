@@ -543,30 +543,20 @@ std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInteres
 
   Proposition *tc = new BooleanConstant(true, VarType::Bool, 1, 0);
   Proposition *fc = new BooleanConstant(false, VarType::Bool, 1, 0);
-  template_dt->addItem(tc,{0,0},depth);
   std::vector<size_t> iv_suffix;  
 
   //Automaton::Node *cn = _ant->_root;
   harm::Implication * impl = _impl;
   size_t currTime = time;
+  template_dt->addItem(tc,{0,0},depth);
   while (currTime < _max_length) {
-    //template evaluated to T
-    //if(impl->evaluate_ant(currTime) == Trinary::T){
-    //  //Substitute fc and evaluate
-    //  template_dt->popItem(depth);
-    //  template_dt->addItem(fc,{0,0},depth); 
-    //  //before was true, now is false, currTime is an interesting value 
     if(impl->evaluate_ant(currTime) == Trinary::T && impl->evaluate_con(currTime) == Trinary::T)
       iv_suffix.push_back(currTime);
-    //  }
-    //  //restore tc for next time
-    //  template_dt->popItem(depth);
-    //  template_dt->addItem(tc,{0,0},depth);
-    //}
     // each currTime we change state, currTime increases by 1
     currTime++;
+    
   }
-  //template_dt->popItem(depth);
+  template_dt->popItem(depth);
   //now we have a vector of interesting values for the already instantiated part of the template
   //iterate on cn trace values, to get {value,time} pairs
   std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> ret;

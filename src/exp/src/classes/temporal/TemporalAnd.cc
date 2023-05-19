@@ -47,19 +47,25 @@ size_t TemporalAnd::size() { return _items.size(); }
 void TemporalAnd::popItem() { _items.pop_back(); }
 
 Proposition * TemporalAnd::popLastItem(){
-  auto prop = dynamic_cast<TemporalInst *>(_items.back())->getProposition();
+  auto inst = dynamic_cast<TemporalInst *>(_items.back());
+  auto prop = inst->getProposition();
   _items.pop_back();
   return prop;
 }
 
-void TemporalAnd::updateIntervals(std::pair<size_t,size_t> new_interval){
+void TemporalAnd::updateIntervals(std::pair<size_t,size_t> new_interval, bool add){
   for(auto &item :_items){
     //last item is always an Inst
     if(item != _items.back()){
       auto intv = dynamic_cast<Eventually *>(item)->getInterval();
       //shift interval according to the new one
+      if(add){
       intv.first += new_interval.first;
       intv.second += new_interval.second;
+      }else{
+      intv.first -= new_interval.first;
+      intv.second -= new_interval.second;
+      }
       dynamic_cast<Eventually *>(item)->setInterval(intv);
     }      
   }

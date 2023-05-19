@@ -23,7 +23,7 @@ public:
 
   Proposition * popLastItem();
 
-  void updateIntervals(std::pair<size_t,size_t> new_interval);
+  void updateIntervals(std::pair<size_t,size_t> new_interval, bool add);
 
   void removeItems();
 
