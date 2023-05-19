@@ -1,10 +1,9 @@
 <harm>
 	<context name="default"> 
-		<numeric exp="v1" loc="dt"/>
-		<numeric exp="v2" loc="dt"/>
-		<numeric exp="v3" loc="dt"/>
-		<prop exp="v4" loc="c"/>
+		<numeric clsEffort="0.01" exp="v1" loc="dt"/>
+		<numeric clsEffort="0.01" exp="v2" loc="dt"/>
+		<prop exp="v3" loc="c"/>
 
-        <template dtLimits="2D,2W,2A,1E" exp="G( (..F..) -> F[0,0](P0) )" /> 
+        <template dtLimits="3A,1E" exp="G( (..F..) -> F[0,0](P0) )" /> 
 	</context>
 </harm>

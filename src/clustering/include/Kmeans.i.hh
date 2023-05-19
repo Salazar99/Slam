@@ -182,10 +182,10 @@ std::vector<std::pair<std::pair<T, T>,std::pair<size_t,size_t>>> kmeansElbowStl(
     ret.push_back(lr);
   }
 
-  std::sort(ret.begin(), ret.end(),
-            [](const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &e1, const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &e2) {
-              return e1.first.second <= e2.first.first;
-            });
+//  std::sort(ret.begin(), ret.end(),
+//            [](const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &e1, const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &e2) {
+//              return e1.first.second <= e2.first.first;
+//            });
 
   return ret;
 }
