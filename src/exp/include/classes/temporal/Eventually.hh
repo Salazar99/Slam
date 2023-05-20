@@ -34,7 +34,7 @@ public:
 
   void setInterval(const std::pair<size_t, size_t> &intv);
 
-  std::pair<size_t, size_t> &getInterval();
+  std::pair<size_t, size_t> getInterval();
 
   void acceptVisitor(ExpVisitor &vis) override;
 

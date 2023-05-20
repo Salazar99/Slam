@@ -108,17 +108,45 @@ std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
 DTAndF::getItems() {
   std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> ret;
 
-  ret.push_back(
-      std::make_pair(dynamic_cast<TemporalInst *>(_choices->getItems().back())->getProposition(),
-                     _t->getConsequentInterval()));
-
-  for (size_t i = 0; i < _choices->size()-1; i++) {
-    auto ti = _choices->getItems()[i];
+  //interval of last prop = interval of last Eventually in the formula
+  if (_choices->size() != 1){
     ret.push_back(
-        std::make_pair(dynamic_cast<TemporalInst *>(
-                           (dynamic_cast<Eventually *>(ti)->getOperand()))
-                           ->getProposition(),
-                       dynamic_cast<Eventually *>(ti)->getInterval()));
+        std::make_pair(dynamic_cast<TemporalInst *>(_choices->getItems().back())->getProposition(),
+                       dynamic_cast<Eventually*>(_choices->getItems()[_choices->size()-2])->getInterval()));
+  }else{
+    ret.push_back(
+        std::make_pair(dynamic_cast<TemporalInst *>(_choices->getItems().back())->getProposition(),
+                       _t->getConsequentInterval()));
+  }
+  //starting from the last eventually
+  //FIXME: dangerous because size_t cannot contain negative numbers, so if i goes below 0 its value is undefined
+  for (size_t i = 0 ; i < _choices->size()-1 ; i++) {
+    auto ti = _choices->getItems()[i];
+    if(i == 0){
+    //last eventually before consequent
+      auto con_intv = _t->getConsequentInterval();
+      auto ti_intv = dynamic_cast<Eventually *>(ti)->getInterval();
+      //interval = (interval of con - interval of this Eventually)
+      con_intv.first -= ti_intv.first;
+      con_intv.second -= ti_intv.second; 
+      ret.push_back(
+          std::make_pair(dynamic_cast<TemporalInst *>(
+                             (dynamic_cast<Eventually *>(ti)->getOperand()))
+                             ->getProposition(),con_intv)
+                         );
+    }else{
+      auto nti = _choices->getItems()[i-1];
+      auto nti_intv = dynamic_cast<Eventually *>(nti)->getInterval();
+      auto ti_intv = dynamic_cast<Eventually *>(ti)->getInterval();
+      //Interval = interval of next Eventually - interval of this eventually
+      nti_intv.first -= ti_intv.first;
+      nti_intv.second -= ti_intv.second;
+      ret.push_back(
+          std::make_pair(dynamic_cast<TemporalInst *>(
+                             (dynamic_cast<Eventually *>(ti)->getOperand()))
+                             ->getProposition(),nti_intv)
+                         );
+    }
   }
 
   return ret;

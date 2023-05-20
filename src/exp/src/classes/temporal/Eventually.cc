@@ -41,7 +41,7 @@ void Eventually::setInterval(const std::pair<size_t, size_t> &intv) {
   _interval = intv;
 }
 
-std::pair<size_t, size_t> &Eventually::getInterval() { return _interval; }
+std::pair<size_t, size_t> Eventually::getInterval() { return _interval; }
 void Eventually::acceptVisitor(ExpVisitor &vis) { vis.visit(*this); }
 
 }; // namespace expression
