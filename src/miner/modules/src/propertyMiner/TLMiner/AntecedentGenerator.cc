@@ -289,7 +289,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
     // antecedent
     template_dt->addItem(prop.first, prop.second, depth);
 
-    //std::cout << "Proposition: " << prop2String(*prop.first) << "Interval: " <<prop.second.first << " , " << prop.second.second <<std::endl;
+    std::cout << "Proposition: " << prop2String(*prop.first) << "Interval: " <<prop.second.first << " , " << prop.second.second <<std::endl;
     // ignore this prop if the template contains a known solution
     /*
     if ((template_dt->isRandomConstructed() ||

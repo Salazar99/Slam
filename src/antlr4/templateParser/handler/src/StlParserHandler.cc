@@ -45,8 +45,10 @@ void StlParserHandler::exitImplication(stlParser::ImplicationContext *ctx) {
     _tfStack.push(new Implication(te, teformulaCon));
     return;
   } else if (ctx->tformula().size() == 2) {
+    std::pair<size_t,size_t> intv = *(_intervals[_intervalNames.top()]);
+    _intervalNames.pop();
     TemporalExp *teformulaCon =
-        new Eventually(_tfStack.top(), std::pair<size_t, size_t>(0, 0), _trace);
+        new Eventually(_tfStack.top(), intv, _trace);
     _tfStack.pop();
 
     TemporalExp *teFormulaAnt = _tfStack.top();
@@ -103,8 +105,10 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
 
   //If we are exiting a tformula rule that gives STL_eventually operator
   if (ctx->tformula().size() == 1 && ctx->STL_EVENTUALLY() != nullptr) {
+    std::pair<size_t,size_t> intv = *(_intervals[_intervalNames.top()]);
+    _intervalNames.pop();
     Eventually *p =
-        new Eventually(_tfStack.top(), std::pair<size_t, size_t>(0, 0), _trace);
+        new Eventually(_tfStack.top(), intv, _trace);
     _tfStack.pop();
     _tfStack.push(p);
     return;
@@ -152,13 +156,9 @@ void StlParserHandler::exitInterval(stlParser::IntervalContext *ctx) {
     intval.pop();
     std::string leftb = intval.top();
     intval.pop();
-    std::stringstream r(rightb);
-    std::stringstream l(leftb);
 
-    size_t rightval;
-    size_t leftval;
-    r >> rightval;
-    l >> leftval;
+    size_t rightval = std::stoi(rightb);
+    size_t leftval = std:: stoi(leftb);
 
     std::string intervalname = leftb + "," + rightb;
 

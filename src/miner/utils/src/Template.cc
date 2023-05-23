@@ -394,13 +394,14 @@ void Template::check() {
       if (evaluate(i) == Trinary::F) {
         std::cout << "===================================="
                   << "\n";
-        size_t shift = 0;
+
+        auto intv = this->getConsequentInterval();
 
 
-        //  evalAutomatonDyShift(shift, _con, shift);
-        std::cout << "[" << i << "," << shift << "]"
+        //evalAutomatonDyShift(shift, _con, shift);
+        std::cout << "[" << i << "," << intv.second << "]"
                   << "\n";
-        std::cout << _trace->printTrace(i, (shift - i) + 1) << "\n";
+        std::cout << _trace->printTrace(i, intv.second) << "\n";
         std::cout << "===================================="
                   << "\n";
       }
@@ -413,13 +414,12 @@ void Template::check() {
   if (_max_length < 30) {
     std::cout << "Ant: ";
     for (size_t i = 0; i < _max_length; i++) {
-      //FIXME
-      //      std::cout << evaluate_ant(i) << "(" << i << ")" << " ";
+        std::cout << evaluate_ant(i) << "(" << i << ")" << " ";
     }
 
     std::cout << "\n";
     std::cout << "\n";
-    std::cout << "Sft: ";
+//    std::cout << "Sft: ";
 //    if (_applyDynamicShift || _constShift > 0) {
 //      for (size_t i = 0; i < _max_length; i++) {
 //        std::cout << (!_applyDynamicShift ? 0 : _dynamicShiftCachedValues[i]) +
@@ -433,8 +433,7 @@ void Template::check() {
 
     std::cout << "Con: ";
     for (size_t i = 0; i < _max_length; i++) {
-      //FIXME
-      //std::cout << evaluate_con(i) << "(" << i << ")" << " ";
+      std::cout << evaluate_con(i) << "(" << i << ")" << " ";
     }
     std::cout << "\n";
     std::cout << "\n";
