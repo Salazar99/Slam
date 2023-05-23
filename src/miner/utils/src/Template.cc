@@ -366,29 +366,9 @@ void Template::check() {
   evaluate(0);
   size_t ct[3][3] = {{0}};
   fillContingency(ct, 0);
+
   if (!assHoldsOnTrace(harm::Location::AntCon)) {
     printContingency();
-    //     FIXME:broken until findCauseOfFailure is restored
-    //     auto cause = findCauseOfFailure();
-    //  fort::utf8_table table;
-    //  table << fort::header << "Cause of Failure"
-    //        << "Impact" << fort::endr;
-    //  std::vector<std::string> sorted;
-    //  for (auto c : cause) {
-    //    sorted.push_back(c.first);
-    //  }
-    //  std::sort(sorted.begin(), sorted.end(),
-    //            [&cause](std::string &e1, std::string &e2) {
-    //              return cause.at(e1) > cause.at(e2);
-    //            });
-    //  for (auto c : sorted) {
-    //    table << c
-    //          << to_string_with_precision(
-    //                 ((double)cause.at(c) / (double)ct[0][1]) * 100, 2) +
-    //                 "%\n"
-    //          << fort::endr;
-    //  }
-    //  std::cout << table.to_string() << std::endl;
     std::cout << "Failing sub-traces:\n";
     for (size_t i = 0; i < _max_length; i++) {
       if (evaluate(i) == Trinary::F) {
@@ -398,10 +378,9 @@ void Template::check() {
         auto intv = this->getConsequentInterval();
 
 
-        //evalAutomatonDyShift(shift, _con, shift);
         std::cout << "[" << i << "," << intv.second << "]"
                   << "\n";
-        std::cout << _trace->printTrace(i, intv.second) << "\n";
+        std::cout << _trace->printTrace(i, intv.second+1) << "\n";
         std::cout << "===================================="
                   << "\n";
       }
@@ -411,23 +390,13 @@ void Template::check() {
     std::cout << "OK!"
               << "\n";
   }
-  if (_max_length < 30) {
+
+  if (_max_length < 50) {
     std::cout << "Ant: ";
     for (size_t i = 0; i < _max_length; i++) {
         std::cout << evaluate_ant(i) << "(" << i << ")" << " ";
     }
 
-    std::cout << "\n";
-    std::cout << "\n";
-//    std::cout << "Sft: ";
-//    if (_applyDynamicShift || _constShift > 0) {
-//      for (size_t i = 0; i < _max_length; i++) {
-//        std::cout << (!_applyDynamicShift ? 0 : _dynamicShiftCachedValues[i]) +
-//                         _constShift
-//                  << "(" << i << ")"
-//                  << " ";
-//      }
-//    }
     std::cout << "\n";
     std::cout << "\n";
 

@@ -24,7 +24,7 @@ Trinary Eventually::evaluate(size_t time) {
       return Trinary::U;
     }
 
-    if (_operand->evaluate(time) == Trinary::T) {
+    if (_operand->evaluate(i) == Trinary::T) {
       return Trinary::T;
     }
   }
