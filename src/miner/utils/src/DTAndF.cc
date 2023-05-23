@@ -32,7 +32,7 @@ bool DTAndF::isTaken(size_t id, bool second, int depth) {
   if (second) {
     return _leaves.count(id) && _leaves.at(id).first.second != nullptr;
   } else {
-    return _leaves.count(id) && _leaves.at(id).first.second != nullptr;
+    return _leaves.count(id) && _leaves.at(id).first.first != nullptr;
   }
 }
 void DTAndF::removeLeaf(size_t id, int depth) {
@@ -57,7 +57,7 @@ void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> interval,
     //need to: add new prop as Inst, make olt Inst into Eventually, modify all intervals
     //Pop and get the previous TemporalInst added, which is at the back of the _choices's items
     Proposition * lastItem = _choices->popLastItem();
-    std::cout<< "lastProp: " << prop2String(*lastItem) <<std::endl;
+    //std::cout<< "lastProp: " << prop2String(*lastItem) <<std::endl;
     //lastItem is added as an Eventually
     expression::TemporalExp *Fprop =
         new Eventually(new TemporalInst(lastItem, ""), std::make_pair(0,0), _t->_trace);

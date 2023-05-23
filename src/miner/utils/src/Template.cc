@@ -224,69 +224,69 @@ void Template::loadPropositions(std::vector<Proposition *> &props,
 
 void Template::fillContingency(size_t (&ct)[3][3], bool offset) {
 
-  //  // make sure the chaced values are initialized
-  //  evaluate(0);
-  //
-  //  if (offset) {
-  //    //ant -> !con
-  //
-  //    for (size_t time = 0; time < _max_length; time++) {
-  //      size_t shift =
-  //          time + (_applyDynamicShift ? _dynamicShiftCachedValues[time] : 0) +
-  //          _constShift;
-  //      auto ant = _antCachedValues[time];
-  //      auto con = (shift >= _max_length) ? Trinary::U : _conCachedValues[shift];
-  //      if (ant == Trinary::T && (!con) == Trinary::T) {
-  //        ct[0][0]++;
-  //      } else if (ant == Trinary::T && (!con) == Trinary::F) {
-  //        assert(0);
-  //        ct[0][1]++;
-  //      } else if (ant == Trinary::T && (!con) == Trinary::U) {
-  //        ct[0][2]++;
-  //      } else if (ant == Trinary::F && (!con) == Trinary::T) {
-  //        ct[1][0]++;
-  //      } else if (ant == Trinary::F && (!con) == Trinary::F) {
-  //        ct[1][1]++;
-  //      } else if (ant == Trinary::F && (!con) == Trinary::U) {
-  //        ct[1][2]++;
-  //      } else if (ant == Trinary::U && (!con) == Trinary::T) {
-  //        ct[2][0]++;
-  //      } else if (ant == Trinary::U && (!con) == Trinary::F) {
-  //        ct[2][1]++;
-  //      } else if (ant == Trinary::U && (!con) == Trinary::U) {
-  //        ct[2][2]++;
-  //      }
-  //    }
-  //  } else {
-  //    //ant -> con
-  //
-  //    for (size_t time = 0; time < _max_length; time++) {
-  //      size_t shift =
-  //          time + (_applyDynamicShift ? _dynamicShiftCachedValues[time] : 0) +
-  //          _constShift;
-  //      auto ant = _antCachedValues[time];
-  //      auto con = (shift >= _max_length) ? Trinary::U : _conCachedValues[shift];
-  //      if (ant == Trinary::T && con == Trinary::T) {
-  //        ct[0][0]++;
-  //      } else if (ant == Trinary::T && con == Trinary::F) {
-  //        ct[0][1]++;
-  //      } else if (ant == Trinary::T && con == Trinary::U) {
-  //        ct[0][2]++;
-  //      } else if (ant == Trinary::F && con == Trinary::T) {
-  //        ct[1][0]++;
-  //      } else if (ant == Trinary::F && con == Trinary::F) {
-  //        ct[1][1]++;
-  //      } else if (ant == Trinary::F && con == Trinary::U) {
-  //        ct[1][2]++;
-  //      } else if (ant == Trinary::U && con == Trinary::T) {
-  //        ct[2][0]++;
-  //      } else if (ant == Trinary::U && con == Trinary::F) {
-  //        ct[2][1]++;
-  //      } else if (ant == Trinary::U && con == Trinary::U) {
-  //        ct[2][2]++;
-  //      }
-  //    }
-  //  }
+    // make sure the chaced values are initialized
+    evaluate(0);
+  
+    if (offset) {
+      //ant -> !con
+  
+      for (size_t time = 0; time < _max_length; time++) {
+        //size_t shift =
+        //    time + (_applyDynamicShift ? _dynamicShiftCachedValues[time] : 0) +
+        //    _constShift;
+        auto ant = evaluate_ant(time);
+        auto con = evaluate_con(time);
+        if (ant == Trinary::T && (!con) == Trinary::T) {
+          ct[0][0]++;
+        } else if (ant == Trinary::T && (!con) == Trinary::F) {
+          assert(0);
+          ct[0][1]++;
+        } else if (ant == Trinary::T && (!con) == Trinary::U) {
+          ct[0][2]++;
+        } else if (ant == Trinary::F && (!con) == Trinary::T) {
+          ct[1][0]++;
+        } else if (ant == Trinary::F && (!con) == Trinary::F) {
+          ct[1][1]++;
+        } else if (ant == Trinary::F && (!con) == Trinary::U) {
+          ct[1][2]++;
+        } else if (ant == Trinary::U && (!con) == Trinary::T) {
+          ct[2][0]++;
+        } else if (ant == Trinary::U && (!con) == Trinary::F) {
+          ct[2][1]++;
+        } else if (ant == Trinary::U && (!con) == Trinary::U) {
+          ct[2][2]++;
+        }
+      }
+    } else {
+      //ant -> con
+  
+      for (size_t time = 0; time < _max_length; time++) {
+        //size_t shift =
+        //    time + (_applyDynamicShift ? _dynamicShiftCachedValues[time] : 0) +
+        //    _constShift;
+        auto ant = evaluate_ant(time);
+        auto con = evaluate_con(time);
+        if (ant == Trinary::T && con == Trinary::T) {
+          ct[0][0]++;
+        } else if (ant == Trinary::T && con == Trinary::F) {
+          ct[0][1]++;
+        } else if (ant == Trinary::T && con == Trinary::U) {
+          ct[0][2]++;
+        } else if (ant == Trinary::F && con == Trinary::T) {
+          ct[1][0]++;
+        } else if (ant == Trinary::F && con == Trinary::F) {
+          ct[1][1]++;
+        } else if (ant == Trinary::F && con == Trinary::U) {
+          ct[1][2]++;
+        } else if (ant == Trinary::U && con == Trinary::T) {
+          ct[2][0]++;
+        } else if (ant == Trinary::U && con == Trinary::F) {
+          ct[2][1]++;
+        } else if (ant == Trinary::U && con == Trinary::U) {
+          ct[2][2]++;
+        }
+      }
+    }
 }
 
 void Template::setCacheAntFalse() { _antInCache = false; }

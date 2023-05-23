@@ -289,7 +289,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
     // antecedent
     template_dt->addItem(prop.first, prop.second, depth);
 
-    std::cout << "Proposition: " << prop2String(*prop.first) << "Interval: " <<prop.second.first << " , " << prop.second.second <<std::endl;
+    //std::cout << "Proposition: " << prop2String(*prop.first) << "Interval: " <<prop.second.first << " , " << prop.second.second <<std::endl;
     // ignore this prop if the template contains a known solution
     /*
     if ((template_dt->isRandomConstructed() ||
@@ -303,14 +303,16 @@ inline void AntecedentGenerator::findCandidatesNumeric(
 
     // is the new antecedent at least once satisfied? (avoid vacuity)
     if (res.occProposition > 0) {
-
+      
       //          std::cout << "-------->" <<prop2String(*prop)<< "\n";
       //          std::cout << " res.occGoal: " <<  res.occGoal << "\n";
       //          std::cout << " res.occProposition " <<  res.occProposition <<
       //          "\n";
       if (res.occGoal == 0 || res.occGoal == res.occProposition) {
-        discLeaf = 1;
+        //discLeaf = 1;
         taken = 1;
+        template_dt->addLeaf(prop.first, prop.second, candidate + numLeavesOffset, 0, depth);
+        discLeaves.push_back(DiscoveredLeaf(candidate + numLeavesOffset, 0, depth));
 
         storeSolution(t, res.occGoal == 0);
       } else {
@@ -319,7 +321,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
         double IG = currEntropy - condEnt;
 
         if (!taken) {
-          igs.emplace_back(candidate, IG, depth, prop.first, prop.second, 0, condEnt);
+          igs.emplace_back(candidate + numLeavesOffset, IG, depth, prop.first, prop.second, 0, condEnt);
         }
       }
     }

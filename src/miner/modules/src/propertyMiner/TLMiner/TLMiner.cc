@@ -308,15 +308,18 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       //
       //} else {
       for (auto prop : props) {
+        //std::cout<<"Prop: " <<prop2String(*prop.first) << "intv:" << prop.second.first << ", " <<prop.second.second << std::endl;
         t->getDT()->addItem(prop.first, std::pair<size_t, size_t>(prop.second),
                             -1);
       }
+        std::cout << t->getAssertion() << std::endl;
+        std::cout<<"End of set" <<std::endl;
       //}
       assert(!t->getDT()->getItems().empty());
 
       //check for vacuity
       if (!t->isVacuous(Location::Ant)) {
-
+        std::cout<< "non vacous" <<std::endl;
         //create a new assertion by making a snapshot of a template
         //auto prettyAssOld = t->getDT()->prettyPrint(0);
         std::pair<std::string, std::string> prettyAss;

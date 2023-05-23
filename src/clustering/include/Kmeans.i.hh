@@ -13,6 +13,10 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include <sstream>
+#include <fstream>
+#include <iomanip>
+
 
 template <typename T>
 std::vector<std::pair<T, T>> kmeans(std::vector<std::pair<T, T>> elements, size_t k) {
@@ -32,7 +36,7 @@ std::vector<std::pair<T, T>> kmeans(std::vector<std::pair<T, T>> elements, size_
   std::unordered_map<size_t, std::vector<T>> labelToValues;
   for (size_t j = 0; j < std::get<1>(cluster_data).size(); j++) {
     auto label = std::get<1>(cluster_data)[j];
-    labelToValues[label].push_back(data[j][0]);
+    labelToValues[label].push_back(data[j]);
   }
 
   // translate the customers into ranges [min, max]
@@ -138,6 +142,43 @@ std::vector<std::pair<std::pair<T, T>,std::pair<size_t,size_t>>> kmeansElbowStl(
       labelToValues[label].push_back(data[j]);
     }
 
+    //Gnuplot of the points################## 
+  
+    /*
+     std::ofstream file("data.txt");
+    if (!file) {
+        std::cerr << "Error opening file." << std::endl;
+        exit(1);
+    }
+
+    std::unordered_map<size_t, std::string> labelColors;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+
+    for (const auto& pair : labelToValues) {
+        size_t label = pair.first;
+        const std::vector<std::array<T, 2>>& values = pair.second;
+
+        for (const auto& value : values) {
+            file << value[0] << " " << value[1] << " " << label << std::endl;
+        }
+
+        std::ostringstream colorStream;
+        colorStream << "#";
+        for (int i = 0; i < 3; ++i) {
+            colorStream << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(dis(gen) * 255);
+        }
+        labelColors[label] = colorStream.str();
+    }
+
+    file.close();
+
+    system("bash script.sh");
+
+    */
+    //#######################################
     // compute the standard deviation
     double totSD = 0.f;
     auto means = std::get<0>(cluster_data);
