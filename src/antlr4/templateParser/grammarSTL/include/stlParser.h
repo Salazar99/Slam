@@ -1,5 +1,5 @@
 
-// Generated from stl.g4 by ANTLR 4.10.1
+// Generated from stl.g4 by ANTLR 4.12.0
 
 #pragma once
 
@@ -114,17 +114,17 @@ public:
   public:
     TformulaContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    BooleanContext *boolean();
-    PlaceholderContext *placeholder();
-    antlr4::tree::TerminalNode *LPAREN();
+    antlr4::tree::TerminalNode *NOT();
     std::vector<TformulaContext *> tformula();
     TformulaContext* tformula(size_t i);
-    antlr4::tree::TerminalNode *RPAREN();
-    antlr4::tree::TerminalNode *NOT();
     antlr4::tree::TerminalNode *STL_EVENTUALLY();
     antlr4::tree::TerminalNode *LCPAREN();
     IntervalContext *interval();
     antlr4::tree::TerminalNode *RCPAREN();
+    antlr4::tree::TerminalNode *LPAREN();
+    antlr4::tree::TerminalNode *RPAREN();
+    BooleanContext *boolean();
+    PlaceholderContext *placeholder();
     antlr4::tree::TerminalNode *AND();
     antlr4::tree::TerminalNode *OR();
 

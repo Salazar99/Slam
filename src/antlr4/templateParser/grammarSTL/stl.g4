@@ -11,12 +11,12 @@ implication :
  tformula IMPL STL_EVENTUALLY LCPAREN interval RCPAREN tformula
 ;
 
-tformula: boolean | placeholder
-	| LPAREN tformula RPAREN 
+tformula:
 	| NOT tformula 
-	| tformula AND tformula 
-	| tformula OR tformula 
     | STL_EVENTUALLY LCPAREN interval RCPAREN tformula
+	| tformula (AND | OR) tformula 
+	| LPAREN tformula RPAREN 
+    | boolean | placeholder
 	;
 
 placeholder: 'P' NUMERIC ;

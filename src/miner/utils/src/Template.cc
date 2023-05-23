@@ -354,9 +354,9 @@ void Template::printContingency() {
 }
 void Template::check() {
   //FIXME
-  //messageErrorIf(!isFullyInstantiated(),
-  //               "Checking is available only for fully instantiated templates "
-  //               "(assertions)!");
+  messageErrorIf(!isFullyInstantiated(),
+                 "Checking is available only for fully instantiated templates "
+                 "(assertions)!");
   std::cout << "==============================================================="
                "==========="
             << "\n";
@@ -529,13 +529,14 @@ size_t Template::getL1Threads() {
 
 void Template::setDTLimits(const DTLimits &l) { _limits = l; }
 bool Template::saveOffset() { return _limits._saveOffset; }
+*/
+
 bool Template::isFullyInstantiated() {
   return (getNumPlaceholders(harm::Location::Ant) +
           getNumPlaceholders(harm::Location::Con) +
           getNumPlaceholders(harm::Location::AntCon)) == 0 &&
          _dtOp.second == nullptr;
 }
-*/
 std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInterestingValue(size_t time, CachedAllNumeric *cn, int depth, int width) {
 
   DTOperator *template_dt = _dtOp.second;
