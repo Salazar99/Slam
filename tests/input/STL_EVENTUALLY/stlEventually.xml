@@ -1,6 +1,6 @@
 <harm>
 	<context name="sample"> 
-		<numeric clsEffort = "0.01" exp="v2" loc="dt"/>
+		<numeric clsEffort = "0.05" exp="v2" loc="dt"/>
 
 		<prop exp="v3" loc="c"/>
 

@@ -173,10 +173,10 @@ std::vector<std::pair<Proposition *,std::pair<size_t,size_t>>> inline makeNumeri
 
 template <typename T>
 std::vector<std::pair<std::pair<T, T>,std::pair<size_t,size_t>>> clsElbow(std::vector<std::pair<T,T>> &elements,
-                                      double clsEffort) {
+                                      double clsEffort,const std::string &numericName) {
   std::vector<std::pair<std::pair<T, T>,std::pair<size_t,size_t>>> clusters;
   if (clc::clsAlg == "kmeans") {
-    clusters = kmeansElbowStl<T>(elements, 20, clsEffort);
+    clusters = kmeansElbowStl<T>(elements, 20, clsEffort,0,numericName);
   } 
   //else if (clc::clsAlg == "kde") {
   //  clusters = kdeElbow<T>(elements, 20, clsEffort);
@@ -201,14 +201,14 @@ genPropsThroughClustering(
       for (auto &iv : ivs) {
         elements.push_back(std::make_pair(iv.first._f,(float)iv.second));
       }
-      auto clusters = clsElbow<float>(elements, cn->_clsEffort);
+      auto clusters = clsElbow<float>(elements, cn->_clsEffort, allNum2String(*cn));
       return makeNumericRange<float>(clusters, type, cn);
     } else {
       std::vector<std::pair<double,double>> elements;
       for (auto &iv : ivs) {
         elements.push_back(std::make_pair(iv.first._d,(double)iv.second));
       }
-      auto clusters = clsElbow<double>(elements, cn->_clsEffort);
+      auto clusters = clsElbow<double>(elements, cn->_clsEffort, allNum2String(*cn));
       return makeNumericRange<double>(clusters, type, cn);
     }
   } else if (cn->getType().first == VarType::SLogic) {
@@ -216,7 +216,7 @@ genPropsThroughClustering(
     for (auto &iv : ivs) {
       elements.push_back(std::make_pair(iv.first._s,(SLogic)iv.second));
     }
-    auto clusters = clsElbow<SLogic>(elements, cn->_clsEffort);
+    auto clusters = clsElbow<SLogic>(elements, cn->_clsEffort, allNum2String(*cn));
     return makeLogicRange<SLogic>(clusters, type, cn);
   } else if (cn->getType().first == VarType::ULogic) {
     std::vector<std::pair<SLogic,SLogic>> elements;
@@ -224,7 +224,7 @@ genPropsThroughClustering(
       elements.push_back(std::make_pair(iv.first._u,(SLogic)iv.second));
     }
     std::vector<std::pair<std::pair<SLogic, SLogic>,std::pair<size_t,size_t>>> clusters =
-        clsElbow<SLogic>(elements, cn->_clsEffort);
+        clsElbow<SLogic>(elements, cn->_clsEffort, allNum2String(*cn));
     return makeLogicRange<SLogic>(clusters, type, cn);
   } else {
     messageError("Unknown type in CachedAllNumeric");

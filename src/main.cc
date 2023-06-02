@@ -235,6 +235,9 @@ void parseCommandLineArguments(int argc, char *args[]) {
   if (result.count("splitLogic")) {
     clc::splitLogic = true;
   }
+  if (result.count("debug-cls")) {
+    clc::debugCls = true;
+  }
   messageErrorIf(clc::splitLogic && !clc::genTemp,
                  "--split-logic must be used with --generate-config");
 

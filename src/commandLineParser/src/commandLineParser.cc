@@ -48,13 +48,17 @@ cxxopts::ParseResult parseHARM(int argc, char *argv[]) {
                   "do not populate assertions with values (saves memory)")(
         "interactive", "enable interactive assertion ranking")(
         "split-logic", "split bitvectors into boolean variabes")
-        ( "dont-print-ass", "do not print the mined assertions")(
-        "silent", "disable all outputs")("wsilent", "disable all warning")(
+        ( "dont-print-ass", "do not print the mined assertions")
+        ("silent", "disable all outputs")
+        ("wsilent", "disable all warning")(
         "isilent", "disable all info")("psilent", "disable all progress bars")(
         "cls-alg",
         "type of clustering algorithm; <kmeans>, <kde> kernel density "
         "estimation, <hc> hierarchical (default is kmeans)",
-        cxxopts::value<std::string>(), "<String>")("help", "Show options")(
+        cxxopts::value<std::string>(), "<String>")
+        ("debug-cls", "print the clusters")
+        
+        ("help", "Show options")(
         "name", "name of this execution (used when dumping statistics)",
         cxxopts::value<std::string>(), "<String>");
 

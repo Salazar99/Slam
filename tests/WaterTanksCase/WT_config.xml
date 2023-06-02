@@ -1,10 +1,10 @@
 <harm>
 	<context name="sample"> 
-		<numeric clsEffort = "0.001" exp="z" loc="dt"/>
-		<numeric clsEffort = "0.001" exp="d" loc="dt"/>
-		<numeric clsEffort = "0.001" exp="rain" loc="dt"/>
+		<numeric clsEffort = "0.01" exp="z" loc="dt"/>
+		<numeric clsEffort = "0.01" exp="d" loc="dt"/>
+		<numeric clsEffort = "0.01" exp="rain" loc="dt"/>
 
-		<numeric exp="a" loc="c"/>
+		<numeric clsEffort = "0.1" exp="a" loc="c"/>
 
         <!--
 		<numeric clsEffort = "0.01" exp="v1" loc="dt"/>

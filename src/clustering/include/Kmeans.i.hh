@@ -1,5 +1,6 @@
 
 #include "dkm.hpp"
+#include "globals.hh"
 #include "utils.hh"
 #include <algorithm>
 #include <cfloat>
@@ -11,6 +12,7 @@
 #include <map>
 #include <set>
 #include <sstream>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -117,10 +119,269 @@ std::vector<std::pair<T, T>> kmeansElbow(std::vector<T> elements, size_t max,
   return ret;
 }
 
+// Function to plot scatter points and rectangles using Gnuplot
+template <typename T>
+void plotPointsAndRectangles(
+    const std::vector<std::pair<T, T>> &points,
+    const std::vector<std::tuple<double, double, double, double>> &rectangles,
+    const std::string &title) {
+  //  const char *colors[] = {
+  //      "red",  "green",   "orange", "purple", "brown",
+  //      "cyan", "magenta", "yellow", "gray",   "white",
+  //      // Add more colors here as needed
+  //  };
+  const char *colors[] = {"dark-grey",
+                          "red",
+                          "web-green",
+                          "web-blue",
+                          "dark-magenta",
+                          "dark-cyan",
+                          "dark-orange",
+                          "dark-yellow",
+                          "royalblue",
+                          "goldenrod",
+                          "dark-spring-green",
+                          "purple",
+                          "steelblue",
+                          "dark-red",
+                          "dark-chartreuse",
+                          "orchid",
+                          "aquamarine",
+                          "brown",
+                          "yellow",
+                          "turquoise",
+                          "grey0",
+                          "grey10",
+                          "grey20",
+                          "grey30",
+                          "grey40",
+                          "grey50",
+                          "grey60",
+                          "grey70",
+                          "grey",
+                          "grey80",
+                          "grey90",
+                          "grey100",
+                          "light-red",
+                          "light-green",
+                          "light-blue",
+                          "light-magenta",
+                          "light-cyan",
+                          "light-goldenrod",
+                          "light-pink",
+                          "light-turquoise",
+                          "gold",
+                          "green",
+                          "dark-green",
+                          "spring-green",
+                          "forest-green",
+                          "sea-green",
+                          "blue",
+                          "dark-blue",
+                          "midnight-blue",
+                          "navy",
+                          "medium-blue",
+                          "skyblue",
+                          "cyan",
+                          "magenta",
+                          "dark-turquoise",
+                          "dark-pink",
+                          "coral",
+                          "light-coral",
+                          "orange-red",
+                          "salmon",
+                          "dark-salmon",
+                          "khaki",
+                          "dark-khaki",
+                          "dark-goldenrod",
+                          "beige",
+                          "olive",
+                          "orange",
+                          "violet",
+                          "dark-violet",
+                          "plum",
+                          "dark-plum",
+                          "dark-olivegreen",
+                          "orangered4",
+                          "brown4",
+                          "sienna4",
+                          "orchid4",
+                          "mediumpurple3",
+                          "slateblue1",
+                          "yellow4",
+                          "sienna1",
+                          "tan1",
+                          "sandybrown",
+                          "light-salmon",
+                          "pink",
+                          "khaki1",
+                          "lemonchiffon",
+                          "bisque",
+                          "honeydew",
+                          "slategrey",
+                          "seagreen",
+                          "antiquewhite",
+                          "chartreuse",
+                          "greenyellow",
+                          "gray",
+                          "light-gray",
+                          "light-grey",
+                          "dark-gray",
+                          "slategray",
+                          "gray0",
+                          "gray10",
+                          "gray20",
+                          "gray30",
+                          "gray40",
+                          "gray50",
+                          "gray60",
+                          "gray70",
+                          "gray80",
+                          "gray90",
+                          "gray100"};
+
+  const size_t numColors = sizeof(colors) / sizeof(colors[0]);
+  size_t colorIndex = 0;
+
+  FILE *gnuplotPipe = popen("gnuplot -persist", "w");
+  if (gnuplotPipe == nullptr) {
+    std::cerr << "Error: Failed to open Gnuplot pipe." << std::endl;
+    return;
+  }
+
+  auto xMinMax = std::minmax_element(
+      points.begin(), points.end(),
+      [](const auto &p1, const auto &p2) { return p1.first < p2.first; });
+  auto yMinMax = std::minmax_element(
+      points.begin(), points.end(),
+      [](const auto &p1, const auto &p2) { return p1.second < p2.second; });
+
+  double xMin = xMinMax.first->first;
+  double xMax = xMinMax.second->first;
+  double yMin = yMinMax.first->second;
+  double yMax = yMinMax.second->second;
+
+  xMin *= xMin > 0 ? 0.9 : 1.1;
+  xMax *= xMax > 0 ? 1.1 : 0.9;
+  yMin *= yMin > 0 ? 0.9 : 1.1;
+  yMax *= yMax > 0 ? 1.1 : 0.9;
+
+  fprintf(gnuplotPipe, "set xrange [%f:%f]\n", xMin, xMax);
+  fprintf(gnuplotPipe, "set yrange [%f:%f]\n", yMin, yMax);
+
+  // Send scatter plot commands for points
+
+  // Send scatter plot commands for points
+  fprintf(gnuplotPipe, "set title '%s'\n",title.c_str());
+
+  // Set x and y labels
+  fprintf(gnuplotPipe, "set xlabel 'Value'\n");
+  fprintf(gnuplotPipe, "set ylabel 'Distance'\n");
+
+  fprintf(gnuplotPipe,
+          "plot '-' with points pt 7 ps 0.3 lc rgb 'black' notitle\n");
+
+  // Send points data to the pipe
+  for (const auto &point : points) {
+    fprintf(gnuplotPipe, "%f %f\n", (double)point.first, (double)point.second);
+  }
+  fprintf(gnuplotPipe, "e\n");
+
+  // Draw rectangles using set object rect
+  size_t rectangleIndex = 1;
+  for (const auto &rectangle : rectangles) {
+
+    double x1, y1, x2, y2;
+    std::tie(x1, x2, y1, y2) = rectangle;
+
+    const char *color = colors[colorIndex % numColors];
+    ++colorIndex;
+
+    fprintf(gnuplotPipe,
+            "set object %ld rect from %f,%f to %f,%f fc rgb '%s'\n",
+            rectangleIndex, x1, y1, x2, y2, color);
+//    printf("set object %ld rect from %f,%f to %f,%f fc rgb '%s'\n",
+//           rectangleIndex, x1, y1, x2, y2, color);
+
+    ++rectangleIndex;
+  }
+
+  // Replot to include rectangles
+  fprintf(gnuplotPipe, "replot\n");
+
+  // Close the pipe
+  pclose(gnuplotPipe);
+}
+
+template <typename T>
+void printClusters(const std::vector<std::pair<T, T>> &elements,const std::vector<std::pair<std::pair<T, T>, std::pair<size_t, size_t>>> &ret, const std::string &expName){
+
+
+  //prepare data
+  std::vector<std::tuple<double, double, double, double>> rectangles;
+  for (auto &[n, t] : ret) {
+    rectangles.emplace_back((double)n.first, (double)n.second, t.first,
+                            t.second);
+  }
+  int avgShift = 5;
+  for (auto &[f, s, t, fo] : rectangles) {
+    if (f > 0) {
+      f *= ((100 - rand() % avgShift) / 100.f);
+
+    } else {
+      f /= ((100 - rand() % avgShift) / 100.f);
+    }
+    if (s > 0) {
+      s *= ((rand() % avgShift + 100) / 100.f);
+    } else {
+      s /= ((rand() % avgShift + 100) / 100.f);
+    }
+    if (t > 0) {
+      t *= ((100 - rand() % avgShift) / 100.f);
+    } else {
+      t /= ((100 - rand() % avgShift) / 100.f);
+    }
+    if (fo > 0) {
+      fo *= ((rand() % avgShift + 100) / 100.f);
+    } else {
+      fo /= ((rand() % avgShift + 100) / 100.f);
+    }
+    if ((s - f) * (fo - t) == 0) {
+      f -= 1.f;
+      s += 1.f;
+      t -= 1.f;
+      fo += 1.f;
+    }
+  }
+
+  //  std::vector<std::pair<double, double>> points = {
+  //      {1.0, 1.0}, {2.0, 2.0}, {3.0, 3.0}, {4.0, 4.0}, {5.0, 5.0}};
+  //  std::vector<std::tuple<double, double, double, double>> rects = {
+  //      {1, 3, 2, 4}};
+  //sort rectangles
+  std::sort(rectangles.begin(), rectangles.end(),
+            [](const std::tuple<double, double, double, double> &e1,
+               const std::tuple<double, double, double, double> &e2) {
+              return ((std::get<1>(e1) - std::get<0>(e1)) *
+                      (std::get<3>(e1) + std::get<2>(e1))) >
+                     ((std::get<1>(e2) - std::get<0>(e2)) *
+                      (std::get<3>(e2) + std::get<2>(e2)));
+            });
+
+
+  plotPointsAndRectangles(elements, rectangles, expName);
+  //  plotPointsAndRectangles(points, rects);
+  char c;
+  std::cin >> c;
+
+
+}
 template <typename T>
 std::vector<std::pair<std::pair<T, T>, std::pair<size_t, size_t>>>
 kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
-               double SDmin_red, bool keepOnlyBest) {
+               double SDmin_red, bool keepOnlyBest,
+               const std::string &expName) {
+
   // store data in the correct format
   std::vector<std::array<T, 2>> data;
   for (size_t i = 0; i < elements.size(); i++) {
@@ -150,7 +411,7 @@ kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
       double mean = means[k][0];
       double currSD = 0.f;
       for (auto &v : labelToValues[k]) {
-        currSD += std::pow(mean - (double)((v[0]+v[1])/2), 2);
+        currSD += std::pow(mean - (double)((v[0] + v[1]) / 2), 2);
       }
       currSD = std::sqrt(currSD / (double)elements.size());
       totSD += currSD;
@@ -186,11 +447,14 @@ kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
     ret.push_back(lr);
   }
 
+  if (clc::debugCls) {
+    printClusters(elements,ret, expName);
+  }
+
   //  std::sort(ret.begin(), ret.end(),
   //            [](const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &e1, const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &e2) {
   //              return e1.first.second <= e2.first.first;
   //            });
-
   return ret;
 }
 
