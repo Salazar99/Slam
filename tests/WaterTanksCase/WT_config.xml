@@ -2,7 +2,6 @@
 	<context name="sample"> 
 		<numeric clsEffort = "0.01" exp="z" loc="dt"/>
 		<numeric clsEffort = "0.01" exp="d" loc="dt"/>
-		<numeric clsEffort = "0.01" exp="rain" loc="dt"/>
 
 		<numeric clsEffort = "0.1" exp="a" loc="c"/>
 
@@ -12,7 +11,7 @@
         <template check="1" dtLimits="2A,1E" exp="G((v2 >=50) && (v2 <=100) -> F[3,5](v3))" />
         -->
 
-        <template dtLimits="3A,0E" exp="G( (..F..) -> F[0,0](P0) )" />
+        <template dtLimits="3A,1E" exp="G( (..F..) -> F[0,0](P0) )" />
 
 
 		<sort name="causality" exp="1-afct/traceLength"/>

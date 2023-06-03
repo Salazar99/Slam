@@ -237,9 +237,11 @@ AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
   //everything is done at template side 
   auto ret = t->gatherInterestingValue(0, cn ,depth, -1);
   std::cout << "Numeric: " << allNum2String(*cn) << std::endl;
+  /*
   for(auto &pair : ret){
     std::cout <<"("<<pair.first._d << "," << pair.second <<") " ;
   } 
+  */
   std::cout <<  "\n";
   return ret;
 }
