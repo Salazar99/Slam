@@ -92,7 +92,6 @@ public:
   virtual size_t getNChoices() = 0;
   virtual size_t getCurrentDepth() = 0;
   virtual const DTLimits &getLimits() = 0;
-
   virtual std::pair<std::string, std::string> prettyPrint(bool offset) = 0;
 
 protected:

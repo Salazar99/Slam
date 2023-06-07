@@ -51,10 +51,10 @@ Result_DC mean_MT(Template *t) {
   t->setCacheAntFalse();
 
   for (size_t i = 0; i < t->_max_length; i++) {
-    //FIXME: evaluate_ant is undefined
-    //  if (t->evaluate_ant(i) != Trinary::T) {
-    //    continue;
-    //  }
+    
+    if (t->evaluate_ant(i) != Trinary::T) {
+      continue;
+    }
     if (t->evaluate(i) == Trinary::T) {
       ++res.occGoal;
       ++res.occProposition;
@@ -237,11 +237,11 @@ AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
   //everything is done at template side 
   auto ret = t->gatherInterestingValue(0, cn ,depth, -1);
   std::cout << "Numeric: " << allNum2String(*cn) << std::endl;
-  /*
+  
   for(auto &pair : ret){
     std::cout <<"("<<pair.first._d << "," << pair.second <<") " ;
   } 
-  */
+  
   std::cout <<  "\n";
   return ret;
 }
@@ -275,23 +275,24 @@ inline void AntecedentGenerator::findCandidatesNumeric(
 
   DTOperator *template_dt = t->getDT();
 
-  if (template_dt->isTaken(candidate + numLeavesOffset, 0, depth)) {
-    return;
-  }
-  bool discLeaf = 0;
+  std::cout << "DT size: "<<template_dt->getNChoices()  <<std::endl;
+  //bool discLeaf = 0;
 
   // retrieve the propositions (props)
   std::vector<std::pair<Proposition *,std::pair<size_t,size_t>>> props = gatherPropositionsFromNumerics(
       dcVariables.at(candidate), t, depth, genProps);
 
   for (auto prop : props) {
-    bool taken = 0;
+
+    if (template_dt->isTaken(candidate + numLeavesOffset, 0, depth))
+      continue;
+    
 
     // add the new proposition of a unused variable in the current
     // antecedent
-    template_dt->addItem(prop.first, prop.second, depth);
 
     std::cout << "Proposition: " << prop2String(*prop.first) << "Interval: " <<prop.second.first << " , " << prop.second.second <<std::endl;
+    template_dt->addItem(prop.first, prop.second, depth);
     // ignore this prop if the template contains a known solution
     /*
     if ((template_dt->isRandomConstructed() ||
@@ -312,7 +313,6 @@ inline void AntecedentGenerator::findCandidatesNumeric(
       //          "\n";
       if (res.occGoal == 0 || res.occGoal == res.occProposition) {
         //discLeaf = 1;
-        taken = 1;
         template_dt->addLeaf(prop.first, prop.second, candidate + numLeavesOffset, 0, depth);
         discLeaves.push_back(DiscoveredLeaf(candidate + numLeavesOffset, 0, depth));
 
@@ -322,19 +322,19 @@ inline void AntecedentGenerator::findCandidatesNumeric(
                                                t->_max_length);
         double IG = currEntropy - condEnt;
 
-        if (!taken) {
-          igs.emplace_back(candidate + numLeavesOffset, IG, depth, prop.first, prop.second, 0, condEnt);
-        }
+        igs.emplace_back(candidate + numLeavesOffset, IG, depth, prop.first, prop.second, 0, condEnt);
       }
     }
     template_dt->popItem(depth);
   }
 
+/*
   if (discLeaf) {
     std::pair<size_t, size_t> intv = std::pair<size_t, size_t>({0, 0});
     template_dt->addLeaf(nullptr, intv, candidate + numLeavesOffset, 0, depth);
     discLeaves.push_back(DiscoveredLeaf(candidate + numLeavesOffset, 0, depth));
   }
+*/
 }
 bool AntecedentGenerator::isKnownSolution(
     const std::vector<Proposition *> &items, DTOperator *template_dt,
