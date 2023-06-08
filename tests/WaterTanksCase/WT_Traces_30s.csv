@@ -1,4 +1,4 @@
-float z, float d, float w, float amount, float clk, float rain, bool a
+float z, float d, float w, float amount, float clk, float rain, float a
 1.800,0.4000,0.5000,0.0,-0.7000,0.0,0
 1.738,0.4441,0.4818,0.0,-0.7182,0.0,0
 1.677,0.4867,0.4644,0.0,-0.7356,0.0,0
