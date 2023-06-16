@@ -298,7 +298,7 @@ void plotPointsAndRectangles(
     ++colorIndex;
 
     fprintf(gnuplotPipe,
-            "set object %ld rect from %f,%f to %f,%f fc rgb '%s'\n",
+            "set object %ld rect from %f,%f to %f,%f fc rgb '%s' fillstyle transparent solid 0.5\n",
             rectangleIndex, x1, y1, x2, y2, color);
 //    printf("set object %ld rect from %f,%f to %f,%f fc rgb '%s'\n",
 //           rectangleIndex, x1, y1, x2, y2, color);
