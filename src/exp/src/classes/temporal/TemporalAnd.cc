@@ -29,6 +29,15 @@ void TemporalAnd::addItem(TemporalExp *prop) {
   _items.push_back(prop);
 }
 
+void TemporalAnd::addFront(TemporalExp *prop) {
+    _items.insert(_items.begin(), prop);
+}
+TemporalExp* TemporalAnd::popFront() {
+    auto item = _items.front();
+    _items.erase(_items.begin());
+    return item;
+}
+
 std::vector<TemporalExp *> TemporalAnd::getItems() { return _items; };
 
 //std::vector<expression::Proposition *> TemporalAnd::getPropositions() {
@@ -51,24 +60,6 @@ Proposition * TemporalAnd::popLastItem(){
   auto prop = inst->getProposition();
   _items.pop_back();
   return prop;
-}
-
-void TemporalAnd::updateIntervals(std::pair<size_t,size_t> new_interval, bool add){
-  for(auto &item :_items){
-    //last item is always an Inst
-    if(item != _items.back()){
-      auto intv = dynamic_cast<Eventually *>(item)->getInterval();
-      //shift interval according to the new one
-      if(add){
-      intv.first += new_interval.first;
-      intv.second += new_interval.second;
-      }else{
-      intv.first -= new_interval.first;
-      intv.second -= new_interval.second;
-      }
-      dynamic_cast<Eventually *>(item)->setInterval(intv);
-    }      
-  }
 }
 
 

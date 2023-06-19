@@ -192,7 +192,8 @@ void TLMiner::l2Handler(
         busyTemplates.push_back(templs.size());
         templIndexTol2Inst[templs.size()] = toBeServed;
         instToTemplIndex[toBeServed] = templs.size();
-        Template *newTemp = hparser::parseTemplate(t->getTemplate(), t->_trace);
+        Template *newTemp = hparser::parseTemplate(
+            t->getTemplate(), t->_trace, "stl", t->getDT()->getLimits());
         newTemp->transferPermutations(*t);
         templs.push_back(newTemp);
         nextTemp = templs.back();
@@ -264,7 +265,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
     DecTreeVariables candidateVariables;
     for (size_t i = 0; i < _propsDT.size(); i++) {
       candidateVariables[i].first.first = _propsDT[i];
-      candidateVariables[i].first.second = makeExpression<PropositionNot>(_propsDT[i]);
+      candidateVariables[i].first.second =
+          makeExpression<PropositionNot>(_propsDT[i]);
     }
 
     if (t->isVacuous(harm::Location::AntCon)) {
@@ -297,6 +299,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
     // Onset
     for (std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
              &props : antGen.onSets) {
+        
 
       //rebulding the assertion starting from a list propositions (the operands of a dt operator)
       //if (t->getDT()->isMultiDimensional()) {
@@ -307,19 +310,18 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       //  }
       //
       //} else {
-      for (auto prop : props) {
-        //std::cout<<"Prop: " <<prop2String(*prop.first) << "intv:" << prop.second.first << ", " <<prop.second.second << std::endl;
-        t->getDT()->addItem(prop.first, std::pair<size_t, size_t>(prop.second),
-                            -1);
-      }
-        std::cout << t->getAssertion() << std::endl;
-        std::cout<<"End of set" <<std::endl;
+      //
+
+      t->getDT()->loadSolution(props);
+
+      //std::cout << t->getAssertion() << std::endl;
+      //std::cout<<"End of set" <<std::endl;
       //}
       assert(!t->getDT()->getItems().empty());
 
       //check for vacuity
       if (!t->isVacuous(Location::Ant)) {
-        std::cout<< "non vacous" <<std::endl;
+        //std::cout<< "non vacous" <<std::endl;
         //create a new assertion by making a snapshot of a template
         //auto prettyAssOld = t->getDT()->prettyPrint(0);
         std::pair<std::string, std::string> prettyAss;
@@ -342,7 +344,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       else {
         vacLock.lock();
         std::ofstream vacFile("vac.txt", ios_base::app);
-        vacFile << t->getDT()->prettyPrint(0).first + "\n";
+        vacFile << t->getAssertion() + "\n";
         vacFile.close();
         vacLock.unlock();
       }
@@ -358,7 +360,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       }
     }
     // Offset, same as onset but the consequent is negated
-    for (std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> &props : antGen.offSets) {
+    for (std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+             &props : antGen.offSets) {
       /*
       if (t->getDT()->isMultiDimensional()) {
         for (size_t i = 0; i < props.size(); i++) {
@@ -368,20 +371,21 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         }
       } else {
       */
-        for (auto prop : props) {
-          t->getDT()->addItem(prop.first, std::pair<size_t, size_t>(prop.second),-1);
-        }
+      for (auto prop : props) {
+        t->getDT()->addItem(prop.first, std::pair<size_t, size_t>(prop.second),
+                            -1);
+      }
       //}
 
       assert(!t->getDT()->getItems().empty());
-      
+
       if (!t->isVacuousOffset(Location::Ant)) {
         auto prettyAss = t->getDT()->prettyPrint(1);
         Assertion *ass = new Assertion();
         t->fillContingency(ass->_ct, 1);
         ass->_toString = prettyAss;
         //FIXME
-        std::vector<Proposition*> loadedProps;// = t->getLoadedPropositions();
+        std::vector<Proposition *> loadedProps; // = t->getLoadedPropositions();
         ass->_complexity = getNumVariables(loadedProps);
         ass->_pRepetitions = getRepetitions(loadedProps);
         ass->fillValuesOffset(t);
@@ -397,7 +401,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         vacLock.unlock();
       }
 #endif
-      
+
       t->getDT()->removeItems();
       //if (t->getDT()->isMultiDimensional()) {
       //  for (size_t i = 0; i < props.size(); i++) {
@@ -414,7 +418,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
 
     //deallocate memory for negated candidate variables
     for (size_t i = 0; i < _propsDT.size(); i++) {
-      dynamic_cast<PropositionNot *>(candidateVariables[i].first.second)->popItem();
+      dynamic_cast<PropositionNot *>(candidateVariables[i].first.second)
+          ->popItem();
       delete candidateVariables[i].first.second;
     }
     candidateVariables.clear();

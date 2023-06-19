@@ -5,6 +5,7 @@
 #include "Template.hh"
 #include "message.hh"
 #include "minerUtils.hh"
+#include <algorithm>
 #include <string>
 #include <unordered_set>
 #include <utility>
@@ -29,128 +30,97 @@ bool DTAndF::canInsertAtDepth(int depth) {
 bool DTAndF::isRandomConstructed() { return false; }
 size_t DTAndF::getNChoices() { return _choices->size(); }
 bool DTAndF::isTaken(size_t id, bool second, int depth) {
-  if (second) {
-    return _leaves.count(id) && _leaves.at(id).first.second != nullptr;
-  } else {
-    return _leaves.count(id) && _leaves.at(id).first.first != nullptr;
-  }
+  return _leaves.count(id) && _leaves.at(id).first.second != nullptr;
 }
-void DTAndF::removeLeaf(size_t id, int depth) {
-  _leaves.at(id).first.first = nullptr;
+void DTAndF::removeLeaf(size_t id, bool second, int depth) {
   _leaves.at(id).first.second = nullptr;
 }
-void DTAndF::addLeaf(Proposition *p, std::pair<size_t, size_t> intv, size_t id,
-                     bool second, int depth) {
-  if (second) {
-    _leaves[id].first.second = p;
-  } else {
-    _leaves[id].first.first = p;
-  }
-  _leaves[id].second = intv;
+void DTAndF::addLeaf(Proposition *p, size_t id, bool second, int depth) {
+  _leaves[id].first.second = p;
 }
 
-void DTAndF::removeItems() { _choices->removeItems(); }
+void DTAndF::removeItems() { _choices->removeItems(); _t->setConsequentInterval(std::pair(0,0)); }
+
 
 void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> interval,
                      int depth) {
-  if (_choices->size() != 0) {
-    //need to: add new prop as Inst, make olt Inst into Eventually, modify all intervals
-    //Pop and get the previous TemporalInst added, which is at the back of the _choices's items
-    Proposition * lastItem = _choices->popLastItem();
-    //std::cout<< "lastProp: " << prop2String(*lastItem) <<std::endl;
-    //lastItem is added as an Eventually
-    expression::TemporalExp *Fprop =
-        new Eventually(new TemporalInst(lastItem, ""), std::make_pair(0,0), _t->_trace);
-    _choices->addItem(Fprop);
-    //new proposition is added as a TemporalInst
-    expression::TemporalExp *Iprop = new TemporalInst(p, "");
-    _choices->addItem(Iprop);
 
-    //Update consequent interval
-    std::pair<size_t, size_t> consequent_intv = _t->getConsequentInterval();
-    consequent_intv.first += interval.first;
-    consequent_intv.second += interval.second;
-    _t->setConsequentInterval(consequent_intv);
-    //Update Fprops intervals
-    _choices->updateIntervals(interval, true);
-  } else {
-    expression::TemporalExp *Fprop = new TemporalInst(p, "");
-    _t->setConsequentInterval(interval);
-    _choices->addItem(Fprop);
+  auto items = _choices->getItems();
+
+  for (size_t i = 0; i < items.size(); i++) {
+    auto e = dynamic_cast<Eventually *>(items[i]);
+    auto currInterval = e->getInterval();
+    e->setInterval(std::make_pair(currInterval.first + interval.first,
+                                  currInterval.second + interval.second));
   }
+
+  //shift consequent interval
+  auto currInterval = _t->getConsequentInterval();
+  _t->setConsequentInterval(
+      std::make_pair(currInterval.first + interval.first,
+                     currInterval.second + interval.second));
+
+  _choices->addFront(new Eventually(new TemporalInst(p, ""),
+                                    std::make_pair(0, 0), _t->_trace));
+
 }
-
 void DTAndF::popItem(int depth) {
-  //delete _choices->getItems().back();
-  _choices->popItem();
-  //Get and pop last Eventually
-  if(_choices->size() != 0){
-    Eventually * lastF = dynamic_cast<Eventually *>(_choices->getItems().back());
-    _choices->popItem();
-    //get interval to subtract from others
-    std::pair<size_t,size_t> sub_intv = lastF->getInterval();
-    //get con interval
-    std::pair<size_t, size_t> consequent_intv = _t->getConsequentInterval();
-    consequent_intv.first -= sub_intv.first;
-    consequent_intv.second -= sub_intv.second;
-    _t->setConsequentInterval(consequent_intv);
-    //get new TemporalInst to add to items
-    TemporalInst * newInst = dynamic_cast<TemporalInst *>(lastF->getOperand());
-    _choices->addItem(newInst); 
-    //Update intervals of choices
-    _choices->updateIntervals(sub_intv,false);
-    //Free memory
-    //delete lastF;
+  messageErrorIf(_choices->getItems().empty(),
+                 "DTAndF::popItem: empty choices");
+
+  auto items = _choices->getItems();
+  auto shiftingInterval =
+      items.size() > 1 ? dynamic_cast<Eventually *>(items[1])->getInterval()
+                       : _t->getConsequentInterval();
+
+  if (items.size() > 1) {
+    //All intervals need to be shifted by the interval of the second item
+    //Reset the interval of the second item
+    dynamic_cast<Eventually *>(items[1])->setInterval(std::make_pair(0, 0));
+    //shift all other intervals (if the antecedent contains more than 2 items)
+    for (size_t i = 2; i < items.size(); i++) {
+      auto e = dynamic_cast<Eventually *>(items[i]);
+      auto currInterval = e->getInterval();
+      e->setInterval(
+          std::make_pair(currInterval.first - shiftingInterval.first,
+                         currInterval.second - shiftingInterval.second));
+    }
   }
+
+  //shift consequent interval
+  auto currInterval = _t->getConsequentInterval();
+  _t->setConsequentInterval(
+      std::make_pair(currInterval.first - shiftingInterval.first,
+                     currInterval.second - shiftingInterval.second));
+
+  delete _choices->popFront();
 }
 
 std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
 DTAndF::getItems() {
   std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> ret;
+  auto items = _choices->getItems();
 
-  //interval of last prop = interval of last Eventually in the formula
-  if (_choices->size() != 1){
-    ret.push_back(
-        std::make_pair(dynamic_cast<TemporalInst *>(_choices->getItems().back())->getProposition(),
-                       dynamic_cast<Eventually*>(_choices->getItems()[_choices->size()-2])->getInterval()));
-  }else{
-    ret.push_back(
-        std::make_pair(dynamic_cast<TemporalInst *>(_choices->getItems().back())->getProposition(),
-                       _t->getConsequentInterval()));
+  if (items.empty()) {
+    return ret;
   }
-  //starting from the last eventually
-  //FIXME: dangerous because size_t cannot contain negative numbers, so if i goes below 0 its value is undefined
-  for (size_t i = 0 ; i < _choices->size()-1 ; i++) {
-    auto ti = _choices->getItems()[i];
-    if(i == 0){
-    //last eventually before consequent
-      auto con_intv = _t->getConsequentInterval();
-      auto ti_intv = dynamic_cast<Eventually *>(ti)->getInterval();
-      //interval = (interval of con - interval of this Eventually)
-      con_intv.first -= ti_intv.first;
-      con_intv.second -= ti_intv.second; 
-      ret.push_back(
-          std::make_pair(dynamic_cast<TemporalInst *>(
-                             (dynamic_cast<Eventually *>(ti)->getOperand()))
-                             ->getProposition(),con_intv)
-                         );
-    }else{
-      auto nti = _choices->getItems()[i-1];
-      auto nti_intv = dynamic_cast<Eventually *>(nti)->getInterval();
-      auto ti_intv = dynamic_cast<Eventually *>(ti)->getInterval();
-      //Interval = interval of next Eventually - interval of this eventually
-      nti_intv.first -= ti_intv.first;
-      nti_intv.second -= ti_intv.second;
-      ret.push_back(
-          std::make_pair(dynamic_cast<TemporalInst *>(
-                             (dynamic_cast<Eventually *>(ti)->getOperand()))
-                             ->getProposition(),nti_intv)
-                         );
-    }
+
+  auto frontProp = dynamic_cast<TemporalInst *>(
+                       dynamic_cast<Eventually *>(items.front())->getOperand())
+                       ->getProposition();
+  messageErrorIf(frontProp == nullptr, "DTAndF::getItems: frontProp is null");
+
+  ret.emplace_back(frontProp, _t->getConsequentInterval());
+
+  for (size_t i = 1; i < items.size(); i++) {
+    auto e = dynamic_cast<Eventually *>(items[i]);
+    auto p = dynamic_cast<TemporalInst *>(e->getOperand())->getProposition();
+    ret.emplace_back(p, e->getInterval());
   }
 
   return ret;
 }
+
 
 std::vector<TemporalExp *> DTAndF::unpack() {
   messageError("Can't unpack in unidimensional operator'");
@@ -246,5 +216,21 @@ std::pair<std::string, std::string> DTAndF::prettyPrint(bool offset) {
   //      Hstring(")", Hstring::Stype::G, (expression::TemporalExp **)nullptr);
   //  return std::make_pair(reducedTemplate.toString(1),
   //                        reducedTemplate.toColoredString(1));
+  return std::make_pair("", "");
+}
+
+void DTAndF::loadSolution(
+    const std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+        &sol) {
+
+  auto items = sol;
+  _t->setConsequentInterval(sol.front().second);
+  _choices->addItem(new Eventually(new TemporalInst(items[0].first, ""),
+                                    std::make_pair(0, 0), _t->_trace));
+
+  for (size_t i = 1; i < items.size(); i++) {
+    _choices->addItem(new Eventually(new TemporalInst(items[i].first, ""),
+                                      items[i].second, _t->_trace));
+  }
 }
 } // namespace harm

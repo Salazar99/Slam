@@ -272,7 +272,7 @@ void plotPointsAndRectangles(
   // Send scatter plot commands for points
 
   // Send scatter plot commands for points
-  fprintf(gnuplotPipe, "set title '%s'\n",title.c_str());
+  fprintf(gnuplotPipe, "set title '%s'\n", title.c_str());
 
   // Set x and y labels
   fprintf(gnuplotPipe, "set xlabel 'Value'\n");
@@ -298,10 +298,11 @@ void plotPointsAndRectangles(
     ++colorIndex;
 
     fprintf(gnuplotPipe,
-            "set object %ld rect from %f,%f to %f,%f fc rgb '%s' fillstyle transparent solid 0.5\n",
+            "set object %ld rect from %f,%f to %f,%f fc rgb '%s' fillstyle "
+            "transparent solid 0.5\n",
             rectangleIndex, x1, y1, x2, y2, color);
-//    printf("set object %ld rect from %f,%f to %f,%f fc rgb '%s'\n",
-//           rectangleIndex, x1, y1, x2, y2, color);
+    //    printf("set object %ld rect from %f,%f to %f,%f fc rgb '%s'\n",
+    //           rectangleIndex, x1, y1, x2, y2, color);
 
     ++rectangleIndex;
   }
@@ -314,8 +315,11 @@ void plotPointsAndRectangles(
 }
 
 template <typename T>
-void printClusters(const std::vector<std::pair<T, T>> &elements,const std::vector<std::pair<std::pair<T, T>, std::pair<size_t, size_t>>> &ret, const std::string &expName){
-
+void printClusters(
+    const std::vector<std::pair<T, T>> &elements,
+    const std::vector<std::pair<std::pair<T, T>, std::pair<size_t, size_t>>>
+        &ret,
+    const std::string &expName) {
 
   //prepare data
   std::vector<std::tuple<double, double, double, double>> rectangles;
@@ -368,13 +372,14 @@ void printClusters(const std::vector<std::pair<T, T>> &elements,const std::vecto
                       (std::get<3>(e2) + std::get<2>(e2)));
             });
 
-
   plotPointsAndRectangles(elements, rectangles, expName);
   //  plotPointsAndRectangles(points, rects);
   char c;
   std::cin >> c;
-
-
+}
+template <typename T>
+std::string toHash(const std::pair<std::pair<T, T>, std::pair<size_t, size_t>> &range){
+    return std::to_string(range.first.first) + "_" + std::to_string(range.first.second) + "_" + std::to_string(range.second.first) + "_" + std::to_string(range.second.second);
 }
 template <typename T>
 std::vector<std::pair<std::pair<T, T>, std::pair<size_t, size_t>>>
@@ -386,32 +391,51 @@ kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
   std::vector<std::array<T, 2>> data;
   for (size_t i = 0; i < elements.size(); i++) {
     data.push_back(
-        std::array<T, 2>({(T)(elements[i].first), (T)(elements[i].second)}));
+        std::array<T, 2>({elements[i].first, elements[i].second}));
   }
 
   std::vector<std::pair<std::pair<T, T>, std::pair<size_t, size_t>>> ranges;
+  std::unordered_set<std::string> rangesHash;
   double prevSD = DBL_MAX;
   for (size_t i = 1; i <= max && i <= elements.size(); i++) {
     // generate the clusters
     std::tuple<std::vector<std::array<T, 2>>, std::vector<uint32_t>>
         cluster_data = dkm::kmeans_lloyd(data, i, 100);
 
-    // group the clusters by label
+    auto means = std::get<0>(cluster_data);
+    auto labels = std::get<1>(cluster_data);
+
+//    // print the clusters
+//    for (size_t j = 0; j < data.size(); j++) {
+//      std::cout << "("<<data[j][0]<<","<<data[j][0]<<") "<< " " << labels[j] << std::endl;
+//    }
+//
+//    std::cout << "means:" << "\n";
+//    for (size_t k = 0; k < means.size(); k++) {
+//    std::cout << k<<"----->"<< means[k][0]<<","<<means[k][1]<< "\n";
+//    }
+    
+
+    // group data by label
     std::unordered_map<size_t, std::vector<std::array<T, 2>>> labelToValues;
-    for (size_t j = 0; j < std::get<1>(cluster_data).size(); j++) {
-      auto label = std::get<1>(cluster_data)[j];
-      labelToValues[label].push_back(data[j]);
+    for (size_t j = 0; j < labels.size(); j++) {
+      labelToValues[labels[j]].push_back(data[j]);
     }
 
-    //#######################################
+    if (labelToValues.size()!=i) {
+        //kmeans failed for unknown reason
+        break;
+    }
+
+
     // compute the standard deviation
     double totSD = 0.f;
-    auto means = std::get<0>(cluster_data);
     for (size_t k = 0; k < i; k++) {
-      double mean = means[k][0];
+      double meanValues = means[k][0];
+      double meanDistances = means[k][1];
       double currSD = 0.f;
       for (auto &v : labelToValues[k]) {
-        currSD += std::pow(mean - (double)((v[0] + v[1]) / 2), 2);
+        currSD += std::pow(((double)(std::abs(meanValues - v[0]) + std::abs(meanDistances - v[1])))/2.f , 2);
       }
       currSD = std::sqrt(currSD / (double)elements.size());
       totSD += currSD;
@@ -422,39 +446,34 @@ kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
     if (std::abs((double)prevSD - (double)totSD) / (double)prevSD < SDmin_red) {
       break;
     }
+
     // translate the clusters into ranges [min, max]
     auto rr = toRanges2D<T>(labelToValues);
+
     // add the ranges to the final list
     if (keepOnlyBest) {
       ranges.clear();
     }
-    ranges.insert(ranges.end(), rr.begin(), rr.end());
+    for (auto &newRange : rr) {
+        std::string newRangeHash = toHash(newRange);
+        if (!rangesHash.count(newRangeHash)) {
+            ranges.push_back(newRange);
+            rangesHash.insert(newRangeHash);
+        }
+    }
+
     prevSD = totSD;
+
+    //print sd
+    //std::cout << totSD << "\n";
+    //std::cout << "-----------------------" << "\n";
   }
 
-  // remove redundant ranges
-  std::sort(ranges.begin(), ranges.end());
-  auto last = std::unique(ranges.begin(), ranges.end());
-  ranges.erase(last, ranges.end());
-  //std::vector<std::pair<std::pair<T, T>,std::pair<size_t,size_t>>> uniqueRanges;
-  //for (auto &lr : ranges) {
-  //  uniqueRanges.insert(lr);
-  //}
-
-  std::vector<std::pair<std::pair<T, T>, std::pair<size_t, size_t>>> ret;
-  //translate the ranges into the output format
-  for (auto &lr : ranges) {
-    ret.push_back(lr);
-  }
 
   if (clc::debugCls) {
-    printClusters(elements,ret, expName);
+    printClusters(elements, ranges, expName);
   }
 
-  //  std::sort(ret.begin(), ret.end(),
-  //            [](const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &e1, const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &e2) {
-  //              return e1.first.second <= e2.first.first;
-  //            });
-  return ret;
+  return ranges;
 }
 

@@ -11,7 +11,7 @@
 #include <unordered_set>
 #include <vector>
 
-#define dumpVacAss 0
+#define dumpVacAss 1
 #define enPB 1
 using namespace std;
 

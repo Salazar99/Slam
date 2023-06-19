@@ -1,1 +1,0 @@
-./harm --csv ../tests/WaterTanksCase/WT_Traces_80s.csv --conf ../tests/WaterTanksCase/WT_config.xml --max-threads 1

@@ -62,14 +62,14 @@ public:
    * \param second if true the proposition is negated
    * \param depth depth of the leaf
    */
-  virtual void addLeaf(Proposition *p, std::pair<size_t,size_t> intv, size_t id, bool second, int depth) = 0;
+  virtual void addLeaf(Proposition *p, size_t id, bool second, int depth) = 0;
   /** \brief Remove a leaf of the decision tree
    * \param id Id of the leaf
    * \param intv interval of validity for the proposition
    * \param second select part to add 
    * \param depth depth of the leaf
    */
-  virtual void removeLeaf(size_t id, int depth) = 0;
+  virtual void removeLeaf(size_t id, bool second, int depth) = 0;
   /** \brief Returns true if it is possible to insert a new operand at depth 'depth'
    */
   virtual bool canInsertAtDepth(int depth) = 0;
@@ -93,6 +93,7 @@ public:
   virtual size_t getCurrentDepth() = 0;
   virtual const DTLimits &getLimits() = 0;
   virtual std::pair<std::string, std::string> prettyPrint(bool offset) = 0;
+  virtual void loadSolution(const std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> &sol)=0;
 
 protected:
   ///dt configuration

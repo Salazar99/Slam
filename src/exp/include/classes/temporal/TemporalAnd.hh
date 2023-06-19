@@ -19,16 +19,17 @@ public:
 
   void addItem(TemporalExp *prop);
 
+  void addFront(TemporalExp *prop);
+
   void popItem();
+  TemporalExp *popFront();
 
-  Proposition * popLastItem();
+  Proposition *popLastItem();
 
-  void updateIntervals(std::pair<size_t,size_t> new_interval, bool add);
 
   void removeItems();
 
   void acceptVisitor(ExpVisitor &vis) override;
-
 
 private:
   std::vector<TemporalExp *> _items;

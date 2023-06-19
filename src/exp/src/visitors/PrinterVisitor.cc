@@ -252,7 +252,7 @@ void PrinterVisitor::visit(Implication &o) {
 }
 void PrinterVisitor::visit(Eventually &o) {
   _ss << "F[" << o.getInterval().first << ","
-      << o.getInterval().first << "](";
+      << o.getInterval().second << "](";
   o.getItems()[0]->acceptVisitor(*this);
   _ss << ")";
 }
