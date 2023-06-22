@@ -10,6 +10,6 @@ Here is a brief explanation on the system's signals:
 -rain:      variable representing the rain/sunny behaviour(-1<=r<=0 for sunny, 0<r<=1 for rainy) ;
 -clk:       clock that define the periods for max rain (r=1) or max sun (r=-1)
 
-1. The wather changes based on fixed time intervals 
-2. If the amount of water in main tank approaches max capacity, the valve to secondary tank would open
+1. If the amount of water in main tank approaches max capacity, the valve to secondary tank would open
+2. The wather changes based on fixed time intervals 
 3. 

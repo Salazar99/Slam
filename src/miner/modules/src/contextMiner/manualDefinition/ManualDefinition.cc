@@ -3,6 +3,7 @@
 #include "ProgressBar.hpp"
 #include "Template.hh"
 #include "Trace.hh"
+#include "expUtils/expUtils.hh"
 #include "classes/atom/Atom.hh"
 #include "dtLimitsParser.hh"
 #include "metricParser.hh"
@@ -222,15 +223,15 @@ void ManualDefinition::mineContexts(Trace *trace,
         for (auto &loc : locs) {
           if (loc != Location::DecTree) {
             //generate props though clustering using the whole trace
-            std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> ivs;
+            std::vector<size_t> ivs;
             for (size_t i = 0; i < trace->getLength(); i++) {
-              ivs.push_back(std::make_pair(nn->evaluate(i),i));
+              ivs.push_back(i);
             }
 
-            //FIXME: ret type of genPropsThroughClustering is not correct
-            auto props = genPropsThroughClustering(ivs, nn, trace->getLength());
+            auto props = genPropsThroughClustering1D(ivs, nn, trace->getLength());
+            messageWarningIf(props.empty(), "No props generated for numeric '" + allNum2String(*nn)+"'");
             for (auto p : props) {
-              context->_props.emplace_back(p.first, loc);
+              context->_props.emplace_back(p, loc);
             }
           } else {
             context->_numerics.push_back(nn);

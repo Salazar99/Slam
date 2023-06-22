@@ -1,5 +1,6 @@
 #include "visitors/PrinterVisitor.hh"
 #include <bitset>
+#include <iomanip>
 
 //------------------------------------------------------------------------------
 #define VARIABLE(LEAF)                                                         \
@@ -15,7 +16,7 @@
   }
 
 #define REAL_CONSTANT(LEAF)                                                    \
-  void PrinterVisitor::visit(LEAF &o) { _ss << o.evaluate(0); }
+  void PrinterVisitor::visit(LEAF &o) { _ss << std::setprecision(6)<<std::fixed<<o.evaluate(0); }
 
 #define BOOLEAN_CONSTANT(LEAF)                                                 \
   void PrinterVisitor::visit(LEAF &o) {                                        \

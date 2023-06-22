@@ -97,6 +97,7 @@ std::vector<std::pair<T, T>> kmeansElbow(std::vector<T> elements, size_t max,
     }
     ranges.insert(ranges.end(), rr.begin(), rr.end());
     prevSD = totSD;
+
   }
 
   // remove redundant ranges
@@ -118,7 +119,6 @@ std::vector<std::pair<T, T>> kmeansElbow(std::vector<T> elements, size_t max,
 
   return ret;
 }
-
 // Function to plot scatter points and rectangles using Gnuplot
 template <typename T>
 void plotPointsAndRectangles(
@@ -473,6 +473,9 @@ kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
   if (clc::debugCls) {
     printClusters(elements, ranges, expName);
   }
+
+  //sort to simplify debug
+  sort(ranges.begin(),ranges.end(),[](const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &a,const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &b){return a.second.second<b.second.second ;} );
 
   return ranges;
 }

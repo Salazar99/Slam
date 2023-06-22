@@ -1,4 +1,4 @@
-float z, float d, float w, float amount, float clk, float rain, float a
+double z, double d, double w, double amount, double rain, double clk, double a
 1.800,0.4000,0.5000,0.0,-0.7000,0.0,0.0
 1.775,0.4179,0.4926,0.0,-0.7074,0.0,0.0
 1.750,0.4355,0.4853,0.0,-0.7147,0.0,0.0
