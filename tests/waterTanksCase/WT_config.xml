@@ -9,18 +9,22 @@
 		<numeric clsEffort = "0.01" exp="v1" loc="dt"/>
         <template check="1" dtLimits="2A,1E" exp="G(F[8,15](v2 == 0) && (v1 == 0) -> F[8,19](v3))" />
         <template check="1" dtLimits="2A,1E" exp="G((v2 >=50) && (v2 <=100) -> F[3,5](v3))" />
-		<sort name="frequency" exp="atct/traceLength"/>
 
         <template dtLimits="2A,0.01E" exp="G( (..F..) -> F[0,0](a>=0 && F[1,1](a==0)) )" />
 
-
 		<sort name="causality" exp="1-afct/traceLength"/>
+
 	</context>
         -->
 
-	<context name="MainTankFull_OpenSecondary"> 
+	<context name="TankEmptying_OpenValve"> 
 
-		<numeric op="ge" clsEffort = "0.001" exp="z" loc="dt"/>
+		<numeric op="le,ge" clsEffort = "0.1" exp="z" loc="dt"/>
+		<numeric op="le,ge" clsEffort = "0.1" exp="d" loc="dt"/>
+		<numeric op="le,ge" clsEffort = "0.1" exp="rain" loc="dt"/>
+        <prop exp="a==0" loc="c"/>
+        <prop exp="a==1" loc="c"/>
+        <prop exp="a>=0.1 && a<=0.9" loc="c"/>
         <!--
 		<numeric op="ge,r,le" clsEffort = "0.1" exp="d" loc="c"/>
 		<numeric clsEffort = "0.001" exp="d" loc="c"/>
@@ -28,11 +32,11 @@
         <template check="1" exp="G(z>=1.9 -> F[1,20](d>=0.1))" />
         <template check="1" exp="G(z >= 1.9 -> F[0,100](a<=0.01))" />
         -->
-        <template dtLimits="2A,1E" exp="G( (..F..) -> F[0,0](a<=0.01))" />
+        <template dtLimits="3A,0.01E" exp="G( (..F..) -> F[0,0](P0))" />
 
 
 
 
-		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
 	</context>
 </harm>

@@ -292,9 +292,9 @@ inline void AntecedentGenerator::findCandidatesNumeric(
 
     bool taken = 0;
 
-    std::cout << "Checking: " << prop2String(*prop.first)
-              << "Interval: " << prop.second.first << " , "
-              << prop.second.second << std::endl;
+    //std::cout << "Checking: " << prop2String(*prop.first)
+    //          << "Interval: " << prop.second.first << " , "
+    //          << prop.second.second << std::endl;
 
     // add the new proposition of a unused variable in the current
     // antecedent
