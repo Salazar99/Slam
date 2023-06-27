@@ -386,7 +386,10 @@ std::vector<std::pair<std::pair<T, T>, std::pair<size_t, size_t>>>
 kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
                double SDmin_red, bool keepOnlyBest,
                const std::string &expName) {
+    max=5;
+    //keepOnlyBest=1;
 
+    //std::cout <<"Number of elements: "<< elements.size() << "\n";
   // store data in the correct format
   std::vector<std::array<T, 2>> data;
   for (size_t i = 0; i < elements.size(); i++) {
@@ -405,15 +408,15 @@ kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
     auto means = std::get<0>(cluster_data);
     auto labels = std::get<1>(cluster_data);
 
-//    // print the clusters
-//    for (size_t j = 0; j < data.size(); j++) {
-//      std::cout << "("<<data[j][0]<<","<<data[j][0]<<") "<< " " << labels[j] << std::endl;
-//    }
-//
-//    std::cout << "means:" << "\n";
-//    for (size_t k = 0; k < means.size(); k++) {
-//    std::cout << k<<"----->"<< means[k][0]<<","<<means[k][1]<< "\n";
-//    }
+    // print the clusters
+    //for (size_t j = 0; j < data.size(); j++) {
+    //  std::cout << "("<<data[j][0]<<","<<data[j][0]<<") "<< " " << labels[j] << std::endl;
+    //}
+
+    //std::cout << "means:" << "\n";
+    //for (size_t k = 0; k < means.size(); k++) {
+    //std::cout << k<<"----->"<< means[k][0]<<","<<means[k][1]<< "\n";
+    //}
     
 
     // group data by label
@@ -450,6 +453,10 @@ kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
     // translate the clusters into ranges [min, max]
     auto rr = toRanges2D<T>(labelToValues);
 
+  //if (clc::debugCls) {
+  //  printClusters(elements, rr, expName);
+  //}
+
     // add the ranges to the final list
     if (keepOnlyBest) {
       ranges.clear();
@@ -458,7 +465,9 @@ kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
         std::string newRangeHash = toHash(newRange);
         if (!rangesHash.count(newRangeHash)) {
             ranges.push_back(newRange);
-            rangesHash.insert(newRangeHash);
+            if (!keepOnlyBest) {
+                rangesHash.insert(newRangeHash);
+            }
         }
     }
 

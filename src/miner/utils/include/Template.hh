@@ -195,8 +195,7 @@ public:
   size_t gatherInterestingValue(size_t time, int depth, int width);
 
   std::vector<std::pair<expression::CachedAllNumeric::EvalRet, size_t>>
-  gatherInterestingValue(size_t time, CachedAllNumeric *cn, int depth,
-                         int width);
+  gatherInterestingValue(CachedAllNumeric *cn, int depth, int width);
 
   void subPropInAssertion(Proposition *original, Proposition *newProp);
 

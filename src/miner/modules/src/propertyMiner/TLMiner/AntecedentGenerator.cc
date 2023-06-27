@@ -234,7 +234,7 @@ AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
                                              int depth) {
   //FIXME: antecedentGenerator::gatherInterestingValue does absolutely nothing at the moment
   //everything is done at template side
-  auto ret = t->gatherInterestingValue(0, cn, depth, -1);
+  auto ret = t->gatherInterestingValue(cn, depth, -1);
   //  std::cout << "Numeric: " << allNum2String(*cn) << std::endl;
 
   //  for(auto &pair : ret){

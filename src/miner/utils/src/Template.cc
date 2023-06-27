@@ -506,7 +506,7 @@ bool Template::isFullyInstantiated() {
           getNumPlaceholders(harm::Location::AntCon)) == 0 &&
          _dtOp.second == nullptr;
 }
-std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInterestingValue(size_t time, CachedAllNumeric *cn, int depth, int width) {
+std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInterestingValue(CachedAllNumeric *cn, int depth, int width) {
 
   DTOperator *template_dt = _dtOp.second;
 
@@ -516,7 +516,7 @@ std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInteres
 
   //Automaton::Node *cn = _ant->_root;
   harm::Implication * impl = _impl;
-  size_t currTime = time;
+  size_t currTime = 0;
   template_dt->addItem(tc,{0,0},depth);
   while (currTime < _max_length) {
     if(impl->evaluate_ant(currTime) == Trinary::T && impl->evaluate_con(currTime) == Trinary::T)
@@ -525,14 +525,16 @@ std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInteres
     currTime++;
     
   }
+  const int min_distance = 0;
+  const int max_distance = 100;
   template_dt->popItem(depth);
   //now we have a vector of interesting values for the already instantiated part of the template
   //iterate on cn trace values, to get {value,time} pairs
   std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> ret;
-  for(currTime = time; currTime < _max_length; currTime++){
+  for(currTime = 0; currTime < _max_length; currTime++){
       CachedAllNumeric::EvalRet value = cn->evaluate(currTime);
       for(size_t iv : iv_suffix){
-        if(iv >= currTime){
+        if(iv >= currTime && ((iv - currTime) <= max_distance) && ((iv - currTime) >= min_distance)){
           ret.push_back(std::make_pair(value,(size_t)iv-currTime));
         }
       }
