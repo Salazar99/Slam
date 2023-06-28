@@ -15,8 +15,12 @@ atom
 | effort
 | strategy
 | negated
+| maxDistance
+| minDistance
 ;
 
+maxDistance: NUMERIC 'maxd';
+minDistance: NUMERIC 'mind';
 dep: NUMERIC 'D';
 width: NUMERIC 'W';
 all: NUMERIC 'A';

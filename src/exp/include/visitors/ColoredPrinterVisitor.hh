@@ -74,8 +74,15 @@ public:
   void visit(Placeholder &o);
   void visit(TemporalInst &o);
   void visit(TemporalAnd &o);
+  void visit(TemporalOr &o);
+  void visit(TemporalNot &o);
   void visit(Implication &o);
   void visit(Eventually &o);
+
+  //Misc
+  void visit(LogicDerivative &o) override;
+  void visit(NumericDerivative &o) override;
+  void visit(PropDerivative &o) override;
 
 protected:
   enum ope : int {

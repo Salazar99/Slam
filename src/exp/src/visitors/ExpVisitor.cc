@@ -81,8 +81,13 @@ EXPRESSION_NODE_2(LogicToNumeric)
   }
 
 TEMPORAL_NODE(TemporalAnd)
+TEMPORAL_NODE(TemporalOr)
 TEMPORAL_NODE(Implication)
 TEMPORAL_NODE(Eventually)
+
+void ExpVisitor::visit(TemporalNot &o) {
+  o.getItem()->acceptVisitor(*this);
+}
 
 void ExpVisitor::visit(TemporalInst &o) {
   o.getProposition()->acceptVisitor(*this);
@@ -92,4 +97,8 @@ void ExpVisitor::visit(Placeholder &o) {
     o.getProposition()->acceptVisitor(*this);
   }
 }
+
+EXPRESSION_NODE_2(NumericDerivative);
+EXPRESSION_NODE_2(LogicDerivative);
+EXPRESSION_NODE_2(PropDerivative);
 } // namespace expression

@@ -87,37 +87,42 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
     return;
   }
 
-  if (ctx->tformula().size() == 2 && ctx->AND() != nullptr) {
-    TemporalAnd *p = new TemporalAnd();
-    p->addItem(_tfStack.top());
-    _tfStack.pop();
-    p->addItem(_tfStack.top());
-    _tfStack.pop();
-    _tfStack.push(p);
+  if (ctx->tformula().size() == 2) {
+    if (ctx->AND() != nullptr) {
+      TemporalAnd *p = new TemporalAnd();
+      p->addItem(_tfStack.top());
+      _tfStack.pop();
+      p->addItem(_tfStack.top());
+      _tfStack.pop();
+      _tfStack.push(p);
+
+    } else if (ctx->OR() != nullptr) {
+      TemporalOr *p = new TemporalOr();
+      p->addItem(_tfStack.top());
+      _tfStack.pop();
+      p->addItem(_tfStack.top());
+      _tfStack.pop();
+      _tfStack.push(p);
+    }
 
     return;
   }
 
-  if (ctx->tformula().size() == 2 && ctx->OR() != nullptr) {
-    return;
-  }
+  if (ctx->tformula().size() == 1) {
+    if (ctx->STL_EVENTUALLY() != nullptr) {
+      std::pair<size_t, size_t> intv = *(_intervals[_intervalNames.top()]);
+      _intervalNames.pop();
+      Eventually *p = new Eventually(_tfStack.top(), intv, _trace);
+      _tfStack.pop();
+      _tfStack.push(p);
+    } else if (ctx->tformula().size() == 1 && ctx->NOT() != nullptr) {
+      TemporalNot *p = new TemporalNot(_tfStack.top());
+      _tfStack.pop();
+      _tfStack.push(p);
+    } else if (ctx->LPAREN() != nullptr && ctx->RPAREN() != nullptr) {
+      //nothing to do
+    }
 
-  //If we are exiting a tformula rule that gives STL_eventually operator
-  if (ctx->tformula().size() == 1 && ctx->STL_EVENTUALLY() != nullptr) {
-    std::pair<size_t, size_t> intv = *(_intervals[_intervalNames.top()]);
-    _intervalNames.pop();
-    Eventually *p = new Eventually(_tfStack.top(), intv, _trace);
-    _tfStack.pop();
-    _tfStack.push(p);
-    return;
-  }
-
-  if (ctx->tformula().size() == 1 && ctx->LPAREN() != nullptr &&
-      ctx->RPAREN() != nullptr) {
-    return;
-  }
-
-  if (ctx->tformula().size() == 1 && ctx->NOT() != nullptr) {
     return;
   }
 }

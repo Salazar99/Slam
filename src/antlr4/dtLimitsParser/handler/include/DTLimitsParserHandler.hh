@@ -49,6 +49,9 @@ private:
   virtual void enterStrategy(limitsParser::StrategyContext *ctx) override;
 
   virtual void enterEveryRule(antlr4::ParserRuleContext *ctx) override;
+
+  virtual void enterMaxDistance(limitsParser::MaxDistanceContext *ctx) override;
+  virtual void enterMinDistance(limitsParser::MinDistanceContext *ctx) override;
   virtual void visitTerminal(antlr4::tree::TerminalNode *node) override;
 
   virtual void visitErrorNode(antlr4::tree::ErrorNode *node) override;

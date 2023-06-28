@@ -93,8 +93,13 @@ bool checkKind(TemporalExp *f1, TemporalExp *f2) {
       dynamic_cast<Placeholder *>(f2) != nullptr) {
     return 1;
   }
-  if (dynamic_cast<TemporalAnd *>(f1) != nullptr &&
-      dynamic_cast<TemporalAnd *>(f2) != nullptr) {
+  if (dynamic_cast<TemporalAnd *>(f1) != nullptr && dynamic_cast<TemporalAnd *>(f2) != nullptr) {
+    return 1;
+  }
+  if (dynamic_cast<TemporalOr *>(f1) != nullptr && dynamic_cast<TemporalOr *>(f2) != nullptr) {
+    return 1;
+  }
+  if (dynamic_cast<TemporalNot *>(f1) != nullptr && dynamic_cast<TemporalNot *>(f2) != nullptr) {
     return 1;
   }
 
@@ -121,9 +126,8 @@ PermGenerator::generatePermUnit(TemporalExp *templ,
   //  std::cout << __func__ << "\n";
   ret->_op = PermOperator::Mul;
 
-  if (dynamic_cast<TemporalAnd *>(templ) !=
-      nullptr /*|| templ.is(spot::op::Or)*/) {
-    //      std::cout << "And:"<<templ->size() << "\n";
+  if (dynamic_cast<TemporalAnd *>(templ) != nullptr || dynamic_cast<TemporalOr *>(templ) != nullptr) {
+    //      std::cout << "AndOr:"<<templ->size() << "\n";
     // retrieve equivalent operands
     std::map<size_t, std::vector<size_t>> equals;
     std::unordered_set<size_t> used;

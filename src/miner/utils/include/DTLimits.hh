@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <limits.h>
 
 namespace harm {
 struct DTLimits {
@@ -15,6 +16,8 @@ struct DTLimits {
 
   DTLimits() {}
 
+  size_t _minDistance=0;
+  size_t _maxDistance=INT_MAX;
   size_t _maxDepth=3;
   size_t _maxWidth=3;
   size_t _maxAll=3;

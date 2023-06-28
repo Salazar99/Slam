@@ -124,6 +124,8 @@ void ManualDefinition::mineContexts(Trace *trace,
       //          << "\n";
       // std::cout << "saveOffset:" << dtLimits._saveOffset << "\n";
       // std::cout << "useNegatedProps:" << dtLimits._useNegatedProps << "\n";
+       //std::cout << "minDistance:" << dtLimits._minDistance << "\n";
+       //std::cout << "maxDistance:" << dtLimits._maxDistance << "\n";
       context->_templates.push_back(
           hparser::parseTemplate(exp, trace, language, dtLimits));
       messageErrorIf(check != "0" && check != "1",
@@ -219,6 +221,14 @@ void ManualDefinition::mineContexts(Trace *trace,
         }
 
         delete np;
+
+        //debug
+        //for (size_t i = 0; i < nn->getMaxTime(); i++) {
+        //    std::cout << nn->evaluate(i)._d << "";
+        //}
+        //std::cout <<  "\n";
+        //
+
 
         for (auto &loc : locs) {
           if (loc != Location::DecTree) {

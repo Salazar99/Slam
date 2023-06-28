@@ -217,13 +217,30 @@ void ColoredPrinterVisitor::visit(TemporalInst &o) {
   }
 }
 
+void ColoredPrinterVisitor::visit(TemporalNot &o) {
+  _ss << BOOL(operators[ope::PropositionNot]);
+  o.getItem()->acceptVisitor(*this);
+}
+
 void ColoredPrinterVisitor::visit(TemporalAnd &o) {
   if (o.getItems().empty()) {
-    _ss << BOOL("true");
+    _ss << TEMP("true");
   } else {
     o.getItems()[0]->acceptVisitor(*this);
     for (size_t i = 1; i < o.getItems().size(); i++) {
-      _ss << BOOL(" && ");
+      _ss << TEMP(" && ");
+      auto item = o.getItems()[i];
+      item->acceptVisitor(*this);
+    }
+  }
+}
+void ColoredPrinterVisitor::visit(TemporalOr &o) {
+  if (o.getItems().empty()) {
+    _ss << TEMP("true");
+  } else {
+    o.getItems()[0]->acceptVisitor(*this);
+    for (size_t i = 1; i < o.getItems().size(); i++) {
+      _ss << TEMP(" || ");
       auto item = o.getItems()[i];
       item->acceptVisitor(*this);
     }
@@ -240,5 +257,17 @@ void ColoredPrinterVisitor::visit(Eventually &o) {
   o.getItems()[0]->acceptVisitor(*this);
   _ss << TEMP(")");
 }
+
+#define DERIVATIVE(TYPE)                                                       \
+  void ColoredPrinterVisitor::visit(TYPE &o) {                                 \
+    _ss << TIMPL("@(");                                                        \
+    o.getItem().acceptVisitor(*this);                                          \
+    _ss << TIMPL(",") << o.getShift();                                         \
+    _ss << TIMPL(")");                                                         \
+  }
+
+DERIVATIVE(NumericDerivative);
+DERIVATIVE(LogicDerivative);
+DERIVATIVE(PropDerivative);
 
 } // namespace expression

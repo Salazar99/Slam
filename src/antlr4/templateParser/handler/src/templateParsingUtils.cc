@@ -129,20 +129,20 @@ void addTypeToTemplate(std::string &formula,
       if (std::get<0>(varDec) == "true" || std::get<0>(varDec) == "false") {
         nameType = "@" + std::get<0>(varDec);
       } else {
-        nameType = " <" + std::get<0>(varDec) + ",bool>";
+        nameType = " {" + std::get<0>(varDec) + ",bool}";
       }
       break;
     case VarType::ULogic:
-      nameType = " <" + std::get<0>(varDec) + ",logic(u," +
-                 std::to_string(std::get<2>(varDec)) + ")>";
+      nameType = " {" + std::get<0>(varDec) + ",logic_u" +
+                 std::to_string(std::get<2>(varDec)) + "}";
       break;
     case VarType::SLogic:
-      nameType = " <" + std::get<0>(varDec) + ",logic(s," +
-                 std::to_string(std::get<2>(varDec)) + ")>";
+      nameType = " {" + std::get<0>(varDec) + ",logic_s" +
+                 std::to_string(std::get<2>(varDec)) + "}";
       break;
     case VarType::Numeric:
-      nameType = " <" + std::get<0>(varDec) + ",numeric(" +
-                 std::to_string(std::get<2>(varDec)) + ")>";
+      nameType = " {" + std::get<0>(varDec) + ",numeric" +
+                 std::to_string(std::get<2>(varDec)) + "}";
       break;
     default:
       messageError("Variable is of \'Uknown type\'");

@@ -1,44 +1,25 @@
 <harm>
 
         <!--
+
+        -->
 	<context name="TankEmptying_OpenValve"> 
 
 		<numeric op="le" clsEffort = "0.01" exp="z" loc="dt"/>
 		<numeric op="ge" clsEffort = "0.01" exp="d" loc="dt"/>
 
-        <template exp="G( ..F.. -> F[0,0](a==1))" />
+        <template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](a==1))" />
 
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
-        -->
 
+    <!--
+	<context name="ValveClose_SecondaryTankEmptying"> 
 
-	<context name="TankEmptying_OpenValve"> 
+		<numeric op="e,r,ge,le" clsEffort = "0.001" exp="a" loc="dt"/>
 
-		<numeric op="e" clsEffort = "0.00001" exp="a" loc="dt"/>
-		<numeric op="r" clsEffort = "0.05" exp="rain" loc="dt"/>
-        <!--
-		<numeric op="ge,le" clsEffort = "0.05" exp="d" loc="dt"/>
-		<numeric op="le,ge" clsEffort = "0.1" exp="d" loc="dt"/>
-		<numeric op="ge,r,le" clsEffort = "0.1" exp="d" loc="c"/>
-        <template dtLimits="2A,1E" exp="G( (..F..) -> F[0,0](d<=0.1 && F[1,50](d>=0.1)))" />
-        <template check="1" exp="G(z>=1.9 -> F[1,20](d>=0.1))" />
-        <template check="1" exp="G(z >= 1.9 -> F[0,100](a<=0.01))" />
-        <template dtLimits="3A,0.1E" exp="G( (..F..) -> F[0,0](F[0,0](a<=0.1) && F[0,5](a>0.1)))" />
-        <template dtLimits="3A,0.1E" exp="G( (..F..) -> F[0,0](F[0,0](a==0)))" />
-        <template dtLimits="3A,0.1E" exp="G( (..F..) -> F[0,0](a>=0.98))" />
-        <template dtLimits="3A,0.1E" exp="G( (..F..) -> F[0,0](a<=0.02))" />
-        <template check="1" exp="G(z >= 1.3 && F[0,10](z<1.3) -> F[13,18](a>=0.5))" />
-        <template check="1" exp="G(z<=1.1 -> F[13,18](a>=0.5))" />
-
-        <template check="1" exp="G(z <= 1.3 && d>=0.5 -> F[0,70](a==1))" />
-        <template dtLimits="2A,0.5E" exp="G( ..F.. -> F[0,0]((z>=0.6) && F[0,50]z<0.5))" />
-        <template dtLimits="2A,0.5E" exp="G( ..F.. -> F[0,0]((d>=0.6) && F[0,50]d<0.5))" />
-        <template dtLimits="2A,0.5E" exp="G( ..F.. -> F[0,0](F[0,10]d<0.5))" />
-        <template check="1" exp="G( a>=0.1 && d>=0.6 -> F[0,0](F[0,10]d<0.5))" />
-        -->
-        <template dtLimits="3A,0.5E" exp="G( ..F.. -> F[0,0](F[0,10]d>0.5))" />
+        <template dtLimits="1A,0.1E,100maxd" exp="G( (..F..) -> F[0,0]( @(d,1) > 0 ))" />
 
 
 
@@ -46,4 +27,51 @@
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
+        -->
+
+    <!--
+	<context name="ValveOpen_SecondaryTankFilling"> 
+
+		<numeric op="ge" clsEffort = "0.001" exp="a" loc="dt"/>
+
+
+        <template dtLimits="1A,0.1E,100maxd" exp="G( (..F..) -> F[0,0](@(d,1) < 0 || d<=0.1 ))" />
+
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+    --> 
+
+    <!--
+	<context name="MainTankEmptying"> 
+
+		<numeric op="r,e,ge,le" clsEffort = "0.001" exp="a" loc="dt"/>
+		<numeric op="r,e,ge,le" clsEffort = "0.001" exp="rain" loc="dt"/>
+		<numeric op="r,e,ge,le" clsEffort = "0.001" exp="d" loc="dt"/>
+
+
+        <template dtLimits="3A,0.1E,20maxd" exp="G( (..F..) -> F[0,0](@(z,1) < 0))" />
+
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+    --> 
+
+    <!--
+	<context name="MainTankFilling"> 
+
+		<numeric op="ge,le" clsEffort = "0.001" exp="a" loc="dt"/>
+		<numeric op="ge,le" clsEffort = "0.001" exp="rain" loc="dt"/>
+		<numeric op="ge,le" clsEffort = "0.001" exp="d" loc="dt"/>
+
+
+        <template dtLimits="3A,0.1E,100maxd" exp="G( (..F..) -> F[0,0](@(z,1) > 0))" />
+
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+    --> 
 </harm>

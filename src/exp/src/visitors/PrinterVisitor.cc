@@ -16,7 +16,9 @@
   }
 
 #define REAL_CONSTANT(LEAF)                                                    \
-  void PrinterVisitor::visit(LEAF &o) { _ss << std::setprecision(6)<<std::fixed<<o.evaluate(0); }
+  void PrinterVisitor::visit(LEAF &o) {                                        \
+    _ss << std::setprecision(6) << std::fixed << o.evaluate(0);                \
+  }
 
 #define BOOLEAN_CONSTANT(LEAF)                                                 \
   void PrinterVisitor::visit(LEAF &o) {                                        \
@@ -86,7 +88,8 @@
 
 namespace expression {
 
-PrinterVisitor::PrinterVisitor(bool subPlaceholders) : ExpVisitor(), _ss(), _subPlaceholders(subPlaceholders) {
+PrinterVisitor::PrinterVisitor(bool subPlaceholders)
+    : ExpVisitor(), _ss(), _subPlaceholders(subPlaceholders) {
   // proposition
   operators[ope::PropositionNot] = std::string("!");
   operators[ope::PropositionAnd] = std::string("&&");
@@ -124,7 +127,6 @@ PrinterVisitor::PrinterVisitor(bool subPlaceholders) : ExpVisitor(), _ss(), _sub
   operators[ope::LogicLessEq] = std::string("<=");
   operators[ope::LogicLShift] = std::string("<<");
   operators[ope::LogicRShift] = std::string(">>");
-
 }
 
 void PrinterVisitor::clear() {
@@ -252,11 +254,39 @@ void PrinterVisitor::visit(Implication &o) {
   o.getItems()[1]->acceptVisitor(*this);
 }
 void PrinterVisitor::visit(Eventually &o) {
-  _ss << "F[" << o.getInterval().first << ","
-      << o.getInterval().second << "](";
+  _ss << "F[" << o.getInterval().first << "," << o.getInterval().second << "](";
   o.getItems()[0]->acceptVisitor(*this);
   _ss << ")";
 }
 
+void PrinterVisitor::visit(TemporalOr &o) {
+  if (o.getItems().empty()) {
+    _ss << BOOL("true");
+  } else {
+    o.getItems()[0]->acceptVisitor(*this);
+    for (size_t i = 1; i < o.getItems().size(); i++) {
+      _ss << " || ";
+      auto item = o.getItems()[i];
+      item->acceptVisitor(*this);
+    }
+  }
+}
+
+void PrinterVisitor::visit(TemporalNot &o) {
+    _ss << BOOL("!");
+    o.getItem()->acceptVisitor(*this);
+}
+
+#define DERIVATIVE(TYPE)                                   \
+void PrinterVisitor::visit(TYPE &o) {\
+  _ss << "@(";\
+  o.getItem().acceptVisitor(*this);\
+  _ss << "," << o.getShift();\
+  _ss << ")";\
+}
+
+DERIVATIVE(NumericDerivative);
+DERIVATIVE(LogicDerivative);
+DERIVATIVE(PropDerivative);
 
 } // namespace expression

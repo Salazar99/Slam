@@ -74,9 +74,15 @@ public:
   void visit(Placeholder &o) override;
   void visit(TemporalInst &o) override;
   void visit(TemporalAnd &o) override;
+  void visit(TemporalOr &o) override;
+  void visit(TemporalNot &o) override;
   void visit(Implication &o) override;
   void visit(Eventually &o) override;
 
+  //Misc
+  void visit(LogicDerivative &o) override;
+  void visit(NumericDerivative &o) override;
+  void visit(PropDerivative &o) override;
 protected:
   enum ope : int {
     PropositionNot = 0,
