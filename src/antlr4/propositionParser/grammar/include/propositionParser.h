@@ -153,9 +153,11 @@ public:
     antlr4::tree::TerminalNode *NEG();
     std::vector<LogicContext *> logic();
     LogicContext* logic(size_t i);
-    LogicAtomContext *logicAtom();
+    antlr4::tree::TerminalNode *DER();
     antlr4::tree::TerminalNode *LPAREN();
+    antlr4::tree::TerminalNode *NUMERIC();
     antlr4::tree::TerminalNode *RPAREN();
+    LogicAtomContext *logicAtom();
     antlr4::tree::TerminalNode *TIMES();
     antlr4::tree::TerminalNode *DIV();
     antlr4::tree::TerminalNode *PLUS();

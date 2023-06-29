@@ -268,6 +268,5 @@ void ColoredPrinterVisitor::visit(Eventually &o) {
 
 DERIVATIVE(NumericDerivative);
 DERIVATIVE(LogicDerivative);
-DERIVATIVE(PropDerivative);
 
 } // namespace expression

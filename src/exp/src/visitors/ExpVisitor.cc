@@ -100,5 +100,4 @@ void ExpVisitor::visit(Placeholder &o) {
 
 EXPRESSION_NODE_2(NumericDerivative);
 EXPRESSION_NODE_2(LogicDerivative);
-EXPRESSION_NODE_2(PropDerivative);
 } // namespace expression

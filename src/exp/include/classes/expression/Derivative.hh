@@ -44,7 +44,6 @@ template <typename ET,typename RT> class Derivative : public RT {
 };
 using LogicDerivative = Derivative<LogicExpression,LogicExpression>;
 using NumericDerivative = Derivative<NumericExpression,NumericExpression>;
-using PropDerivative = Derivative<Proposition,LogicExpression>;
 
 } // namespace oden
 

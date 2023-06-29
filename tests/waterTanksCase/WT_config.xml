@@ -2,7 +2,7 @@
 
         <!--
 
-        -->
+
 	<context name="TankEmptying_OpenValve"> 
 
 		<numeric op="le" clsEffort = "0.01" exp="z" loc="dt"/>
@@ -13,6 +13,7 @@
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
+        -->
 
     <!--
 	<context name="ValveClose_SecondaryTankEmptying"> 
@@ -35,7 +36,7 @@
 		<numeric op="ge" clsEffort = "0.001" exp="a" loc="dt"/>
 
 
-        <template dtLimits="1A,0.1E,100maxd" exp="G( (..F..) -> F[0,0](@(d,1) < 0 || d<=0.1 ))" />
+        <template dtLimits="1A,0.1E,10maxd" exp="G( (..F..) -> F[0,0](@(d,1) < 0 || d<=0.1 ))" />
 
 
 		<sort name="causality" exp="1-afct/traceLength"/>
@@ -43,7 +44,6 @@
 	</context>
     --> 
 
-    <!--
 	<context name="MainTankEmptying"> 
 
 		<numeric op="r,e,ge,le" clsEffort = "0.001" exp="a" loc="dt"/>
@@ -57,6 +57,7 @@
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
+    <!--
     --> 
 
     <!--

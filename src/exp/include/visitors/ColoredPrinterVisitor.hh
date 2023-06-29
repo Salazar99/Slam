@@ -82,7 +82,6 @@ public:
   //Misc
   void visit(LogicDerivative &o) override;
   void visit(NumericDerivative &o) override;
-  void visit(PropDerivative &o) override;
 
 protected:
   enum ope : int {

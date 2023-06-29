@@ -168,6 +168,7 @@ void PropositionParserHandler::exitBoolean(
       _proposition.push(makeExpression<PropositionNot>(p));
       return;
     }
+
     messageError("Unknown unary boolean operator!" + printErrorMessage());
   } else if (ctx->boolean().size() == 2) {
     antlr4::Token *boolop = ctx->booleanop;
@@ -350,6 +351,16 @@ void PropositionParserHandler::exitLogic(propositionParser::LogicContext *ctx) {
       return;
     }
 
+    if (ctx->DER() != nullptr) {
+      size_t shift =
+          ctx->NUMERIC() != nullptr ? std::stoul(ctx->NUMERIC()->getText()) : 1;
+      LogicExpression *le = _logicExpressions.top();
+      _logicExpressions.pop();
+      LogicExpression *le_r = new LogicDerivative(le, shift);
+      _logicExpressions.push(le_r);
+      return;
+    }
+
     messageError("Unknown unary logic operator in logic expression!" +
                  printErrorMessage());
 
@@ -448,24 +459,24 @@ void PropositionParserHandler::exitNumeric(
     propositionParser::NumericContext *ctx) {
   // std::cout<<__func__<<std::endl;
 
-
   if (_logicExpressions.size() == 1) {
-      LogicExpression *le = _logicExpressions.top();
-      _logicExpressions.pop();
-      _numericExpressions.push(new LogicToNumeric(le));
+    LogicExpression *le = _logicExpressions.top();
+    _logicExpressions.pop();
+    _numericExpressions.push(new LogicToNumeric(le));
     return;
   }
 
   if (ctx->numeric().size() == 1) {
     if (ctx->DER() != nullptr) {
-        size_t shift=ctx->NUMERIC()!=nullptr?std::stoul(ctx->NUMERIC()->getText()):1;
-        NumericExpression *ne = _numericExpressions.top();
-        _numericExpressions.pop();
-        NumericExpression *ne_r = new NumericDerivative(ne,shift);
-        _numericExpressions.push(ne_r);
+      size_t shift =
+          ctx->NUMERIC() != nullptr ? std::stoul(ctx->NUMERIC()->getText()) : 1;
+      NumericExpression *ne = _numericExpressions.top();
+      _numericExpressions.pop();
+      NumericExpression *ne_r = new NumericDerivative(ne, shift);
+      _numericExpressions.push(ne_r);
     } else {
-    messageError("Unknown unary numeric operator in logic expression!" +
-                 printErrorMessage());
+      messageError("Unknown unary numeric operator in logic expression!" +
+                   printErrorMessage());
     }
   } else if (ctx->numeric().size() == 2) {
     antlr4::Token *artop = ctx->artop;

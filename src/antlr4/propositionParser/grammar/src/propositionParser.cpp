@@ -49,7 +49,7 @@ void propositionParserInitialize() {
       "relop"
     },
     std::vector<std::string>{
-      "", "'{'", "',bool}'", "':'", "',logic_'", "'}'", "','", "',numeric'", 
+      "", "'{'", "',bool}'", "','", "':'", "',logic_'", "'}'", "',numeric'", 
       "", "'@'", "'['", "']'", "'('", "')'", "", "", "", "", "", "", "'+'", 
       "'-'", "'*'", "'/'", "'>'", "'>='", "'<'", "'<='", "'=='", "'!='", 
       "'&'", "'|'", "'^'", "'~'", "'<<'", "'>>'", "'&&'", "'||'", "'!'"
@@ -63,70 +63,73 @@ void propositionParserInitialize() {
     }
   );
   static const int32_t serializedATNSegment[] = {
-  	4,1,39,201,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,
+  	4,1,39,208,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,
   	7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,
   	14,2,15,7,15,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
   	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
   	1,1,1,1,1,1,1,1,1,1,1,3,1,70,8,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
   	1,1,1,1,1,1,5,1,84,8,1,10,1,12,1,87,9,1,1,2,1,2,3,2,91,8,2,1,3,1,3,1,
-  	4,1,4,1,4,1,4,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,3,5,107,8,5,1,5,1,5,1,5,
-  	1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,
-  	5,1,5,1,5,5,5,132,8,5,10,5,12,5,135,9,5,1,6,1,6,1,6,1,6,3,6,141,8,6,1,
-  	6,1,6,1,7,1,7,3,7,147,8,7,1,8,1,8,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,10,1,
-  	10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,3,10,172,
-  	8,10,1,10,1,10,1,10,1,10,1,10,1,10,5,10,180,8,10,10,10,12,10,183,9,10,
-  	1,11,1,11,3,11,187,8,11,1,12,1,12,1,13,1,13,1,13,1,13,1,13,1,13,1,14,
-  	1,14,1,15,1,15,1,15,0,3,2,10,20,16,0,2,4,6,8,10,12,14,16,18,20,22,24,
-  	26,28,30,0,4,1,0,22,23,1,0,20,21,1,0,15,18,1,0,24,27,217,0,32,1,0,0,0,
-  	2,69,1,0,0,0,4,90,1,0,0,0,6,92,1,0,0,0,8,94,1,0,0,0,10,106,1,0,0,0,12,
-  	136,1,0,0,0,14,146,1,0,0,0,16,148,1,0,0,0,18,150,1,0,0,0,20,171,1,0,0,
-  	0,22,186,1,0,0,0,24,188,1,0,0,0,26,190,1,0,0,0,28,196,1,0,0,0,30,198,
-  	1,0,0,0,32,33,3,2,1,0,33,34,5,0,0,1,34,1,1,0,0,0,35,36,6,1,-1,0,36,37,
-  	5,38,0,0,37,70,3,2,1,15,38,39,3,10,5,0,39,40,3,30,15,0,40,41,3,10,5,0,
-  	41,70,1,0,0,0,42,43,3,20,10,0,43,44,3,30,15,0,44,45,3,20,10,0,45,70,1,
-  	0,0,0,46,47,3,10,5,0,47,48,5,28,0,0,48,49,3,10,5,0,49,70,1,0,0,0,50,51,
-  	3,20,10,0,51,52,5,28,0,0,52,53,3,20,10,0,53,70,1,0,0,0,54,55,3,10,5,0,
-  	55,56,5,29,0,0,56,57,3,10,5,0,57,70,1,0,0,0,58,59,3,20,10,0,59,60,5,29,
-  	0,0,60,61,3,20,10,0,61,70,1,0,0,0,62,70,3,4,2,0,63,70,3,10,5,0,64,70,
-  	3,20,10,0,65,66,5,12,0,0,66,67,3,2,1,0,67,68,5,13,0,0,68,70,1,0,0,0,69,
-  	35,1,0,0,0,69,38,1,0,0,0,69,42,1,0,0,0,69,46,1,0,0,0,69,50,1,0,0,0,69,
-  	54,1,0,0,0,69,58,1,0,0,0,69,62,1,0,0,0,69,63,1,0,0,0,69,64,1,0,0,0,69,
-  	65,1,0,0,0,70,85,1,0,0,0,71,72,10,10,0,0,72,73,5,28,0,0,73,84,3,2,1,11,
-  	74,75,10,7,0,0,75,76,5,29,0,0,76,84,3,2,1,8,77,78,10,6,0,0,78,79,5,36,
-  	0,0,79,84,3,2,1,7,80,81,10,5,0,0,81,82,5,37,0,0,82,84,3,2,1,6,83,71,1,
-  	0,0,0,83,74,1,0,0,0,83,77,1,0,0,0,83,80,1,0,0,0,84,87,1,0,0,0,85,83,1,
-  	0,0,0,85,86,1,0,0,0,86,3,1,0,0,0,87,85,1,0,0,0,88,91,3,6,3,0,89,91,3,
-  	8,4,0,90,88,1,0,0,0,90,89,1,0,0,0,91,5,1,0,0,0,92,93,5,19,0,0,93,7,1,
-  	0,0,0,94,95,5,1,0,0,95,96,3,28,14,0,96,97,5,2,0,0,97,9,1,0,0,0,98,99,
-  	6,5,-1,0,99,100,5,33,0,0,100,107,3,10,5,11,101,107,3,14,7,0,102,103,5,
-  	12,0,0,103,104,3,10,5,0,104,105,5,13,0,0,105,107,1,0,0,0,106,98,1,0,0,
-  	0,106,101,1,0,0,0,106,102,1,0,0,0,107,133,1,0,0,0,108,109,10,9,0,0,109,
-  	110,7,0,0,0,110,132,3,10,5,10,111,112,10,8,0,0,112,113,7,1,0,0,113,132,
-  	3,10,5,9,114,115,10,7,0,0,115,116,5,34,0,0,116,132,3,10,5,8,117,118,10,
-  	6,0,0,118,119,5,35,0,0,119,132,3,10,5,7,120,121,10,5,0,0,121,122,5,30,
-  	0,0,122,132,3,10,5,6,123,124,10,4,0,0,124,125,5,32,0,0,125,132,3,10,5,
-  	5,126,127,10,3,0,0,127,128,5,31,0,0,128,132,3,10,5,4,129,130,10,10,0,
-  	0,130,132,3,12,6,0,131,108,1,0,0,0,131,111,1,0,0,0,131,114,1,0,0,0,131,
-  	117,1,0,0,0,131,120,1,0,0,0,131,123,1,0,0,0,131,126,1,0,0,0,131,129,1,
-  	0,0,0,132,135,1,0,0,0,133,131,1,0,0,0,133,134,1,0,0,0,134,11,1,0,0,0,
-  	135,133,1,0,0,0,136,137,5,10,0,0,137,140,5,15,0,0,138,139,5,3,0,0,139,
-  	141,5,15,0,0,140,138,1,0,0,0,140,141,1,0,0,0,141,142,1,0,0,0,142,143,
-  	5,11,0,0,143,13,1,0,0,0,144,147,3,16,8,0,145,147,3,18,9,0,146,144,1,0,
-  	0,0,146,145,1,0,0,0,147,15,1,0,0,0,148,149,7,2,0,0,149,17,1,0,0,0,150,
-  	151,5,1,0,0,151,152,3,28,14,0,152,153,5,4,0,0,153,154,5,8,0,0,154,155,
-  	5,15,0,0,155,156,5,5,0,0,156,19,1,0,0,0,157,158,6,10,-1,0,158,159,5,9,
-  	0,0,159,160,5,12,0,0,160,161,3,20,10,0,161,162,5,6,0,0,162,163,5,15,0,
-  	0,163,164,5,13,0,0,164,172,1,0,0,0,165,172,3,22,11,0,166,172,3,10,5,0,
-  	167,168,5,12,0,0,168,169,3,20,10,0,169,170,5,13,0,0,170,172,1,0,0,0,171,
-  	157,1,0,0,0,171,165,1,0,0,0,171,166,1,0,0,0,171,167,1,0,0,0,172,181,1,
-  	0,0,0,173,174,10,5,0,0,174,175,7,0,0,0,175,180,3,20,10,6,176,177,10,4,
-  	0,0,177,178,7,1,0,0,178,180,3,20,10,5,179,173,1,0,0,0,179,176,1,0,0,0,
-  	180,183,1,0,0,0,181,179,1,0,0,0,181,182,1,0,0,0,182,21,1,0,0,0,183,181,
-  	1,0,0,0,184,187,3,24,12,0,185,187,3,26,13,0,186,184,1,0,0,0,186,185,1,
-  	0,0,0,187,23,1,0,0,0,188,189,5,15,0,0,189,25,1,0,0,0,190,191,5,1,0,0,
-  	191,192,3,28,14,0,192,193,5,7,0,0,193,194,5,15,0,0,194,195,5,5,0,0,195,
-  	27,1,0,0,0,196,197,5,14,0,0,197,29,1,0,0,0,198,199,7,3,0,0,199,31,1,0,
-  	0,0,13,69,83,85,90,106,131,133,140,146,171,179,181,186
+  	4,1,4,1,4,1,4,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,
+  	1,5,3,5,114,8,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,
+  	5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,5,5,139,8,5,10,5,12,5,142,9,5,1,
+  	6,1,6,1,6,1,6,3,6,148,8,6,1,6,1,6,1,7,1,7,3,7,154,8,7,1,8,1,8,1,9,1,9,
+  	1,9,1,9,1,9,1,9,1,9,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,
+  	1,10,1,10,1,10,1,10,3,10,179,8,10,1,10,1,10,1,10,1,10,1,10,1,10,5,10,
+  	187,8,10,10,10,12,10,190,9,10,1,11,1,11,3,11,194,8,11,1,12,1,12,1,13,
+  	1,13,1,13,1,13,1,13,1,13,1,14,1,14,1,15,1,15,1,15,0,3,2,10,20,16,0,2,
+  	4,6,8,10,12,14,16,18,20,22,24,26,28,30,0,4,1,0,22,23,1,0,20,21,1,0,15,
+  	18,1,0,24,27,225,0,32,1,0,0,0,2,69,1,0,0,0,4,90,1,0,0,0,6,92,1,0,0,0,
+  	8,94,1,0,0,0,10,113,1,0,0,0,12,143,1,0,0,0,14,153,1,0,0,0,16,155,1,0,
+  	0,0,18,157,1,0,0,0,20,178,1,0,0,0,22,193,1,0,0,0,24,195,1,0,0,0,26,197,
+  	1,0,0,0,28,203,1,0,0,0,30,205,1,0,0,0,32,33,3,2,1,0,33,34,5,0,0,1,34,
+  	1,1,0,0,0,35,36,6,1,-1,0,36,37,5,38,0,0,37,70,3,2,1,15,38,39,3,10,5,0,
+  	39,40,3,30,15,0,40,41,3,10,5,0,41,70,1,0,0,0,42,43,3,20,10,0,43,44,3,
+  	30,15,0,44,45,3,20,10,0,45,70,1,0,0,0,46,47,3,10,5,0,47,48,5,28,0,0,48,
+  	49,3,10,5,0,49,70,1,0,0,0,50,51,3,20,10,0,51,52,5,28,0,0,52,53,3,20,10,
+  	0,53,70,1,0,0,0,54,55,3,10,5,0,55,56,5,29,0,0,56,57,3,10,5,0,57,70,1,
+  	0,0,0,58,59,3,20,10,0,59,60,5,29,0,0,60,61,3,20,10,0,61,70,1,0,0,0,62,
+  	70,3,4,2,0,63,70,3,10,5,0,64,70,3,20,10,0,65,66,5,12,0,0,66,67,3,2,1,
+  	0,67,68,5,13,0,0,68,70,1,0,0,0,69,35,1,0,0,0,69,38,1,0,0,0,69,42,1,0,
+  	0,0,69,46,1,0,0,0,69,50,1,0,0,0,69,54,1,0,0,0,69,58,1,0,0,0,69,62,1,0,
+  	0,0,69,63,1,0,0,0,69,64,1,0,0,0,69,65,1,0,0,0,70,85,1,0,0,0,71,72,10,
+  	10,0,0,72,73,5,28,0,0,73,84,3,2,1,11,74,75,10,7,0,0,75,76,5,29,0,0,76,
+  	84,3,2,1,8,77,78,10,6,0,0,78,79,5,36,0,0,79,84,3,2,1,7,80,81,10,5,0,0,
+  	81,82,5,37,0,0,82,84,3,2,1,6,83,71,1,0,0,0,83,74,1,0,0,0,83,77,1,0,0,
+  	0,83,80,1,0,0,0,84,87,1,0,0,0,85,83,1,0,0,0,85,86,1,0,0,0,86,3,1,0,0,
+  	0,87,85,1,0,0,0,88,91,3,6,3,0,89,91,3,8,4,0,90,88,1,0,0,0,90,89,1,0,0,
+  	0,91,5,1,0,0,0,92,93,5,19,0,0,93,7,1,0,0,0,94,95,5,1,0,0,95,96,3,28,14,
+  	0,96,97,5,2,0,0,97,9,1,0,0,0,98,99,6,5,-1,0,99,100,5,33,0,0,100,114,3,
+  	10,5,12,101,102,5,9,0,0,102,103,5,12,0,0,103,104,3,10,5,0,104,105,5,3,
+  	0,0,105,106,5,15,0,0,106,107,5,13,0,0,107,114,1,0,0,0,108,114,3,14,7,
+  	0,109,110,5,12,0,0,110,111,3,10,5,0,111,112,5,13,0,0,112,114,1,0,0,0,
+  	113,98,1,0,0,0,113,101,1,0,0,0,113,108,1,0,0,0,113,109,1,0,0,0,114,140,
+  	1,0,0,0,115,116,10,9,0,0,116,117,7,0,0,0,117,139,3,10,5,10,118,119,10,
+  	8,0,0,119,120,7,1,0,0,120,139,3,10,5,9,121,122,10,7,0,0,122,123,5,34,
+  	0,0,123,139,3,10,5,8,124,125,10,6,0,0,125,126,5,35,0,0,126,139,3,10,5,
+  	7,127,128,10,5,0,0,128,129,5,30,0,0,129,139,3,10,5,6,130,131,10,4,0,0,
+  	131,132,5,32,0,0,132,139,3,10,5,5,133,134,10,3,0,0,134,135,5,31,0,0,135,
+  	139,3,10,5,4,136,137,10,11,0,0,137,139,3,12,6,0,138,115,1,0,0,0,138,118,
+  	1,0,0,0,138,121,1,0,0,0,138,124,1,0,0,0,138,127,1,0,0,0,138,130,1,0,0,
+  	0,138,133,1,0,0,0,138,136,1,0,0,0,139,142,1,0,0,0,140,138,1,0,0,0,140,
+  	141,1,0,0,0,141,11,1,0,0,0,142,140,1,0,0,0,143,144,5,10,0,0,144,147,5,
+  	15,0,0,145,146,5,4,0,0,146,148,5,15,0,0,147,145,1,0,0,0,147,148,1,0,0,
+  	0,148,149,1,0,0,0,149,150,5,11,0,0,150,13,1,0,0,0,151,154,3,16,8,0,152,
+  	154,3,18,9,0,153,151,1,0,0,0,153,152,1,0,0,0,154,15,1,0,0,0,155,156,7,
+  	2,0,0,156,17,1,0,0,0,157,158,5,1,0,0,158,159,3,28,14,0,159,160,5,5,0,
+  	0,160,161,5,8,0,0,161,162,5,15,0,0,162,163,5,6,0,0,163,19,1,0,0,0,164,
+  	165,6,10,-1,0,165,166,5,9,0,0,166,167,5,12,0,0,167,168,3,20,10,0,168,
+  	169,5,3,0,0,169,170,5,15,0,0,170,171,5,13,0,0,171,179,1,0,0,0,172,179,
+  	3,22,11,0,173,179,3,10,5,0,174,175,5,12,0,0,175,176,3,20,10,0,176,177,
+  	5,13,0,0,177,179,1,0,0,0,178,164,1,0,0,0,178,172,1,0,0,0,178,173,1,0,
+  	0,0,178,174,1,0,0,0,179,188,1,0,0,0,180,181,10,5,0,0,181,182,7,0,0,0,
+  	182,187,3,20,10,6,183,184,10,4,0,0,184,185,7,1,0,0,185,187,3,20,10,5,
+  	186,180,1,0,0,0,186,183,1,0,0,0,187,190,1,0,0,0,188,186,1,0,0,0,188,189,
+  	1,0,0,0,189,21,1,0,0,0,190,188,1,0,0,0,191,194,3,24,12,0,192,194,3,26,
+  	13,0,193,191,1,0,0,0,193,192,1,0,0,0,194,23,1,0,0,0,195,196,5,15,0,0,
+  	196,25,1,0,0,0,197,198,5,1,0,0,198,199,3,28,14,0,199,200,5,7,0,0,200,
+  	201,5,15,0,0,201,202,5,6,0,0,202,27,1,0,0,0,203,204,5,14,0,0,204,29,1,
+  	0,0,0,205,206,7,3,0,0,206,31,1,0,0,0,13,69,83,85,90,113,138,140,147,153,
+  	178,186,188,193
   };
   staticData->serializedATN = antlr4::atn::SerializedATNView(serializedATNSegment, sizeof(serializedATNSegment) / sizeof(serializedATNSegment[0]));
 
@@ -728,16 +731,24 @@ propositionParser::LogicContext* propositionParser::LogicContext::logic(size_t i
   return getRuleContext<propositionParser::LogicContext>(i);
 }
 
-propositionParser::LogicAtomContext* propositionParser::LogicContext::logicAtom() {
-  return getRuleContext<propositionParser::LogicAtomContext>(0);
+tree::TerminalNode* propositionParser::LogicContext::DER() {
+  return getToken(propositionParser::DER, 0);
 }
 
 tree::TerminalNode* propositionParser::LogicContext::LPAREN() {
   return getToken(propositionParser::LPAREN, 0);
 }
 
+tree::TerminalNode* propositionParser::LogicContext::NUMERIC() {
+  return getToken(propositionParser::NUMERIC, 0);
+}
+
 tree::TerminalNode* propositionParser::LogicContext::RPAREN() {
   return getToken(propositionParser::RPAREN, 0);
+}
+
+propositionParser::LogicAtomContext* propositionParser::LogicContext::logicAtom() {
+  return getRuleContext<propositionParser::LogicAtomContext>(0);
 }
 
 tree::TerminalNode* propositionParser::LogicContext::TIMES() {
@@ -823,14 +834,30 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(106);
+    setState(113);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case propositionParser::NEG: {
         setState(99);
         match(propositionParser::NEG);
         setState(100);
-        logic(11);
+        logic(12);
+        break;
+      }
+
+      case propositionParser::DER: {
+        setState(101);
+        match(propositionParser::DER);
+        setState(102);
+        match(propositionParser::LPAREN);
+        setState(103);
+        logic(0);
+        setState(104);
+        match(propositionParser::T__2);
+        setState(105);
+        match(propositionParser::NUMERIC);
+        setState(106);
+        match(propositionParser::RPAREN);
         break;
       }
 
@@ -839,17 +866,17 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
       case propositionParser::VERILOG_BINARY:
       case propositionParser::GCC_BINARY:
       case propositionParser::HEX: {
-        setState(101);
+        setState(108);
         logicAtom();
         break;
       }
 
       case propositionParser::LPAREN: {
-        setState(102);
+        setState(109);
         match(propositionParser::LPAREN);
-        setState(103);
+        setState(110);
         logic(0);
-        setState(104);
+        setState(111);
         match(propositionParser::RPAREN);
         break;
       }
@@ -858,7 +885,7 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
       throw NoViableAltException(this);
     }
     _ctx->stop = _input->LT(-1);
-    setState(133);
+    setState(140);
     _errHandler->sync(this);
     alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 6, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
@@ -866,16 +893,16 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(131);
+        setState(138);
         _errHandler->sync(this);
         switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 5, _ctx)) {
         case 1: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(108);
+          setState(115);
 
           if (!(precpred(_ctx, 9))) throw FailedPredicateException(this, "precpred(_ctx, 9)");
-          setState(109);
+          setState(116);
           antlrcpp::downCast<LogicContext *>(_localctx)->artop = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == propositionParser::TIMES
@@ -887,7 +914,7 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(110);
+          setState(117);
           logic(10);
           break;
         }
@@ -895,10 +922,10 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
         case 2: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(111);
+          setState(118);
 
           if (!(precpred(_ctx, 8))) throw FailedPredicateException(this, "precpred(_ctx, 8)");
-          setState(112);
+          setState(119);
           antlrcpp::downCast<LogicContext *>(_localctx)->artop = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == propositionParser::PLUS
@@ -910,7 +937,7 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(113);
+          setState(120);
           logic(9);
           break;
         }
@@ -918,12 +945,12 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
         case 3: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(114);
+          setState(121);
 
           if (!(precpred(_ctx, 7))) throw FailedPredicateException(this, "precpred(_ctx, 7)");
-          setState(115);
+          setState(122);
           antlrcpp::downCast<LogicContext *>(_localctx)->logop = match(propositionParser::LSHIFT);
-          setState(116);
+          setState(123);
           logic(8);
           break;
         }
@@ -931,12 +958,12 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
         case 4: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(117);
+          setState(124);
 
           if (!(precpred(_ctx, 6))) throw FailedPredicateException(this, "precpred(_ctx, 6)");
-          setState(118);
+          setState(125);
           antlrcpp::downCast<LogicContext *>(_localctx)->logop = match(propositionParser::RSHIFT);
-          setState(119);
+          setState(126);
           logic(7);
           break;
         }
@@ -944,12 +971,12 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
         case 5: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(120);
+          setState(127);
 
           if (!(precpred(_ctx, 5))) throw FailedPredicateException(this, "precpred(_ctx, 5)");
-          setState(121);
+          setState(128);
           antlrcpp::downCast<LogicContext *>(_localctx)->logop = match(propositionParser::BAND);
-          setState(122);
+          setState(129);
           logic(6);
           break;
         }
@@ -957,12 +984,12 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
         case 6: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(123);
+          setState(130);
 
           if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
-          setState(124);
+          setState(131);
           antlrcpp::downCast<LogicContext *>(_localctx)->logop = match(propositionParser::BXOR);
-          setState(125);
+          setState(132);
           logic(5);
           break;
         }
@@ -970,12 +997,12 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
         case 7: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(126);
+          setState(133);
 
           if (!(precpred(_ctx, 3))) throw FailedPredicateException(this, "precpred(_ctx, 3)");
-          setState(127);
+          setState(134);
           antlrcpp::downCast<LogicContext *>(_localctx)->logop = match(propositionParser::BOR);
-          setState(128);
+          setState(135);
           logic(4);
           break;
         }
@@ -983,10 +1010,10 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
         case 8: {
           _localctx = _tracker.createInstance<LogicContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleLogic);
-          setState(129);
+          setState(136);
 
-          if (!(precpred(_ctx, 10))) throw FailedPredicateException(this, "precpred(_ctx, 10)");
-          setState(130);
+          if (!(precpred(_ctx, 11))) throw FailedPredicateException(this, "precpred(_ctx, 11)");
+          setState(137);
           bitSelect();
           break;
         }
@@ -995,7 +1022,7 @@ propositionParser::LogicContext* propositionParser::logic(int precedence) {
           break;
         } 
       }
-      setState(135);
+      setState(142);
       _errHandler->sync(this);
       alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 6, _ctx);
     }
@@ -1061,21 +1088,21 @@ propositionParser::BitSelectContext* propositionParser::bitSelect() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(136);
+    setState(143);
     match(propositionParser::LCPAREN);
-    setState(137);
+    setState(144);
     match(propositionParser::NUMERIC);
-    setState(140);
+    setState(147);
     _errHandler->sync(this);
 
     _la = _input->LA(1);
-    if (_la == propositionParser::T__2) {
-      setState(138);
-      match(propositionParser::T__2);
-      setState(139);
+    if (_la == propositionParser::T__3) {
+      setState(145);
+      match(propositionParser::T__3);
+      setState(146);
       match(propositionParser::NUMERIC);
     }
-    setState(142);
+    setState(149);
     match(propositionParser::RCPAREN);
    
   }
@@ -1131,7 +1158,7 @@ propositionParser::LogicAtomContext* propositionParser::logicAtom() {
     exitRule();
   });
   try {
-    setState(146);
+    setState(153);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case propositionParser::NUMERIC:
@@ -1139,14 +1166,14 @@ propositionParser::LogicAtomContext* propositionParser::logicAtom() {
       case propositionParser::GCC_BINARY:
       case propositionParser::HEX: {
         enterOuterAlt(_localctx, 1);
-        setState(144);
+        setState(151);
         logicConstant();
         break;
       }
 
       case propositionParser::T__0: {
         enterOuterAlt(_localctx, 2);
-        setState(145);
+        setState(152);
         logicVariable();
         break;
       }
@@ -1218,7 +1245,7 @@ propositionParser::LogicConstantContext* propositionParser::logicConstant() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(148);
+    setState(155);
     _la = _input->LA(1);
     if (!((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & 491520) != 0))) {
@@ -1287,18 +1314,18 @@ propositionParser::LogicVariableContext* propositionParser::logicVariable() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(150);
+    setState(157);
     match(propositionParser::T__0);
-    setState(151);
+    setState(158);
     variable();
-    setState(152);
-    match(propositionParser::T__3);
-    setState(153);
-    match(propositionParser::SIGN);
-    setState(154);
-    match(propositionParser::NUMERIC);
-    setState(155);
+    setState(159);
     match(propositionParser::T__4);
+    setState(160);
+    match(propositionParser::SIGN);
+    setState(161);
+    match(propositionParser::NUMERIC);
+    setState(162);
+    match(propositionParser::T__5);
    
   }
   catch (RecognitionException &e) {
@@ -1407,43 +1434,43 @@ propositionParser::NumericContext* propositionParser::numeric(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(171);
+    setState(178);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 9, _ctx)) {
     case 1: {
-      setState(158);
+      setState(165);
       match(propositionParser::DER);
-      setState(159);
+      setState(166);
       match(propositionParser::LPAREN);
-      setState(160);
+      setState(167);
       numeric(0);
-      setState(161);
-      match(propositionParser::T__5);
-      setState(162);
+      setState(168);
+      match(propositionParser::T__2);
+      setState(169);
       match(propositionParser::NUMERIC);
-      setState(163);
+      setState(170);
       match(propositionParser::RPAREN);
       break;
     }
 
     case 2: {
-      setState(165);
+      setState(172);
       numericAtom();
       break;
     }
 
     case 3: {
-      setState(166);
+      setState(173);
       logic(0);
       break;
     }
 
     case 4: {
-      setState(167);
+      setState(174);
       match(propositionParser::LPAREN);
-      setState(168);
+      setState(175);
       numeric(0);
-      setState(169);
+      setState(176);
       match(propositionParser::RPAREN);
       break;
     }
@@ -1452,7 +1479,7 @@ propositionParser::NumericContext* propositionParser::numeric(int precedence) {
       break;
     }
     _ctx->stop = _input->LT(-1);
-    setState(181);
+    setState(188);
     _errHandler->sync(this);
     alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 11, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
@@ -1460,16 +1487,16 @@ propositionParser::NumericContext* propositionParser::numeric(int precedence) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(179);
+        setState(186);
         _errHandler->sync(this);
         switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 10, _ctx)) {
         case 1: {
           _localctx = _tracker.createInstance<NumericContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleNumeric);
-          setState(173);
+          setState(180);
 
           if (!(precpred(_ctx, 5))) throw FailedPredicateException(this, "precpred(_ctx, 5)");
-          setState(174);
+          setState(181);
           antlrcpp::downCast<NumericContext *>(_localctx)->artop = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == propositionParser::TIMES
@@ -1481,7 +1508,7 @@ propositionParser::NumericContext* propositionParser::numeric(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(175);
+          setState(182);
           numeric(6);
           break;
         }
@@ -1489,10 +1516,10 @@ propositionParser::NumericContext* propositionParser::numeric(int precedence) {
         case 2: {
           _localctx = _tracker.createInstance<NumericContext>(parentContext, parentState);
           pushNewRecursionContext(_localctx, startState, RuleNumeric);
-          setState(176);
+          setState(183);
 
           if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
-          setState(177);
+          setState(184);
           antlrcpp::downCast<NumericContext *>(_localctx)->artop = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == propositionParser::PLUS
@@ -1504,7 +1531,7 @@ propositionParser::NumericContext* propositionParser::numeric(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(178);
+          setState(185);
           numeric(5);
           break;
         }
@@ -1513,7 +1540,7 @@ propositionParser::NumericContext* propositionParser::numeric(int precedence) {
           break;
         } 
       }
-      setState(183);
+      setState(190);
       _errHandler->sync(this);
       alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 11, _ctx);
     }
@@ -1569,19 +1596,19 @@ propositionParser::NumericAtomContext* propositionParser::numericAtom() {
     exitRule();
   });
   try {
-    setState(186);
+    setState(193);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case propositionParser::NUMERIC: {
         enterOuterAlt(_localctx, 1);
-        setState(184);
+        setState(191);
         numericConstant();
         break;
       }
 
       case propositionParser::T__0: {
         enterOuterAlt(_localctx, 2);
-        setState(185);
+        setState(192);
         numericVariable();
         break;
       }
@@ -1640,7 +1667,7 @@ propositionParser::NumericConstantContext* propositionParser::numericConstant() 
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(188);
+    setState(195);
     match(propositionParser::NUMERIC);
    
   }
@@ -1697,16 +1724,16 @@ propositionParser::NumericVariableContext* propositionParser::numericVariable() 
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(190);
+    setState(197);
     match(propositionParser::T__0);
-    setState(191);
+    setState(198);
     variable();
-    setState(192);
+    setState(199);
     match(propositionParser::T__6);
-    setState(193);
+    setState(200);
     match(propositionParser::NUMERIC);
-    setState(194);
-    match(propositionParser::T__4);
+    setState(201);
+    match(propositionParser::T__5);
    
   }
   catch (RecognitionException &e) {
@@ -1758,7 +1785,7 @@ propositionParser::VariableContext* propositionParser::variable() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(196);
+    setState(203);
     match(propositionParser::VARIABLE);
    
   }
@@ -1824,7 +1851,7 @@ propositionParser::RelopContext* propositionParser::relop() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(198);
+    setState(205);
     _la = _input->LA(1);
     if (!((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & 251658240) != 0))) {
@@ -1879,7 +1906,7 @@ bool propositionParser::logicSempred(LogicContext *_localctx, size_t predicateIn
     case 8: return precpred(_ctx, 5);
     case 9: return precpred(_ctx, 4);
     case 10: return precpred(_ctx, 3);
-    case 11: return precpred(_ctx, 10);
+    case 11: return precpred(_ctx, 11);
 
   default:
     break;

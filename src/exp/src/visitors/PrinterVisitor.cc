@@ -287,6 +287,5 @@ void PrinterVisitor::visit(TYPE &o) {\
 
 DERIVATIVE(NumericDerivative);
 DERIVATIVE(LogicDerivative);
-DERIVATIVE(PropDerivative);
 
 } // namespace expression

@@ -27,7 +27,6 @@ public:
   virtual void visit(PropositionEq &o);
   virtual void visit(PropositionNeq &o);
   virtual void visit(PropositionNot &o);
-  virtual void visit(PropDerivative &o);
 
   // numeric
   virtual void visit(NumericConstant &o);

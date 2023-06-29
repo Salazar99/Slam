@@ -38,6 +38,7 @@ booleanVariable
 logic
     : NEG logic 
     | logic bitSelect 
+    | DER LPAREN logic ',' NUMERIC RPAREN
     | logic artop=(TIMES|DIV) logic
     | logic artop=(PLUS|MINUS) logic
     | logic logop=LSHIFT logic

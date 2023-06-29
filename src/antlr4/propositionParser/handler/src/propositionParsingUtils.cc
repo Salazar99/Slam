@@ -20,8 +20,8 @@ expression::Proposition *parseProposition(std::string formula, harm::Trace *trac
   antlr4::tree::ParseTree *treeFragAnt = parser.file();
   antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, treeFragAnt);
   /*
-  std::cout << treeFragAnt->toStringTree(&parser) << "\n\n\n";
   DEBUG
+  std::cout << treeFragAnt->toStringTree(&parser) << "\n\n\n";
   exit(0);
   */
   return listener.getProposition();
@@ -38,8 +38,8 @@ expression::Proposition *parsePropositionAlreadyTyped(std::string formula, harm:
   antlr4::tree::ParseTree *treeFragAnt = parser.file();
   antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, treeFragAnt);
   /*
-  std::cout << treeFragAnt->toStringTree(&parser) << "\n\n\n";
   DEBUG
+  std::cout << treeFragAnt->toStringTree(&parser) << "\n\n\n";
   exit(0);
   */
   return listener.getProposition();
