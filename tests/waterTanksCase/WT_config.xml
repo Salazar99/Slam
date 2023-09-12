@@ -1,6 +1,7 @@
 <harm>
 
         <!--
+        -->
 
 
 	<context name="TankEmptying_OpenValve"> 
@@ -13,10 +14,9 @@
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
-        -->
 
     <!--
-	<context name="ValveClose_SecondaryTankEmptying"> 
+	<context name="ValveClose_SecondaryTankFilling"> 
 
 		<numeric op="e,r,ge,le" clsEffort = "0.001" exp="a" loc="dt"/>
 
@@ -29,9 +29,9 @@
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
         -->
-
     <!--
-	<context name="ValveOpen_SecondaryTankFilling"> 
+
+	<context name="ValveOpen_SecondaryTankEmptying"> 
 
 		<numeric op="ge" clsEffort = "0.001" exp="a" loc="dt"/>
 
@@ -44,6 +44,7 @@
 	</context>
     --> 
 
+    <!--
 	<context name="MainTankEmptying"> 
 
 		<numeric op="r,e,ge,le" clsEffort = "0.001" exp="a" loc="dt"/>
@@ -57,7 +58,6 @@
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
-    <!--
     --> 
 
     <!--
