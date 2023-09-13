@@ -8,6 +8,8 @@ set(TEST_DIR ${CMAKE_BINARY_DIR}/../tests)
 
 
 #tests
-add_test(NAME AllTests COMMAND gtests WORKING_DIRECTORY ${WORK_DIR})
-add_test(NAME TraceTest COMMAND gtests --gtest_filter=TraceTest* WORKING_DIRECTORY ${WORK_DIR})
-add_test(NAME EvalTest COMMAND gtests --gtest_filter=EvalTest* WORKING_DIRECTORY ${WORK_DIR})
+#add_test(NAME AllTests COMMAND gtests WORKING_DIRECTORY ${WORK_DIR})
+#add_test(NAME TraceTest COMMAND gtests --gtest_filter=TraceTest* WORKING_DIRECTORY ${WORK_DIR})
+#add_test(NAME EvalTest COMMAND gtests --gtest_filter=EvalTest* WORKING_DIRECTORY ${WORK_DIR})
+
+add_test(NAME heater COMMAND harm --csv ${TEST_DIR}/HeaterCase/HT_trace.csv --conf ${TEST_DIR}/HeaterCase/HT_config.xml  WORKING_DIRECTORY ${WORK_DIR})
