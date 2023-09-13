@@ -1,1 +1,1 @@
-./harm --csv ../tests/gearboxCase/trace_gearbox_final.csv --conf ../tests/gearboxCase/Gearbox_config.xml
+./harm --csv ../tests/gearboxCase/trace_gearbox_Date.csv --conf ../tests/gearboxCase/Gearbox_config.xml
