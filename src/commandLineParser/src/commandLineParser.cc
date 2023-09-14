@@ -41,10 +41,9 @@ cxxopts::ParseResult parseHARM(int argc, char *argv[]) {
         "dump", "dump assertions to file")("dump-stat",
                                            "dump statistics to file")(
         "dump-to", "dump assertions to file with given path",
-        cxxopts::value<std::string>(), "<DIRECTORY>")(
-        "max-ass", "maximum number of assertions to keep after the ranking",
-        cxxopts::value<size_t>(),
-        "<uint>")("dont-fill-ass",
+        cxxopts::value<std::string>(), "<DIRECTORY>")
+        ( "min-final", "keep only assertions with at least the specified minimum final ranking", cxxopts::value<double>(), "<double>")
+        ("dont-fill-ass",
                   "do not populate assertions with values (saves memory)")(
         "interactive", "enable interactive assertion ranking")(
         "split-logic", "split bitvectors into boolean variabes")

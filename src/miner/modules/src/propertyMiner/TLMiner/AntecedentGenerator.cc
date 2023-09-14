@@ -301,12 +301,12 @@ inline void AntecedentGenerator::findCandidatesNumeric(
 
     template_dt->addItem(prop.first, prop.second, depth);
 
-          std::cout << "Checking:"
-                    << "\n";
-          std::cout << "\t\t\t" << prop2String(*prop.first)
-                    << "Interval: " << prop.second.first << " , "
-                    << prop.second.second << std::endl;
-          std::cout << "\t\t\t" << t->getAssertion() << "\n";
+          //std::cout << "Checking:"
+          //          << "\n";
+          //std::cout << "\t\t\t" << prop2String(*prop.first)
+          //          << "Interval: " << prop.second.first << " , "
+          //          << prop.second.second << std::endl;
+          //std::cout << "\t\t\t" << t->getAssertion() << "\n";
 
     // ignore this prop if the template contains a known solution
     /*

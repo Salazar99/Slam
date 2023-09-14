@@ -45,6 +45,9 @@ void Miner::run() {
   _config.contextMiner->mineContexts(trace, contexts);
 
   for (Context *context : contexts) {
+      clearStats();
+      hs::name=context->_name;
+
     messageErrorIf(context->_templates.empty(),
                    "No templates or assertions defined!");
 
@@ -84,6 +87,7 @@ void Miner::run() {
 
     //4) Qualify the mined temporal assertions (additionally print and dump)
     _config.propertyQualifier->qualify(*context, trace);
+    printStats();
 
     for (Template *t : toCheck) {
       t->check();
@@ -93,7 +97,15 @@ void Miner::run() {
 
   delete trace;
 
-  printStats();
+}
+
+void Miner::clearStats(){
+    hs::nAssertions = 0;
+    hs::nFaults = 0;
+    hs::nOfCovFaults = 0;
+    hs::nFaultCovSubset = 0;
+    hs::timeToMine_ms = 0;
+    hs::name = "";
 }
 
 void Miner::printStats() {
@@ -118,7 +130,8 @@ void Miner::printStats() {
             << "\n";
 
   if (clc::dumpStat) {
-    std::string filename = "stat_out_" + hs::name + ".csv";
+    //std::string filename = "stat_out_" + hs::name + ".csv";
+    std::string filename = "stat_out.csv";
     bool exists = std::filesystem::exists(filename);
     std::ofstream of(filename,
                      exists ? std::ofstream::app : std::ofstream::trunc);

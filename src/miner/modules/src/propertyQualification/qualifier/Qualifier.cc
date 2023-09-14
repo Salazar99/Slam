@@ -458,6 +458,11 @@ void Qualifier::sortAssertionsWithMetrics(std::vector<Metric *> &metrics,
             [](Assertion *left, Assertion *right) {
               return left->_finalScore > right->_finalScore;
             });
+
+  assertions.erase(std::remove_if(assertions.begin(), assertions.end(),
+                                  [](Assertion *a) { return a->_finalScore <=clc::minFinal ; }),
+                   assertions.end());
+
 }
 
 void Qualifier::filterAssertionsWithMetrics(
@@ -913,6 +918,7 @@ std::vector<Assertion *> Qualifier::rankAssertions(Context &context,
 
     assertions.erase(assertions.begin() + clc::maxAss, assertions.end());
   }
+
 
   return assertions;
 }

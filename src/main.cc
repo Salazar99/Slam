@@ -128,6 +128,9 @@ void parseCommandLineArguments(int argc, char *args[]) {
   if (result.count("max-ass")) {
     clc::maxAss = result["max-ass"].as<size_t>();
   }
+  if (result.count("min-final")) {
+    clc::minFinal = result["min-final"].as<double>();
+  }
 
   if (result.count("max-threads")) {
     size_t nt = result["max-threads"].as<size_t>();
