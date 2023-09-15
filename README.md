@@ -2,7 +2,7 @@
   
   
 
-## HARM
+## EX-HARM
 
 The official repo of the EXtended Hint-Based AsseRtion Miner  
 
@@ -77,13 +77,6 @@ make install
 ```
 export DYLD_LIBRARY_PATH=/path/to/install/directory/Ex-harm/lib:$DYLD_LIBRARY_PATH
 ```
-
-<## Run default tests>
-
-<```>
-<ctest -V -R>
-<```>
-
 
 # How to use the miner  
 EX-HARM has two main inputs, a trace in the form of a csv file and a set of hints.
@@ -167,7 +160,7 @@ The user can specify a set of tuples N = \{(ne\_i, loc\_i, th\_i) | i =1, ..., k
 #### Template
 
 
-Templates can be written using all LTL operators, they must follow the form "G(antecedente -> consequent)"; all variables (inside the template) of the form P\<N\> are considered  placeholders. For instance, template "G(P0 && P1 -> P2 U P3)" has 4 placeholders.
+Templates can be written using all LTL operators, they must follow the form "G(antecedent -> consequent)"; all variables (inside the template) of the form P\<N\> are considered  placeholders. For instance, template "G(P0 && P1 -> P2 U P3)" has 4 placeholders.
 For the full grammar of templates, check "src/antl4/templateParser/grammar/temporal.g4".
  
  There are three special placeholders: ..&&.., ..##\<N>.. and ..#\<N>&..;  when  employed, the miner will try to replace them with a corresponding expression using a decision tree (DT) algorithm.
@@ -237,7 +230,3 @@ The template expression has an additional parameter "check", if it is set to "1"
 * \-\-vcd-r : recursively add signals for all sub-scopes
 * \-\-vcd-ss <string> :  select a scope of signals in the .vcd trace
 * \-\-wsilent : disable all warnings
-
-<# Docker>
-<# Citations>
-
