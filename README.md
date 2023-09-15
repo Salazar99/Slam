@@ -4,10 +4,7 @@
 
 ## HARM
 
-The official repo of the Hint-Based AsseRtion Miner
-
-<img src="icon.png" alt="drawing" width="200"/>
-  
+The official repo of the EXtended Hint-Based AsseRtion Miner  
 
 ## Table of contents
 
@@ -31,25 +28,16 @@ The official repo of the Hint-Based AsseRtion Miner
 
 [Optional arguments](#optional-arguments)
 
-[API](#api)
-
-[Docker](#docker)
-
-[Citations](#citations)
-
 ## Project info
 
-HARM (Hint-based AsseRtion Miner) is a tool to generate Linear Temporal Logic (LTL) assertions starting from a set of user-defined hints and the simulation traces of the design under verification (DUV). The tool is agnostic with respect to the design from which the trace was generated, thus the DUV source code is not necessary. The user-defined hints involve LTL templates, propositions and ranking metrics that are exploited by the assertion miner to reduce the search space and improve the quality of the generated assertions. This way, the tool supports the work of the verification engineer by including his/her insights in the process of automatically generating assertions.
+EX-HARM (EXtended Hint-based AsseRtion Miner) is a tool to generate Signal Temporal Logic (STL) assertions starting from a set of user-defined hints and the simulation traces of the design under verification (DUV). The tool is agnostic with respect to the design from which the trace was generated, thus the DUV source code is not necessary. The user-defined hints involve STL templates, propositions and ranking metrics that are exploited by the assertion miner to reduce the search space and improve the quality of the generated assertions. This way, the tool supports the work of the verification engineer by including his/her insights in the process of automatically generating assertions.
 
 # Quick start
 
 For now, we support only Linux and Mac OS (both x86 and arm64) with gcc (c++17) and cmake 3.14+.
 
 ## Dependencies
-* [spotLTL](https://spot.lrde.epita.fr/install.html)
 * [antlr4-runtime](https://www.antlr.org)
-* [z3](https://github.com/Z3Prover/z3)
-
   
 
 (skip this step if you already have the required dependencies on the path)
@@ -75,42 +63,32 @@ bash install_all.sh
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
-(you can use option -DCMAKE_INSTALL_PREFIX=/path/to/install/directory/ of cmake to specify where to install harm and its dependencies)
+(you can use option -DCMAKE_INSTALL_PREFIX=/path/to/install/directory/ of cmake to specify where to install ex-harm and its dependencies)
 ```
 make
 ```
 
 ### Mac OS only
-* Install the libraries (specify a proper path using cmake) 
+* Install the libraries (specify a proper path usig cmake) 
 ```
 make install
 ```
 * Add the libraries to the runtime library path
 ```
-export DYLD_LIBRARY_PATH=/path/to/install/directory/harm/lib:$DYLD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH=/path/to/install/directory/Ex-harm/lib:$DYLD_LIBRARY_PATH
 ```
 
-## Run default tests
+<## Run default tests>
 
-```
-ctest -V -R
-```
+<```>
+<ctest -V -R>
+<```>
 
 
 # How to use the miner  
-HARM has two main inputs, a trace in the form of a vcd/csv file and a set of hints.
+EX-HARM has two main inputs, a trace in the form of a csv file and a set of hints.
 Hints consist of a set of propositions, templates and metrics; they are defined in a separate xml configuration file. 
-The user can find several working examples in the "tests" directory.
-
-## Run with a vcd trace
-
-```
-./harm --vcd trace.vcd --clk clock --conf config.xml
-```
-
-* clock is the signal used to sample time (every posedge).
-* config.xml is the configuration file containing propositions and templates.
-* use --vcd-dir <DIRECTORY>  to give as input a set of .vcd traces
+The user can find several working examples in the "tests" directory .
 
 ## Run with a csv trace
 
@@ -140,7 +118,7 @@ For csv:
 ./harm --csv trace.csv --conf path/to/newConfig.xml --generate-config
 ```
 
- HARM will create the configuration file on the path given as an argument.
+ HARM will create the configuration file on the path given as argument.
 
 #  The configuration file
  It is recommended to always start from an automatically generated configuration file (using the --generate-config option).
@@ -165,7 +143,7 @@ For csv:
 </harm>
 ```
 #### Proposition
- Propositions are non-temporal boolean expressions used to fill the empty spots (placeholders) of the templates;  metrics are used to perform the final ranking of assertions. Propositions can be written using all boolean, relational and arithmetic operators of the C/C++ language.
+ Propositions are non-temporal boolean expressions used to fill the empty spots (placeholders) of the templates;  metrics are used to perform the final ranking of assertions. Propositions can be written using all boolean, relational an arithmetic operators of the C/C++ language.
 For the full grammar of propositions, check "src/antl4/propositionParser/grammar/proposition.g4".
 	
 A proposition is defined inside the "exp" attribute
@@ -173,7 +151,7 @@ A proposition is defined inside the "exp" attribute
 * Do not include the prefix common to all variables in the vcd, ex. If all design's variables are contained inside the global scope "test1", then variable "a" must be referenced as "modn::a"
 
 Propositions are labelled (using the 'loc' attribute of 'prop') with "a", "c", "ac" and "dt"
-* "a" propositions will be used only to fill the antecedent's placeholders
+* "a" propositions will be used only to fill antecedent's placeholders (not the dt operator)
 * "c" propositions will be used only to fill consequent's placeholders (not the decision tree operators)
 * "ac" propositions will be used only in placeholders appearing in both the antecedent and the consequent.
 * "dt" propositions will be used only to fill decision tree operators 
@@ -184,18 +162,15 @@ The user can specify a set of tuples N = \{(ne\_i, loc\_i, th\_i) | i =1, ..., k
 * loc\_i is a location label (among 'a', 'c', 'ac', and 'dt', following the same meaning as in a proposition, "loc" attribute). 
 * th\_i is a numeric threshold (from 0 to 1, "clsEffort" attribute) that is used to specify how much effort the tool must put in to generate propositions including the numeric expression ne\_i (for technical reasons, a threshold close to 0 is considered high effort while a threshold close to 1 is low effort).
 
-See the paper below to know more about how the procedure is carried out in harm.
-```
-S. Germiniani and G. Pravadelli, "Exploiting clustering and decision-tree algorithms to mine LTL assertions containing non-boolean expressions," 2022 IFIP/IEEE 30th International Conference on Very Large Scale Integration (VLSI-SoC), Patras, Greece, 2022, pp. 1-6, doi: 10.1109/VLSI-SoC54400.2022.9939640.
-```
+
 
 #### Template
 
 
-Templates can be written using all LTL operators, they must follow the form "G(antecedent -> consequent)"; all variables (inside the template) of the form P\<N\> are considered placeholders. For instance, template "G(P0 && P1 -> P2 U P3)" has 4 placeholders.
+Templates can be written using all LTL operators, they must follow the form "G(antecedente -> consequent)"; all variables (inside the template) of the form P\<N\> are considered  placeholders. For instance, template "G(P0 && P1 -> P2 U P3)" has 4 placeholders.
 For the full grammar of templates, check "src/antl4/templateParser/grammar/temporal.g4".
  
- There are three special placeholders: ..&&.., ..##\<N>.. and ..#\<N>&..;  when employed, the miner will try to replace them with a corresponding expression using a decision tree (DT) algorithm.
+ There are three special placeholders: ..&&.., ..##\<N>.. and ..#\<N>&..;  when  employed, the miner will try to replace them with a corresponding expression using a decision tree (DT) algorithm.
  
  * ..&&..  will be replaced with an expression of type v1 && v2 && .. && vn
  * ..##1..  will be replaced with an expression of type v1 ##1 v2 ##1 .. ##1 vn
@@ -263,84 +238,6 @@ The template expression has an additional parameter "check", if it is set to "1"
 * \-\-vcd-ss <string> :  select a scope of signals in the .vcd trace
 * \-\-wsilent : disable all warnings
 
-
-## API
-### Integrate HARM in your project
-#### Manually
-* Specify the install path using cmake
-```
-cmake -DCMAKE_INSTALL_PREFIX=/path/to/install/directory ..
-``` 
-
-* Install the header and binaries in the specified location
- ```
-make install
-``` 
-
-#### Using cmake
-1. Clone HARM into your project
-```
-git clone https://github.com/SamueleGerminiani/harm.git
-```
-2. Use cmake to compile the source code: 
-```
-add_subdirectory(src/harm)
-```
-3. Link devharm to your project (headers will be automatically included)
-```
-target_link_libraries(YOUR_PROJECT devharm)
-```
-
-#### Simple example of using the API (src/api/cpp/example/example.cpp)
-The following example uses the HARM API to mine assertions given a short trace "bl_master1h.vcd" and a configuration file "bl_masterConfig.xml".
-```
-#include "harm.hh"
-#include "harm/Assertion.hh"
-#include <iostream>
-int main() {
-  harm::Parameters p;
-  p.traceFiles.push_back("bl_master1h.vcd");
-  p.configFile = "bl_masterConfig.xml";
-  p.selectedScope = "::sim1::p::core::master_interface";
-  p.clk = "wb_clk";
-  p.parserType = "vcd";
-  p.dontPrintAss = 1;
-  auto res = harm::mine(p);
-  //print the mined assertions
-  for (auto &[context, ass] : res) {
-    std::cout << context << "\n";
-    for (auto &a : ass) {
-      std::cout << "\t\t\t " << a->_toString.second << "\n";
-    }
-  }
-}
-```
-* All applications using the HARM API must include "harm.hh"
-* "harm::Parameters" defines a set of parameters and inputs to control the behaviour of HARM.
-* "p.traceFiles" specifies the paths to the input traces (only one in this case)
-* "p.configFile" specifies the configuration file with the hints
-* "p.selectedScope" specifies the scope of the VCD input files to be considered in the mining
-* "p.clk" specifies the clock signal used to sample time
-* See harm.hh for the whole list of available parameters (they are equivalent to the command-line arguments)
-
-* "harm::mine(p)" is the only available API (for now). Given a set of parameters p as input, it returns a map [contextName] -> [vector<Assertions>], where vector<Assertions> is a list of Assertions ranked according to the specified metrics.
-
-# Docker
-
-Download the docker image:
-```
-docker pull samger/harm:latest
-```
-
-Run it:
-```
-docker run -it samger/harm:latest
-```
-
-# Citations
-If you need to reference HARM in an academic publication, refer to the following paper:
-```
-S. Germiniani and G. Pravadelli, "HARM: A Hint-Based Assertion Miner," in IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, vol. 41, no. 11, pp. 4277-4288, Nov. 2022, doi: 10.1109/TCAD.2022.3197525.
-```
-
+<# Docker>
+<# Citations>
 
