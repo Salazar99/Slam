@@ -4,10 +4,7 @@
 
 ## HARM
 
-The official repo of the Hint-Based AsseRtion Miner
-
-<img src="icon.png" alt="drawing" width="200"/>
-  
+The official repo of the EXtended Hint-Based AsseRtion Miner  
 
 ## Table of contents
 
@@ -31,25 +28,16 @@ The official repo of the Hint-Based AsseRtion Miner
 
 [Optional arguments](#optional-arguments)
 
-[API](#api)
-
-[Docker](#docker)
-
-[Citations](#citations)
-
 ## Project info
 
-HARM (Hint-based AsseRtion Miner) is a tool to generate Linear Temporal Logic (LTL) assertions starting from a set of user-defined hints and the simulation traces of the design under verification (DUV). The tool is agnostic with respect to the design from which the trace was generated, thus the DUV source code is not necessary. The user-defined hints involve LTL templates, propositions and ranking metrics that are exploited by the assertion miner to reduce the search space and improve the quality of the generated assertions. This way, the tool supports the work of the verification engineer by including his/her insights in the process of automatically generating assertions.
+EX-HARM (EXtended Hint-based AsseRtion Miner) is a tool to generate Signal Temporal Logic (STL) assertions starting from a set of user-defined hints and the simulation traces of the design under verification (DUV). The tool is agnostic with respect to the design from which the trace was generated, thus the DUV source code is not necessary. The user-defined hints involve STL templates, propositions and ranking metrics that are exploited by the assertion miner to reduce the search space and improve the quality of the generated assertions. This way, the tool supports the work of the verification engineer by including his/her insights in the process of automatically generating assertions.
 
 # Quick start
 
 For now, we support only Linux and Mac OS (both x86 and arm64) with gcc (c++17) and cmake 3.14+.
 
 ## Dependencies
-* [spotLTL](https://spot.lrde.epita.fr/install.html)
 * [antlr4-runtime](https://www.antlr.org)
-* [z3](https://github.com/Z3Prover/z3)
-
   
 
 (skip this step if you already have the required dependencies on the path)
@@ -75,7 +63,7 @@ bash install_all.sh
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
-(you can use option -DCMAKE_INSTALL_PREFIX=/path/to/install/directory/ of cmake to specify where to install harm and its dependencies)
+(you can use option -DCMAKE_INSTALL_PREFIX=/path/to/install/directory/ of cmake to specify where to install ex-harm and its dependencies)
 ```
 make
 ```
@@ -87,30 +75,20 @@ make install
 ```
 * Add the libraries to the runtime library path
 ```
-export DYLD_LIBRARY_PATH=/path/to/install/directory/harm/lib:$DYLD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH=/path/to/install/directory/Ex-harm/lib:$DYLD_LIBRARY_PATH
 ```
 
-## Run default tests
+<## Run default tests>
 
-```
-ctest -V -R
-```
+<```>
+<ctest -V -R>
+<```>
 
 
 # How to use the miner  
-HARM has two main inputs, a trace in the form of a vcd/csv file and a set of hints.
+EX-HARM has two main inputs, a trace in the form of a csv file and a set of hints.
 Hints consist of a set of propositions, templates and metrics; they are defined in a separate xml configuration file. 
 The user can find several working examples in the "tests" directory .
-
-## Run with a vcd trace
-
-```
-./harm --vcd trace.vcd --clk clock --conf config.xml
-```
-
-* clock is the signal used to sample time (every posedge).
-* config.xml is the configuration file containing propositions and templates.
-* use --vcd-dir <DIRECTORY>  to give as input a set of .vcd traces
 
 ## Run with a csv trace
 
@@ -260,84 +238,6 @@ The template expression has an additional parameter "check", if it is set to "1"
 * \-\-vcd-ss <string> :  select a scope of signals in the .vcd trace
 * \-\-wsilent : disable all warnings
 
-
-## API
-### Integrate HARM in your project
-#### Manually
-* Specify the install path using cmake
-```
-cmake -DCMAKE_INSTALL_PREFIX=/path/to/install/directory ..
-``` 
-
-* Install the header and binaries in the specified location
- ```
-make install
-``` 
-
-#### Using cmake
-1. Clone HARM into your project
-```
-git clone https://github.com/SamueleGerminiani/harm.git
-```
-2. Use cmake to compile the source code: 
-```
-add_subdirectory(src/harm)
-```
-3. Link devharm to your project (headers will be automatically included)
-```
-target_link_libraries(YOUR_PROJECT devharm)
-```
-
-#### Simple example of using the API (src/api/cpp/example/example.cpp)
-The following example uses the HARM API to mine assertions given a short trace "bl_master1h.vcd" and a configuration file "bl_masterConfig.xml".
-```
-#include "harm.hh"
-#include "harm/Assertion.hh"
-#include <iostream>
-int main() {
-  harm::Parameters p;
-  p.traceFiles.push_back("bl_master1h.vcd");
-  p.configFile = "bl_masterConfig.xml";
-  p.selectedScope = "::sim1::p::core::master_interface";
-  p.clk = "wb_clk";
-  p.parserType = "vcd";
-  p.dontPrintAss = 1;
-  auto res = harm::mine(p);
-  //print the mined assertions
-  for (auto &[context, ass] : res) {
-    std::cout << context << "\n";
-    for (auto &a : ass) {
-      std::cout << "\t\t\t " << a->_toString.second << "\n";
-    }
-  }
-}
-```
-* All applications using the HARM API must include "harm.hh"
-* "harm::Parameters" defines a set of parameters and inputs to control the behaviour of HARM.
-* "p.traceFiles" specifies the paths to the input traces (only one in this case)
-* "p.configFile" specifies the configuration file with the hints
-* "p.selectedScope" specifies the scope of the VCD input files to be considered in the mining
-* "p.clk" specifies the clock signal used to sample time
-* See harm.hh for the whole list of available parameters (they are equivalent to the command-line arguments)
-
-* "harm::mine(p)" is the only available API (for now). Given a set of parameters p as input, it returns a map [contextName] -> [vector<Assertions>], where vector<Assertions> is a list of Assertions ranked according to the specified metrics.
-
-# Docker
-
-Download the docker image:
-```
-docker pull samger/harm:latest
-```
-
-Run it:
-```
-docker run -it samger/harm:latest
-```
-
-# Citations
-If you need to reference HARM in an academic publication, refer to the following paper:
-```
-S. Germiniani and G. Pravadelli, "HARM: A Hint-Based Assertion Miner," in IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, vol. 41, no. 11, pp. 4277-4288, Nov. 2022, doi: 10.1109/TCAD.2022.3197525.
-```
-
+<# Docker>
+<# Citations>
 
