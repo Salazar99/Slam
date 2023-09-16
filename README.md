@@ -144,7 +144,7 @@ For csv:
  It is recommended to always start from an automatically generated configuration file (using the --generate-config option).
  Hints are organised in contexts, each context contains three types of expressions: propositions, templates and metrics (see the configuration file below).  
  ```xml
-<harm>
+<exharm>
 	<context name="c1">
 		<prop exp="var1 && var2" loc="a"/>
 		<prop exp="var3 + var4 > 100" loc="a"/>
@@ -153,22 +153,20 @@ For csv:
 		
 		<numeric clsEffort="0.3" exp="var7 + var8" loc="c"/>
 		
-		<template dtLimits="4A,3D,2D,-0.1E,R,O" exp="G({..F..}|-> F[0,0](P0))" /> 
+		<template dtLimits="4A,3D,2D,-0.1E" exp="G({..F..}|-> F[0,0](P0))" /> 
 		
 	
 		<filter name="causality" exp="1-afct/traceLength" threshold="0.45"/>
 		<sort name="pRepetitions" exp="1/(pRepetitions*2+1)" />
 		<sort name="frequency" exp="atct/traceLength"/>
 	</context>
-</harm>
+</exharm>
 ```
 #### Proposition
  Propositions are non-temporal boolean expressions used to fill the empty spots (placeholders) of the templates;  metrics are used to perform the final ranking of assertions. Propositions can be written using all boolean, relational an arithmetic operators of the C/C++ language.
 For the full grammar of propositions, check "src/antl4/propositionParser/grammar/proposition.g4".
 	
 A proposition is defined inside the "exp" attribute
-* WARNING: if you are using a vcd trace, the variables must include the hierarchical path as a prefix, ex. "test1::modn::a" is the variable "a" in module "modn" instantiated in module "test1". Check the vcd file to retrieve the path.
-* Do not include the prefix common to all variables in the vcd, ex. If all design's variables are contained inside the global scope "test1", then variable "a" must be referenced as "modn::a"
 
 Propositions are labelled (using the 'loc' attribute of 'prop') with "a", "c", "ac" and "dt"
 * "a" propositions will be used only to fill antecedent's placeholders (not the dt operator)
@@ -183,26 +181,23 @@ The user can specify a set of tuples N = \{(ne\_i, loc\_i, th\_i) | i =1, ..., k
 * th\_i is a numeric threshold (from 0 to 1, "clsEffort" attribute) that is used to specify how much effort the tool must put in to generate propositions including the numeric expression ne\_i (for technical reasons, a threshold close to 0 is considered high effort while a threshold close to 1 is low effort).
 
 
-
 #### Template
 
 
-Templates can be written using all LTL operators, they must follow the form "G(antecedent -> consequent)"; all variables (inside the template) of the form P\<N\> are considered  placeholders. For instance, template "G(P0 && P1 -> P2 U P3)" has 4 placeholders.
-For the full grammar of templates, check "src/antl4/templateParser/grammar/temporal.g4".
+Templates must follow the form "G(antecedent -> consequent)"; all variables (inside the template) of the form P\<N\> are considered  placeholders. For instance, template "G(..F.. -> F[0,0](P2 U P3))" has 2 placeholders.
+For the full grammar of templates, check "src/antl4/templateParser/grammarSTL/stl.g4".
  
- There are three special placeholders: ..&&.., ..##\<N>.. and ..#\<N>&..;  when  employed, the miner will try to replace them with a corresponding expression using a decision tree (DT) algorithm.
+ There is one special placeholder: ..F..;  when  employed, the miner will try to replace it with a corresponding expression using a decision tree (DT) algorithm.
  
  * ..F..  will be replaced with an expression of type v1 && F[t1,t2]v2 && .. && [tn1,tn2]vn
  
- These placeholders can only be used once in the antecedent.
+ This placeholder can only be used once in the antecedent.
  
  A template using a Decision Tree Operator (DTO) is associated with a configuration (defined in the 'dtLimits' attribute of 'template') involving several adjustable parameters:
  * \<uint\>A : the maximum number of operands to be added to the DT operator.
  * \<uint\>D : the maximum number of temporal operands to be added to the DT operator. Adding a temporal operands increases the temporal depth of the DT operator.
  * \<uint\>W : the maximum number of propositions to be added at a certain depth in the dt operator
-* S, R: this parameter states if a DT operator with a temporal dimension must construct expressions following a sequential (S) or an unordered (R, random) approach. To understand this, consider a DTO ..##2.. with parameter 3D, the resulting expression must follow the implicit template o_1 ##2 o_2 ##2 o_3; however, the order in which o_1, o_2, o_3 are substituted greatly changes the outcome of the DT algorithm. A sequential DTO adds the operands in order from o_1 to o_3 while an unordered DTO can add operands in any order. The first one can only generate the expressions "o_1", "o_1 ##2 o_2", "o_1 ##2 o_2 ##2 o_3" while the latter can generate expressions such as "o_1 ##4 o_3" or "##4 o_3".
 * <float>E is used to adjust the computational effort of the DT algorithm, in practice, it is used to decide the number of candidates selected by the DT algorithm to split the search space. Legal values: from 0 to 1. If E is associated with a negative value, then the algorithm will put in the least possible effort to mine assertions.
-* O: this parameter states that the DT algorithm must return the assertions belonging to the offset; such assertions are obtained by negating the consequent of an implication that is false each time the antecedent is true (G(ant -> !con)), making the implication always T on the trace.
 
 #### Metric
 A metric is a numeric formula measuring the impact of an assertion's feature in the assertion ranking. 
