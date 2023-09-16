@@ -14,7 +14,7 @@ namespace hparser {
 class PropositionParserHandler : public propositionBaseListener {
 
 public:
-  explicit PropositionParserHandler(exharm::Trace *trace);
+  explicit PropositionParserHandler(slam::Trace *trace);
 
   ~PropositionParserHandler() override = default;
 
@@ -29,7 +29,7 @@ private:
   std::stack<expression::Proposition *> _proposition;
   std::stack<expression::LogicExpression *> _logicExpressions;
   std::stack<expression::NumericExpression *> _numericExpressions;
-  exharm::Trace *_trace;
+  slam::Trace *_trace;
   size_t boolStack = 0;
   size_t logicStack = 0;
   size_t numeriStack = 0;

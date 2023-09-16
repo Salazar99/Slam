@@ -3,7 +3,7 @@
 #include "Trinary.hh"
 #include "globals.hh"
 
-namespace exharm {
+namespace slam {
 class Template;
 
 /*! \class Assertion
@@ -48,4 +48,4 @@ public:
 /** \brief just a heuristic to find equivalence between assertions
    */
 bool operator==(const Assertion &a1, const Assertion &a2);
-} // namespace exharm
+} // namespace slam

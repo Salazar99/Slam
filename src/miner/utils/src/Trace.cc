@@ -4,7 +4,7 @@
 #include <cassert>
 #include <sstream>
 
-namespace exharm {
+namespace slam {
 
 using namespace expression;
 
@@ -119,7 +119,7 @@ std::vector<Trace *> Trace::newTracesWithSAFault(const std::string &varName) {
   }
 
   return faultyTraces;
-} // namespace exharm
+} // namespace slam
 Trace::~Trace() {
   delete[] _numeriTrace;
   delete[] _booleanTrace;
@@ -271,4 +271,4 @@ Trace::getNumericVariable(const std::string &name) const {
 
 std::vector<size_t> &Trace::getCuts() { return _cuts; }
 void Trace::setCuts(const std::vector<size_t> &cuts) { _cuts = cuts; }
-} // namespace exharm
+} // namespace slam

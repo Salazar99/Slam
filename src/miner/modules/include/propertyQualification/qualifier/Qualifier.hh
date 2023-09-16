@@ -3,7 +3,7 @@
 #include "PropertyQualifier.hh"
 #include <unordered_map>
 
-namespace exharm {
+namespace slam {
 
 /*! \class Qualifier
     \brief used to rank the assertions
@@ -127,4 +127,4 @@ private:
   std::unordered_map<size_t, std::string> _fToVar;
 };
 
-} // namespace exharm
+} // namespace slam

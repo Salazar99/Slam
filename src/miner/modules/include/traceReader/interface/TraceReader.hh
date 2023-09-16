@@ -2,7 +2,7 @@
 
 #include "Trace.hh"
 
-namespace exharm {
+namespace slam {
 
 /// @\class TraceReader
 /// This is an interface for a generic trace reader module.
@@ -42,4 +42,4 @@ protected:
   Trace *_trace = nullptr;
 };
 
-} // namespace exharm
+} // namespace slam

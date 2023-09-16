@@ -1,7 +1,7 @@
 #include "PropertyQualifier.hh"
 //#include "applicationUtils.hh"
 
-namespace exharm {
+namespace slam {
 
 /*
 PropertyQualifier::PropertyQualifier(XmlNode *data) : configuration(nullptr) {
@@ -16,4 +16,4 @@ PropertyQualifier::PropertyQualifier() {
   
 }
 
-} // namespace exharm
+} // namespace slam

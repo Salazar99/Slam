@@ -13,7 +13,7 @@
 #include <thread>
 #include <utility>
 
-namespace exharm {
+namespace slam {
 
 Trinary Template::evaluate(size_t time) { return _impl->evaluate(time); }
 
@@ -25,20 +25,20 @@ Trinary Template::evaluate_con(size_t time) {
   return _impl->evaluate_con(time);
 }
 
-bool Template::assHoldsOnTrace(exharm::Location update) {
+bool Template::assHoldsOnTrace(slam::Location update) {
 
   switch (update) {
-  case exharm::Location::Ant:
+  case slam::Location::Ant:
     setCacheAntFalse();
     break;
-  case exharm::Location::Con:
+  case slam::Location::Con:
     setCacheConFalse();
     break;
-  case exharm::Location::AntCon:
+  case slam::Location::AntCon:
     setCacheAntFalse();
     setCacheConFalse();
     break;
-  case exharm::Location::None:
+  case slam::Location::None:
     break;
   default:
     messageError("Illegal use of Location operator");
@@ -52,20 +52,20 @@ bool Template::assHoldsOnTrace(exharm::Location update) {
   }
   return true;
 }
-bool Template::assHoldsOnTraceOffset(exharm::Location update) {
+bool Template::assHoldsOnTraceOffset(slam::Location update) {
 
   switch (update) {
-  case exharm::Location::Ant:
+  case slam::Location::Ant:
     setCacheAntFalse();
     break;
-  case exharm::Location::Con:
+  case slam::Location::Con:
     setCacheConFalse();
     break;
-  case exharm::Location::AntCon:
+  case slam::Location::AntCon:
     setCacheAntFalse();
     setCacheConFalse();
     break;
-  case exharm::Location::None:
+  case slam::Location::None:
     break;
   default:
     messageError("Illegal use of Location operator");
@@ -80,19 +80,19 @@ bool Template::assHoldsOnTraceOffset(exharm::Location update) {
   }
   return true;
 }
-bool Template::isVacuous(exharm::Location update) {
+bool Template::isVacuous(slam::Location update) {
   switch (update) {
-  case exharm::Location::Ant:
+  case slam::Location::Ant:
     setCacheAntFalse();
     break;
-  case exharm::Location::Con:
+  case slam::Location::Con:
     setCacheConFalse();
     break;
-  case exharm::Location::AntCon:
+  case slam::Location::AntCon:
     setCacheAntFalse();
     setCacheConFalse();
     break;
-  case exharm::Location::None:
+  case slam::Location::None:
     break;
   default:
     messageError("Illegal use of Location operator");
@@ -116,19 +116,19 @@ nextCondition:;
   }
   return true;
 }
-bool Template::isVacuousOffset(exharm::Location update) {
+bool Template::isVacuousOffset(slam::Location update) {
   switch (update) {
-  case exharm::Location::Ant:
+  case slam::Location::Ant:
     setCacheAntFalse();
     break;
-  case exharm::Location::Con:
+  case slam::Location::Con:
     setCacheConFalse();
     break;
-  case exharm::Location::AntCon:
+  case slam::Location::AntCon:
     setCacheAntFalse();
     setCacheConFalse();
     break;
-  case exharm::Location::None:
+  case slam::Location::None:
     break;
   default:
     messageError("Illegal use of Location operator");
@@ -152,4 +152,4 @@ nextCondition:;
   }
   return true;
 }
-} // namespace exharm
+} // namespace slam

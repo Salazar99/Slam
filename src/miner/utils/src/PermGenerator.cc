@@ -7,7 +7,7 @@
 #include <sstream>
 #include <utility>
 
-namespace exharm {
+namespace slam {
 using namespace expression;
 Row operator*(const Row &r1, const Row &r2) {
   Row ret = r1;
@@ -181,7 +181,7 @@ PermGenerator::generatePermUnit(TemporalExp *templ,
   } else if (dynamic_cast<Placeholder *>(templ) != nullptr) {
 
     //     std::cout << "PH" << "\n";
-    exharm::Location loc =
+    slam::Location loc =
         _phToLoc.at(dynamic_cast<Placeholder *>(templ)->getName());
     PermUnit *ph = new PermUnit();
     ph->_op = PermOperator::Ph;
@@ -192,13 +192,13 @@ PermGenerator::generatePermUnit(TemporalExp *templ,
     } else {
       foundPH.insert(dynamic_cast<Placeholder *>(templ)->getName());
       // set the correct domain
-      if (loc == exharm::Location::Ant) {
+      if (loc == slam::Location::Ant) {
         ph->_dim.first = _aProps;
         ph->_dim.second = 1;
-      } else if (loc == exharm::Location::Con) {
+      } else if (loc == slam::Location::Con) {
         ph->_dim.first = _cProps;
         ph->_dim.second = 1;
-      } else if (loc == exharm::Location::AntCon) {
+      } else if (loc == slam::Location::AntCon) {
         ph->_dim.first = _acProps;
         ph->_dim.second = 1;
       }
@@ -357,7 +357,7 @@ void PermGenerator::genPermutations(size_t antP, size_t conP, size_t antConP,
   // retrieve placeholders to location
   size_t index = 0;
   for (auto &[ph, p] : templ->_cphToProp) {
-    _phToLoc.insert({{ph, exharm::Location::Con}});
+    _phToLoc.insert({{ph, slam::Location::Con}});
     _phToIndex[ph] = index++;
     _mPhs[ph]++;
   }
@@ -466,4 +466,4 @@ Matrix PermGenerator::visitPermUnit(PermGenerator::PermUnit *pu) {
 
   return ret;
 }
-} // namespace exharm
+} // namespace slam

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <limits.h>
 
-namespace exharm {
+namespace slam {
 struct DTLimits {
   DTLimits(const DTLimits &o) = default;
   explicit DTLimits(size_t maxDepth, size_t maxWidth, size_t maxAll,

@@ -18,9 +18,9 @@ void StlParserHandler::enterFile(__attribute__((unused))
                                  stlParser::FileContext *ctx) {
   _abort = false;
 }
-StlParserHandler::StlParserHandler(exharm::Trace *trace, exharm::DTLimits limits)
+StlParserHandler::StlParserHandler(slam::Trace *trace, slam::DTLimits limits)
     : _abort(false), _trace(trace) {
-  _template = new exharm::Template(trace, limits);
+  _template = new slam::Template(trace, limits);
 }
 
 void StlParserHandler::exitFile(stlParser::FileContext *ctx) {
@@ -40,7 +40,7 @@ void StlParserHandler::exitImplication(stlParser::ImplicationContext *ctx) {
 
     std::string ph = "dtAndF";
     _template->_dtOp =
-        std::make_pair(ph, new exharm::DTAndF(dynamic_cast<TemporalAnd *>(te),
+        std::make_pair(ph, new slam::DTAndF(dynamic_cast<TemporalAnd *>(te),
                                             _template, _template->_limits));
     _tfStack.push(new Implication(te, teformulaCon));
     return;

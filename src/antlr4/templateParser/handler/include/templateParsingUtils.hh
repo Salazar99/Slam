@@ -2,16 +2,16 @@
 #include "DTLimits.hh"
 #include "Trace.hh"
 
-namespace exharm {
+namespace slam {
 class Template;
 }
 
 namespace hparser {
 void addTypeToTemplate(std::string &formula,
-                       std::vector<exharm::VarDeclaration> varDeclarations);
+                       std::vector<slam::VarDeclaration> varDeclarations);
 
-exharm::Template *parseTemplate(std::string formula, exharm::Trace *trace,
+slam::Template *parseTemplate(std::string formula, slam::Trace *trace,
                               const std::string &language = "stl",
-                              const exharm::DTLimits &limits = exharm::DTLimits(),
+                              const slam::DTLimits &limits = slam::DTLimits(),
                               bool useCache = true);
 } // namespace hparser

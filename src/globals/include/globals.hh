@@ -50,7 +50,7 @@ extern size_t multiplyTrace;
 
 } // namespace clc
 
-// exharm stat
+// slam stat
 namespace hs {
 
 extern size_t timeToMine_ms;

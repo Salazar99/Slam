@@ -1,5 +1,5 @@
 # set the project name
-project("EX-HARM" CXX)
+project("SLAM" CXX)
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -103,7 +103,7 @@ link_libraries(globals)
 
 
 #main
-SET(NAME ex-harm)
+SET(NAME slam)
 SET(MAIN_SRC src/main.cc)
 
 #Main executable
@@ -180,15 +180,15 @@ add_subdirectory(examples)
 
 
 
-INSTALL(FILES src/globals/include/globals.hh src/utils/include/colors.hh src/miner/utils/include/Assertion.hh src/miner/utils/include/Trinary.hh DESTINATION ex-harm/include/ex-harm)
+INSTALL(FILES src/globals/include/globals.hh src/utils/include/colors.hh src/miner/utils/include/Assertion.hh src/miner/utils/include/Trinary.hh DESTINATION slam/include/slam)
 
-INSTALL(TARGETS ex-harm 
-    RUNTIME DESTINATION ex-harm/bin
-    LIBRARY DESTINATION ex-harm/lib
-    ARCHIVE DESTINATION ex-harm/lib
+INSTALL(TARGETS slam 
+    RUNTIME DESTINATION slam/bin
+    LIBRARY DESTINATION slam/lib
+    ARCHIVE DESTINATION slam/lib
     )
 
-INSTALL(PROGRAMS ${SPOTLTL_LIB} ${ANTLR4_RUNTIME} ${Z3_LIBRARY} DESTINATION ex-harm/lib)
+INSTALL(PROGRAMS ${SPOTLTL_LIB} ${ANTLR4_RUNTIME} ${Z3_LIBRARY} DESTINATION slam/lib)
 
 #Copy the libraries with their symbolic links
 INSTALL(

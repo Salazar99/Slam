@@ -4,7 +4,7 @@
 
 namespace hparser{
 using namespace expression;
-expression::Proposition *parseProposition(std::string formula, exharm::Trace *trace){
+expression::Proposition *parseProposition(std::string formula, slam::Trace *trace){
   // formula="ePage == PAGE_MAIN && c8val==M_TEST+M_NULL";
 
   auto decls=trace->getDeclarations();
@@ -26,7 +26,7 @@ expression::Proposition *parseProposition(std::string formula, exharm::Trace *tr
   */
   return listener.getProposition();
 }
-expression::Proposition *parsePropositionAlreadyTyped(std::string formula, exharm::Trace *trace){
+expression::Proposition *parsePropositionAlreadyTyped(std::string formula, slam::Trace *trace){
 
   // parse typed propositions
   hparser::PropositionParserHandler listener(trace);
@@ -45,7 +45,7 @@ expression::Proposition *parsePropositionAlreadyTyped(std::string formula, exhar
   return listener.getProposition();
 }
 void addTypeToProposition(std::string &formula,
-                          std::vector<exharm::VarDeclaration> varDeclarations) {
+                          std::vector<slam::VarDeclaration> varDeclarations) {
   /*all this code is to solve the problem of
   adding types to the variables in the formula:
   The complexity of the code is to handle the following problems:*/
@@ -62,8 +62,8 @@ void addTypeToProposition(std::string &formula,
 
   // match the longest variables first to solve (3)
   std::sort(begin(varDeclarations), end(varDeclarations),
-            [](exharm::VarDeclaration &e1,
-               exharm::VarDeclaration &e2) {
+            [](slam::VarDeclaration &e1,
+               slam::VarDeclaration &e2) {
               return std::get<0>(e1).size() > std::get<0>(e2).size();
             });
 

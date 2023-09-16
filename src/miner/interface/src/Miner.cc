@@ -6,7 +6,7 @@
 #include <filesystem>
 #include <type_traits>
 
-namespace exharm {
+namespace slam {
 
 Miner::ModulesConfig::ModulesConfig()
     : contextMiner(nullptr), propertyMiner(nullptr),
@@ -188,4 +188,4 @@ void Miner::_printWelcomeMessage() {
   //            << "\n";
 }
 
-} // namespace exharm
+} // namespace slam

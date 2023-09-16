@@ -1,7 +1,7 @@
 #include "PropertyMiner.hh"
-namespace exharm {
+namespace slam {
 
 //FIXME: do we still need this?
 PropertyMiner::PropertyMiner() {}
 
-} // namespace exharm
+} // namespace slam

@@ -1,6 +1,6 @@
 
 #include "Automaton.hh"
-namespace exharm {
+namespace slam {
 
 Automaton::Node::Node(size_t id, int type) : _id(id), _type(type) { // not todo
 }
@@ -22,4 +22,4 @@ Automaton::Edge::Edge(EdgeProposition *prop, Node *toNode, Node *fromNode)
 Automaton::Edge::~Edge() { delete _prop; }
 
 
-} // namespace exharm
+} // namespace slam

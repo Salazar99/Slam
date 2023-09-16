@@ -1,7 +1,7 @@
 
 #include "TraceReader.hh"
 
-namespace exharm {
+namespace slam {
 
 /// \class VCDtraceReader
 /// This class implements the logic to read a .vcd file
@@ -14,4 +14,4 @@ private:
   virtual Trace *readTrace(const std::string file) override;
   std::string _clk="";
 };
-} // namespace exharm
+} // namespace slam

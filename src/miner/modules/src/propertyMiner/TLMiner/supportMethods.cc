@@ -3,7 +3,7 @@
 #include <cmath>
 #include<iostream>
 
-namespace exharm{
+namespace slam{
 
 
 double getEntropy(size_t occurrences, size_t traceLength) {

@@ -17,7 +17,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace exharm {
+namespace slam {
 
 using Matrix = std::vector<std::vector<size_t>>;
 using Row = std::vector<size_t>;
@@ -59,6 +59,6 @@ public:
   int **_perms = nullptr;
   std::pair<size_t, size_t> _size;
   std::unordered_map<std::string, size_t> _phToIndex;
-  std::unordered_map<std::string, exharm::Location> _phToLoc;
+  std::unordered_map<std::string, slam::Location> _phToLoc;
 };
-} // namespace exharm
+} // namespace slam

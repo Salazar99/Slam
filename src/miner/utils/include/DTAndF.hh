@@ -1,7 +1,7 @@
 #pragma once
 #include "DTOperator.hh"
 
-namespace exharm {
+namespace slam {
 /*! \class DTAndF
     \brief Decision tree operator class for ..F.., see base class for the description of the methods
 */
@@ -48,4 +48,4 @@ private:
   Template *_t;
   DecTreeVariables _leaves;
 };
-} // namespace exharm
+} // namespace slam

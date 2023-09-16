@@ -4,7 +4,7 @@
 
 #include <unordered_map>
 
-namespace exharm {
+namespace slam {
 
 /*! \class Metric
     \brief Class representing an index used to rank the assertions
@@ -42,4 +42,4 @@ public:
   ///name of the metric
   std::string _name;
 };
-} // namespace exharm
+} // namespace slam

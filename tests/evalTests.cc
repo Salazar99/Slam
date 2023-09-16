@@ -9,10 +9,10 @@
 #include "propositionParser.hh"
 #include "propositionParsingUtils.hh"
 
-using namespace exharm;
+using namespace slam;
 using namespace expression;
 using namespace hparser;
-//FIXME: put new tests for ex-harm here
+//FIXME: put new tests for slam here
 //To properly test need to implement interval declared by user, or interval mining.
 
 class EvalTest : public ::testing::Test {
@@ -72,7 +72,7 @@ protected:
     //
     //con.push_back(new Eventually(new Placeholder(_tokenToProp.at("v2")),_tokenToIntv.at("4,6"),_trace));
     //
-    //_impl = new exharm::Implication(ant,con);
+    //_impl = new slam::Implication(ant,con);
   }
 
   Trinary evaluate(size_t time) {return _impl->evaluate(time);}

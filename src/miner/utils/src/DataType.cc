@@ -1,7 +1,7 @@
 #include "DataType.hh"
 
 
-namespace exharm {
+namespace slam {
     using namespace expression;
 
 DataType::DataType()

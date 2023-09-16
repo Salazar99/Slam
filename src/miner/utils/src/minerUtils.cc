@@ -5,7 +5,7 @@
 #include "Template.hh"
 #include "globals.hh"
 
-namespace exharm {
+namespace slam {
 
 std::ostream &operator<<(std::ostream &os, ClsOp op) {
   switch (op) {
@@ -553,4 +553,4 @@ EdgeProposition *edgeToProposition(
   messageError("Error in spot edge formula");
   return nullptr;
 }
-} // namespace exharm
+} // namespace slam

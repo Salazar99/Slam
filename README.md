@@ -2,9 +2,9 @@
   
   
 
-## EX-HARM
+## SLAM
 
-The official repo of the EXtended Hint-Based AsseRtion Miner  
+The official repo of the Signal temporal Logic Assertion Miner 
 
 ## Table of contents
 
@@ -29,7 +29,7 @@ The official repo of the EXtended Hint-Based AsseRtion Miner
 
 ## Project info
 
-EX-HARM (EXtended Hint-based AsseRtion Miner) is a tool to generate Signal Temporal Logic (STL) assertions starting from a set of user-defined hints and the simulation traces of the design under verification (DUV). The tool is agnostic with respect to the design from which the trace was generated, thus the DUV source code is not necessary. The user-defined hints involve STL templates, propositions and ranking metrics that are exploited by the assertion miner to reduce the search space and improve the quality of the generated assertions. This way, the tool supports the work of the verification engineer by including his/her insights in the process of automatically generating assertions.
+SLAM (Signal temporal Logic Assertion Miner) is a tool to generate Signal Temporal Logic (STL) assertions starting from a set of user-defined hints and the simulation traces of the design under verification (DUV). The tool is agnostic with respect to the design from which the trace was generated, thus the DUV source code is not necessary. The user-defined hints involve STL templates, propositions and ranking metrics that are exploited by the assertion miner to reduce the search space and improve the quality of the generated assertions. This way, the tool supports the work of the verification engineer by including his/her insights in the process of automatically generating assertions.
 
 # Quick start
 
@@ -62,13 +62,13 @@ bash install_all.sh
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
-(you can use option -DCMAKE_INSTALL_PREFIX=/path/to/install/directory/ of cmake to specify where to install ex-harm and its dependencies)
+(you can use option -DCMAKE_INSTALL_PREFIX=/path/to/install/directory/ of cmake to specify where to install SLAM and its dependencies)
 ```
 make
 ```
 
 ## Run default tests
-The tests for the tool can be run from the /path/to/install/Ex-harm/build directory using:
+The tests for the tool can be run from the /path/to/install/Slam/build directory using:
 
 ```
 ctest -V -R
@@ -106,11 +106,11 @@ make install
 ```
 * Add the libraries to the runtime library path
 ```
-export DYLD_LIBRARY_PATH=/path/to/install/directory/Ex-harm/lib:$DYLD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH=/path/to/install/directory/Slam/lib:$DYLD_LIBRARY_PATH
 ```
 
 # How to use the miner  
-EX-HARM has two main inputs, a trace in the form of a csv file and a set of hints.
+SLAM has two main inputs, a trace in the form of a csv file and a set of hints.
 Hints consist of a set of propositions, templates and metrics; they are defined in a separate xml configuration file. 
 The user can find several working examples in the "tests" directory .
 
@@ -131,14 +131,14 @@ int var1, bool var2, float var3
 ```
 	
 ## Automatically generating a configuration file
-To simplify the creation of a new test, EX-HARM is capable of generating a sample configuration file using the variables found in the trace.  The user might want to modify the generated configuration file to adapt it to her/his needs.
+To simplify the creation of a new test, SLAM is capable of generating a sample configuration file using the variables found in the trace.  The user might want to modify the generated configuration file to adapt it to her/his needs.
 
 For csv:
 ```
-./ex-harm --csv trace.csv --conf path/to/newConfig.xml --generate-config
+./slam --csv trace.csv --conf path/to/newConfig.xml --generate-config
 ```
 
- EX-HARM will create the configuration file on the path given as argument.
+ SLAM will create the configuration file on the path given as argument.
 
 #  The configuration file
  It is recommended to always start from an automatically generated configuration file (using the --generate-config option).
@@ -241,7 +241,7 @@ The template expression has an additional parameter "check", if it is set to "1"
 * \-\-dont-normalize : discard assertions using the absolute value (not normalized) of filterig metrics 
 * \-\-isilent : disable all infos
 * \-\-max-ass <uint> : the maximum number of assertions to keep after the ranking
-* \-\-max-threads <uint> : max number of threads that EX-HARM is allowed to spawn
+* \-\-max-threads <uint> : max number of threads that SLAM is allowed to spawn
 * \-\-name : <String> name of this execution (used when dumping statistics);
 * \-\-psilent : disable all progress bars
 * \-\-silent : disable all outputs

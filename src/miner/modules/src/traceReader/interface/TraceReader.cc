@@ -7,7 +7,7 @@ namespace l1Constants {
 extern size_t MAX_THREADS;
 }
 
-namespace exharm {
+namespace slam {
 
 using namespace expression;
 
@@ -189,4 +189,4 @@ Trace *TraceReader::multiplyTrace(Trace *trace, size_t n) {
 
   return mergedTrace;
 }
-} // namespace exharm
+} // namespace slam

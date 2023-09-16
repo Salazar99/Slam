@@ -13,8 +13,8 @@ extern std::vector<VarDeclaration> _availableVars;
 
 } // namespace metrics
 namespace hparser {
-    exharm::Metric *parseMetric(const std::string &name, std::string &formula,
-                    exharm::Trace *trace) {
+    slam::Metric *parseMetric(const std::string &name, std::string &formula,
+                    slam::Trace *trace) {
 
   auto decls = metrics::_availableVars;
   addTypeToMetric(formula, decls);
@@ -33,12 +33,12 @@ namespace hparser {
   std::cout << treeFragAnt->toStringTree(&parser) << "\n\n\n";
   exit(0);
   */
-  exharm::Metric *m = listener.getMetric();
+  slam::Metric *m = listener.getMetric();
   m->_name = name;
   return m;
 }
 void addTypeToMetric(std::string &formula,
-                     std::vector<exharm::VarDeclaration> &varDeclarations) {
+                     std::vector<slam::VarDeclaration> &varDeclarations) {
   /*all this code is to solve the problem of
   adding types to the variables in the formula:
   The complexity of the code is to handle the following problems:*/
@@ -52,7 +52,7 @@ void addTypeToMetric(std::string &formula,
 
   // match the longest variables first to solve (3)
   std::sort(begin(varDeclarations), end(varDeclarations),
-            [](exharm::VarDeclaration &e1, exharm::VarDeclaration &e2) {
+            [](slam::VarDeclaration &e1, slam::VarDeclaration &e2) {
               return std::get<0>(e1).size() > std::get<0>(e2).size();
             });
 

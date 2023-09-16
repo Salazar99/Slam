@@ -10,7 +10,7 @@
 #include <tuple>
 #include <vector>
 
-namespace exharm {
+namespace slam {
 
 using VarDeclaration = std::tuple<std::string, expression::VarType, size_t>;
 
@@ -113,4 +113,4 @@ private:
   size_t _val4Logic = sizeof(expression::ULogic) * CHAR_BIT;
 };
 
-} // namespace exharm
+} // namespace slam

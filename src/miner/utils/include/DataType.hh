@@ -5,7 +5,7 @@
 #include "Location.hh"
 #include "expUtils/VarType.hh"
 
-namespace exharm {
+namespace slam {
 
 /// @brief \class DataType
 /// This class represents the declaration of a variable.
@@ -51,4 +51,4 @@ private:
 
 };
 
-} // namespace exharm
+} // namespace slam

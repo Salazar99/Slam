@@ -1,7 +1,7 @@
 
 #include "TraceReader.hh"
 
-namespace exharm {
+namespace slam {
 
 /// \class CSVtraceReader
 /// This class implements the logic to read a .csv file
@@ -18,4 +18,4 @@ private:
 std::pair<std::string, std::pair<std::string, size_t>>
 parseVariable(std::string varDecl);
 DataType toDataType(std::string name, std::string type, size_t size);
-} // namespace exharm
+} // namespace slam
