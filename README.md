@@ -16,7 +16,6 @@ The official repo of the EXtended Hint-Based AsseRtion Miner
 3. [Run default tests](#run-default-tests)
 
 [How to use the miner](#how-to-use-the-miner)
-* [Run with vcd trace](#run-with-a-vcd-trace)
 * [Run with csv trace](#run-with-a-csv-trace)
 * [Automatically generating a configuration file](#automatically-generating-a-configuration-file)
 
@@ -68,7 +67,7 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 
-## Run tests
+## Run default tests
 The tests for the tool can be run from the /path/to/install/Ex-harm/build directory using:
 
 ```
