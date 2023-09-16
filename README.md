@@ -31,6 +31,7 @@ The official repo of the Signal temporal Logic Assertion Miner
 
 SLAM (Signal temporal Logic Assertion Miner) is a tool to generate Signal Temporal Logic (STL) assertions starting from a set of user-defined hints and the simulation traces of the design under verification (DUV). The tool is agnostic with respect to the design from which the trace was generated, thus the DUV source code is not necessary. The user-defined hints involve STL templates, propositions and ranking metrics that are exploited by the assertion miner to reduce the search space and improve the quality of the generated assertions. This way, the tool supports the work of the verification engineer by including his/her insights in the process of automatically generating assertions.
 
+
 # Quick start
 
 For now, we support only Linux and Mac OS (both x86 and arm64) with gcc (c++17) and cmake 3.14+.
@@ -63,6 +64,7 @@ mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 (you can use option -DCMAKE_INSTALL_PREFIX=/path/to/install/directory/ of cmake to specify where to install SLAM and its dependencies)
+
 ```
 make
 ```
