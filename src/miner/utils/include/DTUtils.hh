@@ -8,7 +8,7 @@
 #include <spot/tl/formula.hh>
 #include <spot/twaalgos/postproc.hh>
 
-namespace harm {
+namespace exharm {
   /** \brief returns a vector of combinations, k permutations of n elements 
    */
 inline void comb(int N, int K, std::vector<std::vector<size_t>> &ret) {
@@ -91,4 +91,4 @@ inline bool nothingAfter(const std::string &token, spot::formula f) {
   }
 }
 
-} // namespace harm
+} // namespace exharm

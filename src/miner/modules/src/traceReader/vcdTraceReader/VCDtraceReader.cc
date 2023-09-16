@@ -16,7 +16,7 @@
 #include <string>
 #include <unordered_set>
 
-namespace harm {
+namespace exharm {
 
 using namespace expression;
 
@@ -194,7 +194,7 @@ Trace *VCDtraceReader::readTrace(const std::string file) {
     rootScope = vcd_trace->root_scope;
   }
 
-  //change the name of this 'run' of harm (used when printing/dumping stats), only if the user did not already define a name, same thing for the scope
+  //change the name of this 'run' of exharm (used when printing/dumping stats), only if the user did not already define a name, same thing for the scope
   if (hs::name == "") {
     if (clc::selectedScope == "") {
       hs::name = rootScope->name;
@@ -263,7 +263,7 @@ Trace *VCDtraceReader::readTrace(const std::string file) {
   //  _nameToSignal.erase(n);
   //}
 
-  //harm dose not support logic types larger than 64 bits
+  //exharm dose not support logic types larger than 64 bits
   std::vector<std::string> gt64names;
   for (auto &n_vv : _nameToValues) {
     if (n_vv.second.size() > 64) {
@@ -495,4 +495,4 @@ Trace *VCDtraceReader::readTrace(const std::string file) {
   return trace;
 }
 
-} // namespace harm
+} // namespace exharm

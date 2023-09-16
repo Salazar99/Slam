@@ -4,7 +4,7 @@ namespace expression {
 
 CachedAllNumeric::CachedAllNumeric(
     NumericExpression *nume, double clsEffort,
-    const std::unordered_set<harm::ClsOp> &clsOps)
+    const std::unordered_set<exharm::ClsOp> &clsOps)
     : _nume(nume), _clsEffort(clsEffort), _clsOps(clsOps) {
 
   if (nume->getType().second == 32) {
@@ -22,7 +22,7 @@ CachedAllNumeric::CachedAllNumeric(
 }
 CachedAllNumeric::CachedAllNumeric(
     LogicExpression *loge,
-    double clsEffort, const std::unordered_set<harm::ClsOp> &clsOps)
+    double clsEffort, const std::unordered_set<exharm::ClsOp> &clsOps)
     : _loge(loge), _clsEffort(clsEffort), _clsOps(clsOps) {
   if (loge->getType().first == VarType::ULogic) {
     _cachedul = new ULogic[loge->getMaxTime()];

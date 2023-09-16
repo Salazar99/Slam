@@ -22,7 +22,7 @@
 
 #define enPB 1
 
-namespace harm {
+namespace exharm {
 
 using namespace rapidxml;
 ManualDefinition::ManualDefinition(std::string &configFile)
@@ -265,4 +265,4 @@ void ManualDefinition::mineContexts(Trace *trace,
   }
 }
 
-} // namespace harm
+} // namespace exharm

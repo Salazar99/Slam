@@ -24,7 +24,7 @@
 #include <unordered_set>
 #include <utility>
 
-namespace harm {
+namespace exharm {
 
 TLMiner::TLMiner() : PropertyMiner() {}
 
@@ -55,7 +55,7 @@ void TLMiner::mineProperties(Context &context, Trace *trace) {
     case Location::DecTree:
       _propsDT.push_back(pl.first);
       break;
-    case harm::Location::None:
+    case exharm::Location::None:
       break;
     }
   }
@@ -269,7 +269,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
           makeExpression<PropositionNot>(_propsDT[i]);
     }
 
-    if (t->isVacuous(harm::Location::AntCon)) {
+    if (t->isVacuous(exharm::Location::AntCon)) {
 #if enPB
       _progressBar.increment(l3InstId);
       _progressBar.display();
@@ -336,7 +336,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         ass->fillValues(t);
 
         assp.push_back(ass);
-        messageErrorIf(!t->assHoldsOnTrace(harm::Location::None),
+        messageErrorIf(!t->assHoldsOnTrace(exharm::Location::None),
                        "dt assertion is false: " + t->getColoredAssertion());
       }
 #if dumpVacAss
@@ -433,8 +433,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
   else {
     // If the template does not have a dt
 
-    if (!t->isVacuous(harm::Location::AntCon) &&
-        t->assHoldsOnTrace(harm::Location::None)) {
+    if (!t->isVacuous(exharm::Location::AntCon) &&
+        t->assHoldsOnTrace(exharm::Location::None)) {
 
       //create a new assertion by making a snapshot of a template
       Assertion *ass = new Assertion();
@@ -452,7 +452,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
     }
 #if dumpVacAss
     else {
-      if (t->isVacuous(harm::Location::AntCon)) {
+      if (t->isVacuous(exharm::Location::AntCon)) {
         vacLock.lock();
         std::ofstream vacFile("vac.txt", ios_base::app);
         vacFile << t->getAssertion() + "\n";
@@ -492,4 +492,4 @@ void TLMiner::clear() {
   _numerics.clear();
   _collectedAssertions.clear();
 }
-} // namespace harm
+} // namespace exharm

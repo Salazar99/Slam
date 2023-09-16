@@ -4,7 +4,7 @@
 
 namespace hparser{
 void addTypeToMetric(std::string &formula,
-                          std::vector<harm::VarDeclaration> &varDeclarations) ;
+                          std::vector<exharm::VarDeclaration> &varDeclarations) ;
 
-harm::Metric* parseMetric(const std::string &name, std::string &formula, harm::Trace *trace) ;
+exharm::Metric* parseMetric(const std::string &name, std::string &formula, exharm::Trace *trace) ;
 }

@@ -8,7 +8,7 @@
 #include <vector>
 
 
-namespace harm {
+namespace exharm {
 
 class Template;
 class Assertion;
@@ -40,4 +40,4 @@ public:
   ///filtering metrics
   std::vector<std::pair<Metric *, double>> _filter;
 };
-} // namespace harm
+} // namespace exharm

@@ -5,7 +5,7 @@
 #include "globals.hh"
 #include <gtest/gtest.h>
 
-using namespace harm;
+using namespace exharm;
 using namespace expression;
 
 class TraceTest : public ::testing::Test {

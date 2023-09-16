@@ -10,7 +10,7 @@
 #include <unordered_set>
 #include <vector>
 
-namespace harm {
+namespace exharm {
 
 class Template;
 class Automaton;

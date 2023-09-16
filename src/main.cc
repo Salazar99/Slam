@@ -14,7 +14,7 @@
 #include <filesystem>
 #include <string>
 
-using namespace harm;
+using namespace exharm;
 
 static void parseCommandLineArguments(int argc, char *args[]);
 
@@ -265,7 +265,7 @@ void genConfigFile(std::string &configFile, TraceReader *tr) {
   std::ofstream ofs(configFile,
                     std::fstream::in | std::fstream::out | std::fstream::trunc);
 
-  ofs << "<harm>"
+  ofs << "<ex-harm>"
       << "\n";
   ofs << "\t<context name=\"default\">"
       << "\n\n";
@@ -385,7 +385,7 @@ void genConfigFile(std::string &configFile, TraceReader *tr) {
   ofs << "\t\t<sort name=\"frequency\" exp=\"atct/traceLength\"/>\n";
   ofs << "	</context>"
       << "\n";
-  ofs << "</harm>"
+  ofs << "</ex-harm>"
       << "\n";
   ofs << "\n\n"
       << "\n";

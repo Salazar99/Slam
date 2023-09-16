@@ -1,4 +1,4 @@
-<harm>
+<exharm>
 	<context name="sample"> 
 		<numeric clsEffort = "0.001" exp="v1" loc="dt"/>
 
@@ -16,4 +16,4 @@
 		<sort name="frequency" exp="atct/traceLength"/>
 
 	</context>
-</harm>
+</exharm>

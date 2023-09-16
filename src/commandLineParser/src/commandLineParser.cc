@@ -26,10 +26,10 @@ cxxopts::ParseResult parseHARM(int argc, char *argv[]) {
         cxxopts::value<std::string>(), "<DIRECTORY>")(
         "ftm",
         "'fault-on-trace mode', give the path to a file containing comma "
-        "seperated 'output variables', harm will perform fault coverage by "
+        "seperated 'output variables', ex-harm will perform fault coverage by "
         "inserting stuck-at faults in the 'outputs' of the trace",
         cxxopts::value<std::string>(), "<FILE>")
-            ( "max-threads", "max number of threads that harm is allowed to spawn", cxxopts::value<size_t>(), "<uint>")
+            ( "max-threads", "max number of threads that ex-harm is allowed to spawn", cxxopts::value<size_t>(), "<uint>")
             ( "multiply-trace", "repliocate the trace N times", cxxopts::value<size_t>(), "<uint>")
             ("test-level", "test one level of the 3lp (1,2 or 3)",
                   cxxopts::value<size_t>(), "<uint>")(
@@ -75,9 +75,9 @@ cxxopts::ParseResult parseHARM(int argc, char *argv[]) {
         result.count("conf") == 0) {
       std::cout << "Usage:\n";
       std::cout
-          << "vcd input --> harm [--vcd <vcdFile> | --vcd-dir <dirPath>] --clk "
+          << "vcd input --> ex-harm [--vcd <vcdFile> | --vcd-dir <dirPath>] --clk "
              "<clkSignal> --conf <xmlConfigFile> [<OptionalArguments...>]\n";
-      std::cout << "csv input --> harm [--csv <csvFile> | --csv-dir <dirPath>] "
+      std::cout << "csv input --> ex-harm [--csv <csvFile> | --csv-dir <dirPath>] "
                    "--conf <xmlConfigFile> [<OptionalArguments...>]"
                 << "\n";
       exit(0);

@@ -24,9 +24,9 @@
 #include <string>
 #include <thread>
 #include <utility>
-namespace harm {
+namespace exharm {
 
-Template::Template(harm::Trace *trace, DTLimits limits)
+Template::Template(exharm::Trace *trace, DTLimits limits)
     : _max_length(trace->getLength()), _limits(limits), _trace(trace) {
 
 }
@@ -106,14 +106,14 @@ bool Template::nextPerm() {
   _conInCache = false;
   _antInCache = false;
   for (auto &e : _pg._phToIndex) {
-    harm::Location where = _pg._phToLoc.at(e.first);
+    exharm::Location where = _pg._phToLoc.at(e.first);
     // e.first is the string representation of a placeholder e.second is the column of the permutation's table _permIndex is the row of the permutation's table
 
-    if (where == harm::Location::Ant) {
+    if (where == exharm::Location::Ant) {
       //fill the placeholder with the correct proposition _pg._perms[_permIndex][e.second] contains the index of the proposition to be inserted
       //FIXME Completely broken due to Hstring modification
       //  (*_aphToProp.at(e.first)) = _aProps[_pg._perms[_permIndex][e.second]];
-      //} else if (where == harm::Location::Con) {
+      //} else if (where == exharm::Location::Con) {
       //  (*_cphToProp.at(e.first)) = _cProps[_pg._perms[_permIndex][e.second]];
       //} else {
       //  (*_acphToProp.at(e.first)) = _acProps[_pg._perms[_permIndex][e.second]];
@@ -137,16 +137,16 @@ void Template::loadPerm(size_t n) {
   _conInCache = false;
   _antInCache = false;
   for (auto &e : _pg._phToIndex) {
-    harm::Location where = _pg._phToLoc.at(e.first);
+    exharm::Location where = _pg._phToLoc.at(e.first);
     //e.first is the string representation of a placeholder e.second is the column of the permutation's table _permIndex is the row of the permutation's table
 
-    if (where == harm::Location::Ant) {
+    if (where == exharm::Location::Ant) {
       //        messageError("");
       //feel the placeholder with the correct proposition _pg._perms[_permIndex][e.second] contains the index of the proposition to be inserted
       //FIXME Completely broken due to Hstring modification
       dynamic_cast<Placeholder *>(_aphToProp.at(e.first))
           ->setProposition(_aProps[_pg._perms[n][e.second]]);
-    } else if (where == harm::Location::Con) {
+    } else if (where == exharm::Location::Con) {
       dynamic_cast<Placeholder *>(_cphToProp.at(e.first))
           ->setProposition(_cProps[_pg._perms[n][e.second]]);
       //      dynamic_cast<Placeholder *>(*_cphToProp.at(e.first)) ->setProposition(_cProps[n]);
@@ -160,10 +160,10 @@ void Template::loadPerm(size_t n) {
   // available permutations
 }
 
-size_t Template::getNumPlaceholders(harm::Location where) {
-  if (where == harm::Location::Ant) {
+size_t Template::getNumPlaceholders(exharm::Location where) {
+  if (where == exharm::Location::Ant) {
     return _aphToProp.size();
-  } else if (where == harm::Location::Con) {
+  } else if (where == exharm::Location::Con) {
     return _cphToProp.size();
   } else {
     return _acphToProp.size();
@@ -175,15 +175,15 @@ size_t Template::getNumPlaceholders() {
 }
 
 void Template::loadPropositions(std::vector<Proposition *> &props,
-                                harm::Location where) {
+                                exharm::Location where) {
 
   // Check errors-----------------------------
-  if (where == harm::Location::Ant) {
+  if (where == exharm::Location::Ant) {
     messageErrorIf(_aphToProp.size() != props.size(),
                    "Expecting " + std::to_string(_aphToProp.size()) +
                        " propositions, " + std::to_string(props.size()) +
                        " given!");
-  } else if (where == harm::Location::Con) {
+  } else if (where == exharm::Location::Con) {
     messageErrorIf(_cphToProp.size() != props.size(),
                    "Expecting " + std::to_string(_cphToProp.size()) +
                        " propositions, " + std::to_string(props.size()) +
@@ -199,14 +199,14 @@ void Template::loadPropositions(std::vector<Proposition *> &props,
 
   // Warning: the given propositions are inserted following the alphabetic order of the placeholders
   size_t i = 0;
-  if (where == harm::Location::Ant) {
+  if (where == exharm::Location::Ant) {
     // the antecedent is modified: we need to recalculate
     _antInCache = false;
     // put the propositions in the antecedent's placeholders
     for (const auto &ph : _aphToProp) {
       dynamic_cast<Placeholder *>(ph.second)->setProposition(props[i++]);
     }
-  } else if (where == harm::Location::Con) {
+  } else if (where == exharm::Location::Con) {
 
     for (const auto &ph : _cphToProp) {
       dynamic_cast<Placeholder *>(ph.second)->setProposition(props[i++]);
@@ -367,7 +367,7 @@ void Template::check() {
   size_t ct[3][3] = {{0}};
   fillContingency(ct, 0);
 
-  if (!assHoldsOnTrace(harm::Location::AntCon)) {
+  if (!assHoldsOnTrace(exharm::Location::AntCon)) {
     printContingency();
     std::cout << "Failing sub-traces:\n";
     for (size_t i = 0; i < _max_length; i++) {
@@ -501,9 +501,9 @@ bool Template::saveOffset() { return _limits._saveOffset; }
 */
 
 bool Template::isFullyInstantiated() {
-  return (getNumPlaceholders(harm::Location::Ant) +
-          getNumPlaceholders(harm::Location::Con) +
-          getNumPlaceholders(harm::Location::AntCon)) == 0 &&
+  return (getNumPlaceholders(exharm::Location::Ant) +
+          getNumPlaceholders(exharm::Location::Con) +
+          getNumPlaceholders(exharm::Location::AntCon)) == 0 &&
          _dtOp.second == nullptr;
 }
 std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInterestingValue(CachedAllNumeric *cn, int depth, int width) {
@@ -515,7 +515,7 @@ std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInteres
   std::vector<size_t> iv_suffix;  
 
   //Automaton::Node *cn = _ant->_root;
-  harm::Implication * impl = _impl;
+  exharm::Implication * impl = _impl;
   size_t currTime = 0;
   template_dt->addItem(tc,{0,0},depth);
   while (currTime < _max_length) {
@@ -565,4 +565,4 @@ void Template::subPropInAssertion(Proposition *original, Proposition *newProp) {
 }
 
 
-} // namespace harm
+} // namespace exharm

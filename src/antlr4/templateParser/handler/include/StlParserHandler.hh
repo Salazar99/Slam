@@ -11,7 +11,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace harm {
+namespace exharm {
 class Template;
 }
 
@@ -20,11 +20,11 @@ namespace hparser {
 class StlParserHandler : public stlBaseListener {
 
 public:
-  explicit StlParserHandler(harm::Trace *trace, harm::DTLimits limits);
+  explicit StlParserHandler(exharm::Trace *trace, exharm::DTLimits limits);
 
   ~StlParserHandler() override = default;
 
-  harm::Template *getTemplate() {
+  exharm::Template *getTemplate() {
      
       return _template; }
   void addErrorMessage(const std::string &msg);
@@ -37,8 +37,8 @@ private:
   std::stack<expression::TemporalExp *> _tfStack;
   std::stack<std::string> _intervalNames;
   std::unordered_map<std::string, std::pair<size_t, size_t> *> _intervals;
-  harm::Trace *_trace;
-  harm::Template *_template;
+  exharm::Trace *_trace;
+  exharm::Template *_template;
   std::unordered_map<std::string, expression::TemporalExp **> _phToProp;
   std::unordered_map<std::string, std::string> _propStrToInst;
   size_t dtCount = 0;

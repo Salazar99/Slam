@@ -42,7 +42,7 @@ std::vector<VarDeclaration> _availableVars;
 
 } // namespace metrics
 
-namespace harm {
+namespace exharm {
 
 using namespace expression;
 
@@ -954,4 +954,4 @@ std::unordered_map<std::string, double> Qualifier::getMaxValuesForFilterMetrics(
   return mToMaxValue;
 }
 
-} // namespace harm
+} // namespace exharm

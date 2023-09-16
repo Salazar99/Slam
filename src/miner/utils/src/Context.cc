@@ -3,7 +3,7 @@
 #include "Assertion.hh"
 #include "Metric.hh"
 
-namespace harm {
+namespace exharm {
 
 Context::Context() {}
 
@@ -40,4 +40,4 @@ Context::Context(
     : _name(name), _props(props), _templates(templates), _language(language) {
   // not todo
 }
-} // namespace harm
+} // namespace exharm

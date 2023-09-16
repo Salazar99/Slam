@@ -3,5 +3,5 @@
 #include "DTLimits.hh"
 
 namespace hparser{
-    harm::DTLimits parseLimits(const std::string &formula);
+    exharm::DTLimits parseLimits(const std::string &formula);
 }

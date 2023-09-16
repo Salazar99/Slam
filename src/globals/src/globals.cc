@@ -45,7 +45,7 @@ bool dontNormalize = false;
 bool debugCls=0;
 } // namespace clc
 
-// harm stat
+// exharm stat
 namespace hs {
 
 size_t timeToMine_ms = 0;

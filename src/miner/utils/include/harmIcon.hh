@@ -2,7 +2,7 @@
 
 #include <string>
 
-  /** \brief Get the string representation of the HARM icon
+  /** \brief Get the string representation of the EX-HARM icon
    */
 inline std::string getIcon() {
   return 

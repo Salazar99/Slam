@@ -1,7 +1,7 @@
 #include "Assertion.hh"
 #include "Template.hh"
 
-namespace harm {
+namespace exharm {
 
 Assertion::~Assertion() {
   if (_values != nullptr) {
@@ -94,4 +94,4 @@ bool operator==(const Assertion &a1, const Assertion &a2) {
 
   return a1_s == a2_s;
 }
-} // namespace harm
+} // namespace exharm

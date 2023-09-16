@@ -9,7 +9,7 @@
 namespace hparser {
 using namespace expression;
 
-MetricParserHandler::MetricParserHandler(harm::Trace *trace)
+MetricParserHandler::MetricParserHandler(exharm::Trace *trace)
     : _abort(false), _logicExpressions(), _numericExpressions(), _trace(trace) {
 }
 
@@ -21,7 +21,7 @@ void MetricParserHandler::enterFile(__attribute__((unused))
                                     metricParser::FileContext *ctx) {
   _abort = false;
 
-  _metric = new harm::Metric();
+  _metric = new exharm::Metric();
 }
 
 void MetricParserHandler::enterLogicConstant(
@@ -253,7 +253,7 @@ void MetricParserHandler::exitNumeric(metricParser::NumericContext *ctx) {
   }
 }
 
-harm::Metric *MetricParserHandler::getMetric() {
+exharm::Metric *MetricParserHandler::getMetric() {
   messageErrorIf(_numericExpressions.size() != 1, ""+printErrorMessage());
 
   _metric->_exp = _numericExpressions.top();

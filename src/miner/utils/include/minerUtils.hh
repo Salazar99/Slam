@@ -17,7 +17,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace harm {
+namespace exharm {
 class Template;
 class Automaton;
 class EdgeProposition;
@@ -53,4 +53,4 @@ Automaton *buildAutomaton(
 EdgeProposition *edgeToProposition(
     const spot::formula &f,
     std::unordered_map<std::string, expression::Proposition **> &tokenToProp);
-} // namespace harm
+} // namespace exharm

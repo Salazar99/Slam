@@ -17,13 +17,13 @@ public:
   };
 
   CachedAllNumeric(NumericExpression *nume, double clsEffort = 1.0f,
-                   const std::unordered_set<harm::ClsOp> &clsOps =
-                       std::unordered_set<harm::ClsOp>({harm::ClsOp::Range,
-                                                        harm::ClsOp::E}));
+                   const std::unordered_set<exharm::ClsOp> &clsOps =
+                       std::unordered_set<exharm::ClsOp>({exharm::ClsOp::Range,
+                                                        exharm::ClsOp::E}));
   CachedAllNumeric(LogicExpression *loge, double clsEffort = 1.0f,
-                   const std::unordered_set<harm::ClsOp> &clsOps =
-                       std::unordered_set<harm::ClsOp>({harm::ClsOp::Range,
-                                                        harm::ClsOp::E}));
+                   const std::unordered_set<exharm::ClsOp> &clsOps =
+                       std::unordered_set<exharm::ClsOp>({exharm::ClsOp::Range,
+                                                        exharm::ClsOp::E}));
   virtual ~CachedAllNumeric();
   EvalRet evaluate(size_t time);
 
@@ -45,6 +45,6 @@ private:
 
 public:
   double _clsEffort = 0.3f;
-  std::unordered_set<harm::ClsOp> _clsOps;
+  std::unordered_set<exharm::ClsOp> _clsOps;
 };
 } // namespace expression

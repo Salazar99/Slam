@@ -33,7 +33,7 @@ std::string replaceAll(std::string str, const std::string &from,
 }
 #endif
 
-namespace harm {
+namespace exharm {
 
 namespace {
 namespace MT /* multi-thread methods */ {
@@ -544,4 +544,4 @@ void AntecedentGenerator::storeSolution(Template *t, bool isOffset) {
   }
 }
 
-} // namespace harm
+} // namespace exharm

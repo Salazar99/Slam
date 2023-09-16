@@ -15,10 +15,10 @@
 #define enPB 1
 using namespace std;
 
-namespace harm {
+namespace exharm {
 
 /*! \class TLMiner
-    \brief implements the logic of the harm assertion miner
+    \brief implements the logic of the ex-harm assertion miner
 */
 class TLMiner : public PropertyMiner {
 
@@ -67,4 +67,4 @@ private:
 #endif
   };
 
-} // namespace harm
+} // namespace exharm

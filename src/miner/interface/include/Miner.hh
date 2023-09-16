@@ -2,7 +2,7 @@
 
 #include "modules.hh"
 
-namespace harm {
+namespace exharm {
 /// \class Miner
 /// \brief This class contains a collection of modules implementing the functionaltiies of an assertion miner.
 class Miner {
@@ -49,4 +49,4 @@ private:
   void _printWelcomeMessage();
 };
 
-} // namespace harm
+} // namespace exharm

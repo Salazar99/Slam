@@ -1,5 +1,5 @@
 #include "EdgeProposition.hh"
-namespace harm {
+namespace exharm {
 
 EdgeAnd::EdgeAnd(EdgeProposition *p1, EdgeProposition *p2) : EdgeProposition() {
   _operands.push_back(p1);
@@ -84,4 +84,4 @@ bool EdgePlaceholder::evaluate(size_t time) {
   return (*_toProp)->evaluate(time);
 }
 std::string EdgePlaceholder::toString() { return prop2String(**_toProp); }
-} // namespace harm
+} // namespace exharm

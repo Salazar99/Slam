@@ -70,7 +70,7 @@ void DTLimitsParserHandler::enterStrategy(limitsParser::StrategyContext *ctx) {
 void DTLimitsParserHandler::enterEveryRule(antlr4::ParserRuleContext *ctx) {}
 void DTLimitsParserHandler::visitTerminal(antlr4::tree::TerminalNode *node) {}
 
-harm::DTLimits DTLimitsParserHandler::getLimits() { return _limits; }
+exharm::DTLimits DTLimitsParserHandler::getLimits() { return _limits; }
 std::unordered_set<std::string> DTLimitsParserHandler::getSetOptions() {
   return _setOptions;
 }

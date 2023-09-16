@@ -68,6 +68,38 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 
+## Run tests
+The tests for the tool can be run from the /path/to/install/Ex-harm/build directory using:
+
+```
+ctest -V -R
+```
+(This will run all the tests)
+
+To show all available tests use:
+
+```
+ctest --show-only
+```
+
+To run a specific test use:
+ ```
+ctest -V -R testname
+```
+for example for the test regarding the "tank" system:
+ ```
+ctest -V -R tank
+```
+
+To run the tests on scalability for a specific system use:
+```
+ctest -V -R testname_
+```
+for example for the scalability tests regarding the "tank" system:
+ ```
+ctest -V -R tank_
+```
+
 ### Mac OS only
 * Install the libraries (specify a proper path usig cmake) 
 ```
@@ -100,18 +132,14 @@ int var1, bool var2, float var3
 ```
 	
 ## Automatically generating a configuration file
-To simplify the creation of a new test, HARM is capable of generating a sample configuration file using the variables found in the trace.  The user might want to modify the generated configuration file to adapt it to her/his needs.
+To simplify the creation of a new test, EX-HARM is capable of generating a sample configuration file using the variables found in the trace.  The user might want to modify the generated configuration file to adapt it to her/his needs.
 
-For vcd:
-```
-./harm --vcd trace.vcd --clk clock --conf path/to/newConfig.xml --generate-config
-```
 For csv:
 ```
-./harm --csv trace.csv --conf path/to/newConfig.xml --generate-config
+./ex-harm --csv trace.csv --conf path/to/newConfig.xml --generate-config
 ```
 
- HARM will create the configuration file on the path given as argument.
+ EX-HARM will create the configuration file on the path given as argument.
 
 #  The configuration file
  It is recommended to always start from an automatically generated configuration file (using the --generate-config option).
@@ -126,7 +154,7 @@ For csv:
 		
 		<numeric clsEffort="0.3" exp="var7 + var8" loc="c"/>
 		
-		<template dtLimits="4A,3D,2D,-0.1E,R,O" exp="G({..#1&..}|-> X(P0))" /> 
+		<template dtLimits="4A,3D,2D,-0.1E,R,O" exp="G({..F..}|-> F[0,0](P0))" /> 
 		
 	
 		<filter name="causality" exp="1-afct/traceLength" threshold="0.45"/>
@@ -165,10 +193,8 @@ For the full grammar of templates, check "src/antl4/templateParser/grammar/tempo
  
  There are three special placeholders: ..&&.., ..##\<N>.. and ..#\<N>&..;  when  employed, the miner will try to replace them with a corresponding expression using a decision tree (DT) algorithm.
  
- * ..&&..  will be replaced with an expression of type v1 && v2 && .. && vn
- * ..##1..  will be replaced with an expression of type v1 ##1 v2 ##1 .. ##1 vn
- * ..#1&..  will be replaced with an expressions of type (..&&..)_1 ##1 (..&&..)_2 ##1 .. ##1 (..&&..)_n
-
+ * ..F..  will be replaced with an expression of type v1 && F[t1,t2]v2 && .. && [tn1,tn2]vn
+ 
  These placeholders can only be used once in the antecedent.
  
  A template using a Decision Tree Operator (DTO) is associated with a configuration (defined in the 'dtLimits' attribute of 'template') involving several adjustable parameters:
@@ -203,7 +229,7 @@ Currently available assertion features (more will be added):
 #   How to check an assertion
 The template expression has an additional parameter "check", if it is set to "1" then the miner analyses the corresponding assertion on the given trace, if the assertion does not hold on the input traces, it reports the cause of failure.  Example:
 ```
-<template check="1" exp="G({v1} |-> {(v2<10 && v3) && (v4==8 && v5)})" />
+<template check="1" exp="G((v1==100) |-> F[0,0](v3))" />
 ``` 
  Note that the template must be fully instantiated (no placeholders).
  
@@ -221,7 +247,7 @@ The template expression has an additional parameter "check", if it is set to "1"
 * \-\-dont-normalize : discard assertions using the absolute value (not normalized) of filterig metrics 
 * \-\-isilent : disable all infos
 * \-\-max-ass <uint> : the maximum number of assertions to keep after the ranking
-* \-\-max-threads <uint> : max number of threads that HARM is allowed to spawn
+* \-\-max-threads <uint> : max number of threads that EX-HARM is allowed to spawn
 * \-\-name : <String> name of this execution (used when dumping statistics);
 * \-\-psilent : disable all progress bars
 * \-\-silent : disable all outputs

@@ -7,7 +7,7 @@
 
 #define printTree 1
 
-namespace harm {
+namespace exharm {
 
 // For the decision tree algorithm variables are enumerated. Each variable is a proposition splitting the search space.
 using DecTreeVariables =
@@ -147,4 +147,4 @@ private:
 #endif
 };
 
-} // namespace harm
+} // namespace exharm

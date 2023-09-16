@@ -10,7 +10,7 @@
 #include <unordered_set>
 #include <utility>
 
-namespace harm {
+namespace exharm {
 //--DTAndF == ..F..---------------------------------------
 DTAndF::DTAndF(TemporalAnd *p, Template *t, const DTLimits &limits)
     : _choices(p), _t(t) {
@@ -167,12 +167,12 @@ std::vector<TemporalExp *> DTAndF::minimize(bool isOffset) {
   //      }
   //      // check if this combination works
   //      if (isOffset) {
-  //        if (_t->assHoldsOnTraceOffset(harm::Location::Ant)) {
+  //        if (_t->assHoldsOnTraceOffset(exharm::Location::Ant)) {
   //          // we found a minimal solution
   //          goto end;
   //        }
   //      } else {
-  //        if (_t->assHoldsOnTrace(harm::Location::Ant)) {
+  //        if (_t->assHoldsOnTrace(exharm::Location::Ant)) {
   //          goto end;
   //        }
   //      }
@@ -233,4 +233,4 @@ void DTAndF::loadSolution(
                                       items[i].second, _t->_trace));
   }
 }
-} // namespace harm
+} // namespace exharm

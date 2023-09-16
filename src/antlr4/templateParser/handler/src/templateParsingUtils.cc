@@ -7,9 +7,9 @@
 
 namespace hparser {
 using namespace expression;
-harm::Template *parseTemplate(std::string formula, harm::Trace *trace,
+exharm::Template *parseTemplate(std::string formula, exharm::Trace *trace,
                               const std::string &language,
-                              const harm::DTLimits &limits, bool useCache) {
+                              const exharm::DTLimits &limits, bool useCache) {
 
   auto decls = trace->getDeclarations();
   addTypeToTemplate(formula, decls);
@@ -40,7 +40,7 @@ harm::Template *parseTemplate(std::string formula, harm::Trace *trace,
 
 //FIXME Do we still need this?
 /*
-Hstring spotToSVA(std::string spotFormula, harm::Trace *trace) {
+Hstring spotToSVA(std::string spotFormula, exharm::Trace *trace) {
 
   auto decls = trace->getDeclarations();
   addTypeToTemplate(spotFormula, decls);
@@ -78,7 +78,7 @@ void findAllOccurances(std::vector<size_t> &vec, std::string data,
 }
 
 void addTypeToTemplate(std::string &formula,
-                       std::vector<harm::VarDeclaration> varDeclarations) {
+                       std::vector<exharm::VarDeclaration> varDeclarations) {
   /*all this code is to solve the problem of
   adding types to the variables in the formula:
   The complexity of the code is to handle the following problems:*/
@@ -95,7 +95,7 @@ void addTypeToTemplate(std::string &formula,
 
   // match the longest variables first to solve (3)
   std::sort(begin(varDeclarations), end(varDeclarations),
-            [](harm::VarDeclaration &e1, harm::VarDeclaration &e2) {
+            [](exharm::VarDeclaration &e1, exharm::VarDeclaration &e2) {
               return std::get<0>(e1).size() > std::get<0>(e2).size();
             });
 

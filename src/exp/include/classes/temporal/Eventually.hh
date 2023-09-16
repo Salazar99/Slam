@@ -2,7 +2,7 @@
 
 #include "TemporalExp.hh"
 
-namespace harm {
+namespace exharm {
 class Trace;
 }
 
@@ -11,7 +11,7 @@ namespace expression {
 class Eventually : public TemporalExp {
 public:
   Eventually(TemporalExp *operand, const std::pair<size_t, size_t> &interval,
-             harm::Trace *trace);
+             exharm::Trace *trace);
 
   Eventually(const Eventually &original) {
       _trace=original._trace;
@@ -41,7 +41,7 @@ public:
 private:
   TemporalExp *_operand;
   std::pair<size_t, size_t> _interval;
-  harm::Trace *_trace;
+  exharm::Trace *_trace;
 };
 
 }; // namespace expression

@@ -4,7 +4,7 @@
 #include "Trace.hh"
 #include "Template.hh"
 
-namespace harm {
+namespace exharm {
 
 /// @brief PropertyMiner declaration.
 /// This is an interface for a generic property miner module.

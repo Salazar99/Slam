@@ -7,7 +7,7 @@
 namespace hparser {
 using namespace expression;
 
-PropositionParserHandler::PropositionParserHandler(harm::Trace *trace)
+PropositionParserHandler::PropositionParserHandler(exharm::Trace *trace)
     : _abort(false), _proposition(), _logicExpressions(), _numericExpressions(),
       _trace(trace) {}
 

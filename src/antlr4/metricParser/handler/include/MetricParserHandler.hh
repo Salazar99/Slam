@@ -15,11 +15,11 @@ namespace hparser{
 class MetricParserHandler : public metricBaseListener {
 
 public:
-  explicit MetricParserHandler(harm::Trace * trace);
+  explicit MetricParserHandler(exharm::Trace * trace);
 
   ~MetricParserHandler() override = default;
 
-  harm::Metric* getMetric();
+  exharm::Metric* getMetric();
   void addErrorMessage(const std::string &msg);
 
 private:
@@ -29,10 +29,10 @@ private:
 
   std::stack<expression::LogicExpression *> _logicExpressions;
   std::stack<expression::NumericExpression *> _numericExpressions;
-  harm::Trace * _trace;
+  exharm::Trace * _trace;
   size_t logicStack = 0;
   size_t numeriStack = 0;
-  harm::Metric* _metric;
+  exharm::Metric* _metric;
 
 
   void enterFile(metricParser::FileContext *ctx) override;

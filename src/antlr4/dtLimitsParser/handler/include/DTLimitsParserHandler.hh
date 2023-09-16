@@ -18,7 +18,7 @@ public:
 
   ~DTLimitsParserHandler() override = default;
 
-  harm::DTLimits getLimits() ;
+  exharm::DTLimits getLimits() ;
   std::unordered_set<std::string> getSetOptions();
   void addErrorMessage(const std::string &msg);
 
@@ -56,7 +56,7 @@ private:
 
   virtual void visitErrorNode(antlr4::tree::ErrorNode *node) override;
 
-  harm::DTLimits _limits;
+  exharm::DTLimits _limits;
   std::unordered_set<std::string> _setOptions;
 };
 } // namespace hparser

@@ -2,7 +2,7 @@
 #include "message.hh"
 #include <sstream>
 
-namespace harm {
+namespace exharm {
 
 ContextMiner::ContextMiner(std::string &configFile)
     : _configuration(nullptr), _xmlFile(nullptr), _doc(nullptr) {
@@ -24,10 +24,10 @@ ContextMiner::ContextMiner(std::string &configFile)
   }
 
   // specifications
-  _configuration = _doc->first_node("harm");
+  _configuration = _doc->first_node("exharm");
   if (_configuration == nullptr) {
-    messageError("harm node not found!");
+    messageError("ex-harm node not found!");
   }
 }
 
-} // namespace harm
+} // namespace exharm
