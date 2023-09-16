@@ -22,6 +22,8 @@ std::string clk = "";
 std::string outputLang = "Spot";
 bool genTemp;
 size_t maxThreads = std::thread::hardware_concurrency();
+size_t multiplyTrace = 1;
+bool divideStat = false;
 bool findMinSubset = false;
 bool dumpAssToFile = false;
 size_t maxAss = std::numeric_limits<size_t>().max();

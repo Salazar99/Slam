@@ -45,6 +45,9 @@ extern std::string clsAlg;
 extern bool dumpStat;
 extern bool dontNormalize;
 extern bool debugCls;
+extern bool divideStat;
+extern size_t multiplyTrace;
+
 } // namespace clc
 
 // harm stat

@@ -22,6 +22,8 @@ public:
   /// @brief Unsupported operator
   TraceReader &operator=(const TraceReader &other) = delete;
 
+  Trace *multiplyTrace(Trace *trace, size_t n) ;
+
 private:
   /// @brief used when multiple traces are given as input
   Trace *mergeTrace(const std::vector<Trace *> &traces);

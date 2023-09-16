@@ -28,16 +28,17 @@ cxxopts::ParseResult parseHARM(int argc, char *argv[]) {
         "'fault-on-trace mode', give the path to a file containing comma "
         "seperated 'output variables', harm will perform fault coverage by "
         "inserting stuck-at faults in the 'outputs' of the trace",
-        cxxopts::value<std::string>(), "<FILE>")(
-        "max-threads", "max number of threads that harm is allowed to spawn",
-        cxxopts::value<size_t>(),
-        "<uint>")("test-level", "test one level of the 3lp (1,2 or 3)",
+        cxxopts::value<std::string>(), "<FILE>")
+            ( "max-threads", "max number of threads that harm is allowed to spawn", cxxopts::value<size_t>(), "<uint>")
+            ( "multiply-trace", "repliocate the trace N times", cxxopts::value<size_t>(), "<uint>")
+            ("test-level", "test one level of the 3lp (1,2 or 3)",
                   cxxopts::value<size_t>(), "<uint>")(
         "generate-config", "generate template xml configuration")(
         "dont-normalize", "discard assertions using the absolute value (not "
-                          "normalized) of filterig metrics ")(
-        "find-min-subset",
-        "find the minimum number of assertions covering all faults")(
+                          "normalized) of filterig metrics ")
+        ( "find-min-subset", "find the minimum number of assertions covering all faults")
+        ( "divide-stat", "divide the statistics for each context")
+        (
         "dump", "dump assertions to file")("dump-stat",
                                            "dump statistics to file")(
         "dump-to", "dump assertions to file with given path",

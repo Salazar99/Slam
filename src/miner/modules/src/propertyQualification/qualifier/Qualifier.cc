@@ -762,16 +762,16 @@ void Qualifier::fbqUsingFaultyTraces(std::vector<Assertion *> &selected) {
 
   //  debug
   //  which ass covers which fault?
-  //  for (auto aff : _aToF) {
-  //    std::cout << aff.first << ") " <<
-  //    selected[aff.first]->_toString.second
-  //              << "\n";
-  //    for (auto f : aff.second) {
-  //      std::cout << "\t"
-  //                << "   " << f << "\n";
-  //    }
-  //  }
-  //
+    for (auto aff : _aToF) {
+      std::cout << aff.first << ") " <<
+      selected[aff.first]->_toString.second
+                << "\n";
+      for (auto f : aff.second) {
+        std::cout << "\t"
+                  << "   " << f << "\n";
+      }
+    }
+  
 }
 void Qualifier::faultBasedQualification(std::vector<Assertion *> selected,
                                         Trace *trace) {

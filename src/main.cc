@@ -128,6 +128,12 @@ void parseCommandLineArguments(int argc, char *args[]) {
   if (result.count("max-ass")) {
     clc::maxAss = result["max-ass"].as<size_t>();
   }
+  if (result.count("multiply-trace")) {
+    clc::multiplyTrace = result["multiply-trace"].as<size_t>();
+  }
+  if (result.count("divide-stat")) {
+    clc::divideStat = true;
+  }
   if (result.count("min-final")) {
     clc::minFinal = result["min-final"].as<double>();
   }

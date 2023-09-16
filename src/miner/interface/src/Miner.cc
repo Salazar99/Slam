@@ -37,6 +37,14 @@ void Miner::run() {
                  "Trace reader module has not been set!");
 
   Trace *trace = _config.traceReader->readTrace();
+  if (clc::multiplyTrace > 1) {
+    messageInfo("Multiplying trace by " + std::to_string(clc::multiplyTrace));
+    auto originalTrace = trace;
+    trace = _config.traceReader->multiplyTrace(trace, clc::multiplyTrace);
+    delete originalTrace;
+    messageInfo("New trace length: " + std::to_string(trace->getLength()));
+  }
+
   hs::traceLength = trace->getLength();
 
   //2) Read the contexts
@@ -45,8 +53,10 @@ void Miner::run() {
   _config.contextMiner->mineContexts(trace, contexts);
 
   for (Context *context : contexts) {
+    if (clc::divideStat) {
       clearStats();
-      hs::name=context->_name;
+      hs::name = context->_name;
+    }
 
     messageErrorIf(context->_templates.empty(),
                    "No templates or assertions defined!");
@@ -87,7 +97,9 @@ void Miner::run() {
 
     //4) Qualify the mined temporal assertions (additionally print and dump)
     _config.propertyQualifier->qualify(*context, trace);
-    printStats();
+    if (clc::divideStat) {
+      printStats();
+    }
 
     for (Template *t : toCheck) {
       t->check();
@@ -95,17 +107,20 @@ void Miner::run() {
     delete context;
   }
 
-  delete trace;
+  if (!clc::divideStat) {
+    printStats();
+  }
 
+  delete trace;
 }
 
-void Miner::clearStats(){
-    hs::nAssertions = 0;
-    hs::nFaults = 0;
-    hs::nOfCovFaults = 0;
-    hs::nFaultCovSubset = 0;
-    hs::timeToMine_ms = 0;
-    hs::name = "";
+void Miner::clearStats() {
+  hs::nAssertions = 0;
+  hs::nFaults = 0;
+  hs::nOfCovFaults = 0;
+  hs::nFaultCovSubset = 0;
+  hs::timeToMine_ms = 0;
+  hs::name = "";
 }
 
 void Miner::printStats() {
