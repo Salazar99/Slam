@@ -28,6 +28,7 @@ extern bool genTemp;
 extern size_t maxThreads;
 extern bool dumpAssToFile;
 extern size_t maxAss;
+extern double minFinal;
 extern std::string dumpPath;
 extern bool findMinSubset;
 extern bool intMode;
@@ -43,9 +44,13 @@ extern bool psilent;
 extern std::string clsAlg;
 extern bool dumpStat;
 extern bool dontNormalize;
+extern bool debugCls;
+extern bool divideStat;
+extern size_t multiplyTrace;
+
 } // namespace clc
 
-// harm stat
+// slam stat
 namespace hs {
 
 extern size_t timeToMine_ms;

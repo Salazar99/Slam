@@ -14,7 +14,7 @@
 #include <filesystem>
 #include <string>
 
-using namespace harm;
+using namespace slam;
 
 static void parseCommandLineArguments(int argc, char *args[]);
 
@@ -128,6 +128,15 @@ void parseCommandLineArguments(int argc, char *args[]) {
   if (result.count("max-ass")) {
     clc::maxAss = result["max-ass"].as<size_t>();
   }
+  if (result.count("multiply-trace")) {
+    clc::multiplyTrace = result["multiply-trace"].as<size_t>();
+  }
+  if (result.count("divide-stat")) {
+    clc::divideStat = true;
+  }
+  if (result.count("min-final")) {
+    clc::minFinal = result["min-final"].as<double>();
+  }
 
   if (result.count("max-threads")) {
     size_t nt = result["max-threads"].as<size_t>();
@@ -235,6 +244,9 @@ void parseCommandLineArguments(int argc, char *args[]) {
   if (result.count("splitLogic")) {
     clc::splitLogic = true;
   }
+  if (result.count("debug-cls")) {
+    clc::debugCls = true;
+  }
   messageErrorIf(clc::splitLogic && !clc::genTemp,
                  "--split-logic must be used with --generate-config");
 
@@ -253,7 +265,7 @@ void genConfigFile(std::string &configFile, TraceReader *tr) {
   std::ofstream ofs(configFile,
                     std::fstream::in | std::fstream::out | std::fstream::trunc);
 
-  ofs << "<harm>"
+  ofs << "<slam>"
       << "\n";
   ofs << "\t<context name=\"default\">"
       << "\n\n";
@@ -373,7 +385,7 @@ void genConfigFile(std::string &configFile, TraceReader *tr) {
   ofs << "\t\t<sort name=\"frequency\" exp=\"atct/traceLength\"/>\n";
   ofs << "	</context>"
       << "\n";
-  ofs << "</harm>"
+  ofs << "</slam>"
       << "\n";
   ofs << "\n\n"
       << "\n";

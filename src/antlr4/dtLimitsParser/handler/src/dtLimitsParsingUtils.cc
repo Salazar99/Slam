@@ -1,6 +1,6 @@
 #include "DTLimitsParserHandler.hh"
 #include "limitsLexer.h"
-using namespace harm;
+using namespace slam;
 
 namespace hparser{
 DTLimits parseLimits(const std::string &formula){

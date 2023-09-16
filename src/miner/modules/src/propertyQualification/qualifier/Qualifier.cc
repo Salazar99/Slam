@@ -42,7 +42,7 @@ std::vector<VarDeclaration> _availableVars;
 
 } // namespace metrics
 
-namespace harm {
+namespace slam {
 
 using namespace expression;
 
@@ -144,9 +144,11 @@ Qualifier::patchDiscardAssertions(std::vector<Assertion *> &inAssertions,
   for (auto a : inAssertions) {
     if (a->_ct[1][0] == 0) {
       auto assTemp = hparser::parseTemplate(a->_toString.first, trace);
-      auto antProps = assTemp->getLoadedPropositionsAnt();
+      //FIXME
+      std::vector<Proposition*> antProps; //= assTemp->getLoadedPropositionsAnt();
       if (antProps.size() == 1) {
-        auto conProps = assTemp->getLoadedPropositionsCon();
+        //FIXME
+        std::vector<Proposition*> conProps; //= assTemp->getLoadedPropositionsCon();
         if (conProps.size() == antProps.size()) {
           auto antPropStr = prop2String(*antProps.back());
           auto conPropStr = prop2String(*conProps.back());
@@ -456,6 +458,11 @@ void Qualifier::sortAssertionsWithMetrics(std::vector<Metric *> &metrics,
             [](Assertion *left, Assertion *right) {
               return left->_finalScore > right->_finalScore;
             });
+
+  assertions.erase(std::remove_if(assertions.begin(), assertions.end(),
+                                  [](Assertion *a) { return a->_finalScore <=clc::minFinal ; }),
+                   assertions.end());
+
 }
 
 void Qualifier::filterAssertionsWithMetrics(
@@ -525,9 +532,10 @@ void Qualifier::printAssertions(Context &context,
         ass_colored = ass->_toString.second;
         ass_black = ass->_toString.first;
       } else if (clc::outputLang == "SVA") {
-        Hstring svaFormula = hparser::spotToSVA(ass->_toString.first, trace);
-        ass_black = svaFormula.toString(1);
-        ass_colored = svaFormula.toColoredString(1);
+        //FIXME
+        //Hstring svaFormula = hparser::spotToSVA(ass->_toString.first, trace);
+        //ass_black = svaFormula.toString(1);
+        //ass_colored = svaFormula.toColoredString(1);
       }
       line.push_back(std::to_string(i));
       line.push_back(ass_colored);
@@ -647,7 +655,8 @@ void Qualifier::fbqUsingFaultOnTraceMode(std::vector<Assertion *> &selected,
         Template *fAss = nullptr;
 
         fAss = hparser::parseTemplate(a->_toString.first, ft);
-        fAss->setL1Threads(std::thread::hardware_concurrency() / 2);
+        //FIXME
+        //fAss->setL1Threads(std::thread::hardware_concurrency() / 2);
         if (!fAss->assHoldsOnTrace(Location::AntCon)) {
           // new fault covered
           _aToF[id].push_back(elabFault - 1);
@@ -710,7 +719,8 @@ void Qualifier::fbqUsingFaultyTraces(std::vector<Assertion *> &selected) {
       //new assertion with faulty trace
       Template *fAss = hparser::parseTemplate(a->_toString.first, ft);
       //exploit l1 parallelism
-      fAss->setL1Threads((l1Constants::MAX_THREADS + 1) / 2);
+      //FIXME
+      //fAss->setL1Threads((l1Constants::MAX_THREADS + 1) / 2);
       if (!fAss->assHoldsOnTrace(Location::AntCon)) {
         // new fault covered
         _aToF[i].push_back(j);
@@ -752,16 +762,16 @@ void Qualifier::fbqUsingFaultyTraces(std::vector<Assertion *> &selected) {
 
   //  debug
   //  which ass covers which fault?
-  //  for (auto aff : _aToF) {
-  //    std::cout << aff.first << ") " <<
-  //    selected[aff.first]->_toString.second
-  //              << "\n";
-  //    for (auto f : aff.second) {
-  //      std::cout << "\t"
-  //                << "   " << f << "\n";
-  //    }
-  //  }
-  //
+    for (auto aff : _aToF) {
+      std::cout << aff.first << ") " <<
+      selected[aff.first]->_toString.second
+                << "\n";
+      for (auto f : aff.second) {
+        std::cout << "\t"
+                  << "   " << f << "\n";
+      }
+    }
+  
 }
 void Qualifier::faultBasedQualification(std::vector<Assertion *> selected,
                                         Trace *trace) {
@@ -852,8 +862,9 @@ void Qualifier::dumpAssToFile(Context &context, Trace *trace,
     if (clc::outputLang == "Spot") {
       assFile << a->_toString.first << "\n";
     } else if (clc::outputLang == "SVA") {
-      Hstring svaFormula = hparser::spotToSVA(a->_toString.first, trace);
-      assFile << svaFormula.toString(1) << "\n";
+      //FIXME
+      //Hstring svaFormula = hparser::spotToSVA(a->_toString.first, trace);
+      //assFile << svaFormula.toString(1) << "\n";
     }
 #if enPB
     pb.increment(0);
@@ -908,6 +919,7 @@ std::vector<Assertion *> Qualifier::rankAssertions(Context &context,
     assertions.erase(assertions.begin() + clc::maxAss, assertions.end());
   }
 
+
   return assertions;
 }
 
@@ -942,4 +954,4 @@ std::unordered_map<std::string, double> Qualifier::getMaxValuesForFilterMetrics(
   return mToMaxValue;
 }
 
-} // namespace harm
+} // namespace slam

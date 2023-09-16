@@ -18,7 +18,7 @@ public:
 
   ~DTLimitsParserHandler() override = default;
 
-  harm::DTLimits getLimits() ;
+  slam::DTLimits getLimits() ;
   std::unordered_set<std::string> getSetOptions();
   void addErrorMessage(const std::string &msg);
 
@@ -49,11 +49,14 @@ private:
   virtual void enterStrategy(limitsParser::StrategyContext *ctx) override;
 
   virtual void enterEveryRule(antlr4::ParserRuleContext *ctx) override;
+
+  virtual void enterMaxDistance(limitsParser::MaxDistanceContext *ctx) override;
+  virtual void enterMinDistance(limitsParser::MinDistanceContext *ctx) override;
   virtual void visitTerminal(antlr4::tree::TerminalNode *node) override;
 
   virtual void visitErrorNode(antlr4::tree::ErrorNode *node) override;
 
-  harm::DTLimits _limits;
+  slam::DTLimits _limits;
   std::unordered_set<std::string> _setOptions;
 };
 } // namespace hparser

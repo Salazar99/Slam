@@ -4,7 +4,7 @@
 #include "Trace.hh"
 
 
-namespace harm {
+namespace slam {
 
 /// @brief PropertyQualification declaration.
 /// This is an interface for a generic property qualification module.
@@ -30,4 +30,4 @@ class PropertyQualifier {
 
 };
 
-} // namespace harm
+} // namespace slam

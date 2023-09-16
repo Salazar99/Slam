@@ -1,8 +1,9 @@
 
 #pragma once
 #include "EdgeProposition.hh"
+#include <unordered_map>
 
-namespace harm {
+namespace slam {
 class Automaton {
 public:
 //----Internal classes Node-Edge to make custom automata
@@ -43,4 +44,4 @@ public:
   Node *_accepting;
   Node *_rejecting;
 };
-} // namespace harm
+} // namespace slam

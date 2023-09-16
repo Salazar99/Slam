@@ -7,7 +7,7 @@
 namespace hparser {
 using namespace expression;
 
-PropositionParserHandler::PropositionParserHandler(harm::Trace *trace)
+PropositionParserHandler::PropositionParserHandler(slam::Trace *trace)
     : _abort(false), _proposition(), _logicExpressions(), _numericExpressions(),
       _trace(trace) {}
 
@@ -82,7 +82,8 @@ void PropositionParserHandler::enterLogicConstant(
                    "Constant '" + conStr.substr(0, conStr.size()) +
                        "' exceeds the maximum length of 64 bits" +
                        printErrorMessage());
-    ULogic value = std::stoull(conStr.substr(2, conStr.size() - 2), nullptr, 16);
+    ULogic value =
+        std::stoull(conStr.substr(2, conStr.size() - 2), nullptr, 16);
     auto *c = new LogicConstant(value, VarType::ULogic, (conStr.size() - 2) * 4,
                                 _trace->getLength());
     _logicExpressions.push(c);
@@ -94,7 +95,7 @@ void PropositionParserHandler::enterLogicConstant(
       conStr = conStr.substr(0, res);
     }
 
-    if (conStr.front()=='-') {
+    if (conStr.front() == '-') {
       // Store the logic as 2s complement int
       ULogic value = std::stoll(conStr);
       auto *c =
@@ -167,6 +168,7 @@ void PropositionParserHandler::exitBoolean(
       _proposition.push(makeExpression<PropositionNot>(p));
       return;
     }
+
     messageError("Unknown unary boolean operator!" + printErrorMessage());
   } else if (ctx->boolean().size() == 2) {
     antlr4::Token *boolop = ctx->booleanop;
@@ -349,6 +351,16 @@ void PropositionParserHandler::exitLogic(propositionParser::LogicContext *ctx) {
       return;
     }
 
+    if (ctx->DER() != nullptr) {
+      size_t shift =
+          ctx->NUMERIC() != nullptr ? std::stoul(ctx->NUMERIC()->getText()) : 1;
+      LogicExpression *le = _logicExpressions.top();
+      _logicExpressions.pop();
+      LogicExpression *le_r = new LogicDerivative(le, shift);
+      _logicExpressions.push(le_r);
+      return;
+    }
+
     messageError("Unknown unary logic operator in logic expression!" +
                  printErrorMessage());
 
@@ -447,10 +459,6 @@ void PropositionParserHandler::exitNumeric(
     propositionParser::NumericContext *ctx) {
   // std::cout<<__func__<<std::endl;
 
-  if (ctx->LPAREN() && ctx->RPAREN()) {
-    return;
-  }
-
   if (_logicExpressions.size() == 1) {
     LogicExpression *le = _logicExpressions.top();
     _logicExpressions.pop();
@@ -459,8 +467,17 @@ void PropositionParserHandler::exitNumeric(
   }
 
   if (ctx->numeric().size() == 1) {
-    messageError("Unknown unary numeric operator in logic expression!" +
-                 printErrorMessage());
+    if (ctx->DER() != nullptr) {
+      size_t shift =
+          ctx->NUMERIC() != nullptr ? std::stoul(ctx->NUMERIC()->getText()) : 1;
+      NumericExpression *ne = _numericExpressions.top();
+      _numericExpressions.pop();
+      NumericExpression *ne_r = new NumericDerivative(ne, shift);
+      _numericExpressions.push(ne_r);
+    } else {
+      messageError("Unknown unary numeric operator in logic expression!" +
+                   printErrorMessage());
+    }
   } else if (ctx->numeric().size() == 2) {
     antlr4::Token *artop = ctx->artop;
 
@@ -502,6 +519,9 @@ void PropositionParserHandler::exitNumeric(
                    "expression!" +
                    printErrorMessage());
     }
+  }
+  if (ctx->LPAREN() && ctx->RPAREN()) {
+    return;
   }
 }
 

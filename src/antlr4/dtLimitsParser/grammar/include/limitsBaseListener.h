@@ -1,5 +1,5 @@
 
-// Generated from limits.g4 by ANTLR 4.10.1
+// Generated from limits.g4 by ANTLR 4.12.0
 
 #pragma once
 
@@ -24,6 +24,12 @@ public:
 
   virtual void enterAtom(limitsParser::AtomContext * /*ctx*/) override { }
   virtual void exitAtom(limitsParser::AtomContext * /*ctx*/) override { }
+
+  virtual void enterMaxDistance(limitsParser::MaxDistanceContext * /*ctx*/) override { }
+  virtual void exitMaxDistance(limitsParser::MaxDistanceContext * /*ctx*/) override { }
+
+  virtual void enterMinDistance(limitsParser::MinDistanceContext * /*ctx*/) override { }
+  virtual void exitMinDistance(limitsParser::MinDistanceContext * /*ctx*/) override { }
 
   virtual void enterDep(limitsParser::DepContext * /*ctx*/) override { }
   virtual void exitDep(limitsParser::DepContext * /*ctx*/) override { }

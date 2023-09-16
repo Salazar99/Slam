@@ -5,7 +5,7 @@
 #include "Template.hh"
 #include "globals.hh"
 
-namespace harm {
+namespace slam {
 
 std::ostream &operator<<(std::ostream &os, ClsOp op) {
   switch (op) {
@@ -86,7 +86,125 @@ std::pair<VarType, size_t> variableTypeFromString(const std::string &type,
 }
 
 template <typename T>
-std::vector<Proposition *> inline makeLogicRange(
+std::vector<std::pair<
+    Proposition *,
+    std::pair<size_t,
+              size_t>>> inline makeLogicRange(std::
+                                                  vector<std::pair<
+                                                      std::pair<T, T>,
+                                                      std::pair<size_t,
+                                                                size_t>>>
+                                                      &clusters,
+                                              std::pair<VarType, T> type,
+                                              CachedAllNumeric *cn) {
+
+  std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> ret;
+  for (auto &c : clusters) {
+    if (c.first.first != c.first.second) {
+      if (cn->_clsOps.count(ClsOp::Range)) {
+        LogicExpression *ll = new LogicConstant(c.first.first, type.first,
+                                                type.second, cn->getMaxTime());
+        LogicExpression *rl = new LogicConstant(c.first.second, type.first,
+                                                type.second, cn->getMaxTime());
+        LogicExpression *l1 = copy(*cn->get()._le);
+        LogicExpression *l2 = copy(*cn->get()._le);
+        ret.push_back(std::make_pair(makeExpression<PropositionAnd>(
+                                         makeExpression<LogicGreaterEq>(l1, ll),
+                                         makeExpression<LogicLessEq>(l2, rl)),
+                                     c.second));
+      }
+      if (cn->_clsOps.count(ClsOp::GE)) {
+        LogicExpression *l1 = copy(*cn->get()._le);
+        LogicExpression *ll = new LogicConstant(c.first.first, type.first,
+                                                type.second, cn->getMaxTime());
+        ret.push_back(
+            std::make_pair(makeExpression<LogicGreaterEq>(l1, ll), c.second));
+      }
+      if (cn->_clsOps.count(ClsOp::LE)) {
+        LogicExpression *l2 = copy(*cn->get()._le);
+        LogicExpression *rl = new LogicConstant(c.first.second, type.first,
+                                                type.second, cn->getMaxTime());
+        ret.push_back(
+            std::make_pair(makeExpression<LogicLessEq>(l2, rl), c.second));
+      }
+    } else {
+      if (cn->_clsOps.count(ClsOp::E)) {
+        LogicExpression *lc = new LogicConstant(c.first.first, type.first,
+                                                type.second, cn->getMaxTime());
+        LogicExpression *le = copy(*cn->get()._le);
+        ret.push_back(
+            std::make_pair(makeExpression<LogicEq>(le, lc), c.second));
+      }
+    }
+  }
+  return ret;
+}
+
+template <typename T>
+std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+makeNumericRange(
+    std::vector<std::pair<std::pair<T, T>, std::pair<size_t, size_t>>>
+        &clusters,
+    std::pair<VarType, T> type, CachedAllNumeric *cn) {
+
+  std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> ret;
+  for (auto &c : clusters) {
+    if (c.first.first != c.first.second) {
+      if (cn->_clsOps.count(ClsOp::Range)) {
+        NumericExpression *ll = new NumericConstant(
+            c.first.first, type.first, type.second, cn->getMaxTime());
+        NumericExpression *rl = new NumericConstant(
+            c.first.second, type.first, type.second, cn->getMaxTime());
+        NumericExpression *l1 = copy(*cn->get()._ne);
+        NumericExpression *l2 = copy(*cn->get()._ne);
+        ret.push_back(
+            std::make_pair(makeExpression<PropositionAnd>(
+                               makeExpression<NumericGreaterEq>(l1, ll),
+                               makeExpression<NumericLessEq>(l2, rl)),
+                           c.second));
+      }
+      if (cn->_clsOps.count(ClsOp::GE)) {
+        NumericExpression *le1 = copy(*cn->get()._ne);
+        NumericExpression *ll = new NumericConstant(
+            c.first.first, type.first, type.second, cn->getMaxTime());
+        ret.push_back(std::make_pair(makeExpression<NumericGreaterEq>(le1, ll),
+                                     c.second));
+
+        NumericExpression *le2 = copy(*cn->get()._ne);
+        NumericExpression *rl = new NumericConstant(
+            c.first.second, type.first, type.second, cn->getMaxTime());
+        ret.push_back(std::make_pair(makeExpression<NumericGreaterEq>(le2, rl),
+                                     c.second));
+      }
+      if (cn->_clsOps.count(ClsOp::LE)) {
+
+        NumericExpression *ge1 = copy(*cn->get()._ne);
+        NumericExpression *ll = new NumericConstant(
+            c.first.first, type.first, type.second, cn->getMaxTime());
+        ret.push_back(
+            std::make_pair(makeExpression<NumericLessEq>(ge1, ll), c.second));
+
+        NumericExpression *ge2 = copy(*cn->get()._ne);
+        NumericExpression *rl = new NumericConstant(
+            c.first.second, type.first, type.second, cn->getMaxTime());
+        ret.push_back(
+            std::make_pair(makeExpression<NumericLessEq>(ge2, rl), c.second));
+      }
+    } else {
+      if (cn->_clsOps.count(ClsOp::E)) {
+        NumericExpression *lc = new NumericConstant(
+            c.first.first, type.first, type.second, cn->getMaxTime());
+        NumericExpression *le = copy(*cn->get()._ne);
+        ret.push_back(
+            std::make_pair(makeExpression<NumericEq>(le, lc), c.second));
+      }
+    }
+  }
+  return ret;
+}
+
+template <typename T>
+std::vector<Proposition *> inline makeLogicRange1D(
     std::vector<std::pair<T, T>> &clusters, std::pair<VarType, T> type,
     CachedAllNumeric *cn) {
 
@@ -129,7 +247,7 @@ std::vector<Proposition *> inline makeLogicRange(
 }
 
 template <typename T>
-std::vector<Proposition *> inline makeNumericRange(
+std::vector<Proposition *> inline makeNumericRange1D(
     std::vector<std::pair<T, T>> &clusters, std::pair<VarType, T> type,
     CachedAllNumeric *cn) {
 
@@ -172,22 +290,19 @@ std::vector<Proposition *> inline makeNumericRange(
 }
 
 template <typename T>
-std::vector<std::pair<T, T>> clsElbow(std::vector<T> &elements,
-                                      double clsEffort) {
-  std::vector<std::pair<T, T>> clusters;
+std::vector<std::pair<std::pair<T, T>, std::pair<size_t, size_t>>>
+clsElbow(std::vector<std::pair<T, T>> &elements, double clsEffort,
+         const std::string &numericName) {
+  std::vector<std::pair<std::pair<T, T>, std::pair<size_t, size_t>>> clusters;
   if (clc::clsAlg == "kmeans") {
-    clusters = kmeansElbow<T>(elements, 20, clsEffort);
-  } else if (clc::clsAlg == "kde") {
-    clusters = kdeElbow<T>(elements, 20, clsEffort);
-  } else if (clc::clsAlg == "hc") {
-    clusters = hcElbowHarm<T>(elements, 20, clsEffort);
+    clusters = kmeansElbowStl<T>(elements, 20, clsEffort, 0, numericName);
   }
   return clusters;
 }
 
-std::vector<Proposition *> genPropsThroughClustering(std::vector<size_t> &ivs,
-                                                     CachedAllNumeric *cn,
-                                                     size_t max_length) {
+std::vector<Proposition *> genPropsThroughClustering1D(std::vector<size_t> &ivs,
+                                                       CachedAllNumeric *cn,
+                                                       size_t max_length) {
 
   std::vector<Proposition *> ret;
   std::pair<VarType, size_t> type = cn->getType();
@@ -198,31 +313,31 @@ std::vector<Proposition *> genPropsThroughClustering(std::vector<size_t> &ivs,
       for (auto &iv : ivs) {
         elements.push_back(cn->evaluate(iv)._f);
       }
-      auto clusters = clsElbow<float>(elements, cn->_clsEffort);
-      return makeNumericRange<float>(clusters, type, cn);
+      auto clusters = kmeansElbow<float>(elements, 20, cn->_clsEffort, 0);
+      return makeNumericRange1D<float>(clusters, type, cn);
     } else {
       std::vector<double> elements;
       for (auto &iv : ivs) {
         elements.push_back(cn->evaluate(iv)._d);
       }
-      auto clusters = clsElbow<double>(elements, cn->_clsEffort);
-      return makeNumericRange<double>(clusters, type, cn);
+      auto clusters = kmeansElbow<double>(elements, 20, cn->_clsEffort, 0);
+      ret = makeNumericRange1D<double>(clusters, type, cn);
     }
   } else if (cn->getType().first == VarType::SLogic) {
     std::vector<SLogic> elements;
     for (auto &iv : ivs) {
       elements.push_back(cn->evaluate(iv)._s);
     }
-    auto clusters = clsElbow<SLogic>(elements, cn->_clsEffort);
-    return makeLogicRange<SLogic>(clusters, type, cn);
+    auto clusters = kmeansElbow<SLogic>(elements, 20, cn->_clsEffort, 0);
+    ret = makeLogicRange1D<SLogic>(clusters, type, cn);
   } else if (cn->getType().first == VarType::ULogic) {
     std::vector<SLogic> elements;
     for (auto &iv : ivs) {
       elements.push_back(cn->evaluate(iv)._u);
     }
     std::vector<std::pair<SLogic, SLogic>> clusters =
-        clsElbow<SLogic>(elements, cn->_clsEffort);
-    return makeLogicRange<SLogic>(clusters, type, cn);
+        kmeansElbow<SLogic>(elements, 20, cn->_clsEffort, 0);
+    ret = makeLogicRange1D<SLogic>(clusters, type, cn);
   } else {
     messageError("Unknown type in CachedAllNumeric");
   }
@@ -230,6 +345,61 @@ std::vector<Proposition *> genPropsThroughClustering(std::vector<size_t> &ivs,
   //  debug
   //  for (auto &p : ret) {
   //    std::cout << prop2String(*p)<< "\n";
+  //  }
+  return ret;
+}
+
+std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+genPropsThroughClustering(
+    std::vector<std::pair<CachedAllNumeric::EvalRet, size_t>> &ivs,
+    CachedAllNumeric *cn, size_t max_length) {
+
+  std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> ret;
+  std::pair<VarType, size_t> type = cn->getType();
+
+  if (cn->getType().first == VarType::Numeric) {
+    if (cn->getType().second == 32) {
+      std::vector<std::pair<float, float>> elements;
+      for (auto &iv : ivs) {
+        elements.push_back(std::make_pair(iv.first._f, (float)iv.second));
+      }
+      auto clusters =
+          clsElbow<float>(elements, cn->_clsEffort, allNum2String(*cn));
+      ret = makeNumericRange<float>(clusters, type, cn);
+    } else {
+      std::vector<std::pair<double, double>> elements;
+      for (auto &iv : ivs) {
+        elements.push_back(std::make_pair(iv.first._d, (double)iv.second));
+      }
+      auto clusters =
+          clsElbow<double>(elements, cn->_clsEffort, allNum2String(*cn));
+      ret = makeNumericRange<double>(clusters, type, cn);
+    }
+  } else if (cn->getType().first == VarType::SLogic) {
+    std::vector<std::pair<SLogic, SLogic>> elements;
+    for (auto &iv : ivs) {
+      elements.push_back(std::make_pair(iv.first._s, (SLogic)iv.second));
+    }
+    auto clusters =
+        clsElbow<SLogic>(elements, cn->_clsEffort, allNum2String(*cn));
+    ret = makeLogicRange<SLogic>(clusters, type, cn);
+  } else if (cn->getType().first == VarType::ULogic) {
+    std::vector<std::pair<SLogic, SLogic>> elements;
+    for (auto &iv : ivs) {
+      elements.push_back(std::make_pair(iv.first._u, (SLogic)iv.second));
+    }
+    std::vector<std::pair<std::pair<SLogic, SLogic>, std::pair<size_t, size_t>>>
+        clusters =
+            clsElbow<SLogic>(elements, cn->_clsEffort, allNum2String(*cn));
+    ret = makeLogicRange<SLogic>(clusters, type, cn);
+  } else {
+    messageError("Unknown type in CachedAllNumeric");
+  }
+
+  //  debug
+  //std::cout << "Clustered:" << "\n";
+  //  for (auto &[p,inter] : ret) {
+  //  std::cout << prop2String(*p) << "Interval: " <<inter.first << " , " << inter.second <<std::endl;
   //  }
   return ret;
 }
@@ -383,4 +553,4 @@ EdgeProposition *edgeToProposition(
   messageError("Error in spot edge formula");
   return nullptr;
 }
-} // namespace harm
+} // namespace slam

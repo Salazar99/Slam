@@ -79,7 +79,6 @@ EXPRESSION(PropositionAnd)
 EXPRESSION(PropositionXor)
 EXPRESSION(PropositionEq)
 EXPRESSION(PropositionNeq)
-EXPRESSION_PAST(PropositionPast)
 
 std::vector<std::pair<std::string, size_t>> VarExtractVisitor::get_vars() {
   return _vars;
@@ -120,7 +119,6 @@ EXPRESSION(NumericGreater)
 EXPRESSION(NumericGreaterEq)
 EXPRESSION(NumericLess)
 EXPRESSION(NumericLessEq)
-EXPRESSION_PAST(NumericPast)
 TYPE_CAST(NumericToBool)
 
 // logic
@@ -139,7 +137,6 @@ EXPRESSION(LogicGreater)
 EXPRESSION(LogicGreaterEq)
 EXPRESSION(LogicLess)
 EXPRESSION(LogicLessEq)
-EXPRESSION_PAST(LogicPast)
 TYPE_CAST(LogicToNumeric)
 TYPE_CAST(LogicToBool)
 EXPRESSION(LogicLShift)

@@ -4,7 +4,7 @@
 
 namespace hparser{
 using namespace expression;
-expression::Proposition *parseProposition(std::string formula, harm::Trace *trace){
+expression::Proposition *parseProposition(std::string formula, slam::Trace *trace){
   // formula="ePage == PAGE_MAIN && c8val==M_TEST+M_NULL";
 
   auto decls=trace->getDeclarations();
@@ -20,13 +20,13 @@ expression::Proposition *parseProposition(std::string formula, harm::Trace *trac
   antlr4::tree::ParseTree *treeFragAnt = parser.file();
   antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, treeFragAnt);
   /*
-  std::cout << treeFragAnt->toStringTree(&parser) << "\n\n\n";
   DEBUG
+  std::cout << treeFragAnt->toStringTree(&parser) << "\n\n\n";
   exit(0);
   */
   return listener.getProposition();
 }
-expression::Proposition *parsePropositionAlreadyTyped(std::string formula, harm::Trace *trace){
+expression::Proposition *parsePropositionAlreadyTyped(std::string formula, slam::Trace *trace){
 
   // parse typed propositions
   hparser::PropositionParserHandler listener(trace);
@@ -38,14 +38,14 @@ expression::Proposition *parsePropositionAlreadyTyped(std::string formula, harm:
   antlr4::tree::ParseTree *treeFragAnt = parser.file();
   antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, treeFragAnt);
   /*
-  std::cout << treeFragAnt->toStringTree(&parser) << "\n\n\n";
   DEBUG
+  std::cout << treeFragAnt->toStringTree(&parser) << "\n\n\n";
   exit(0);
   */
   return listener.getProposition();
 }
 void addTypeToProposition(std::string &formula,
-                          std::vector<harm::VarDeclaration> varDeclarations) {
+                          std::vector<slam::VarDeclaration> varDeclarations) {
   /*all this code is to solve the problem of
   adding types to the variables in the formula:
   The complexity of the code is to handle the following problems:*/
@@ -62,8 +62,8 @@ void addTypeToProposition(std::string &formula,
 
   // match the longest variables first to solve (3)
   std::sort(begin(varDeclarations), end(varDeclarations),
-            [](harm::VarDeclaration &e1,
-               harm::VarDeclaration &e2) {
+            [](slam::VarDeclaration &e1,
+               slam::VarDeclaration &e2) {
               return std::get<0>(e1).size() > std::get<0>(e2).size();
             });
 
@@ -82,20 +82,19 @@ void addTypeToProposition(std::string &formula,
       if (std::get<0>(varDec) == "true" || std::get<0>(varDec) == "false") {
         nameType = "@" + std::get<0>(varDec);
       } else {
-        nameType = " <" + std::get<0>(varDec) + ",bool>";
+        nameType = " {" + std::get<0>(varDec) + ",bool}";
       }
       break;
     case VarType::ULogic:
-      nameType = " <" + std::get<0>(varDec) + ",logic(u," +
-                 std::to_string(std::get<2>(varDec)) + ")>";
+      nameType = " {" + std::get<0>(varDec) + ",logic_u" + std::to_string(std::get<2>(varDec)) + "}";
       break;
     case VarType::SLogic:
-      nameType = " <" + std::get<0>(varDec) + ",logic(s," +
-                 std::to_string(std::get<2>(varDec)) + ")>";
+      nameType = " {" + std::get<0>(varDec) + ",logic_s" +
+                 std::to_string(std::get<2>(varDec)) + "}";
       break;
     case VarType::Numeric:
-      nameType = " <" + std::get<0>(varDec) + ",numeric(" +
-                 std::to_string(std::get<2>(varDec)) + ")>";
+      nameType = " {" + std::get<0>(varDec) + ",numeric" +
+                 std::to_string(std::get<2>(varDec)) + "}";
       break;
     default:
       messageError("Variable is of \'Uknown type\'");

@@ -2,7 +2,7 @@
 
 #include "modules.hh"
 
-namespace harm {
+namespace slam {
 /// \class Miner
 /// \brief This class contains a collection of modules implementing the functionaltiies of an assertion miner.
 class Miner {
@@ -44,8 +44,9 @@ private:
 
   /// @brief Print the statistics of mining (stored in the hs:: namespace)
   void printStats();
+  void clearStats();
   /// @brief Print a message before executin the mining
   void _printWelcomeMessage();
 };
 
-} // namespace harm
+} // namespace slam

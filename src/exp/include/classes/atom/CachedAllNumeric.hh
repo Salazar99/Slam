@@ -4,6 +4,7 @@
 #include "ClsOp.hh"
 namespace expression {
 class CachedAllNumeric {
+public:
   union EvalRet {
     double _d;
     float _f;
@@ -15,15 +16,14 @@ class CachedAllNumeric {
     LogicExpression *_le;
   };
 
-public:
   CachedAllNumeric(NumericExpression *nume, double clsEffort = 1.0f,
-                   const std::unordered_set<harm::ClsOp> &clsOps =
-                       std::unordered_set<harm::ClsOp>({harm::ClsOp::Range,
-                                                        harm::ClsOp::E}));
+                   const std::unordered_set<slam::ClsOp> &clsOps =
+                       std::unordered_set<slam::ClsOp>({slam::ClsOp::Range,
+                                                        slam::ClsOp::E}));
   CachedAllNumeric(LogicExpression *loge, double clsEffort = 1.0f,
-                   const std::unordered_set<harm::ClsOp> &clsOps =
-                       std::unordered_set<harm::ClsOp>({harm::ClsOp::Range,
-                                                        harm::ClsOp::E}));
+                   const std::unordered_set<slam::ClsOp> &clsOps =
+                       std::unordered_set<slam::ClsOp>({slam::ClsOp::Range,
+                                                        slam::ClsOp::E}));
   virtual ~CachedAllNumeric();
   EvalRet evaluate(size_t time);
 
@@ -45,6 +45,6 @@ private:
 
 public:
   double _clsEffort = 0.3f;
-  std::unordered_set<harm::ClsOp> _clsOps;
+  std::unordered_set<slam::ClsOp> _clsOps;
 };
 } // namespace expression

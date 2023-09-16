@@ -6,7 +6,7 @@
 #include <filesystem>
 #include <type_traits>
 
-namespace harm {
+namespace slam {
 
 Miner::ModulesConfig::ModulesConfig()
     : contextMiner(nullptr), propertyMiner(nullptr),
@@ -37,6 +37,14 @@ void Miner::run() {
                  "Trace reader module has not been set!");
 
   Trace *trace = _config.traceReader->readTrace();
+  if (clc::multiplyTrace > 1) {
+    messageInfo("Multiplying trace by " + std::to_string(clc::multiplyTrace));
+    auto originalTrace = trace;
+    trace = _config.traceReader->multiplyTrace(trace, clc::multiplyTrace);
+    delete originalTrace;
+    messageInfo("New trace length: " + std::to_string(trace->getLength()));
+  }
+
   hs::traceLength = trace->getLength();
 
   //2) Read the contexts
@@ -45,6 +53,11 @@ void Miner::run() {
   _config.contextMiner->mineContexts(trace, contexts);
 
   for (Context *context : contexts) {
+    if (clc::divideStat) {
+      clearStats();
+      hs::name = context->_name;
+    }
+
     messageErrorIf(context->_templates.empty(),
                    "No templates or assertions defined!");
 
@@ -84,6 +97,9 @@ void Miner::run() {
 
     //4) Qualify the mined temporal assertions (additionally print and dump)
     _config.propertyQualifier->qualify(*context, trace);
+    if (clc::divideStat) {
+      printStats();
+    }
 
     for (Template *t : toCheck) {
       t->check();
@@ -91,9 +107,20 @@ void Miner::run() {
     delete context;
   }
 
-  delete trace;
+  if (!clc::divideStat) {
+    printStats();
+  }
 
-  printStats();
+  delete trace;
+}
+
+void Miner::clearStats() {
+  hs::nAssertions = 0;
+  hs::nFaults = 0;
+  hs::nOfCovFaults = 0;
+  hs::nFaultCovSubset = 0;
+  hs::timeToMine_ms = 0;
+  hs::name = "";
 }
 
 void Miner::printStats() {
@@ -118,7 +145,8 @@ void Miner::printStats() {
             << "\n";
 
   if (clc::dumpStat) {
-    std::string filename = "stat_out_" + hs::name + ".csv";
+    //std::string filename = "stat_out_" + hs::name + ".csv";
+    std::string filename = "stat_out.csv";
     bool exists = std::filesystem::exists(filename);
     std::ofstream of(filename,
                      exists ? std::ofstream::app : std::ofstream::trunc);
@@ -160,4 +188,4 @@ void Miner::_printWelcomeMessage() {
   //            << "\n";
 }
 
-} // namespace harm
+} // namespace slam

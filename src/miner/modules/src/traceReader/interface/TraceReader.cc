@@ -7,18 +7,18 @@ namespace l1Constants {
 extern size_t MAX_THREADS;
 }
 
-namespace harm {
+namespace slam {
 
 using namespace expression;
 
 TraceReader::TraceReader(const std::vector<std::string> &files)
-    : _files(files){
+    : _files(files) {
   // ntd
 }
 
 Trace *TraceReader::readTrace() {
 
-   //avoid repeating the read
+  //avoid repeating the read
   if (_trace != nullptr) {
     return _trace;
   }
@@ -30,7 +30,7 @@ Trace *TraceReader::readTrace() {
   }
 
   if (traces.size() > 1) {
-      //merge multiple traces into one
+    //merge multiple traces into one
     _trace = mergeTrace(traces);
     //delete the sub-traces
     for (auto t : traces) {
@@ -43,16 +43,16 @@ Trace *TraceReader::readTrace() {
     messageInfo("N merged traces: " + std::to_string(_trace->getCuts().size()));
     messageInfo("AVG length: " + std::to_string(avgLength));
   } else {
-      //only one trace
+    //only one trace
     _trace = traces[0];
     _trace->setCuts(std::vector<size_t>({_trace->getLength() - 1}));
     messageInfo("Trace length:" + std::to_string(_trace->getLength()));
   }
   //  debug
-//  for (auto i : _trace->getCuts()) {
-//      std::cout << i << " ";
-//  }
-//  std::cout <<  "\n";
+  //  for (auto i : _trace->getCuts()) {
+  //      std::cout << i << " ";
+  //  }
+  //  std::cout <<  "\n";
   return _trace;
 }
 Trace *TraceReader::mergeTrace(const std::vector<Trace *> &traces) {
@@ -131,4 +131,62 @@ Trace *TraceReader::mergeTrace(const std::vector<Trace *> &traces) {
 
   return mergedTrace;
 }
-} // namespace harm
+
+Trace *TraceReader::multiplyTrace(Trace *trace, size_t n) {
+
+  std::vector<VarDeclaration> decs = trace->getDeclarations();
+  size_t mergedLength = trace->getLength();
+  //cuts are used to keep track of when the sub-traces (composing the merged trace) end
+
+  //  debug
+  //  for (const auto &dec : decs) {
+  //    std::cout << std::get<0>(dec) << "\n";
+  //  }
+  //  std::cout << "---------------------------"
+  //            << "\n";
+
+  // check that all traces have the same variables
+  mergedLength = trace->getLength() * n;
+  //create the base for the mergedTrace
+  auto varsCopy = trace->getVariables();
+  Trace *mergedTrace = new Trace(varsCopy, mergedLength);
+
+  std::vector<BooleanVariable *> boolVars;
+  std::vector<NumericVariable *> numVars;
+  std::vector<LogicVariable *> logVars;
+
+  for (auto &var : varsCopy) {
+    if (var.getType() == VarType::Bool) {
+      boolVars.push_back(mergedTrace->getBooleanVariable(var.getName()));
+    } else if (var.getType() == VarType::Numeric) {
+      numVars.push_back(mergedTrace->getNumericVariable(var.getName()));
+    } else {
+      logVars.push_back(mergedTrace->getLogicVariable(var.getName()));
+    }
+  }
+
+  //assign the merged trace with the values of the sub-traces
+  size_t time = 0;
+
+  for (size_t i = 0; i < n; i++) {
+      Trace *t= trace;
+    for (size_t i = 0; i < t->getLength(); i++) {
+      for (auto bv : boolVars) {
+        auto currTracebv = t->getBooleanVariable(bv->getName());
+        bv->assign(time + i, currTracebv->evaluate(i));
+      }
+      for (auto nv : numVars) {
+        auto currTracenv = t->getNumericVariable(nv->getName());
+        nv->assign(time + i, currTracenv->evaluate(i));
+      }
+      for (auto lv : logVars) {
+        auto currTracelv = t->getLogicVariable(lv->getName());
+        lv->assign(time + i, currTracelv->evaluate(i));
+      }
+    }
+    time += t->getLength();
+  }
+
+  return mergedTrace;
+}
+} // namespace slam

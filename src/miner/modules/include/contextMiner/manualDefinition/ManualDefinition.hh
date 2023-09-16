@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 
-namespace harm {
+namespace slam {
 /*! \class ManualDefinition
     \brief used to generated manually defined contexts (in the .xml file)
 */
@@ -19,4 +19,4 @@ public:
   void mineContexts(Trace *trace, std::vector<Context *> &context) override;
 };
 
-} // namespace harm
+} // namespace slam

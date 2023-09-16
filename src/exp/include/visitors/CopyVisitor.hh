@@ -24,6 +24,7 @@ public:
   Proposition *get();
   LogicExpression *getLogic();
   NumericExpression *getNumeric();
+  TemporalExp *getTemporal() { return _te; }
 
   // proposition
   void visit(BooleanConstant &o) override;
@@ -34,7 +35,6 @@ public:
   void visit(PropositionEq &o) override;
   void visit(PropositionNeq &o) override;
   void visit(PropositionNot &o) override;
-  void visit(PropositionPast &o) override;
   void visit(LogicToBool &o) override;
 
   // numeric
@@ -44,7 +44,6 @@ public:
   void visit(NumericSub &o) override;
   void visit(NumericMul &o) override;
   void visit(NumericDiv &o) override;
-  void visit(NumericPast &o) override;
   void visit(NumericEq &o) override;
   void visit(NumericNeq &o) override;
   void visit(NumericGreater &o) override;
@@ -65,7 +64,6 @@ public:
   void visit(LogicBXor &o) override;
   void visit(LogicNot &o) override;
   void visit(LogicBitSelector &o) override;
-  void visit(LogicPast &o) override;
   void visit(LogicEq &o) override;
   void visit(LogicNeq &o) override;
   void visit(LogicGreater &o) override;
@@ -76,10 +74,18 @@ public:
   void visit(LogicLShift &o) override;
   void visit(LogicRShift &o) override;
 
+  //Temporal
+  virtual void visit(TemporalAnd &o) override;
+  virtual void visit(TemporalInst &o) override;
+  virtual void visit(Placeholder &o) override;
+  virtual void visit(Eventually &o) override;
+  virtual void visit(Implication &o) override;
+
 private:
   Proposition *_proposition;
   NumericExpression *_numeric;
   LogicExpression *_logic;
+  TemporalExp *_te;
 };
 
 } // namespace expression

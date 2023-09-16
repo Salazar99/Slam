@@ -5,6 +5,8 @@
 #include "globals.hh"
 #include "minerUtils.hh"
 #include "supportMethods.hh"
+#include "templateParser.hh"
+#include "templateParsingUtils.hh"
 
 #include <algorithm>
 #include <chrono>
@@ -22,7 +24,7 @@
 #include <unordered_set>
 #include <utility>
 
-namespace harm {
+namespace slam {
 
 TLMiner::TLMiner() : PropertyMiner() {}
 
@@ -53,7 +55,7 @@ void TLMiner::mineProperties(Context &context, Trace *trace) {
     case Location::DecTree:
       _propsDT.push_back(pl.first);
       break;
-    case harm::Location::None:
+    case slam::Location::None:
       break;
     }
   }
@@ -190,7 +192,10 @@ void TLMiner::l2Handler(
         busyTemplates.push_back(templs.size());
         templIndexTol2Inst[templs.size()] = toBeServed;
         instToTemplIndex[toBeServed] = templs.size();
-        templs.push_back(new Template(*t));
+        Template *newTemp = hparser::parseTemplate(
+            t->getTemplate(), t->_trace, "stl", t->getDT()->getLimits());
+        newTemp->transferPermutations(*t);
+        templs.push_back(newTemp);
         nextTemp = templs.back();
       } else {
         // reuse old copy
@@ -211,13 +216,13 @@ void TLMiner::l2Handler(
       for (auto &e : l2Instances) {
         if (e.second < l2MaxThread) {
           e.second++;
-          templs[instToTemplIndex.at(e.first)]->setL1Threads(e.second);
+          //templs[instToTemplIndex.at(e.first)]->setL1Threads(e.second);
           goto found;
         }
       }
       l2Instances.begin()->second++;
-      templs[instToTemplIndex.at(l2Instances.begin()->first)]->setL1Threads(
-          l2Instances.begin()->second);
+      //templs[instToTemplIndex.at(l2Instances.begin()->first)]->setL1Threads(
+      //    l2Instances.begin()->second);
       l2MaxThread++;
     found:;
     } else {
@@ -259,12 +264,12 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
 
     DecTreeVariables candidateVariables;
     for (size_t i = 0; i < _propsDT.size(); i++) {
-      candidateVariables[i].first = _propsDT[i];
-      candidateVariables[i].second =
+      candidateVariables[i].first.first = _propsDT[i];
+      candidateVariables[i].first.second =
           makeExpression<PropositionNot>(_propsDT[i]);
     }
 
-    if (t->isVacuous(harm::Location::AntCon)) {
+    if (t->isVacuous(slam::Location::AntCon)) {
 #if enPB
       _progressBar.increment(l3InstId);
       _progressBar.display();
@@ -274,7 +279,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
 
     AntecedentGenerator antGen;
 
-    antGen.saveOffset = t->saveOffset();
+    //FIXME
+    //antGen.saveOffset = t->saveOffset();
 
     DecTreeVariables candidateVariables_copy;
     //creating a copy of candidateVariables to pass as parameter to decision tree algorithm
@@ -291,38 +297,46 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
                            genProps);
 
     // Onset
-    for (std::vector<Proposition *> &props : antGen.onSets) {
+    for (std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+             &props : antGen.onSets) {
+        
 
       //rebulding the assertion starting from a list propositions (the operands of a dt operator)
-      if (t->getDT()->isMultiDimensional()) {
-        for (size_t i = 0; i < props.size(); i++) {
-          for (auto prop : t->getDT()->unpack(props[i])) {
-            t->getDT()->addItem(prop, i);
-          }
-        }
-      } else {
-        for (auto prop : props) {
-          t->getDT()->addItem(prop, -1);
-        }
-      }
+      //if (t->getDT()->isMultiDimensional()) {
+      //  for (size_t i = 0; i < props.size(); i++) {
+      //    for (auto prop : t->getDT()->unpack(props[i])) {
+      //      t->getDT()->addItem(prop, i);
+      //    }
+      //  }
+      //
+      //} else {
+      //
 
+      t->getDT()->loadSolution(props);
+
+      //std::cout << t->getAssertion() << std::endl;
+      //std::cout<<"End of set" <<std::endl;
+      //}
       assert(!t->getDT()->getItems().empty());
 
       //check for vacuity
       if (!t->isVacuous(Location::Ant)) {
-
+        //std::cout<< "non vacous" <<std::endl;
         //create a new assertion by making a snapshot of a template
-        auto prettyAss = t->getDT()->prettyPrint(0);
+        //auto prettyAssOld = t->getDT()->prettyPrint(0);
+        std::pair<std::string, std::string> prettyAss;
+        prettyAss.first = t->getAssertion();
+        prettyAss.second = t->getColoredAssertion();
         Assertion *ass = new Assertion();
         t->fillContingency(ass->_ct, 0);
         ass->_toString = prettyAss;
-        auto loadedProps = t->getLoadedPropositions();
+        std::vector<Proposition *> loadedProps; //= t->getLoadedPropositions();
         ass->_complexity = getNumVariables(loadedProps);
         ass->_pRepetitions = getRepetitions(loadedProps);
         ass->fillValues(t);
 
         assp.push_back(ass);
-        messageErrorIf(!t->assHoldsOnTrace(harm::Location::None),
+        messageErrorIf(!t->assHoldsOnTrace(slam::Location::None),
                        "dt assertion is false: " + t->getColoredAssertion());
       }
 #if dumpVacAss
@@ -330,35 +344,38 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       else {
         vacLock.lock();
         std::ofstream vacFile("vac.txt", ios_base::app);
-        vacFile << t->getDT()->prettyPrint(0).first + "\n";
+        vacFile << t->getAssertion() + "\n";
         vacFile.close();
         vacLock.unlock();
       }
 #endif
       // clear the template of the current dt operands
+
       t->getDT()->removeItems();
       if (t->getDT()->isMultiDimensional()) {
         for (size_t i = 0; i < props.size(); i++) {
-          t->getDT()->clearPack(props[i]);
-          delete props[i];
+          //t->getDT()->clearPack(props[i]);
+          //          delete props[i];
         }
       }
     }
-
     // Offset, same as onset but the consequent is negated
-    for (const std::vector<Proposition *> &props : antGen.offSets) {
+    for (std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+             &props : antGen.offSets) {
+      /*
       if (t->getDT()->isMultiDimensional()) {
         for (size_t i = 0; i < props.size(); i++) {
           for (auto prop : t->getDT()->unpack(props[i])) {
             t->getDT()->addItem(prop, i);
           }
         }
-
       } else {
-        for (auto prop : props) {
-          t->getDT()->addItem(prop, -1);
-        }
+      */
+      for (auto prop : props) {
+        t->getDT()->addItem(prop.first, std::pair<size_t, size_t>(prop.second),
+                            -1);
       }
+      //}
 
       assert(!t->getDT()->getItems().empty());
 
@@ -367,7 +384,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         Assertion *ass = new Assertion();
         t->fillContingency(ass->_ct, 1);
         ass->_toString = prettyAss;
-        auto loadedProps = t->getLoadedPropositions();
+        //FIXME
+        std::vector<Proposition *> loadedProps; // = t->getLoadedPropositions();
         ass->_complexity = getNumVariables(loadedProps);
         ass->_pRepetitions = getRepetitions(loadedProps);
         ass->fillValuesOffset(t);
@@ -385,12 +403,12 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
 #endif
 
       t->getDT()->removeItems();
-      if (t->getDT()->isMultiDimensional()) {
-        for (size_t i = 0; i < props.size(); i++) {
-          t->getDT()->clearPack(props[i]);
-          delete props[i];
-        }
-      }
+      //if (t->getDT()->isMultiDimensional()) {
+      //  for (size_t i = 0; i < props.size(); i++) {
+      //    t->getDT()->clearPack(props[i]);
+      //    delete props[i];
+      //  }
+      //}
     }
 
 #if enPB
@@ -400,8 +418,9 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
 
     //deallocate memory for negated candidate variables
     for (size_t i = 0; i < _propsDT.size(); i++) {
-      dynamic_cast<PropositionNot *>(candidateVariables[i].second)->popItem();
-      delete candidateVariables[i].second;
+      dynamic_cast<PropositionNot *>(candidateVariables[i].first.second)
+          ->popItem();
+      delete candidateVariables[i].first.second;
     }
     candidateVariables.clear();
     //delete all generated propositions from numeric expressions and clustering
@@ -414,15 +433,16 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
   else {
     // If the template does not have a dt
 
-    if (!t->isVacuous(harm::Location::AntCon) &&
-        t->assHoldsOnTrace(harm::Location::None)) {
+    if (!t->isVacuous(slam::Location::AntCon) &&
+        t->assHoldsOnTrace(slam::Location::None)) {
 
       //create a new assertion by making a snapshot of a template
       Assertion *ass = new Assertion();
       t->fillContingency(ass->_ct, 0);
       ass->_toString =
           std::make_pair(t->getAssertion(), t->getColoredAssertion());
-      auto loadedProps = t->getLoadedPropositions();
+      //FIXME
+      std::vector<Proposition *> loadedProps; // = t->getLoadedPropositions();
       ass->_complexity = getNumVariables(loadedProps);
       ass->_pRepetitions = getRepetitions(loadedProps);
       ass->fillValues(t);
@@ -432,7 +452,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
     }
 #if dumpVacAss
     else {
-      if (t->isVacuous(harm::Location::AntCon)) {
+      if (t->isVacuous(slam::Location::AntCon)) {
         vacLock.lock();
         std::ofstream vacFile("vac.txt", ios_base::app);
         vacFile << t->getAssertion() + "\n";
@@ -472,4 +492,4 @@ void TLMiner::clear() {
   _numerics.clear();
   _collectedAssertions.clear();
 }
-} // namespace harm
+} // namespace slam

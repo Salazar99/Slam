@@ -864,7 +864,7 @@ tests independent and easier to debug. However, sometimes tests use resources
 that are expensive to set up, making the one-copy-per-test model prohibitively
 expensive.
 
-If the tests don't change the resource, there's no harm in their sharing a
+If the tests don't change the resource, there's no slam in their sharing a
 single resource copy. So, in addition to per-test set-up/tear-down, googletest
 also supports per-test-suite set-up/tear-down. To use it:
 

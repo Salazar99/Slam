@@ -75,7 +75,6 @@ EXPRESSION(PropositionAnd)
 EXPRESSION(PropositionXor)
 EXPRESSION(PropositionEq)
 EXPRESSION(PropositionNeq)
-EXPRESSION_PAST(PropositionPast)
 
 int CounterVisitor::get_count(){
 	return _count;
@@ -103,7 +102,6 @@ EXPRESSION(NumericGreater)
 EXPRESSION(NumericGreaterEq)
 EXPRESSION(NumericLess)
 EXPRESSION(NumericLessEq)
-EXPRESSION_PAST(NumericPast)
 TYPE_CAST(NumericToBool)
 
 // logic
@@ -122,7 +120,6 @@ EXPRESSION(LogicGreater)
 EXPRESSION(LogicGreaterEq)
 EXPRESSION(LogicLess)
 EXPRESSION(LogicLessEq)
-EXPRESSION_PAST(LogicPast)
 EXPRESSION_LOGIC_BIT_SELECTION(LogicBitSelector)
 TYPE_CAST(LogicToNumeric)
 TYPE_CAST(LogicToBool)

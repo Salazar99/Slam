@@ -11,7 +11,7 @@
 #include <cctype>
 #include <iostream>
 
-namespace harm {
+namespace slam {
 using namespace csv;
 using namespace expression;
 
@@ -151,4 +151,4 @@ Trace *CSVtraceReader::readTrace(const std::string file) {
   return trace;
 }
 
-} // namespace harm
+} // namespace slam

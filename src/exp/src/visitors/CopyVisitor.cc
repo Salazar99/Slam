@@ -2,9 +2,7 @@
 
 //------------------------------------------------------------------------------
 #define LEAF_NODE(LEAF, DEST)                                                  \
-  void CopyVisitor::visit(LEAF &o) {                                           \
-    DEST = new LEAF(o);                                                        \
-  }
+  void CopyVisitor::visit(LEAF &o) { DEST = new LEAF(o); }
 
 #define EXPRESSION(OPERATOR, OPERAND, RESULT)                                  \
   void CopyVisitor::visit(OPERATOR &o) {                                       \
@@ -55,11 +53,6 @@ EXPRESSION(PropositionEq, _proposition, _proposition)
 EXPRESSION(PropositionNeq, _proposition, _proposition)
 EXPRESSION(PropositionNot, _proposition, _proposition)
 
-void CopyVisitor::visit(PropositionPast &o) {
-  o.getItem().acceptVisitor(*this);
-  _proposition = new PropositionPast(_proposition, o.getOffset());
-}
-
 void CopyVisitor::visit(LogicToBool &o) {
   o.getItem().acceptVisitor(*this);
   _proposition = new LogicToBool(_logic);
@@ -79,10 +72,6 @@ EXPRESSION(NumericLessEq, _numeric, _proposition)
 EXPRESSION(NumericGreater, _numeric, _proposition)
 EXPRESSION(NumericGreaterEq, _numeric, _proposition)
 
-void CopyVisitor::visit(NumericPast &o) {
-  o.getItem().acceptVisitor(*this);
-  _numeric = new NumericPast(_numeric, o.getOffset());
-}
 void CopyVisitor::visit(LogicToNumeric &o) {
   o.getItem().acceptVisitor(*this);
   _numeric = new LogicToNumeric(_logic);
@@ -108,10 +97,6 @@ EXPRESSION(LogicGreaterEq, _logic, _proposition)
 EXPRESSION(LogicRShift, _logic, _logic)
 EXPRESSION(LogicLShift, _logic, _logic)
 
-void CopyVisitor::visit(LogicPast &o) {
-  o.getItem().acceptVisitor(*this);
-  _logic = new LogicPast(_logic, o.getOffset());
-}
 void CopyVisitor::visit(LogicBitSelector &o) {
   o.getItem().acceptVisitor(*this);
   _logic = new LogicBitSelector(_logic, o.getUpperBound(), o.getLowerBound());
@@ -119,6 +104,57 @@ void CopyVisitor::visit(LogicBitSelector &o) {
 void CopyVisitor::visit(NumericToBool &o) {
   o.getItem().acceptVisitor(*this);
   _proposition = new NumericToBool(_numeric);
+}
+
+//temporal
+void CopyVisitor::visit(Placeholder &o) {
+  auto *copy = new Placeholder();
+  if (o.getProposition() != nullptr) {
+    o.getProposition()->acceptVisitor(*this);
+    copy->setProposition(_proposition);
+  }
+  _te = copy;
+}
+
+void CopyVisitor::visit(TemporalInst &o) {
+  auto *copy = new TemporalInst();
+  if (o.getProposition() != nullptr) {
+    o.getProposition()->acceptVisitor(*this);
+    copy->setProposition(_proposition);
+  }
+  _te = copy;
+}
+
+void CopyVisitor::visit(TemporalAnd &o) {
+  auto *copy = new TemporalAnd();
+  auto items = o.getItems();
+  for (auto *item : items) {
+    item->acceptVisitor(*this);
+    copy->addItem(_te);
+  }
+  _te = copy;
+}
+
+void CopyVisitor::visit(Implication &o) {
+  auto *copy = new Implication();
+  auto items = o.getItems();
+
+  //ant
+  items[0]->acceptVisitor(*this);
+  copy->setAnt(_te);
+  //con
+  items[1]->acceptVisitor(*this);
+  copy->setCon(_te);
+
+  _te = copy;
+}
+
+void CopyVisitor::visit(Eventually &o) {
+  auto item = o.getOperand();
+  auto *copy = new Eventually(o);
+  item->acceptVisitor(*this);
+  copy->setOperand(_te);
+  _te = copy;
 }
 
 } // namespace expression

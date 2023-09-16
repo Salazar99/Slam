@@ -1,5 +1,5 @@
 
-namespace harm {
+namespace slam {
 /** @enum ClsOp
  *  @brief Operator for a numeric expression (clustering): 
  *  Range: l <= numeric <= r;
@@ -8,4 +8,4 @@ namespace harm {
  *  LE: numeric <= r.
  */
 enum class ClsOp { Range = 0, E, GE, LE };
-} // namespace harm
+} // namespace slam

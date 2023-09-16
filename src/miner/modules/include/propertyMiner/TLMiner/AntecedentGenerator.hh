@@ -5,12 +5,14 @@
 #include <set>
 #include <vector>
 
-#define printTree 0
+#define printTree 1
 
-namespace harm {
+namespace slam {
 
 // For the decision tree algorithm variables are enumerated. Each variable is a proposition splitting the search space.
-using DecTreeVariables = std::map<size_t, std::pair<Proposition *, Proposition *>>;
+using DecTreeVariables =
+    std::map<size_t, std::pair<std::pair<Proposition *, Proposition *>,
+                               std::pair<size_t, size_t>>>;
 using NumericDecTreeExp = std::map<size_t, CachedAllNumeric *>;
 
 /*! \struct DiscoveredLeaf
@@ -31,6 +33,12 @@ struct DiscoveredLeaf {
 struct CandidateDec {
 
   CandidateDec() {}
+  CandidateDec(size_t id, double ig, int depth, Proposition *p, std::pair<size_t,size_t> intv, bool offSet,
+               double entropy = 1.f)
+      : _id(id), _ig(ig), _depth(depth), _entropy(entropy) {
+    _props.emplace_back(p, offSet);
+    _intv.emplace_back(intv,offSet);
+  }
   CandidateDec(size_t id, double ig, int depth, Proposition *p, bool offSet,
                double entropy = 1.f)
       : _id(id), _ig(ig), _depth(depth), _entropy(entropy) {
@@ -46,6 +54,7 @@ struct CandidateDec {
   double _ig;
   int _depth;
   double _entropy;
+  std::vector<std::pair<std::pair<size_t,size_t>,size_t>> _intv;
   std::vector<std::pair<Proposition *, size_t>> _props;
 };
 
@@ -74,9 +83,11 @@ public:
   size_t maxPropositions;
 
   /// the algorithm's result (onset, ant -> con):
-  std::vector<std::vector<Proposition *>> onSets;
+  std::vector<std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>>
+      onSets;
   /// the algorithm's result (offset, ant -> !con):
-  std::vector<std::vector<Proposition *>> offSets;
+  std::vector<std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>>
+      offSets;
 
   ///if true, it prompts the algo to save the offset
   bool saveOffset;
@@ -114,19 +125,18 @@ private:
                                     double currEntropy);
 
   /// @brief find choices through clustering, uses gatherPropositionsFromNumerics
-  inline std::vector<Proposition *>
+  inline std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
   gatherPropositionsFromNumerics(CachedAllNumeric *cn, Template *t, int depth,
                                  std::vector<Proposition *> &genProps);
 
   /// @brief analyse the trace to find a set of values on which to perform the clustering
-  inline std::vector<size_t>
+  inline std::vector<std::pair<CachedAllNumeric::EvalRet, size_t>>
   gatherInterestingValues(Template *t, CachedAllNumeric *cn, int depth);
 
   bool isKnownSolution(const std::vector<Proposition *> &items,
                        DTOperator *template_dt, bool checkOnly = false);
 
   void storeSolution(Template *t, bool isOffset);
-
 
   //debug
 #if printTree
@@ -137,4 +147,4 @@ private:
 #endif
 };
 
-} // namespace harm
+} // namespace slam

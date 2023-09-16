@@ -22,9 +22,12 @@ std::string clk = "";
 std::string outputLang = "Spot";
 bool genTemp;
 size_t maxThreads = std::thread::hardware_concurrency();
+size_t multiplyTrace = 1;
+bool divideStat = false;
 bool findMinSubset = false;
 bool dumpAssToFile = false;
 size_t maxAss = std::numeric_limits<size_t>().max();
+double minFinal=0.f;
 std::string dumpPath = "";
 bool intMode = false;
 bool splitLogic = false;
@@ -39,9 +42,10 @@ bool psilent = false;
 std::string clsAlg = "kmeans";
 bool dumpStat = false;
 bool dontNormalize = false;
+bool debugCls=0;
 } // namespace clc
 
-// harm stat
+// slam stat
 namespace hs {
 
 size_t timeToMine_ms = 0;

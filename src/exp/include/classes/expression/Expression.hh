@@ -1,6 +1,9 @@
 #pragma once
 
 #include "classes/atom/Atom.hh"
+#include "classes/expression/BitSelector.hh"
+#include "classes/expression/Derivative.hh"
+
 #include <vector>
 
 namespace expression {

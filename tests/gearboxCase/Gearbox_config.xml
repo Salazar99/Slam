@@ -1,0 +1,73 @@
+<slam>
+	<!--
+	-->
+		<context name="threshold_gear1"> 
+
+		<numeric  clsEffort = "0.01" exp="omega" loc="dt"/>
+		<numeric  clsEffort = "0.01" exp="throttle" loc="dt"/>
+
+        <template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](gear==1))" />
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+	<!--
+	-->
+	<context name="threshold_gear4"> 
+
+		<numeric op="ge"  clsEffort = "0.01" exp="omega" loc="dt"/>
+		<numeric  clsEffort = "0.01" exp="throttle" loc="dt"/>
+
+        <template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](gear==4))" />
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+	<!--
+	-->
+	<context name="threshold_gear3"> 
+
+		<numeric   clsEffort = "0.01" exp="omega" loc="dt"/>
+		<numeric  clsEffort = "0.01" exp="throttle" loc="dt"/>
+
+        <template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](gear==3))" />
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+	<!--
+	-->
+	<context name="threshold_gear2"> 
+		<numeric  clsEffort = "0.01" exp="omega" loc="dt"/>
+		<numeric  clsEffort = "0.01" exp="throttle" loc="dt"/>
+
+        <template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](gear==2))" />
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+    <!--
+	-->
+	<context name="theta_increasing"> 
+
+		<numeric op="ge"  clsEffort = "0.01" exp="omega" loc="dt"/>
+
+        <template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](@(theta,1) > 0))" />
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+	<!--
+	-->
+	<context name="theta_stable"> 
+
+		<numeric op="ge"  clsEffort = "0.01" exp="omega" loc="dt"/>
+
+        <template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](@(theta,1) == 0))" />
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+
+	  
+</slam>

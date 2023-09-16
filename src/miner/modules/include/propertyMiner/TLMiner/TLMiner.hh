@@ -11,14 +11,14 @@
 #include <unordered_set>
 #include <vector>
 
-#define dumpVacAss 0
+#define dumpVacAss 1
 #define enPB 1
 using namespace std;
 
-namespace harm {
+namespace slam {
 
 /*! \class TLMiner
-    \brief implements the logic of the harm assertion miner
+    \brief implements the logic of the slam assertion miner
 */
 class TLMiner : public PropertyMiner {
 
@@ -67,4 +67,4 @@ private:
 #endif
   };
 
-} // namespace harm
+} // namespace slam

@@ -1,5 +1,5 @@
 
-// Generated from proposition.g4 by ANTLR 4.10.1
+// Generated from proposition.g4 by ANTLR 4.12.0
 
 #pragma once
 
@@ -12,8 +12,8 @@
 class  propositionParser : public antlr4::Parser {
 public:
   enum {
-    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, SIGN = 7, 
-    LGPAREN = 8, RGPAREN = 9, LCPAREN = 10, RCPAREN = 11, LPAREN = 12, RPAREN = 13, 
+    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
+    SIGN = 8, DER = 9, LCPAREN = 10, RCPAREN = 11, LPAREN = 12, RPAREN = 13, 
     VARIABLE = 14, NUMERIC = 15, VERILOG_BINARY = 16, GCC_BINARY = 17, HEX = 18, 
     BOOLEAN = 19, PLUS = 20, MINUS = 21, TIMES = 22, DIV = 23, GT = 24, 
     GE = 25, LT = 26, LE = 27, EQ = 28, NEQ = 29, BAND = 30, BOR = 31, BXOR = 32, 
@@ -135,7 +135,6 @@ public:
   public:
     BooleanVariableContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *LT();
     VariableContext *variable();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -154,9 +153,11 @@ public:
     antlr4::tree::TerminalNode *NEG();
     std::vector<LogicContext *> logic();
     LogicContext* logic(size_t i);
-    LogicAtomContext *logicAtom();
+    antlr4::tree::TerminalNode *DER();
     antlr4::tree::TerminalNode *LPAREN();
+    antlr4::tree::TerminalNode *NUMERIC();
     antlr4::tree::TerminalNode *RPAREN();
+    LogicAtomContext *logicAtom();
     antlr4::tree::TerminalNode *TIMES();
     antlr4::tree::TerminalNode *DIV();
     antlr4::tree::TerminalNode *PLUS();
@@ -225,7 +226,6 @@ public:
   public:
     LogicVariableContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *LT();
     VariableContext *variable();
     antlr4::tree::TerminalNode *SIGN();
     antlr4::tree::TerminalNode *NUMERIC();
@@ -242,12 +242,14 @@ public:
     antlr4::Token *artop = nullptr;
     NumericContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    NumericAtomContext *numericAtom();
-    LogicContext *logic();
+    antlr4::tree::TerminalNode *DER();
     antlr4::tree::TerminalNode *LPAREN();
     std::vector<NumericContext *> numeric();
     NumericContext* numeric(size_t i);
+    antlr4::tree::TerminalNode *NUMERIC();
     antlr4::tree::TerminalNode *RPAREN();
+    NumericAtomContext *numericAtom();
+    LogicContext *logic();
     antlr4::tree::TerminalNode *TIMES();
     antlr4::tree::TerminalNode *DIV();
     antlr4::tree::TerminalNode *PLUS();
@@ -291,7 +293,6 @@ public:
   public:
     NumericVariableContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *LT();
     VariableContext *variable();
     antlr4::tree::TerminalNode *NUMERIC();
 

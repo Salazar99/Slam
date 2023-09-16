@@ -1,13 +1,14 @@
 #include "PermGenerator.hh"
+#include "Template.hh"
 #include "colors.hh"
 #include "message.hh"
 
 #include <deque>
-#include <spot/tl/print.hh>
 #include <sstream>
 #include <utility>
 
-namespace harm {
+namespace slam {
+using namespace expression;
 Row operator*(const Row &r1, const Row &r2) {
   Row ret = r1;
   for (auto e : r2) {
@@ -83,6 +84,27 @@ Matrix genCommutatives(Matrix in, size_t k) {
   }
   return ret;
 }
+bool checkKind(TemporalExp *f1, TemporalExp *f2) {
+  if (dynamic_cast<TemporalInst *>(f1) != nullptr &&
+      dynamic_cast<TemporalInst *>(f2) != nullptr) {
+    return 1;
+  }
+  if (dynamic_cast<Placeholder *>(f1) != nullptr &&
+      dynamic_cast<Placeholder *>(f2) != nullptr) {
+    return 1;
+  }
+  if (dynamic_cast<TemporalAnd *>(f1) != nullptr && dynamic_cast<TemporalAnd *>(f2) != nullptr) {
+    return 1;
+  }
+  if (dynamic_cast<TemporalOr *>(f1) != nullptr && dynamic_cast<TemporalOr *>(f2) != nullptr) {
+    return 1;
+  }
+  if (dynamic_cast<TemporalNot *>(f1) != nullptr && dynamic_cast<TemporalNot *>(f2) != nullptr) {
+    return 1;
+  }
+
+  return 0;
+}
 PermGenerator::~PermGenerator() {
   if (_perms != nullptr) {
     for (size_t i = 0; i < _size.first; i++) {
@@ -91,12 +113,12 @@ PermGenerator::~PermGenerator() {
     delete[] _perms;
   }
 }
-PermGenerator::PermUnit *PermGenerator::generatePermUnit(spot::formula &templ) {
+PermGenerator::PermUnit *PermGenerator::generatePermUnit(TemporalExp *templ) {
   std::unordered_set<std::string> foundPH;
   return generatePermUnit(templ, foundPH);
 }
 PermGenerator::PermUnit *
-PermGenerator::generatePermUnit(spot::formula &templ,
+PermGenerator::generatePermUnit(TemporalExp *templ,
                                 std::unordered_set<std::string> &foundPH) {
   //   print_spin_ltl(std::cout, templ, false) << '\n';
 
@@ -104,20 +126,21 @@ PermGenerator::generatePermUnit(spot::formula &templ,
   //  std::cout << __func__ << "\n";
   ret->_op = PermOperator::Mul;
 
-  if (templ.is(spot::op::And) || templ.is(spot::op::Or)) {
+  if (dynamic_cast<TemporalAnd *>(templ) != nullptr || dynamic_cast<TemporalOr *>(templ) != nullptr) {
+    //      std::cout << "AndOr:"<<templ->size() << "\n";
     // retrieve equivalent operands
     std::map<size_t, std::vector<size_t>> equals;
     std::unordered_set<size_t> used;
-    for (size_t i = 0; i < templ.size() && used.size() != templ.size(); i++) {
+    for (size_t i = 0; i < templ->size() && used.size() != templ->size(); i++) {
       if (!used.count(i)) {
         equals[i].push_back(i);
         used.insert(i);
-        for (size_t j = 0; j < templ.size(); j++) {
+        for (size_t j = 0; j < templ->size(); j++) {
           if (i == j) {
             continue;
           }
           if (!used.count(j)) {
-            if (compare(templ[i], templ[j])) {
+            if (compare(templ->getItems()[i], templ->getItems()[j])) {
               equals.at(i).push_back(j);
               used.insert(j);
             }
@@ -130,7 +153,7 @@ PermGenerator::generatePermUnit(spot::formula &templ,
     for (auto &i : equals) {
       if (i.second.size() > 1) {
         // cluster of equivalent operands
-        auto ch = templ[i.first];
+        auto ch = templ->getItems()[i.first];
         auto *tmp = generatePermUnit(ch, foundPH);
         PermUnit *bin = new PermUnit();
         bin->_op = PermOperator::Bin;
@@ -142,7 +165,7 @@ PermGenerator::generatePermUnit(spot::formula &templ,
         ret->_children.push_back(bin);
       } else {
         // of size 1
-        auto ch = templ[i.first];
+        auto ch = templ->getItems()[i.first];
         auto *tmp = generatePermUnit(ch, foundPH);
         for (auto &e : tmp->_children) {
           ret->_children.push_back(e);
@@ -155,25 +178,27 @@ PermGenerator::generatePermUnit(spot::formula &templ,
       ret->_dim.second += i->_dim.second;
     }
 
-  } else if (templ.is(spot::op::ap) && templ.ap_name()[0] == 'P') {
+  } else if (dynamic_cast<Placeholder *>(templ) != nullptr) {
 
-    harm::Location loc = _phToLoc.at(templ.ap_name());
+    //     std::cout << "PH" << "\n";
+    slam::Location loc =
+        _phToLoc.at(dynamic_cast<Placeholder *>(templ)->getName());
     PermUnit *ph = new PermUnit();
     ph->_op = PermOperator::Ph;
-    if (foundPH.count(templ.ap_name())) {
+    if (foundPH.count(dynamic_cast<Placeholder *>(templ)->getName())) {
       // this is a repeated placeholder
       ph->_dim.first = 1;
       ph->_dim.second = 1;
     } else {
-      foundPH.insert(templ.ap_name());
+      foundPH.insert(dynamic_cast<Placeholder *>(templ)->getName());
       // set the correct domain
-      if (loc == harm::Location::Ant) {
+      if (loc == slam::Location::Ant) {
         ph->_dim.first = _aProps;
         ph->_dim.second = 1;
-      } else if (loc == harm::Location::Con) {
+      } else if (loc == slam::Location::Con) {
         ph->_dim.first = _cProps;
         ph->_dim.second = 1;
-      } else if (loc == harm::Location::AntCon) {
+      } else if (loc == slam::Location::AntCon) {
         ph->_dim.first = _acProps;
         ph->_dim.second = 1;
       }
@@ -181,30 +206,32 @@ PermGenerator::generatePermUnit(spot::formula &templ,
     ret->_children.push_back(ph);
     ret->_dim.first = ph->_dim.first;
     ret->_dim.second = ph->_dim.second;
-  } else if ((templ.is(spot::op::U) || templ.is(spot::op::R)) &&
-             (compare(templ[0], templ[1]))) {
-    ret->_dim.first = 1;
-    ret->_dim.second = 0;
+    //  } else if ((templ.is(spot::op::U) || templ.is(spot::op::R)) &&
+    //             (compare(templ[0], templ[1]))) {
+    //    ret->_dim.first = 1;
+    //    ret->_dim.second = 0;
+    //    ret->_op = PermOperator::Mul;
+    //    auto f = templ[0];
+    //    auto *tmp = generatePermUnit(f, foundPH);
+    //    PermUnit *com = new PermUnit();
+    //    com->_op = PermOperator::Com;
+    //    com->_children.push_back(tmp);
+    //    com->_dim.first = (tmp->_dim.first * (tmp->_dim.first - 1));
+    //    com->_dim.second = tmp->_dim.second * 2;
+    //
+    //    ret->_children.push_back(com);
+    //    for (auto &i : ret->_children) {
+    //      ret->_dim.first *= i->_dim.first;
+    //      ret->_dim.second += i->_dim.second;
+    //    }
+    //
+  } else if (dynamic_cast<Placeholder *>(templ) == nullptr &&
+             dynamic_cast<TemporalInst *>(templ) == nullptr) {
+    //    std::cout << "Rest" << "\n";
     ret->_op = PermOperator::Mul;
-    auto f = templ[0];
-    auto *tmp = generatePermUnit(f, foundPH);
-    PermUnit *com = new PermUnit();
-    com->_op = PermOperator::Com;
-    com->_children.push_back(tmp);
-    com->_dim.first = (tmp->_dim.first * (tmp->_dim.first - 1));
-    com->_dim.second = tmp->_dim.second * 2;
-
-    ret->_children.push_back(com);
-    for (auto &i : ret->_children) {
-      ret->_dim.first *= i->_dim.first;
-      ret->_dim.second += i->_dim.second;
-    }
-
-  } else if (!templ.is(spot::op::ap)) {
-    ret->_op = PermOperator::Mul;
     ret->_dim.first = 1;
-    for (size_t i = 0; i < templ.size(); i++) {
-      auto ch = templ[i];
+    for (size_t i = 0; i < templ->size(); i++) {
+      auto ch = templ->getItems()[i];
       auto *tmp = generatePermUnit(ch, foundPH);
       for (auto &e : tmp->_children) {
         ret->_children.push_back(e);
@@ -217,7 +244,7 @@ PermGenerator::generatePermUnit(spot::formula &templ,
     }
   }
 
-  //    std::cout << ret->_dim.first << "x" << ret->_dim.second << "\n";
+  //   std::cout << ret->_dim.first << "x" << ret->_dim.second << "\n";
   return ret;
 }
 void PermGenerator::deletePermUnit(PermGenerator::PermUnit *pu) {
@@ -286,97 +313,57 @@ void PermGenerator::printPermUnit(PermGenerator::PermUnit *pu) {
   level.pop_back();
   level.pop_back();
 }
-bool PermGenerator::compare(spot::formula f1, spot::formula f2) {
+bool PermGenerator::compare(TemporalExp *f1, TemporalExp *f2) {
 
-  if (f1.kind() != f2.kind()) {
+  if (!checkKind(f1, f2)) {
     return false;
   }
-  if (f1.size() != f2.size()) {
+
+  if (dynamic_cast<TemporalInst *>(f1) != nullptr &&
+      dynamic_cast<TemporalInst *>(f2) != nullptr) {
+    return dynamic_cast<TemporalInst *>(f1)->getName() ==
+           dynamic_cast<TemporalInst *>(f2)->getName();
+  }
+
+  if ((dynamic_cast<Placeholder *>(f1) != nullptr &&
+       (_mPhs.at(dynamic_cast<Placeholder *>(f1)->getName()) > 1))) {
+    return dynamic_cast<Placeholder *>(f1)->getName() ==
+           dynamic_cast<Placeholder *>(f2)->getName();
+  }
+  if ((dynamic_cast<Placeholder *>(f2) != nullptr &&
+       (_mPhs.at(dynamic_cast<Placeholder *>(f2)->getName()) > 1))) {
+    return dynamic_cast<Placeholder *>(f1)->getName() ==
+           dynamic_cast<Placeholder *>(f2)->getName();
+  }
+
+  if (f1->size() != f2->size()) {
     return false;
   }
-  if ((f1.is(spot::op::ap) && f1.ap_name()[0] != 'P') ||
-      (f2.is(spot::op::ap) && f2.ap_name()[0] != 'P')) {
 
-    return f1.ap_name() == f2.ap_name();
-  }
-  if ((f1.is(spot::op::ap) && (_mPhs.at(f1.ap_name()) > 1))) {
-    return f1.ap_name() == f2.ap_name();
-  }
-  if ((f2.is(spot::op::ap) && (_mPhs.at(f2.ap_name()) > 1))) {
-    return f1.ap_name() == f2.ap_name();
-  }
-
-  for (size_t i = 0; i < f1.size(); i++) {
-    if (!compare(f1[i], f2[i])) {
+  for (size_t i = 0; i < f1->size(); i++) {
+    if (!compare(f1->getItems()[i], f2->getItems()[i])) {
       return false;
     }
   }
   return true;
 }
 void PermGenerator::genPermutations(size_t antP, size_t conP, size_t antConP,
-                                    Hstring &templateFormula) {
+                                    Template *templ) {
   // set the domains
   _aProps = antP;
   _cProps = conP;
   _acProps = antConP;
 
-  auto hcon = templateFormula.getCon();
-  auto hant = templateFormula.getAnt();
-
   // retrieve placeholders to location
-  std::unordered_set<std::string> antPhs;
-  for (size_t i = 0; i < hant.size(); i++) {
-    auto &e = hant[i];
-    if (e._t == Hstring::Stype::Ph) {
-      _phToLoc.insert({{e._s, harm::Location::Ant}});
-      antPhs.insert(e._s);
-    }
-  }
-
-  for (size_t i = 0; i < hcon.size(); i++) {
-    auto &e = hcon[i];
-    if (e._t == Hstring::Stype::Ph) {
-      if (antPhs.count(e._s)) {
-        _phToLoc.at(e._s) = harm::Location::AntCon;
-      } else {
-        _phToLoc.insert({{e._s, harm::Location::Con}});
-      }
-    }
-  }
-
-  spot::formula con = spot::parse_infix_psl(hcon.toSpotString()).f;
-  spot::formula ant = spot::parse_infix_psl(hant.toSpotString()).f;
-
-  // rebuild the formula
-  spot::formula wholeForm =
-      spot::parse_infix_psl(hant.toSpotString() + "->" + hcon.toSpotString()).f;
-
-  // assign an index to each placeholders
   size_t index = 0;
-
-  wholeForm.traverse([&index, this](spot::formula &templ) {
-    if (templ.is(spot::op::ap) && templ.ap_name()[0] == 'P') {
-      if (!_phToIndex.count(templ.ap_name())) {
-        _phToIndex[templ.ap_name()] = index;
-      } else {
-        // repeated placeholders are stored elsewhere
-        auto phName =
-            templ.ap_name() + "_" + std::to_string(_mPhs.at(templ.ap_name()));
-        _rphToIndex[phName] = index;
-      }
-      // count placeholders occurrences
-      _mPhs[templ.ap_name()]++;
-      index++;
-    }
-    return false;
-  });
-
-  //    debug
-  // print_spin_ltl(std::cout, wholeForm, false) << '\n';
-  messageErrorIf(wholeForm.is_constant(), "The template is a constant!");
+  for (auto &[ph, p] : templ->_cphToProp) {
+    _phToLoc.insert({{ph, slam::Location::Con}});
+    _phToIndex[ph] = index++;
+    _mPhs[ph]++;
+  }
 
   // find the dimensions and structure of the permutations
-  PermUnit *pu = generatePermUnit(wholeForm);
+  PermUnit *pu = generatePermUnit(templ->_impl);
   //    debug
   // printPermUnit(pu);
 
@@ -479,4 +466,4 @@ Matrix PermGenerator::visitPermUnit(PermGenerator::PermUnit *pu) {
 
   return ret;
 }
-} // namespace harm
+} // namespace slam

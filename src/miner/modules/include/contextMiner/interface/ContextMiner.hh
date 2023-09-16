@@ -2,7 +2,7 @@
 
 #include "xmlUtils.hh"
 
-namespace harm {
+namespace slam {
 
 class Context;
 class Trace;
@@ -44,4 +44,4 @@ protected:
   rapidxml::xml_document<> *_doc;
 };
 
-} // namespace harm
+} // namespace slam

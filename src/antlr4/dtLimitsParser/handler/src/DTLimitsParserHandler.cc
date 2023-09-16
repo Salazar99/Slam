@@ -56,10 +56,21 @@ void DTLimitsParserHandler::enterStrategy(limitsParser::StrategyContext *ctx) {
   _setOptions.insert("Strategy");
 }
 
+  void DTLimitsParserHandler::enterMaxDistance(limitsParser::MaxDistanceContext *ctx) {
+  
+  _limits._maxDistance = std::stoul(ctx->NUMERIC()->getText());
+  _setOptions.insert("MaxDistance");
+  }
+  void DTLimitsParserHandler::enterMinDistance(limitsParser::MinDistanceContext *ctx) {
+  _limits._minDistance = std::stoul(ctx->NUMERIC()->getText());
+  _setOptions.insert("MinDistance");
+  
+  }
+
 void DTLimitsParserHandler::enterEveryRule(antlr4::ParserRuleContext *ctx) {}
 void DTLimitsParserHandler::visitTerminal(antlr4::tree::TerminalNode *node) {}
 
-harm::DTLimits DTLimitsParserHandler::getLimits() { return _limits; }
+slam::DTLimits DTLimitsParserHandler::getLimits() { return _limits; }
 std::unordered_set<std::string> DTLimitsParserHandler::getSetOptions() {
   return _setOptions;
 }

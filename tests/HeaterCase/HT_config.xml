@@ -1,0 +1,38 @@
+<slam>
+	<!--
+	-->
+		<context name="threshold_heateron"> 
+
+		<numeric op="le,ge" clsEffort = "0.01" exp="T" loc="dt"/>
+		<numeric op="le,ge,r" clsEffort = "0.01" exp="C" loc="dt"/>
+
+        <template dtLimits="2A,0E,50maxd,0mind" exp="G( ..F.. -> F[0,0](Status==1))" />
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+	<!--
+	-->
+	<context name="threshold_heater_off"> 
+
+		<numeric op="ge" clsEffort = "0.01" exp="T" loc="dt"/>
+
+        <template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](Status==0))" />
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+    <!--
+	-->	  
+	<context name="threshold_heater_night"> 
+
+		<numeric op="e" clsEffort = "0.01" exp="Status" loc="dt"/>
+		<numeric op="le" clsEffort = "0.01" exp="C" loc="dt"/>
+
+        <template dtLimits="2A,0.45E,100maxd,0mind" exp="G( ..F.. -> F[0,0](@(T,1)==0))" />
+
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+</slam>

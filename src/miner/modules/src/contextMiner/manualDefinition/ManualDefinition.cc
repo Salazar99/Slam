@@ -3,6 +3,7 @@
 #include "ProgressBar.hpp"
 #include "Template.hh"
 #include "Trace.hh"
+#include "expUtils/expUtils.hh"
 #include "classes/atom/Atom.hh"
 #include "dtLimitsParser.hh"
 #include "metricParser.hh"
@@ -21,7 +22,7 @@
 
 #define enPB 1
 
-namespace harm {
+namespace slam {
 
 using namespace rapidxml;
 ManualDefinition::ManualDefinition(std::string &configFile)
@@ -102,7 +103,7 @@ void ManualDefinition::mineContexts(Trace *trace,
 
   for (auto &contextTag : contextsTag) {
     auto contextName = getAttributeValue(contextTag, "name", "");
-    auto language = getAttributeValue(contextTag, "language", "Spot");
+    auto language = getAttributeValue(contextTag, "language", "stl");
     Context *context = new Context(contextName, language);
 
     // templates
@@ -123,6 +124,8 @@ void ManualDefinition::mineContexts(Trace *trace,
       //          << "\n";
       // std::cout << "saveOffset:" << dtLimits._saveOffset << "\n";
       // std::cout << "useNegatedProps:" << dtLimits._useNegatedProps << "\n";
+       //std::cout << "minDistance:" << dtLimits._minDistance << "\n";
+       //std::cout << "maxDistance:" << dtLimits._maxDistance << "\n";
       context->_templates.push_back(
           hparser::parseTemplate(exp, trace, language, dtLimits));
       messageErrorIf(check != "0" && check != "1",
@@ -219,6 +222,14 @@ void ManualDefinition::mineContexts(Trace *trace,
 
         delete np;
 
+        //debug
+        //for (size_t i = 0; i < nn->getMaxTime(); i++) {
+        //    std::cout << nn->evaluate(i)._d << "";
+        //}
+        //std::cout <<  "\n";
+        //
+
+
         for (auto &loc : locs) {
           if (loc != Location::DecTree) {
             //generate props though clustering using the whole trace
@@ -226,7 +237,9 @@ void ManualDefinition::mineContexts(Trace *trace,
             for (size_t i = 0; i < trace->getLength(); i++) {
               ivs.push_back(i);
             }
-            auto props = genPropsThroughClustering(ivs, nn, trace->getLength());
+
+            auto props = genPropsThroughClustering1D(ivs, nn, trace->getLength());
+            messageWarningIf(props.empty(), "No props generated for numeric '" + allNum2String(*nn)+"'");
             for (auto p : props) {
               context->_props.emplace_back(p, loc);
             }
@@ -252,4 +265,4 @@ void ManualDefinition::mineContexts(Trace *trace,
   }
 }
 
-} // namespace harm
+} // namespace slam

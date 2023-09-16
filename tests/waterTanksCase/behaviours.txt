@@ -1,0 +1,15 @@
+This file collecs expected behaviours from the water tank cases expressed both in 
+natural language and possible STL assertions.
+
+Here is a brief explanation on the system's signals:
+-z:         variable representing the level of the the main tank;
+-d:         variable representing the level of the the secondary tank;
+-w:         variable representing the state of the weather at the moment, r is calculated using w (Not interesting in the mining procedure?)
+-amount:    variable that calculate how much water has been wasted due to overflow
+-a:         variable that control the return valve opening/closure;
+-rain:      variable representing the rain/sunny behaviour(-1<=r<=0 for sunny, 0<r<=1 for rainy) ;
+-clk:       clock that define the periods for max rain (r=1) or max sun (r=-1)
+
+1. If the amount of water in main tank approaches max capacity, the valve to secondary tank would open
+2. The wather changes based on fixed time intervals 
+3. 

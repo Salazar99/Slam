@@ -1,19 +1,17 @@
 #pragma once
 #include "DTLimits.hh"
-#include "Hstring.hh"
 #include "Trace.hh"
 
-namespace harm {
+namespace slam {
 class Template;
 }
 
 namespace hparser {
 void addTypeToTemplate(std::string &formula,
-                       std::vector<harm::VarDeclaration> varDeclarations);
+                       std::vector<slam::VarDeclaration> varDeclarations);
 
-harm::Template *parseTemplate(std::string formula, harm::Trace *trace,
-                              const std::string &language = "Spot",
-                              const harm::DTLimits &limits = harm::DTLimits(),
+slam::Template *parseTemplate(std::string formula, slam::Trace *trace,
+                              const std::string &language = "stl",
+                              const slam::DTLimits &limits = slam::DTLimits(),
                               bool useCache = true);
-Hstring spotToSVA(std::string spotFormula, harm::Trace *trace);
 } // namespace hparser

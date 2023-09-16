@@ -1,7 +1,7 @@
 #include "Assertion.hh"
 #include "Template.hh"
 
-namespace harm {
+namespace slam {
 
 Assertion::~Assertion() {
   if (_values != nullptr) {
@@ -35,7 +35,8 @@ void Assertion::fillValuesOffset(Template *t) {
     _values = new Trinary[t->_max_length];
   }
   for (size_t i = 0; i < t->_max_length; i++) {
-    _values[i] = t->evaluateOffset(i);
+      //    FIXME
+//    _values[i] = t->evaluateOffset(i);
   }
   _max_length = t->_max_length;
 }
@@ -93,4 +94,4 @@ bool operator==(const Assertion &a1, const Assertion &a2) {
 
   return a1_s == a2_s;
 }
-} // namespace harm
+} // namespace slam

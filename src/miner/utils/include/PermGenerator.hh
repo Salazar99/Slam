@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Hstring.hh"
 #include "Location.hh"
 #include "minerUtils.hh"
 
@@ -18,7 +17,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace harm {
+namespace slam {
 
 using Matrix = std::vector<std::vector<size_t>>;
 using Row = std::vector<size_t>;
@@ -32,8 +31,7 @@ public:
 
   ~PermGenerator();
 
-  void genPermutations(size_t antP, size_t conP, size_t antConP,
-                       Hstring &templateFormula);
+  void genPermutations(size_t antP, size_t conP, size_t antConP,Template *temp);
 
 private:
   enum class PermOperator { Mul, Bin, Com, Ph };
@@ -43,12 +41,11 @@ private:
     std::vector<PermUnit *> _children;
   };
 
-  bool compare(spot::formula f1, spot::formula f2);
+  bool compare(expression::TemporalExp* f1, expression::TemporalExp* f2);
   Matrix visitPermUnit(PermGenerator::PermUnit *pu);
   PermGenerator::PermUnit *
-  generatePermUnit(spot::formula &templ,
-                   std::unordered_set<std::string> &foundPH);
-  PermGenerator::PermUnit *generatePermUnit(spot::formula &templ);
+  generatePermUnit(expression::TemporalExp* templ, std::unordered_set<std::string> &foundPH);
+  PermGenerator::PermUnit *generatePermUnit(expression::TemporalExp* templ);
   void printPermUnit(PermGenerator::PermUnit *pu);
   void deletePermUnit(PermGenerator::PermUnit *pu);
 
@@ -62,6 +59,6 @@ public:
   int **_perms = nullptr;
   std::pair<size_t, size_t> _size;
   std::unordered_map<std::string, size_t> _phToIndex;
-  std::unordered_map<std::string, harm::Location> _phToLoc;
+  std::unordered_map<std::string, slam::Location> _phToLoc;
 };
-} // namespace harm
+} // namespace slam

@@ -59,7 +59,7 @@ class CommonTest : public Test {
     shared_ = nullptr;
   }
 
-  // This 'protected:' is optional.  There's no harm in making all
+  // This 'protected:' is optional.  There's no slam in making all
   // members of this fixture class template public.
  protected:
   // We used to use std::list here, but switched to std::vector since

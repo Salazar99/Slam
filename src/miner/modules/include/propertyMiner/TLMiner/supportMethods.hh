@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-namespace harm {
+namespace slam {
 
 #define DIV(a, b) (static_cast<double>((a)) / static_cast<double>((b)))
 

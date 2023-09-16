@@ -1,5 +1,5 @@
 
-// Generated from limits.g4 by ANTLR 4.10.1
+// Generated from limits.g4 by ANTLR 4.12.0
 
 #pragma once
 
@@ -13,7 +13,7 @@ class  limitsLexer : public antlr4::Lexer {
 public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
-    SEQ = 8, RAN = 9, NOT = 10, NUMERIC = 11, WS = 12
+    T__7 = 8, T__8 = 9, SEQ = 10, RAN = 11, NOT = 12, NUMERIC = 13, WS = 14
   };
 
   explicit limitsLexer(antlr4::CharStream *input);

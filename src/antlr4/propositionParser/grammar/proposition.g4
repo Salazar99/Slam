@@ -31,13 +31,14 @@ booleanConstant
     ;
 
 booleanVariable
-    : '<' variable ',bool>' 
+    : '{' variable ',bool}' 
     ;
 
 // ------------------------------------------ LOGIC
 logic
     : NEG logic 
     | logic bitSelect 
+    | DER LPAREN logic ',' NUMERIC RPAREN
     | logic artop=(TIMES|DIV) logic
     | logic artop=(PLUS|MINUS) logic
     | logic logop=LSHIFT logic
@@ -64,7 +65,7 @@ logicConstant
     ;
 
 logicVariable
-    : '<' variable ',logic(' SIGN ',' NUMERIC ')>' 
+    : '{' variable ',logic_' SIGN NUMERIC '}' 
     ;
 
 SIGN
@@ -75,7 +76,8 @@ SIGN
 
 // ------------------------------------------ NUMERIC
 numeric
-    : numeric artop=(TIMES|DIV) numeric
+    : DER LPAREN numeric ',' NUMERIC RPAREN
+    | numeric artop=(TIMES|DIV) numeric
     | numeric artop=(PLUS|MINUS) numeric
     | numericAtom
     | logic
@@ -92,23 +94,20 @@ numericConstant
     ;
 
 numericVariable
-    : '<' variable ',numeric(' NUMERIC ')>' 
+    : '{' variable ',numeric'  NUMERIC '}' 
     ;
 
 
 
+
+DER
+    : '@'
+    ;
 
 variable
     : VARIABLE
     ;
 
-LGPAREN
-    : '{'
-    ;
-
-RGPAREN
-    : '}'
-    ;
 LCPAREN
     : '['
     ;

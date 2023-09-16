@@ -1,7 +1,7 @@
 #include "DataType.hh"
 
 
-namespace harm {
+namespace slam {
     using namespace expression;
 
 DataType::DataType()

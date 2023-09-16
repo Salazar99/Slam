@@ -1,8 +1,9 @@
 #pragma once
 
 #include <iostream>
+#include <limits.h>
 
-namespace harm {
+namespace slam {
 struct DTLimits {
   DTLimits(const DTLimits &o) = default;
   explicit DTLimits(size_t maxDepth, size_t maxWidth, size_t maxAll,
@@ -15,6 +16,8 @@ struct DTLimits {
 
   DTLimits() {}
 
+  size_t _minDistance=0;
+  size_t _maxDistance=INT_MAX;
   size_t _maxDepth=3;
   size_t _maxWidth=3;
   size_t _maxAll=3;

@@ -1,4 +1,4 @@
-<harm>
+<slam>
 	<context name="default">
                   <prop exp="busy"   loc="a, dt" />
                   <prop exp="wb_ack"   loc="a, dt" />
@@ -22,5 +22,5 @@
                   <template dtLimits="3D,3W,3A,0E,R" exp="G({..#1&.. ;P9}|-> X((P0 U P1) || (P2 U P3)))" />
 
 	</context>
-</harm>
+</slam>
 

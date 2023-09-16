@@ -17,7 +17,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace harm {
+namespace slam {
 class Template;
 class Automaton;
 class EdgeProposition;
@@ -29,9 +29,13 @@ std::ostream &operator<<(std::ostream &os, ClsOp op);
 std::pair<expression::VarType, size_t>
 variableTypeFromString(const std::string &type, size_t size = 1);
 
-std::vector<expression::Proposition *>
-genPropsThroughClustering(std::vector<size_t> &ivs,
-                          expression::CachedAllNumeric *cn, size_t max_length);
+
+std::vector<std::pair<expression::Proposition *,std::pair<size_t,size_t>>>
+genPropsThroughClustering(std::vector<std::pair<expression::CachedAllNumeric::EvalRet,size_t>> &ivs , expression::CachedAllNumeric *cn, size_t max_length) ;
+
+std::vector<expression::Proposition *> genPropsThroughClustering1D(std::vector<size_t> &ivs,
+                                                     expression::CachedAllNumeric *cn,
+                                                     size_t max_length);
 
 /** \brief generate a FSM from a spot formula
    */
@@ -49,4 +53,4 @@ Automaton *buildAutomaton(
 EdgeProposition *edgeToProposition(
     const spot::formula &f,
     std::unordered_map<std::string, expression::Proposition **> &tokenToProp);
-} // namespace harm
+} // namespace slam

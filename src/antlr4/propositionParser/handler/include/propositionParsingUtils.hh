@@ -4,8 +4,8 @@
 
 namespace hparser{
 void addTypeToProposition(std::string &formula,
-                          std::vector<harm::VarDeclaration> varDeclarations) ;
+                          std::vector<slam::VarDeclaration> varDeclarations) ;
 
-expression::Proposition *parseProposition(std::string formula, harm::Trace *trace);
-expression::Proposition *parsePropositionAlreadyTyped(std::string formula, harm::Trace *trace);
+expression::Proposition *parseProposition(std::string formula, slam::Trace *trace);
+expression::Proposition *parsePropositionAlreadyTyped(std::string formula, slam::Trace *trace);
 }

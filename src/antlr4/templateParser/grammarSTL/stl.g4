@@ -1,42 +1,49 @@
 grammar stl;
 import proposition;
 
-file : STL_ALWAYS formula EOF
-| STL_ALWAYS LPAREN formula RPAREN EOF;
+file : STL_ALWAYS LPAREN implication RPAREN EOF
+| STL_ALWAYS LCPAREN interval RCPAREN LPAREN implication RPAREN EOF
+;
 
 
+implication :
+ DT_ANDF IMPL STL_EVENTUALLY LCPAREN interval RCPAREN tformula |
+ tformula IMPL STL_EVENTUALLY LCPAREN interval RCPAREN tformula
+;
 
-formula : tantecendent IMPL tconsequent;
-
-tantecendent : F LCPAREN NUMERIC RCPAREN tformula | tantecendent && tantecendent;
-
-tconsequent : F LCPAREN NUMERIC RCPAREN placeholder;
-
-tformula: boolean | placeholder | DT_AND
-	| LPAREN tformula RPAREN 
+tformula:
 	| NOT tformula 
-	| tformula AND tformula 
-	| tformula OR tformula 
-	| tformula XOR tformula 
+    | STL_EVENTUALLY LCPAREN interval RCPAREN tformula
+	| tformula (AND | OR) tformula 
+	| LPAREN tformula RPAREN 
+    | boolean | placeholder
 	;
 
 placeholder: 'P' NUMERIC ;
 
-EVENTUALLY
-    : 'eventually'
+interval_placeholder: 'X' NUMERIC;
+
+interval: interval_placeholder COMMA interval_placeholder 
+        | NUMERIC COMMA NUMERIC
+        ;
+
+
+DT_ANDF
+    : '('? '..F..' ')'?
     ;
+
+STL_EVENTUALLY: 'F'; 
+
 STL_ALWAYS
-    : 'always'
-    ;
-NEXT
-    : 'nexttime'
-    ;
-UNTIL
-    : 'until'
+    : 'G'
     ;
 
 RELEASE
     : 'release'
+    ;
+
+IMPL
+    : '->'
     ;
 
 SCOL
@@ -45,6 +52,10 @@ SCOL
 
 COL
     : ':'
+    ;
+
+COMMA 
+    : ','
     ;
 
 FIRST_MATCH

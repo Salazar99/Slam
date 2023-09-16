@@ -1,49 +1,46 @@
 #include "templateParsingUtils.hh"
-#include "SpotParserHandler.hh"
-#include "SpotToSVAhandler.hh"
+#include "StlParserHandler.hh"
 #include "Template.hh"
-#include "spotLexer.h"
 
 #include <regex>
 #include <tuple>
 
 namespace hparser {
 using namespace expression;
-harm::Template *parseTemplate(std::string formula, harm::Trace *trace,
+slam::Template *parseTemplate(std::string formula, slam::Trace *trace,
                               const std::string &language,
-                              const harm::DTLimits &limits, bool useCache) {
+                              const slam::DTLimits &limits, bool useCache) {
 
   auto decls = trace->getDeclarations();
   addTypeToTemplate(formula, decls);
 
   // parse typed propositions
-  if (language == "Spot") {
-    hparser::SpotParserHandler listener(trace);
+  if (language == "stl") {
+    hparser::StlParserHandler listener(trace, limits);
     listener.addErrorMessage("\t\t\tIn formula: " + formula);
     listener._useCache = useCache;
     antlr4::ANTLRInputStream input(formula);
-    spotLexer lexer(&input);
+    stlLexer lexer(&input);
     antlr4::CommonTokenStream tokens(&lexer);
-    spotParser parser(&tokens);
+    stlParser parser(&tokens);
     antlr4::tree::ParseTree *treeFragAnt = parser.file();
     antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, treeFragAnt);
-    Hstring templateFormula = listener.getTemplateFormula();
-    /*
-    DEBUG
+
+    /*DEBUG
     std::cout << treeFragAnt->toStringTree(&parser) << "\n";
     std::cout << formula << "\n";
   exit(0);
     */
-    return new harm::Template(templateFormula, trace, limits);
-  } else if (language == "SVA") {
-  } else if (language == "PSL") {
+    return listener.getTemplate();
   } else {
     messageError("Unknown language: '" + language + "'");
   }
   return nullptr;
 }
 
-Hstring spotToSVA(std::string spotFormula, harm::Trace *trace) {
+//FIXME Do we still need this?
+/*
+Hstring spotToSVA(std::string spotFormula, slam::Trace *trace) {
 
   auto decls = trace->getDeclarations();
   addTypeToTemplate(spotFormula, decls);
@@ -58,15 +55,15 @@ Hstring spotToSVA(std::string spotFormula, harm::Trace *trace) {
   spotParser parser(&tokens);
   antlr4::tree::ParseTree *treeFragAnt = parser.file();
   antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, treeFragAnt);
-  /*
-  DEBUG
-  std::cout << treeFragAnt->toStringTree(&parser) << "\n";
-  std::cout << formula << "\n";
+  
+  //DEBUG
+  //std::cout << treeFragAnt->toStringTree(&parser) << "\n";
+  //std::cout << formula << "\n";
 exit(0);
-  */
+  
   return listener.getConvertedFormula();
 }
-
+*/
 void findAllOccurances(std::vector<size_t> &vec, std::string data,
                        std::string toSearch) {
   // Get the first occurrence
@@ -79,8 +76,9 @@ void findAllOccurances(std::vector<size_t> &vec, std::string data,
     pos = data.find(toSearch, pos + toSearch.size());
   }
 }
+
 void addTypeToTemplate(std::string &formula,
-                       std::vector<harm::VarDeclaration> varDeclarations) {
+                       std::vector<slam::VarDeclaration> varDeclarations) {
   /*all this code is to solve the problem of
   adding types to the variables in the formula:
   The complexity of the code is to handle the following problems:*/
@@ -97,7 +95,7 @@ void addTypeToTemplate(std::string &formula,
 
   // match the longest variables first to solve (3)
   std::sort(begin(varDeclarations), end(varDeclarations),
-            [](harm::VarDeclaration &e1, harm::VarDeclaration &e2) {
+            [](slam::VarDeclaration &e1, slam::VarDeclaration &e2) {
               return std::get<0>(e1).size() > std::get<0>(e2).size();
             });
 
@@ -131,20 +129,20 @@ void addTypeToTemplate(std::string &formula,
       if (std::get<0>(varDec) == "true" || std::get<0>(varDec) == "false") {
         nameType = "@" + std::get<0>(varDec);
       } else {
-        nameType = " <" + std::get<0>(varDec) + ",bool>";
+        nameType = " {" + std::get<0>(varDec) + ",bool}";
       }
       break;
     case VarType::ULogic:
-      nameType = " <" + std::get<0>(varDec) + ",logic(u," +
-                 std::to_string(std::get<2>(varDec)) + ")>";
+      nameType = " {" + std::get<0>(varDec) + ",logic_u" +
+                 std::to_string(std::get<2>(varDec)) + "}";
       break;
     case VarType::SLogic:
-      nameType = " <" + std::get<0>(varDec) + ",logic(s," +
-                 std::to_string(std::get<2>(varDec)) + ")>";
+      nameType = " {" + std::get<0>(varDec) + ",logic_s" +
+                 std::to_string(std::get<2>(varDec)) + "}";
       break;
     case VarType::Numeric:
-      nameType = " <" + std::get<0>(varDec) + ",numeric(" +
-                 std::to_string(std::get<2>(varDec)) + ")>";
+      nameType = " {" + std::get<0>(varDec) + ",numeric" +
+                 std::to_string(std::get<2>(varDec)) + "}";
       break;
     default:
       messageError("Variable is of \'Uknown type\'");
