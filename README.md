@@ -119,7 +119,7 @@ The user can find several working examples in the "tests" directory .
 ## Run with a csv trace
 
 ```
-./harm --csv trace.csv --conf config.xml
+./slam --csv trace.csv --conf config.xml
 ```
 *  use --csv-dir <DIRECTORY>  to give as input a set of .csv traces
 * Note that you do not have to specify a clock signal when using a csv file, as each row is already considered a clock event.
@@ -146,7 +146,7 @@ For csv:
  It is recommended to always start from an automatically generated configuration file (using the --generate-config option).
  Hints are organised in contexts, each context contains three types of expressions: propositions, templates and metrics (see the configuration file below).  
  ```xml
-<exharm>
+<slam>
 	<context name="c1">
 		<prop exp="var1 && var2" loc="a"/>
 		<prop exp="var3 + var4 > 100" loc="a"/>
@@ -162,7 +162,7 @@ For csv:
 		<sort name="pRepetitions" exp="1/(pRepetitions*2+1)" />
 		<sort name="frequency" exp="atct/traceLength"/>
 	</context>
-</exharm>
+</slam>
 ```
 #### Proposition
  Propositions are non-temporal boolean expressions used to fill the empty spots (placeholders) of the templates;  metrics are used to perform the final ranking of assertions. Propositions can be written using all boolean, relational an arithmetic operators of the C/C++ language.
