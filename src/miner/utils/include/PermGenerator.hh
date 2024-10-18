@@ -3,17 +3,10 @@
 #include "Location.hh"
 #include "minerUtils.hh"
 
-// spot
-#include "spot/tl/parse.hh"
-#include "spot/twaalgos/hoa.hh"
-#include "spot/twaalgos/translate.hh"
-
 #include <cstdarg>
 #include <deque>
 #include <numeric>
 #include <regex>
-#include <spot/tl/print.hh>
-#include <spot/twa/bddprint.hh>
 #include <string>
 #include <unordered_map>
 

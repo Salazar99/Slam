@@ -10,16 +10,6 @@
 #include <algorithm>
 #include <deque>
 #include <fstream>
-#include <spot/tl/formula.hh>
-#include <spot/tl/parse.hh>
-#include <spot/tl/print.hh>
-#include <spot/twaalgos/hoa.hh>
-#include <spot/twaalgos/isdet.hh>
-#include <spot/twaalgos/ltl2tgba_fm.hh>
-#include <spot/twaalgos/minimize.hh>
-#include <spot/twaalgos/postproc.hh>
-#include <spot/twaalgos/sccfilter.hh>
-#include <spot/twaalgos/stripacc.hh>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -418,87 +408,6 @@ void Template::check() {
                "==========="
             << "\n";
 }
-
-void Template::getPlaceholdersDepth(
-    spot::formula f, std::vector<std::pair<std::string, size_t>> &phToDepth) {
-  static int depth = -1;
-  depth++;
-  if (f.is(spot::op::ap)) {
-    phToDepth.emplace_back(f.ap_name(), depth);
-  } else {
-    for (size_t i = 0; i < f.size(); i++) {
-      getPlaceholdersDepth(f[i], phToDepth);
-    }
-  }
-  depth--;
-}
-/*
-std::vector<Proposition *> Template::getLoadedPropositions() {
-  std::vector<Proposition *> ret;
-  for (auto &s : _templateFormula) {
-    if (s._t == Hstring::Stype::Ph || s._t == Hstring::Stype::Inst) {
-      assert(s._pp != nullptr);
-      ret.push_back(*s._pp);
-    }
-  }
-  if (_dtOp.second != nullptr) {
-    if (_dtOp.second->isMultiDimensional()) {
-      std::vector<TemporalExp *> items = _dtOp.second->unpack();
-      ret.insert(ret.end(), items.begin(), items.end());
-    } else {
-      std::vector<TemporalExp *> items = _dtOp.second->getItems();
-      ret.insert(ret.end(), items.begin(), items.end());
-    }
-  }
-  return ret;
-}
-*/
-/*
-std::vector<Proposition *> Template::getLoadedPropositionsAnt() {
-  std::vector<Proposition *> ret;
-  for (auto &s : _templateFormula.getAnt()) {
-    if (s._t == Hstring::Stype::Ph || s._t == Hstring::Stype::Inst) {
-      assert(s._pp != nullptr);
-      ret.push_back(*s._pp);
-    }
-  }
-  if (_dtOp.second != nullptr) {
-    //FIXME getLoadedProposition needs to be modified
-    
-    if (_dtOp.second->isMultiDimensional()) {
-      std::vector<Proposition *> items = _dtOp.second->unpack();
-      ret.insert(ret.end(), items.begin(), items.end());
-    } else {
-      std::vector<Proposition *> items = _dtOp.second->getItems();
-      ret.insert(ret.end(), items.begin(), items.end());
-    }
-    
-  }
-  return ret;
-}
-
-std::vector<Proposition *> Template::getLoadedPropositionsCon() {
-  std::vector<Proposition *> ret;
-  for (auto &s : _templateFormula.getCon()) {
-    if (s._t == Hstring::Stype::Ph || s._t == Hstring::Stype::Inst) {
-      assert(s._pp != nullptr);
-      ret.push_back(*s._pp);
-    }
-  }
-  return ret;
-}
-void Template::setL1Threads(size_t n) {
-  std::lock_guard<std::mutex> lock{_l1Guard};
-  _availThreads = n;
-}
-size_t Template::getL1Threads() {
-  std::lock_guard<std::mutex> lock{_l1Guard};
-  return _availThreads;
-}
-
-void Template::setDTLimits(const DTLimits &l) { _limits = l; }
-bool Template::saveOffset() { return _limits._saveOffset; }
-*/
 
 bool Template::isFullyInstantiated() {
   return (getNumPlaceholders(slam::Location::Ant) +

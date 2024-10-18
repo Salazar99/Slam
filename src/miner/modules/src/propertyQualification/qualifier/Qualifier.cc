@@ -862,9 +862,8 @@ void Qualifier::dumpAssToFile(Context &context, Trace *trace,
     if (clc::outputLang == "Spot") {
       assFile << a->_toString.first << "\n";
     } else if (clc::outputLang == "SVA") {
-      //FIXME
-      //Hstring svaFormula = hparser::spotToSVA(a->_toString.first, trace);
-      //assFile << svaFormula.toString(1) << "\n";
+      //FIXME 
+      //SVA is no longer supported
     }
 #if enPB
     pb.increment(0);

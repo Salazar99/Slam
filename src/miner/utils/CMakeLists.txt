@@ -23,7 +23,6 @@ SET(MINER_UTILS_SRC src/Trace.cc src/DataType.cc src/Template.cc
 # Targets.
 #############################################
 add_library(${NAME} ${MINER_UTILS_SRC})
-target_include_directories(miner_utils PUBLIC include/ ${SPOTLTLCPP_INCLUDE_DIRS})
-target_link_libraries(${NAME} ${SPOTLTL_LIB} fort clustering)
+target_link_libraries(${NAME} fort clustering)
 
 

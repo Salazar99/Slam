@@ -8,7 +8,6 @@
 #include <mutex>
 #include <numeric>
 #include <regex>
-#include <spot/tl/formula.hh>
 #include <string>
 #include <thread>
 #include <unordered_map>
@@ -141,10 +140,7 @@ public:
   /** \brief get the depth of the placeholder in the abtract syntax tree of the template formula
    * \param phToDepth a list that is filled by this method
    */
-  void
-  getPlaceholdersDepth(spot::formula f,
-                       std::vector<std::pair<std::string, size_t>> &phToDepth);
-
+  
   /** \brief get the depth of the propositions in the abtract syntax tree of the template formula
    */
   std::vector<Proposition *> getLoadedPropositions();

@@ -17,7 +17,6 @@
 #include <math.h>
 #include <mutex>
 #include <regex>
-#include <spot/tl/print.hh>
 #include <sstream>
 #include <string>
 #include <unordered_map>

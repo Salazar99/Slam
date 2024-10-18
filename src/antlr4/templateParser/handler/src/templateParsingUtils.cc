@@ -38,32 +38,6 @@ slam::Template *parseTemplate(std::string formula, slam::Trace *trace,
   return nullptr;
 }
 
-//FIXME Do we still need this?
-/*
-Hstring spotToSVA(std::string spotFormula, slam::Trace *trace) {
-
-  auto decls = trace->getDeclarations();
-  addTypeToTemplate(spotFormula, decls);
-
-  // parse typed propositions
-  hparser::SpotToSVAhandler listener(trace);
-  listener.addErrorMessage("\t\t\tIn formula: " + spotFormula);
-  listener._useCache = 0;
-  antlr4::ANTLRInputStream input(spotFormula);
-  spotLexer lexer(&input);
-  antlr4::CommonTokenStream tokens(&lexer);
-  spotParser parser(&tokens);
-  antlr4::tree::ParseTree *treeFragAnt = parser.file();
-  antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, treeFragAnt);
-  
-  //DEBUG
-  //std::cout << treeFragAnt->toStringTree(&parser) << "\n";
-  //std::cout << formula << "\n";
-exit(0);
-  
-  return listener.getConvertedFormula();
-}
-*/
 void findAllOccurances(std::vector<size_t> &vec, std::string data,
                        std::string toSearch) {
   // Get the first occurrence
@@ -79,14 +53,7 @@ void findAllOccurances(std::vector<size_t> &vec, std::string data,
 
 void addTypeToTemplate(std::string &formula,
                        std::vector<slam::VarDeclaration> varDeclarations) {
-  /*all this code is to solve the problem of
-  adding types to the variables in the formula:
-  The complexity of the code is to handle the following problems:*/
-  //(1) A variable can be used mutiple times non sequentially(need to parse
-  // the string n times) (2) A variable can contain the words bool, logic,
-  // numeric (3) A variable name can be contained in an other variable, ex.
-  // state, next_state
-
+  
   /*now that with have all the variables, we can insert the types in the
   formula*/
 
