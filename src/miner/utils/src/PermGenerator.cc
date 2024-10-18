@@ -206,25 +206,7 @@ PermGenerator::generatePermUnit(TemporalExp *templ,
     ret->_children.push_back(ph);
     ret->_dim.first = ph->_dim.first;
     ret->_dim.second = ph->_dim.second;
-    //  } else if ((templ.is(spot::op::U) || templ.is(spot::op::R)) &&
-    //             (compare(templ[0], templ[1]))) {
-    //    ret->_dim.first = 1;
-    //    ret->_dim.second = 0;
-    //    ret->_op = PermOperator::Mul;
-    //    auto f = templ[0];
-    //    auto *tmp = generatePermUnit(f, foundPH);
-    //    PermUnit *com = new PermUnit();
-    //    com->_op = PermOperator::Com;
-    //    com->_children.push_back(tmp);
-    //    com->_dim.first = (tmp->_dim.first * (tmp->_dim.first - 1));
-    //    com->_dim.second = tmp->_dim.second * 2;
-    //
-    //    ret->_children.push_back(com);
-    //    for (auto &i : ret->_children) {
-    //      ret->_dim.first *= i->_dim.first;
-    //      ret->_dim.second += i->_dim.second;
-    //    }
-    //
+    
   } else if (dynamic_cast<Placeholder *>(templ) == nullptr &&
              dynamic_cast<TemporalInst *>(templ) == nullptr) {
     //    std::cout << "Rest" << "\n";

@@ -148,10 +148,6 @@ add_subdirectory(src/antlr4/templateParser)
 add_subdirectory(src/antlr4/metricParser)
 add_subdirectory(src/antlr4/dtLimitsParser)
 
-
-#spotLTL
-find_package(SPOTLTL REQUIRED)
-
 #CSV parser
 add_subdirectory(src/csv-parser)
 
@@ -188,7 +184,7 @@ INSTALL(TARGETS slam
     ARCHIVE DESTINATION slam/lib
     )
 
-INSTALL(PROGRAMS ${SPOTLTL_LIB} ${ANTLR4_RUNTIME} ${Z3_LIBRARY} DESTINATION slam/lib)
+INSTALL(PROGRAMS ${ANTLR4_RUNTIME} ${Z3_LIBRARY} DESTINATION slam/lib)
 
 #Copy the libraries with their symbolic links
 INSTALL(
@@ -196,8 +192,6 @@ INSTALL(
     "execute_process(
         COMMAND
         ${CMAKE_COMMAND}
-        -DS=${SPOTLTL_LIB}
-        -DB=${BDDX_LIB}
         -DA=${ANTLR4_RUNTIME}
         -DZ=${Z3_LIBRARY}
         -DIP=${CMAKE_INSTALL_PREFIX}
