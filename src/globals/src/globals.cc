@@ -35,6 +35,7 @@ bool vcdRecursive = true;
 std::string selectedScope = "";
 bool dontFillAss = false;
 bool dontPrintAss = false;
+bool ImplFilter = false;
 bool silent = false;
 bool wsilent = false;
 bool isilent = false;

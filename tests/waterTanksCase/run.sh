@@ -1,1 +1,1 @@
-./slam --csv ../tests/waterTanksCase/WT_Trace_Date.csv --conf ../tests/waterTanksCase/WT_config.xml
+~/Slam/build/slam --csv ./WT_Trace_Date.csv --conf ./WT_config.xml --remove-impl --dump-to ./

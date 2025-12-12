@@ -84,6 +84,13 @@ private:
       std::vector<Assertion *> &assertions,
       std::vector<std::pair<Metric *, double>> &metrics);
 
+
+  /** \brief filter the input assertions using stlsat to remove implications
+   */
+  void filterAssertionsWithImplications(
+      std::vector<Assertion *> &assertions);
+
+
   /** \brief load the parameters for the interactive ranking with several 'calibration' functions
    */
   void loadParams();

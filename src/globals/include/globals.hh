@@ -35,6 +35,7 @@ extern bool intMode;
 extern bool splitLogic;
 extern bool dontFillAss;
 extern bool dontPrintAss;
+extern bool ImplFilter;
 extern bool vcdRecursive;
 extern std::string selectedScope;
 extern bool silent;

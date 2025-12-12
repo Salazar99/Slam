@@ -496,6 +496,103 @@ void Qualifier::filterAssertionsWithMetrics(
   messageInfo("Filtered " + std::to_string(filtered) + " assertions");
 }
 
+
+//support function that manages the .stl file creation and call to stlsat
+bool stlsatImplies(std::string a, std::string b) {
+  //We are checking if a implies b which means checking that !(a -> b) is unsatisfiable
+  //!(a -> b) == a && !b
+
+  //Create a temporary .stl file
+  std::string stlFileName = "tempImplicationCheck.stl";
+  std::ofstream stlFile;
+  stlFile.open(stlFileName);
+
+  //Helper lambda to replace all occurrences
+  auto replaceAll = [](std::string& str, const std::string& from, const std::string& to) {
+    size_t pos = 0;
+    while ((pos = str.find(from, pos)) != std::string::npos) {
+      str.replace(pos, from.length(), to);
+      pos += to.length();
+    }
+  };
+  
+  //Substitute the 'G' operator with 'G[0,100]' to avoid issues with stlsat
+  replaceAll(a, "G(", "G[0,100](");
+  replaceAll(b, "G(", "G[0,100](");
+
+  //Write the formula to the file 
+  stlFile << '(' << a << ')' << " &&" << " !" << '(' << b << ')' << std::endl;
+  stlFile.close();
+  if(clc::debugCls)
+    messageInfo("stlFIle content: " + '(' + a + ')' + " &&" + " !" + '(' + b + ')' + "\n");
+
+  //Call stlsat on the created file
+  std::string command = "stlsat " + stlFileName;
+  FILE* pipe = popen(command.c_str(), "r");
+  if (!pipe) return false;
+  std::string result;
+  char buffer[128];
+  while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+    result += buffer;
+  }
+  pclose(pipe);
+  //Remove the temporary file
+  std::remove(stlFileName.c_str());
+
+  //Check the result for "false"
+  return (result.find("false") == std::string::npos) ? true : false;
+}
+
+
+
+void Qualifier::filterAssertionsWithImplications(
+    std::vector<Assertion *> &assertions){
+      std::vector<Assertion *> minSet;
+
+      messageInfo("Pre stlsat filtering set dimension: " + std::to_string(assertions.size()));
+
+      for (auto &a : assertions) {
+        //check if 'a' is implied by any assertion in 'minSet'
+        bool aisImplied = false;
+        bool addtoMinSet = true;
+        //if minSet is empty add 'a' directly
+        if(!minSet.empty()){
+          for (auto &b : minSet) {
+            bool bisImplied = false;
+            //call stlsat to check if b implies a
+            aisImplied = stlsatImplies(b->_toString.first, a->_toString.first);
+            if(aisImplied){
+              addtoMinSet = false;
+              break;
+            }
+            else{
+              //call stlsat on the opposite direction to check if a implies b
+              bisImplied = stlsatImplies(a->_toString.first, b->_toString.first);
+              if (bisImplied){
+                //b is implied by a
+                //remove b from minSet and check next b 
+                std::vector<Assertion *>::iterator it = std::find(minSet.begin(), minSet.end(), b);
+                if (it != minSet.end()) {
+                    minSet.erase(it);
+                }
+              }
+              //a is not implies by this b 
+              //Need to check next b in minSet
+              //addtoMinSet remains true
+           }
+          }      
+        }
+        //checked all b in minSet, if nobody implies 'a' add it to minSet
+        if(addtoMinSet){
+            minSet.push_back(a);
+        }
+    }
+    messageInfo("Post stlsat filtering set dimension: " + std::to_string(minSet.size()));
+    //checked all assertions against each other    
+    //update the assertions set by keeping only the minimal set
+    assertions = minSet;
+}
+
 void Qualifier::printAssertions(Context &context,
                                 std::vector<Assertion *> &assertions,
                                 Trace *trace) {
@@ -907,6 +1004,11 @@ std::vector<Assertion *> Qualifier::rankAssertions(Context &context,
 
   //filter according to filtering metrics
   filterAssertionsWithMetrics(assertions, context._filter);
+
+  //filter based on implication dependency
+  if(clc::ImplFilter){
+    filterAssertionsWithImplications(assertions);
+  }
 
   //sort according to the final score
   sortAssertionsWithMetrics(context._sort, assertions);

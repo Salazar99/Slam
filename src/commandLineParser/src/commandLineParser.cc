@@ -49,6 +49,7 @@ cxxopts::ParseResult parseHARM(int argc, char *argv[]) {
         "interactive", "enable interactive assertion ranking")(
         "split-logic", "split bitvectors into boolean variabes")
         ( "dont-print-ass", "do not print the mined assertions")
+        ("remove-impl", "remove assertions that are implied by others")
         ("silent", "disable all outputs")
         ("wsilent", "disable all warning")(
         "isilent", "disable all info")("psilent", "disable all progress bars")(

@@ -209,6 +209,10 @@ void parseCommandLineArguments(int argc, char *args[]) {
     clc::dontPrintAss = true;
   }
 
+  if (result.count("remove-impl")){
+    clc::ImplFilter = true;
+  }
+
   if (result.count("silent")) {
     clc::silent = true;
     // disable cout
