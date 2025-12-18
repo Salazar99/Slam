@@ -92,6 +92,9 @@ public:
   /** \brief returns the template insantiated with the propositions (colored)
    */
   std::string getColoredAssertion();
+  /** \brief returns the string representations of the propositions used to instantiate the assertion
+   */
+  std::vector<std::string> getAssPropsAsString();
 
   /** \brief returns the string representation of the template
    */

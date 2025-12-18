@@ -39,6 +39,42 @@ std::string Template::getAssertion() {
 std::string Template::getColoredAssertion() {
   return GLOB("G(") + temp2ColoredString(*_impl, 1) + GLOB(")");
 }
+
+std::vector<std::string> Template::getAssPropsAsString() {
+  std::vector<std::string> res;
+  TemporalExp *ant = _impl->getItems()[0];
+  TemporalExp *con = _impl->getItems()[1];
+
+  std::vector<TemporalExp *> antProps = ant->getItems();
+  std::vector<TemporalExp *> conProps = con->getItems();
+  
+  //Check it the elements are Eventually and if yes, unpack them further 
+  for (size_t i = 0; i < antProps.size(); i++) {
+    if (dynamic_cast<Eventually *>(antProps[i]) != nullptr) {
+      auto unpacked = dynamic_cast<Eventually *>(antProps[i])->getItems();
+      antProps.erase(antProps.begin() + i);
+      antProps.insert(antProps.begin() + i, unpacked.begin(), unpacked.end());
+      i += unpacked.size() - 1;
+    }
+  }
+  for (size_t i = 0; i < conProps.size(); i++) {
+    if (dynamic_cast<Eventually *>(conProps[i]) != nullptr) {
+      auto unpacked = dynamic_cast<Eventually *>(conProps[i])->getItems();
+      conProps.erase(conProps.begin() + i);
+      conProps.insert(conProps.begin() + i, unpacked.begin(), unpacked.end());
+      i += unpacked.size() - 1;
+    }
+  }
+
+  for (auto p : antProps) {
+    res.push_back(temp2String(*p, 1));
+  }
+  for (auto p : conProps) {
+    res.push_back(temp2String(*p, 1));
+  }
+  return res;
+}
+
 std::string Template::getTemplate() {
   std::string ant = "";
   if (_dtOp.second == nullptr) {

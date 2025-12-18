@@ -329,6 +329,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         Assertion *ass = new Assertion();
         t->fillContingency(ass->_ct, 0);
         ass->_toString = prettyAss;
+        ass->_props2string = t->getAssPropsAsString();
         std::vector<Proposition *> loadedProps; //= t->getLoadedPropositions();
         ass->_complexity = getNumVariables(loadedProps);
         ass->_pRepetitions = getRepetitions(loadedProps);
@@ -383,6 +384,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         Assertion *ass = new Assertion();
         t->fillContingency(ass->_ct, 1);
         ass->_toString = prettyAss;
+        ass->_props2string = t->getAssPropsAsString();
         //FIXME
         std::vector<Proposition *> loadedProps; // = t->getLoadedPropositions();
         ass->_complexity = getNumVariables(loadedProps);
@@ -440,7 +442,8 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       t->fillContingency(ass->_ct, 0);
       ass->_toString =
           std::make_pair(t->getAssertion(), t->getColoredAssertion());
-      //FIXME
+      ass->_props2string = t->getAssPropsAsString();
+      //FIXME Still need to manage those assertions parameters
       std::vector<Proposition *> loadedProps; // = t->getLoadedPropositions();
       ass->_complexity = getNumVariables(loadedProps);
       ass->_pRepetitions = getRepetitions(loadedProps);

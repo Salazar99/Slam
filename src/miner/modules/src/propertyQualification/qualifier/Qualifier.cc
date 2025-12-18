@@ -14,6 +14,7 @@
 #include "misc.hh"
 #include "propositionParsingUtils.hh"
 #include "templateParsingUtils.hh"
+#include "StlParserHandler.hh"
 #include <algorithm>
 #include <filesystem>
 #include <iomanip>
@@ -543,7 +544,37 @@ bool stlsatImplies(std::string a, std::string b) {
   return (result.find("false") == std::string::npos) ? true : false;
 }
 
+//Check if two assertions have the same propositions
+bool same_props(slam::Assertion * a, slam::Assertion * b){
+    //Extract propositions from both assertions
+    std::vector<std::string> propsA = a->getPropsAsString();
+    std::vector<std::string> propsB = b->getPropsAsString();
+    messageInfo("Got props sets, analyzing...");
+    //print the two sets of propositions for debug
+    std::string propsAStr = "Props A: ";
+    for (const auto& prop : propsA) {
+          propsAStr += prop + ", ";
+    }
+    messageInfo(propsAStr);
+    std::string propsBStr = "Props B: ";
+    for (const auto& prop : propsB) {
+         propsBStr += prop + ", ";
+    }
+    messageInfo(propsBStr);
 
+
+    //If the sizes are different they can't be the same
+    if (propsA.size() != propsB.size()){
+        return false;
+    }
+    //Check that all props in A are also in B
+    for (const auto& prop : propsA) {
+        if (std::find(propsB.begin(), propsB.end(), prop) == propsB.end()) {
+            return false;
+        }
+    }
+    return true;
+}
 
 void Qualifier::filterAssertionsWithImplications(
     std::vector<Assertion *> &assertions){
@@ -559,9 +590,15 @@ void Qualifier::filterAssertionsWithImplications(
         if(!minSet.empty()){
           for (auto &b : minSet) {
             bool bisImplied = false;
+            
+            //Check if the propositions in 'a' and 'b' are the same, if not skip stlsat
+            if(same_props(a, b) == false)
+              continue;
+
             //call stlsat to check if b implies a
             aisImplied = stlsatImplies(b->_toString.first, a->_toString.first);
             if(aisImplied){
+              messageInfo("Assertion: " + a->_toString.first + " is implied by: " + b->_toString.first);
               addtoMinSet = false;
               break;
             }
@@ -571,6 +608,7 @@ void Qualifier::filterAssertionsWithImplications(
               if (bisImplied){
                 //b is implied by a
                 //remove b from minSet and check next b 
+                messageInfo("Assertion: " + a->_toString.first + " is implied by: " + b->_toString.first);
                 std::vector<Assertion *>::iterator it = std::find(minSet.begin(), minSet.end(), b);
                 if (it != minSet.end()) {
                     minSet.erase(it);

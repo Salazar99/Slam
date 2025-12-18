@@ -24,6 +24,12 @@ public:
    */
   void fillValuesOffset(Template *t);
 
+  /** \brief returns the string representation of the propositions used in the assertion
+   */
+  std::vector<std::string> getPropsAsString() {
+    return _props2string;
+  }
+
   bool holdsOnTrace();
 
   ///string representation of the assertion <automatic, colored>
@@ -31,6 +37,8 @@ public:
 
   ///truth values on the trace
   Trinary *_values = nullptr;
+
+  std::vector<std::string> _props2string;
 
   //assertion's features
   ///contingency table
