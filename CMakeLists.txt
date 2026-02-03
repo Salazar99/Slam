@@ -110,7 +110,7 @@ SET(MAIN_SRC src/main.cc)
 add_executable(${NAME} ${MAIN_SRC})
 
 #z3
-find_package(Z3)
+#find_package(Z3)
 
 target_link_libraries(${NAME} stdc++fs)
 include_directories(src/utils/include src/logging/include/
@@ -184,7 +184,9 @@ INSTALL(TARGETS slam
     ARCHIVE DESTINATION slam/lib
     )
 
-INSTALL(PROGRAMS ${ANTLR4_RUNTIME} ${Z3_LIBRARY} DESTINATION slam/lib)
+INSTALL(PROGRAMS ${ANTLR4_RUNTIME} 
+#${Z3_LIBRARY} 
+DESTINATION slam/lib)
 
 #Copy the libraries with their symbolic links
 INSTALL(
@@ -193,7 +195,6 @@ INSTALL(
         COMMAND
         ${CMAKE_COMMAND}
         -DA=${ANTLR4_RUNTIME}
-        -DZ=${Z3_LIBRARY}
         -DIP=${CMAKE_INSTALL_PREFIX}
         -P
         ${CMAKE_SOURCE_DIR}/cmake/PostInstall.cmake
