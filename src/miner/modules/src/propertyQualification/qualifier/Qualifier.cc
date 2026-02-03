@@ -608,13 +608,13 @@ void Qualifier::filterAssertionsWithImplications(
               if (bisImplied){
                 //b is implied by a
                 //remove b from minSet and check next b 
-                messageInfo("Assertion: " + a->_toString.first + " is implied by: " + b->_toString.first);
+                messageInfo("Assertion: " + b->_toString.first + " is implied by: " + a->_toString.first);
                 std::vector<Assertion *>::iterator it = std::find(minSet.begin(), minSet.end(), b);
                 if (it != minSet.end()) {
                     minSet.erase(it);
                 }
               }
-              //a is not implies by this b 
+              //a is not implied by this b 
               //Need to check next b in minSet
               //addtoMinSet remains true
            }

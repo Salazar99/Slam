@@ -1,0 +1,14 @@
+<slam>
+		<context name="EngineSpeed"> 
+
+		<numeric  clsEffort = "0.01" exp="EngineSpeed" loc="c"/>
+		<numeric  clsEffort = "0.01" exp="LoadTorque" loc="dt"/>
+		<numeric  clsEffort = "0.01" exp="ThrottleAngle" loc="dt"/>
+
+        <template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0]EngineSpeed > 2500)" />
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+	  
+</slam>

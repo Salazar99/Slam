@@ -1,0 +1,16 @@
+<slam>
+		<context name="EngineSpeed"> 
+		<!--
+	    -->
+		<numeric clsEffort = "0.01" exp="speed" loc="dt"/>
+		<numeric  clsEffort = "0.01" exp="map" loc="dt"/>
+		<numeric clsEffort = "0.01" exp="ego" loc="dt"/>
+		<numeric clsEffort = "0.01" exp="throttle" loc="dt"/>
+		<numeric clsEffort = "0.01" exp="fuel" loc="dt"/>
+        <template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0]air_fuel_ratio > 10)" />
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+	  
+</slam>
