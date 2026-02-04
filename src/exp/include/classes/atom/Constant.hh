@@ -24,6 +24,7 @@ template <typename T> class Constant : public Atom<T> {
     /// @return A value constant value
     T evaluate(size_t time) override;
 
+    float evaluate_robustness(size_t time) override;
 
     /// @brief Accepts a visitor to visit the current object.
     /// @param vis The visitor.

@@ -328,6 +328,10 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         prettyAss.second = t->getColoredAssertion();
         Assertion *ass = new Assertion();
         t->fillContingency(ass->_ct, 0);
+       if(clc::debugCls)
+        t->fillRobustness(ass->_robval,true);
+       else 
+        t->fillRobustness(ass->_robval);
         ass->_toString = prettyAss;
         ass->_props2string = t->getAssPropsAsString();
         std::vector<Proposition *> loadedProps; //= t->getLoadedPropositions();

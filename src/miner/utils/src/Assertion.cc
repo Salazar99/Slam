@@ -36,7 +36,7 @@ void Assertion::fillValuesOffset(Template *t) {
   }
   for (size_t i = 0; i < t->_max_length; i++) {
       //    FIXME
-//    _values[i] = t->evaluateOffset(i);
+      //    _values[i] = t->evaluateOffset(i);
   }
   _max_length = t->_max_length;
 }

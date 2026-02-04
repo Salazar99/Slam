@@ -2,6 +2,7 @@
 
 #include "TemporalAnd.hh"
 #include "TemporalExp.hh"
+#include "Rectifier.hh"
 #include <vector>
 
 namespace expression {
@@ -20,6 +21,12 @@ public:
   virtual ~Implication();
 
   virtual Trinary evaluate(size_t time) override;
+
+  // Robustness evaluation functions
+  virtual std::pair<float, float> evaluate_std_robustness(size_t time);
+  virtual std::pair<float, float> evaluate_cum_robustness(size_t time);
+  virtual std::pair<float, float> evaluate_tro_robustness(size_t time);
+
 
   virtual std::vector<TemporalExp *> getItems() override;
 

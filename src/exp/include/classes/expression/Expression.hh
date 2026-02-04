@@ -68,6 +68,8 @@ public:
   /// @return The value of the expression in the given simulation time.
   ReturnType evaluate(size_t time) override;
 
+  float evaluate_robustness(size_t time) override {return 0.0f;};
+
   /// @brief Accepts a visitor to visit the current expression.
   /// @param vis The visitor.
   void acceptVisitor(ExpVisitor &vis) override;

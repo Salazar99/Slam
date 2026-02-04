@@ -31,6 +31,13 @@ ULogic LogicVariable::evaluate(size_t time) {
   return ret;
 }
 
+float LogicVariable::evaluate_robustness(size_t time) {
+  // In theory this is useless because the LogicVariable only needs to return its value
+  // but given that this its inherited from Atom we implement it.
+  //Actually this function should never be called for LogicVariables
+  return static_cast<float>(evaluate(time));
+}
+
 void LogicVariable::assign(size_t time, ULogic value) {
   if (_size > 32) {
     _v[time] = value;

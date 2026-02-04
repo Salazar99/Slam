@@ -5,6 +5,7 @@
 #include <bitset>
 #include <climits>
 #include <iostream>
+#include <limits>
 
 namespace expression {
 
@@ -117,6 +118,54 @@ bool Expression<BinaryOperator::NOT, Proposition, Proposition>::evaluate(
   return !_items[0]->evaluate(time);
 }
 //------------------------------------------------------------------------------
+//==== evaluate methods for propositions =======================================
+template <>
+float Expression<BinaryOperator::AND, Proposition, Proposition>::evaluate_robustness(
+    size_t time) {
+   messageErrorIf(_items.size() < 1, "size==" + std::to_string(_items.size()));
+   messageErrorIf(_items.size() > 2, "size canno be >2, only expression of the form (a > num1) && (a < num2) are allowed");
+  float rob = std::numeric_limits<float>::infinity();
+  for (Proposition *prop : _items)
+    rob = std::min(prop->evaluate_robustness(time), rob);
+}
+
+template <>
+float Expression<BinaryOperator::OR, Proposition, Proposition>::evaluate_robustness(
+    size_t time) {
+   messageError("Cannot call evaluate_robustness on binary OR expressions of type Proposition, Proposition");
+   return 0.0f;
+}
+
+template <>
+float Expression<BinaryOperator::XOR, Proposition, Proposition>::evaluate_robustness(
+    size_t time) {
+    messageError("Cannot call evaluate_robustness on binary XOR expressions of type Proposition, Proposition");
+    return 0.0f;
+}
+
+template <>
+float Expression<BinaryOperator::EQ, Proposition, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call evaluate_robustness on binary EQ expressions of type Proposition, Proposition");
+  return 0.0f;
+}
+
+template <>
+float Expression<BinaryOperator::NEQ, Proposition, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call evaluate_robustness on binary NEQ expressions of type Proposition, Proposition");
+  return 0.0f;
+}
+
+template <>
+float Expression<BinaryOperator::NOT, Proposition, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageErrorIf(_items.size() != 1, "size==" + std::to_string(_items.size()));
+
+  return -(_items[0]->evaluate_robustness(time));
+}
+//------------------------------------------------------------------------------
+
 
 //==== evaluate methods for numeric ============================================
 template <>
@@ -212,6 +261,112 @@ bool Expression<BinaryOperator::LE, NumericExpression, Proposition>::evaluate(
   messageErrorIf(_items.size() != 2, "size==" + std::to_string(_items.size()));
   return _items[0]->evaluate(time) <= _items[1]->evaluate(time);
 }
+//------------------------------------------------------------------------------
+//==== evaluate_robustness methods for numeric =================================
+// Note: for EQ,NEQ,SUM,MUL,DIV we return an error, as their robustness measure is not defined and you should never have STL formulas with these operators. But for the moment we keep them here for the future.
+template <>
+float
+Expression<BinaryOperator::SUM, NumericExpression, NumericExpression>::evaluate_robustness(
+    size_t time) {
+  messageError("Not supposed to call robustness for SUM operator");    
+  return std::numeric_limits<float>::infinity();  
+}
+
+template <>
+float
+Expression<BinaryOperator::SUB, NumericExpression, NumericExpression>::evaluate_robustness(
+    size_t time) {
+  messageError("Not supposed to call robustness for SUB operator");  
+  return std::numeric_limits<float>::infinity();  
+}
+
+template <>
+float
+Expression<BinaryOperator::MUL, NumericExpression, NumericExpression>::evaluate_robustness(
+    size_t time) {
+  messageError("Not supposed to call robustness for MUL operator");  
+  return std::numeric_limits<float>::infinity();  
+}
+
+template <>
+float
+Expression<BinaryOperator::DIV, NumericExpression, NumericExpression>::evaluate_robustness(
+    size_t time) {
+  messageError("Not supposed to call robustness for DIV operator");    
+  return std::numeric_limits<float>::infinity();  
+}
+
+
+template <>
+float Expression<BinaryOperator::EQ, NumericExpression, Proposition>::evaluate_robustness(
+    size_t time) {
+    messageError("Not supposed to call robustness for EQ operator");    
+    return std::numeric_limits<float>::infinity();  
+}
+
+template <>
+float Expression<BinaryOperator::NEQ, NumericExpression, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageError("Not supposed to call robustness for NEQ operator");    
+  return std::numeric_limits<float>::infinity();
+}
+
+template <>
+float Expression<BinaryOperator::GT, NumericExpression, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageErrorIf(_items.size() != 2, "size==" + std::to_string(_items.size()));
+  Numeric e1 = _items[0]->evaluate(time);
+  Numeric e2 = _items[1]->evaluate(time);
+  // item1 > item2 
+  if (e1 > e2) {
+    return static_cast<float>(e1 - e2);
+  } else {
+    return static_cast<float>(e2 - e1) * -1.0f;
+  }
+}
+
+template <>
+float Expression<BinaryOperator::GE, NumericExpression, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageErrorIf(_items.size() != 2, "size==" + std::to_string(_items.size()));
+  Numeric e1 = _items[0]->evaluate(time);
+  Numeric e2 = _items[1]->evaluate(time);
+  
+  if (e1 >= e2) {
+    return static_cast<float>(e1 - e2);
+  } else {
+    return static_cast<float>(e2 - e1) * -1.0f;
+  }
+}
+
+template <>
+float Expression<BinaryOperator::LT, NumericExpression, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageErrorIf(_items.size() != 2, "size==" + std::to_string(_items.size()));
+    Numeric e1 = _items[0]->evaluate(time);
+    Numeric e2 = _items[1]->evaluate(time);
+    
+    if (e1 < e2) {
+      return static_cast<float>(e2 - e1);
+    } else {
+      return static_cast<float>(e1 - e2) * -1.0f;
+    }
+}
+
+template <>
+float Expression<BinaryOperator::LE, NumericExpression, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageErrorIf(_items.size() != 2, "size==" + std::to_string(_items.size()));
+  Numeric e1 = _items[0]->evaluate(time);
+  Numeric e2 = _items[1]->evaluate(time);
+  
+  if (e1 <= e2) {
+    return static_cast<float>(e2 - e1);
+  } else {
+    return static_cast<float>(e1 - e2) * -1.0f;
+  }
+}
+
 //------------------------------------------------------------------------------
 
 //==== evaluate methods for logic ==============================================
@@ -453,6 +608,125 @@ Expression<BinaryOperator::RS, LogicExpression, LogicExpression>::evaluate(
     return (ULogic)_items[0]->evaluate(time) >>
            (ULogic)_items[1]->evaluate(time);
   }
+}
+//------------------------------------------------------------------------------
+//==== evaluate methods for logic ==============================================
+template <>
+float
+Expression<BinaryOperator::SUM, LogicExpression, LogicExpression>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for SUM operator for LogicVars");
+  return 0.0f;
+}
+
+template <>
+float
+Expression<BinaryOperator::SUB, LogicExpression, LogicExpression>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for SUB operator for LogicVars");
+  return 0.0f;
+}
+
+template <>
+float
+Expression<BinaryOperator::MUL, LogicExpression, LogicExpression>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for MUL operator for LogicVars");
+  return 0.0f;
+}
+
+template <>
+float
+Expression<BinaryOperator::DIV, LogicExpression, LogicExpression>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for DIV operator for LogicVars");
+  return 0.0f;
+}
+
+template <>
+float
+Expression<BinaryOperator::BAND, LogicExpression, LogicExpression>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for BAND operator for LogicVars");
+  return 0.0f;
+}
+
+template <>
+float
+Expression<BinaryOperator::BOR, LogicExpression, LogicExpression>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for BOR operator for LogicVars");
+  return 0.0f;
+}
+
+template <>
+float
+Expression<BinaryOperator::BXOR, LogicExpression, LogicExpression>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for BXOR operator for LogicVars");
+  return 0.0f;
+}
+template <>
+float Expression<BinaryOperator::EQ, LogicExpression, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for EQ operator for LogicVars");
+  return 0.0f;
+}
+
+template <>
+float Expression<BinaryOperator::NEQ, LogicExpression, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for NEQ operator for LogicVars");
+  return 0.0f;
+}
+
+template <>
+float Expression<BinaryOperator::GT, LogicExpression, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for GT operator for LogicVars");
+  return 0.0f;
+}
+
+template <>
+float Expression<BinaryOperator::GE, LogicExpression, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for GE operator for LogicVars");
+  return 0.0f;
+}
+
+template <>
+float Expression<BinaryOperator::LT, LogicExpression, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for LT operator for LogicVars");
+  return 0.0f;
+}
+
+template <>
+float Expression<BinaryOperator::LE, LogicExpression, Proposition>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for LE operator for LogicVars");
+  return 0.0f;
+}
+
+template <>
+float
+Expression<BinaryOperator::NOT, LogicExpression, LogicExpression>::evaluate_robustness(
+    size_t time) {
+    return -(_items[0]->evaluate_robustness(time));
+}
+template <>
+float
+Expression<BinaryOperator::LS, LogicExpression, LogicExpression>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for LS operator for LogicVars");
+  return 0.0f;
+}
+template <>
+float
+Expression<BinaryOperator::RS, LogicExpression, LogicExpression>::evaluate_robustness(
+    size_t time) {
+  messageError("Cannot call robustness for RS operator for LogicVars");
+  return 0.0f;
 }
 //------------------------------------------------------------------------------
 } // namespace expression

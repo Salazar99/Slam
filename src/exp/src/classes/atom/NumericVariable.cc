@@ -10,6 +10,12 @@ NumericVariable::NumericVariable(Numeric *v, const std::string &name, VarType ty
 
 Numeric NumericVariable::evaluate(size_t time) { return _v[time]; }
 
+float NumericVariable::evaluate_robustness(size_t time) {
+// In theory this is useless because the NumericVariable only needs to return its value
+// but given that this its inherited from Atom we implement it.
+    return static_cast<float>(_v[time]);
+}
+
 void NumericVariable::assign(size_t time, Numeric value) { _v[time] = value; }
 
 

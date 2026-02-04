@@ -14,6 +14,13 @@ bool BooleanVariable::evaluate(size_t time) {
     return (_buffer & (1 << (time & 31))) != 0;
 }
 
+float BooleanVariable::evaluate_robustness(size_t time) {
+    // In theory this is useless because the BooleanVariable only needs to return its value
+    // but given that this its inherited from Atom we implement it.
+    //Actually this function should never be called for BooleanVariables
+    return static_cast<float>(evaluate(time));
+}
+
 void BooleanVariable::assign(size_t time, bool value) {
     if (value)
         _v[time >> 5] |= 1 << (time & 31);

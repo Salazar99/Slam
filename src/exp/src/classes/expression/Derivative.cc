@@ -24,6 +24,16 @@ ULogic Derivative<LogicExpression, LogicExpression>::evaluate(size_t time) {
 }
 
 template <>
+float Derivative<LogicExpression, LogicExpression>::evaluate_robustness(size_t time) {
+  if (time + _shift >= _max_time) {
+    return _e->evaluate(time);
+  }
+
+  return static_cast<float>(_e->evaluate(time + _shift) - _e->evaluate(time));
+}
+
+
+template <>
 Numeric
 Derivative<NumericExpression, NumericExpression>::evaluate(size_t time) {
   if (time + _shift >= _max_time) {
@@ -31,6 +41,15 @@ Derivative<NumericExpression, NumericExpression>::evaluate(size_t time) {
   }
 
   return _e->evaluate(time + _shift) - _e->evaluate(time);
+}
+
+template <>
+float Derivative<NumericExpression, NumericExpression>::evaluate_robustness(size_t time) {
+  if (time + _shift >= _max_time) {
+    return _e->evaluate(time);
+  }
+
+  return static_cast<float>(_e->evaluate(time + _shift) - _e->evaluate(time));
 }
 
 } // namespace expression

@@ -25,8 +25,24 @@ Trinary Template::evaluate_con(size_t time) {
   return _impl->evaluate_con(time);
 }
 
+float Template::evaluate_robustness(R_types robustness, size_t time){
+  switch(robustness){
+    case R_types::STANDARD:
+      return _impl->evaluate_std_robustness(time).first;
+    case R_types::CUMULATIVEPOS:
+      return _impl->evaluate_cum_robustness(time).first;
+    case R_types::CUMULATIVENEG:
+      return _impl->evaluate_cum_robustness(time).second;
+    case R_types::TROPICALPOS:
+      return _impl->evaluate_tro_robustness(time).first;
+    case R_types::TROPICALNEG:
+      return _impl->evaluate_tro_robustness(time).second;
+    default:
+      messageError("Robustness type not supported");
+      return NAN;
+  }
+}
 bool Template::assHoldsOnTrace(slam::Location update) {
-
   switch (update) {
   case slam::Location::Ant:
     setCacheAntFalse();
@@ -52,6 +68,7 @@ bool Template::assHoldsOnTrace(slam::Location update) {
   }
   return true;
 }
+
 bool Template::assHoldsOnTraceOffset(slam::Location update) {
 
   switch (update) {
@@ -80,6 +97,7 @@ bool Template::assHoldsOnTraceOffset(slam::Location update) {
   }
   return true;
 }
+
 bool Template::isVacuous(slam::Location update) {
   switch (update) {
   case slam::Location::Ant:

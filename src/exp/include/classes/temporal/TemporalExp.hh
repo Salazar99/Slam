@@ -15,6 +15,11 @@ public:
 
   virtual Trinary evaluate(size_t time) = 0;
 
+  // Robustness evaluation functions
+  virtual std::pair<float, float> evaluate_std_robustness(size_t time) = 0;
+  virtual std::pair<float, float> evaluate_cum_robustness(size_t time) = 0;
+  virtual std::pair<float, float> evaluate_tro_robustness(size_t time) = 0;
+
   virtual std::vector<TemporalExp *> getItems() = 0;
 
   virtual size_t size() = 0;

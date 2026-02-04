@@ -2,7 +2,7 @@
 
 #include "Trinary.hh"
 #include "globals.hh"
-
+#include "R_types.hh"
 namespace slam {
 class Template;
 
@@ -43,6 +43,10 @@ public:
   //assertion's features
   ///contingency table
   size_t _ct[3][3] = {{0}};
+
+  //robustness statistics
+  RobustnessMatrix _robval;
+
   ///number of variables in the assertion
   size_t _complexity = 0;
   ///number of repetitions of propositions

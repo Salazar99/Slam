@@ -1,5 +1,6 @@
 #include "classes/atom/Constant.hh"
 #include "visitors/ExpVisitor.hh"
+#include <limits>
 
 namespace expression {
 
@@ -8,6 +9,12 @@ template <> bool Constant<bool>::evaluate(size_t) { return _value; }
 template <> Numeric Constant<Numeric>::evaluate(size_t) { return _value; }
 
 template <> ULogic Constant<ULogic>::evaluate(size_t) { return _value; }
+
+template <> float Constant<bool>::evaluate_robustness(size_t) { return std::numeric_limits<float>::infinity(); }
+
+template <> float Constant<Numeric>::evaluate_robustness(size_t) { return _value; }
+
+template <> float Constant<ULogic>::evaluate_robustness(size_t) { return _value; }
 
 template <> void Constant<bool>::acceptVisitor(ExpVisitor &vis) {
     vis.visit(*this);

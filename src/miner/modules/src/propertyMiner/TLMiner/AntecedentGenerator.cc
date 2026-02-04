@@ -232,8 +232,6 @@ inline void AntecedentGenerator::findCandidates(
 inline std::vector<std::pair<CachedAllNumeric::EvalRet, size_t>>
 AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
                                              int depth) {
-  //FIXME: antecedentGenerator::gatherInterestingValue does absolutely nothing at the moment
-  //everything is done at template side
   auto ret = t->gatherInterestingValue(cn, depth, -1);
   //  std::cout << "Numeric: " << allNum2String(*cn) << std::endl;
 

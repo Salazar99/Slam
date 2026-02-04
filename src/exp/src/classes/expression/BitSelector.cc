@@ -25,5 +25,4 @@ bool BitSelector<LogicExpression, Proposition>::evaluate(size_t time) {
                                << _lower_bound) &
          _e->evaluate(time);
 }
-
 } // namespace expression

@@ -38,6 +38,11 @@ class LogicVariable : public Atom<ULogic> {
     /// @return The value of the variable.
     ULogic evaluate(size_t time) override;
 
+    /// @brief  Returns the "robustness" value of the variable in the given simulation time. It actually return the value of the variable.
+    /// @param time The simulation time.
+    /// @return The value of the variable.
+    float evaluate_robustness(size_t time) override;
+
     /// @brief Sets the value of the variable in a given simulation time.
     /// @param time The simulation time.
     /// @param value The value set for the variable.
@@ -90,6 +95,11 @@ class NumericVariable : public Atom<Numeric> {
     /// @return The value of the variable.
     Numeric evaluate(size_t time) override;
 
+    /// @brief  Returns the "robustness" value of the variable in the given simulation time. It actually return the value of the variable.
+    /// @param time The simulation time.
+    /// @return The value of the variable.
+    float evaluate_robustness(size_t time) override;
+
     /// @brief Sets the value of the variable in a given simulation time.
     /// @param time The simulation time.
     /// @param value The value set for the variable.
@@ -135,6 +145,12 @@ class BooleanVariable : public Atom<bool> {
     /// @param time The simulation time
     /// @return The value of the boolean variable
     bool evaluate(size_t time) override;
+
+    /// @brief  Returns the "robustness" value of the variable in the given simulation time. It actually return the value of the variable.
+    /// @param time The simulation time.
+    /// @return The value of the variable.
+    float evaluate_robustness(size_t time) override;
+
 
     /// @brief Sets the value of the variable in a given simulation time
     /// @param time The simulation time

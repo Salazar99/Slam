@@ -13,6 +13,11 @@ public:
 
   virtual Trinary evaluate(size_t time) override;
 
+  // Robustness evaluation functions
+  virtual std::pair<float, float> evaluate_std_robustness(size_t time);
+  virtual std::pair<float, float> evaluate_cum_robustness(size_t time);
+  virtual std::pair<float, float> evaluate_tro_robustness(size_t time);
+
   virtual std::vector<TemporalExp *> getItems() override;
 
   virtual size_t size() override;

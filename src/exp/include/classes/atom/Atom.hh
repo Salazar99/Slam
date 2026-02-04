@@ -27,6 +27,11 @@ public:
   /// @return The value of the atom
   virtual T evaluate(size_t time) = 0;
 
+  /// @brief Returns the value of the atom in the given simulation time
+  /// @param time The simulation time
+  /// @return The value of the atom
+  virtual float evaluate_robustness(size_t time){};
+
   /// @brief Accepts a visitor to visit the current object.
   /// @param vis The visitor.
   virtual void acceptVisitor(ExpVisitor &vis) = 0;

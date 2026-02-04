@@ -1,5 +1,7 @@
 #include "classes/temporal/TemporalAnd.hh"
 #include "visitors/ExpVisitor.hh"
+#include <limits>
+#include <algorithm>
 
 namespace expression {
 
@@ -23,6 +25,42 @@ Trinary TemporalAnd::evaluate(size_t time) {
       return Trinary::U;
   }
   return Trinary::T;
+}
+
+std::pair<float, float> TemporalAnd::evaluate_std_robustness(size_t time) {
+  float rob = std::numeric_limits<float>::infinity();
+  for (auto t : _items) {
+    auto rob_pos = t->evaluate_std_robustness(time);
+
+    rob = std::min(rob_pos.first, rob);
+  }
+  return {rob, 0};
+}
+
+std::pair<float, float> TemporalAnd::evaluate_cum_robustness(size_t time) {
+  std::pair<float, float> rob = {std::numeric_limits<float>::infinity(),
+                                0.0f};
+  for (auto t : _items) {
+    auto rob_curr = t->evaluate_cum_robustness(time);
+    //rob_pos(A and B) = min(rob_pos(A),rob_pos(B))
+    rob.first = Rectifier::process(RectifierType::Positive,std::min(rob_curr.first, rob.first));
+    //rob_neg(A and B) = min(rob_neg(A),rob_neg(B))
+    rob.second = Rectifier::process(RectifierType::Negative,std::min(rob_curr.second, rob.second));
+  }
+  return rob;
+}
+
+std::pair<float, float> TemporalAnd::evaluate_tro_robustness(size_t time) {
+  std::pair<float, float> rob = {std::numeric_limits<float>::infinity(),
+                                0.0f};
+  for (auto t : _items) {
+    auto rob_curr = t->evaluate_tro_robustness(time);
+    //rob_pos(A and B) = min(rob_pos(A),rob_pos(B))
+    rob.first = Rectifier::process(RectifierType::Positive,std::min(rob_curr.first, rob.first));
+    //rob_neg(A and B) = min(rob_neg(A),rob_neg(B))
+    rob.second = Rectifier::process(RectifierType::Negative,std::min(rob_curr.second, rob.second));
+  }
+  return rob;
 }
 
 void TemporalAnd::addItem(TemporalExp *prop) {
