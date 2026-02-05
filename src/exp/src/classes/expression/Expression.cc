@@ -300,7 +300,12 @@ Expression<BinaryOperator::DIV, NumericExpression, NumericExpression>::evaluate_
 template <>
 float Expression<BinaryOperator::EQ, NumericExpression, Proposition>::evaluate_robustness(
     size_t time) {
-    messageError("Not supposed to call robustness for EQ operator");    
+    messageErrorIf(_items.size() != 2, "Size ==" + std::to_string(_items.size()) + " , expected 2." );    
+    if(_items[0]->evaluate(time) == _items[1]->evaluate(time)){
+      return 0.0f;
+    }else{
+      return -(std::abs(static_cast<float>(_items[0]->evaluate(time) - _items[1]->evaluate(time))));
+    }
     return std::numeric_limits<float>::infinity();  
 }
 

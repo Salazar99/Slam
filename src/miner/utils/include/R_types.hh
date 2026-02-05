@@ -17,6 +17,7 @@ enum class R_types { STANDARD, CUMULATIVEPOS, CUMULATIVENEG, TROPICALPOS, TROPIC
 struct robustnessStruct {
     R_types type;
     float mean;
+    float final;
     std::vector<float>* values;
 };
 

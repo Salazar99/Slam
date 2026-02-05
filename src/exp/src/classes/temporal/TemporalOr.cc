@@ -34,6 +34,7 @@ std::pair<float, float> TemporalOr::evaluate_std_robustness(size_t time) {
 
     rob = std::max(rob_pos.first, rob);
   }
+  rob = (rob == 0.0f || rob == -0.0f) ? 0.0f : rob;
   return {rob, 0};
 }
 

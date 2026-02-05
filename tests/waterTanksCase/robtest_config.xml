@@ -1,0 +1,78 @@
+<slam>
+
+        <!--
+      
+  	-->	
+
+	<context name="TankEmptying_OpenValve"> 
+	
+		<numeric op="e,r,ge,le" clsEffort = "0.001" exp="a" loc="dt"/>
+
+        <template dtLimits="1A,0.1E,100maxd" exp="G( (..F..) -> F[0,0]( @(d,1) > 0 ))" />
+
+		    <!--
+		<sort name="mean_std_robustness" exp="mstdrob"/>
+		<sort name="causality" exp="traceLength"/>
+		-->
+		<sort name="mean_std_robustness" exp="mstdrob"/>
+		<sort name="cumpos_robustness" exp="cumpos"/>
+		<sort name="cumneg_robustness" exp="cumneg"/>
+		<sort name="mean_cumpos_robustness" exp="mcumpos"/>
+		<sort name="std_robustness" exp="stdrob"/>
+	</context>
+    <!--
+        
+	<context name="ValveClose_SecondaryTankFilling"> 
+
+		<numeric op="e,r,ge,le" clsEffort = "0.001" exp="a" loc="dt"/>
+
+        <template dtLimits="1A,0.1E,100maxd" exp="G( (..F..) -> F[0,0]( @(d,1) > 0 ))" />
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+	-->
+    <!--
+	<context name="ValveOpen_SecondaryTankEmptying"> 
+
+		<numeric op="ge" clsEffort = "0.001" exp="a" loc="dt"/>
+
+        <template dtLimits="1A,0.1E,10maxd" exp="G( (..F..) -> F[0,0](@(d,1) < 0 || d<=0.1 ))" />
+
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+ 	--> 
+    <!--
+   
+	<context name="MainTankEmptying"> 
+
+		<numeric op="r,e,ge,le" clsEffort = "0.001" exp="a" loc="dt"/>
+		<numeric op="r,e,ge,le" clsEffort = "0.001" exp="rain" loc="dt"/>
+		<numeric op="r,e,ge,le" clsEffort = "0.001" exp="d" loc="dt"/>
+
+        <template dtLimits="3A,0.1E,20maxd" exp="G( (..F..) -> F[0,0](@(z,1) < 0))" />
+
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+ 	--> 
+    <!--
+	<context name="MainTankFilling"> 
+
+		<numeric op="ge,le" clsEffort = "0.001" exp="a" loc="dt"/>
+		<numeric op="ge,le" clsEffort = "0.001" exp="rain" loc="dt"/>
+		<numeric op="ge,le" clsEffort = "0.001" exp="d" loc="dt"/>
+
+        <template dtLimits="3A,0.1E,100maxd" exp="G( (..F..) -> F[0,0](@(z,1) > 0))" />
+
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+    --> 
+
+	
+</slam>

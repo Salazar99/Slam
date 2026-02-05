@@ -43,6 +43,7 @@ std::pair<float, float> Eventually::evaluate_std_robustness(size_t time){
     std::pair<float, float> curr_rob = _operand->evaluate_std_robustness(i);  
     rob.first = std::max(curr_rob.first, rob.first);
   }
+  rob.first = (rob.first == 0.0f || rob.first == -0.0f) ? 0.0f : rob.first;
   return rob;
 }
 

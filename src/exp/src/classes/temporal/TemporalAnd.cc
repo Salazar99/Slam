@@ -34,6 +34,7 @@ std::pair<float, float> TemporalAnd::evaluate_std_robustness(size_t time) {
 
     rob = std::min(rob_pos.first, rob);
   }
+  rob = (rob == 0.0f || rob == -0.0f) ? 0.0f : rob;
   return {rob, 0};
 }
 

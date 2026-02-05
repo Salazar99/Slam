@@ -13,7 +13,9 @@ Trinary TemporalNot::evaluate(size_t time) { return !_item->evaluate(time); }
 
 std::pair<float, float> TemporalNot::evaluate_std_robustness(size_t time) {
   //rob(!A) = -rob(A)
-  return { -_item->evaluate_std_robustness(time).first,
+  float val = -_item->evaluate_std_robustness(time).first;
+  val = (val == 0.0f || val == -0.0f) ? 0.0f : val;
+  return { val,
            0.0f };
 }
 

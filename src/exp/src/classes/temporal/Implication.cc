@@ -25,6 +25,7 @@ std::pair<float, float> Implication::evaluate_std_robustness(size_t time) {
   std::pair<float, float> ant_rob = _ant->evaluate_std_robustness(time);
   std::pair<float, float> con_rob = _con->evaluate_std_robustness(time);
   float rob = (std::max(-ant_rob.first, con_rob.first));
+  rob = (rob == 0.0f || rob == -0.0f) ? 0.0f : rob;
   return {rob, 0};
 }
 

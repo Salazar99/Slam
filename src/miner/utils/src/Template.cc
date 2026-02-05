@@ -316,72 +316,131 @@ void Template::fillContingency(size_t (&ct)[3][3], bool offset) {
 }
 
 void Template::fillRobustness(RobustnessMatrix &rob, bool savePoints) {
-    
-  // make sure the chaced values are initialized
-    if(savePoints){ 
-        std::vector<float> values_std;
-        std::vector<float> values_cumpos;
-        std::vector<float> values_cumneg;
-        std::vector<float> values_tropos;
-        std::vector<float> values_troneg;
-        float sum_std = 0.0;
-        float sum_cumpos = 0.0;
-        float sum_cumneg = 0.0;
-        float sum_tropos = 0.0;
-        float sum_troneg = 0.0;
+  //mean calculation 
+  float sum_std = 0.0;
+  float sum_cumpos = 0.0;
+  float sum_cumneg = 0.0;
+  float sum_tropos = 0.0;
+  float sum_troneg = 0.0;
 
-      for (size_t time = 0; time < _max_length; time++) {
-        values_std.push_back(evaluate_robustness(R_types::STANDARD, time));
-        sum_std += values_std.back();        
-        values_cumpos.push_back(evaluate_robustness(R_types::CUMULATIVEPOS, time));
-        sum_cumpos += values_cumpos.back();
-        values_cumneg.push_back(evaluate_robustness(R_types::CUMULATIVENEG,time));
-        sum_cumneg += values_cumneg.back();
-        values_tropos.push_back(evaluate_robustness(R_types::TROPICALPOS,time));
-        sum_tropos += values_tropos.back();
-        values_troneg.push_back(evaluate_robustness(R_types::TROPICALNEG,time));
-        sum_troneg += values_troneg.back();
-      }
-      rob[0].type = R_types::STANDARD;
-      rob[0].mean = sum_std / static_cast<float>(_max_length);
-      rob[0].values = new std::vector<float>(values_std);
-      rob[1].type = R_types::CUMULATIVEPOS;
-      rob[1].mean = sum_cumpos / static_cast<float>(_max_length);
-      rob[1].values = new std::vector<float>(values_cumpos);
-      rob[2].type = R_types::CUMULATIVENEG;
-      rob[2].mean = sum_cumneg / static_cast<float>(_max_length);
-      rob[2].values = new std::vector<float>(values_cumneg);
-      rob[3].type = R_types::TROPICALPOS;
-      rob[3].mean = sum_tropos / static_cast<float>(_max_length);
-      rob[3].values = new std::vector<float>(values_tropos);
-      rob[4].type = R_types::TROPICALNEG;
-      rob[4].mean = sum_troneg / static_cast<float>(_max_length);  
-      rob[4].values = new std::vector<float>(values_troneg);
-      
-    } else {
-      float sum_std = 0.0;
-      float sum_cumpos = 0.0;
-      float sum_cumneg = 0.0;
-      float sum_tropos = 0.0;
-      float sum_troneg = 0.0;
-      for (size_t time = 0; time < _max_length; time++) {
-        sum_std += evaluate_robustness(R_types::STANDARD, time);
-        sum_cumpos += evaluate_robustness(R_types::CUMULATIVEPOS, time);
-        sum_cumneg += evaluate_robustness(R_types::CUMULATIVENEG,time);
-        sum_tropos += evaluate_robustness(R_types::TROPICALPOS,time);
-        sum_troneg += evaluate_robustness(R_types::TROPICALNEG,time);
-      }
-      rob[0].type = R_types::STANDARD;
-      rob[0].mean = sum_std / static_cast<float>(_max_length);
-      rob[1].type = R_types::CUMULATIVEPOS;
-      rob[1].mean = sum_cumpos / static_cast<float>(_max_length);
-      rob[2].type = R_types::CUMULATIVENEG;
-      rob[2].mean = sum_cumneg / static_cast<float>(_max_length);
-      rob[3].type = R_types::TROPICALPOS;
-      rob[3].mean = sum_tropos / static_cast<float>(_max_length);
-      rob[4].type = R_types::TROPICALNEG;
-      rob[4].mean = sum_troneg / static_cast<float>(_max_length);  
+  //final value calculation
+  float std_final = std::numeric_limits<float>::max();
+  float cumpos_final = std::numeric_limits<float>::max();
+  float cumneg_final = 0.0f;
+  float tropos_final = std::numeric_limits<float>::max();
+  float troneg_final = 0.0f;
+
+  //Save all robustness values for debugging purposes
+  if(savePoints){ 
+    std::vector<float> values_std;
+    std::vector<float> values_cumpos;
+    std::vector<float> values_cumneg;
+    std::vector<float> values_tropos;
+    std::vector<float> values_troneg;
+
+    for (size_t time = 0; time < _max_length; time++) {
+      //Calculate robustness statistics and save each value 
+      values_std.push_back(evaluate_robustness(R_types::STANDARD, time));
+      sum_std += values_std.back();
+      std_final = std::min(std_final, values_std.back());        
+      values_cumpos.push_back(evaluate_robustness(R_types::CUMULATIVEPOS, time));
+      sum_cumpos += values_cumpos.back();
+      cumpos_final = std::min(cumpos_final, values_cumpos.back());
+      values_cumneg.push_back(evaluate_robustness(R_types::CUMULATIVENEG,time));
+      sum_cumneg += values_cumneg.back();
+      cumneg_final = std::min(cumneg_final, values_cumneg.back());
+      values_tropos.push_back(evaluate_robustness(R_types::TROPICALPOS,time));
+      sum_tropos += values_tropos.back();
+      tropos_final = std::min(tropos_final, values_tropos.back());
+      values_troneg.push_back(evaluate_robustness(R_types::TROPICALNEG,time));
+      sum_troneg += values_troneg.back();
+      troneg_final = std::min(troneg_final, values_troneg.back());
     }
+    //Fill the robustness matrix 
+    rob[0].type = R_types::STANDARD;
+    rob[0].mean = sum_std / static_cast<float>(_max_length);
+    rob[0].values = new std::vector<float>(values_std);
+    rob[0].final = std_final;
+    rob[1].type = R_types::CUMULATIVEPOS;
+    rob[1].mean = sum_cumpos / static_cast<float>(_max_length);
+    rob[1].values = new std::vector<float>(values_cumpos);
+    rob[1].final = cumpos_final;
+    rob[2].type = R_types::CUMULATIVENEG;
+    rob[2].mean = sum_cumneg / static_cast<float>(_max_length);
+    rob[2].values = new std::vector<float>(values_cumneg);
+    rob[2].final = cumneg_final;
+    rob[3].type = R_types::TROPICALPOS;
+    rob[3].mean = sum_tropos / static_cast<float>(_max_length);
+    rob[3].values = new std::vector<float>(values_tropos);
+    rob[3].final = tropos_final;
+    rob[4].type = R_types::TROPICALNEG;
+    rob[4].mean = sum_troneg / static_cast<float>(_max_length);  
+    rob[4].values = new std::vector<float>(values_troneg);
+    rob[4].final = troneg_final;
+
+    //Debug print of values
+    if(false){\
+      messageInfo("Printing robustness values over time for debugging purposes:");
+      std::cout << "Robustness values over time: \n";
+      std::cout << "STD: \n";
+      std::cout << "\t final: " + std::to_string(rob[0].final) + "\n" ;
+      std::cout << "\t mean: " + std::to_string(rob[0].mean) + "\n";
+      std::cout << "Cumulative POS: \n";
+      std::cout << "\t final: " + std::to_string(rob[1].final) + "\n";
+      std::cout << "\t mean: " + std::to_string(rob[1].mean) + "\n";
+      std::cout << "Cumulative NEG: \n";
+      std::cout << "\t final: " + std::to_string(rob[2].final) + "\n";
+      std::cout << "\t mean: " + std::to_string(rob[2].mean) + "\n";
+      std::cout << "Tropical POS: \n";
+      std::cout << "\t final: " + std::to_string(rob[3].final) + "\n";
+      std::cout << "\t mean: " + std::to_string(rob[3].mean) + "\n";
+      std::cout << "Tropical NEG: \n";
+      std::cout << "\t final: " + std::to_string(rob[4].final) + "\n";
+      std::cout << "\t mean: " + std::to_string(rob[4].mean) + "\n";
+      std::cout << "\n";
+    }
+      
+  //Calculate only mean and final values 
+  }else{
+  
+    for (size_t time = 0; time < _max_length; time++) {
+      //Need these to save multiple calls to evaluate_robustness
+      float std_curr = evaluate_robustness(R_types::STANDARD, time);
+      float cumpos_curr = evaluate_robustness(R_types::CUMULATIVEPOS, time);
+      float cumneg_curr = evaluate_robustness(R_types::CUMULATIVENEG,time);
+      float tropos_curr = evaluate_robustness(R_types::TROPICALPOS,time);
+      float troneg_curr = evaluate_robustness(R_types::TROPICALNEG,time);
+
+      //Calculate robustness statistics
+      sum_std += std_curr;
+      std_final = std::min(std_final, std_curr);
+      sum_cumpos += cumpos_curr;
+      cumpos_final = std::min(cumpos_final, cumpos_curr);
+      sum_cumneg += cumneg_curr;
+      cumneg_final = std::min(cumneg_final, cumneg_curr);
+      sum_tropos += tropos_curr;
+      tropos_final = std::min(tropos_final, tropos_curr);
+      sum_troneg += troneg_curr;
+      troneg_final = std::min(troneg_final, troneg_curr);
+    }
+    //Fill the robustness matrix
+    rob[0].type = R_types::STANDARD;
+    rob[0].mean = sum_std / static_cast<float>(_max_length);
+    rob[0].final = std_final;
+    rob[1].type = R_types::CUMULATIVEPOS;
+    rob[1].mean = sum_cumpos / static_cast<float>(_max_length);
+    rob[1].final = cumpos_final;
+    rob[2].type = R_types::CUMULATIVENEG;
+    rob[2].mean = sum_cumneg / static_cast<float>(_max_length);
+    rob[2].final = cumneg_final;
+    rob[3].type = R_types::TROPICALPOS;
+    rob[3].mean = sum_tropos / static_cast<float>(_max_length);
+    rob[3].final = tropos_final;
+    rob[4].type = R_types::TROPICALNEG;
+    rob[4].mean = sum_troneg / static_cast<float>(_max_length);
+    rob[4].final = troneg_final;
+  }
+  //Robustness matrix filled 
 }
 
 void Template::setCacheAntFalse() { _antInCache = false; }

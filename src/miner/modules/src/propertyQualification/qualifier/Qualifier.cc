@@ -73,6 +73,26 @@ Qualifier::Qualifier() : PropertyQualifier() {
       std::make_tuple("complexity", VarType::ULogic, 32));
   metrics::_availableVars.push_back(
       std::make_tuple("pRepetitions", VarType::ULogic, 32));
+  metrics::_availableVars.push_back(
+      std::make_tuple("stdrob", VarType::Numeric, 32));
+  metrics::_availableVars.push_back(
+      std::make_tuple("mstdrob", VarType::Numeric, 32));
+  metrics::_availableVars.push_back(
+      std::make_tuple("cumpos", VarType::Numeric, 32));
+  metrics::_availableVars.push_back(
+      std::make_tuple("mcumpos", VarType::Numeric, 32));
+  metrics::_availableVars.push_back(
+      std::make_tuple("cumneg", VarType::Numeric, 32));
+  metrics::_availableVars.push_back(
+      std::make_tuple("mcumneg", VarType::Numeric, 32));
+  metrics::_availableVars.push_back(
+      std::make_tuple("tropos", VarType::Numeric, 32));
+  metrics::_availableVars.push_back(
+      std::make_tuple("mtropos", VarType::Numeric, 32));
+  metrics::_availableVars.push_back(
+      std::make_tuple("troneg", VarType::Numeric, 32));
+  metrics::_availableVars.push_back(
+      std::make_tuple("mtroneg", VarType::Numeric, 32));
 
   loadParams();
 }
@@ -322,6 +342,26 @@ double Qualifier::evaluate(Assertion &a, Metric &m) {
       m.assign(v, a._complexity);
     } else if (v == "pRepetitions") {
       m.assign(v, a._pRepetitions);
+    } else if (v == "stdrob") { 
+      m.assign(v, a._robval[0].final);
+    } else if (v == "mstdrob") { 
+      m.assign(v, a._robval[0].mean);
+    } else if (v == "cumpos") { 
+      m.assign(v, a._robval[1].final);
+    } else if (v == "mcumpos") { 
+      m.assign(v, a._robval[1].mean);
+    } else if (v == "cumneg") { 
+      m.assign(v, a._robval[2].final);
+    } else if (v == "mcumneg") { 
+      m.assign(v, a._robval[2].mean);
+    } else if (v == "tropos") { 
+      m.assign(v, a._robval[3].final);
+    } else if (v == "mtropos") { 
+      m.assign(v, a._robval[3].mean);
+    } else if (v == "troneg") { 
+      m.assign(v, a._robval[4].final);
+    } else if (v == "mtroneg") { 
+      m.assign(v, a._robval[4].mean);
     } else {
       messageError("Unknown metric variable name");
     }

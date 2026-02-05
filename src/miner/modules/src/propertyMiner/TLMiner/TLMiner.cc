@@ -328,11 +328,19 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         prettyAss.second = t->getColoredAssertion();
         Assertion *ass = new Assertion();
         t->fillContingency(ass->_ct, 0);
-       if(clc::debugCls)
-        t->fillRobustness(ass->_robval,true);
-       else 
-        t->fillRobustness(ass->_robval);
-        ass->_toString = prettyAss;
+        //Debug if 
+        if(true){
+          t->fillRobustness(ass->_robval,true);
+          messageInfo("Printing _robval");
+          std::cout << "STD" << ass->_robval[0].mean << " " << ass->_robval[0].final << std::endl;
+          std::cout << "CUMPOS" << ass->_robval[1].mean << " " << ass->_robval[1].final << std::endl;
+          std::cout << "CUMNEG" << ass->_robval[2].mean << " " << ass->_robval[2].final << std::endl;
+          std::cout << "TROPOS" << ass->_robval[3].mean << " " << ass->_robval[3].final << std::endl;
+          std::cout << "TRONEG" << ass->_robval[4].mean << " " << ass->_robval[4].final << std::endl;
+        }else{ 
+          t->fillRobustness(ass->_robval);  
+        }
+          ass->_toString = prettyAss;
         ass->_props2string = t->getAssPropsAsString();
         std::vector<Proposition *> loadedProps; //= t->getLoadedPropositions();
         ass->_complexity = getNumVariables(loadedProps);
