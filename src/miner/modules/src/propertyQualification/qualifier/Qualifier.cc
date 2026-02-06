@@ -15,6 +15,7 @@
 #include "propositionParsingUtils.hh"
 #include "templateParsingUtils.hh"
 #include "StlParserHandler.hh"
+#include <iostream>
 #include <algorithm>
 #include <filesystem>
 #include <iomanip>
@@ -386,14 +387,32 @@ void Qualifier::sortAssertionsWithMetrics(std::vector<Metric *> &metrics,
   }
 
   // gather max value for all metrics (needed to normalize)
-  std::unordered_map<std::string, double> mToMaxValue =
-      getMaxValuesForSortMetrics(metrics, assertions);
+  std::unordered_map<std::string, std::pair<double, double>> mTominMaxValue =
+      getminMaxValuesForSortMetrics(metrics, assertions);   
 
   for (auto &a : assertions) {
     double score = 1;
+    double r;
     for (auto &m : metrics) {
-      double r = scoreFunction(evaluate(*a, *m) / mToMaxValue.at(m->_name),
-                               _functionParams[currParamIndex]);
+      if(clc::dontNormalize){
+        r = scoreFunction(evaluate(*a,*m),_functionParams[currParamIndex]);
+        score *= r;
+        continue;
+      }
+      else {
+          //normalize the value of the metric between 0 and 1 using the min and max values observed among all the assertions, then apply the scoring function
+          //r = evaluate - min / (max - min)
+          //This check is to account for the scoring function performming poorly with values really close to 0 
+        if((evaluate(*a, *m) == 0 && mTominMaxValue.at(m->_name).first == 0 && mTominMaxValue.at(m->_name).second == 0)|| (mTominMaxValue.at(m->_name).first - mTominMaxValue.at(m->_name).second == 0) ||( evaluate(*a, *m) - mTominMaxValue.at(m->_name).second == 0)){
+          r = scoreFunction(0.1,_functionParams[currParamIndex]);;
+        }
+         else {
+          //double tmp = evaluate(*a, *m);
+          r = scoreFunction((evaluate(*a, *m) - mTominMaxValue.at(m->_name).second) / (mTominMaxValue.at(m->_name).first - mTominMaxValue.at(m->_name).second),
+                                 _functionParams[currParamIndex]);
+        }
+      }
+      
       score *= r;
     }
     a->_finalScore = score;
@@ -415,21 +434,26 @@ void Qualifier::filterAssertionsWithMetrics(
     std::vector<std::pair<Metric *, double>> &metrics) {
 
   //need this to normalize the values
-  std::unordered_map<std::string, double> mToMaxValue =
-      getMaxValuesForFilterMetrics(metrics, assertions);
+  std::unordered_map<std::string, std::pair<double, double>> mTominMaxValue =
+      getminMaxValuesForFilterMetrics(metrics, assertions);
 
   // apply filtering metrics, mark as 'deleted' (nullptr) all assertions that evaluates under the threshold
   size_t filtered = 0;
   for (auto &a : assertions) {
     for (auto &m : metrics) {
-      if (clc::dontNormalize
-              ? evaluate(*a, *m.first) < m.second
-              : evaluate(*a, *m.first) / mToMaxValue.at(m.first->_name) <
-                    m.second) {
-        a = nullptr;
-        filtered++;
-        break;
-      }
+        if(clc::dontNormalize){
+          if(evaluate(*a, *m.first) < m.second){
+            a = nullptr;
+            filtered++;
+            break; 
+          }
+        }else {
+          if((evaluate(*a,*m.first) == 0 && mTominMaxValue.at(m.first->_name).first == 0 && mTominMaxValue.at(m.first->_name).second == 0 || ( evaluate(*a, *m.first) - mTominMaxValue.at(m.first->_name).second == 0) || (mTominMaxValue.at(m.first->_name).first - mTominMaxValue.at(m.first->_name).second == 0)) || ((evaluate(*a, *m.first) - mTominMaxValue.at(m.first->_name).second) / (mTominMaxValue.at(m.first->_name).first - mTominMaxValue.at(m.first->_name).second) < m.second)){
+            a = nullptr;
+            filtered++;
+            break;
+          }
+        }
     }
   }
 
@@ -468,13 +492,13 @@ bool stlsatImplies(std::string a, std::string b) {
   //Write the formula to the file 
   stlFile << '(' << a << ')' << " &&" << " !" << '(' << b << ')' << std::endl;
   stlFile.close();
-  if(clc::debugCls)
+  if(clc::debugSAT)
     messageInfo("stlFIle content: " + '(' + a + ')' + " &&" + " !" + '(' + b + ')' + "\n");
 
   //Call stlsat on the created file
   std::string command = "stlsat " + stlFileName;
   FILE* pipe = popen(command.c_str(), "r");
-  if (!pipe) return false;
+  messageErrorIf(!pipe, "Failed to run stlsat command");
   std::string result;
   char buffer[128];
   while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
@@ -542,7 +566,7 @@ void Qualifier::filterAssertionsWithImplications(
             //call stlsat to check if b implies a
             aisImplied = stlsatImplies(b->_toString.first, a->_toString.first);
             if(aisImplied){
-              messageInfo("Assertion: " + a->_toString.first + " is implied by: " + b->_toString.first);
+              messageInfoIf(clc::debugSAT,"Assertion: " + a->_toString.first + " is implied by: " + b->_toString.first);
               addtoMinSet = false;
               break;
             }
@@ -552,7 +576,7 @@ void Qualifier::filterAssertionsWithImplications(
               if (bisImplied){
                 //b is implied by a
                 //remove b from minSet and check next b 
-                messageInfo("Assertion: " + b->_toString.first + " is implied by: " + a->_toString.first);
+                messageInfoIf(clc::debugSAT,"Assertion: " + b->_toString.first + " is implied by: " + a->_toString.first);
                 std::vector<Assertion *>::iterator it = std::find(minSet.begin(), minSet.end(), b);
                 if (it != minSet.end()) {
                     minSet.erase(it);
@@ -586,8 +610,8 @@ void Qualifier::printAssertions(Context &context,
     table.set_border_style(FT_NICE_STYLE);
 
     //need this to normalize the values
-    std::unordered_map<std::string, double> mToMaxValue =
-        getMaxValuesForSortMetrics(context._sort, assertions);
+    std::unordered_map<std::string, std::pair<double, double>> mTominMaxValue =
+        getminMaxValuesForSortMetrics(context._sort, assertions);
     size_t headerPrintRate = 100;
     for (size_t i = 0; i < assertions.size(); i++) {
       if (i % headerPrintRate == 0) {
@@ -620,14 +644,53 @@ void Qualifier::printAssertions(Context &context,
       line.push_back(ass_colored);
       line.push_back(to_string_with_precision(ass->_finalScore, 2));
       for (auto &m : context._sort) {
-        line.push_back(to_string_with_precision(
-            evaluate(*ass, *m) / mToMaxValue.at(m->_name), 2));
+        // double dbg = evaluate(*ass,*m);
+        // double final_val = (evaluate(*ass, *m) - mTominMaxValue.at(m->_name).second) / (mTominMaxValue.at(m->_name).first - mTominMaxValue.at(m->_name).second);
+        if(clc::dontNormalize){
+          line.push_back(to_string_with_precision(evaluate(*ass, *m), 2));
+        }else{
+          if((evaluate(*ass,*m) == 0 && mTominMaxValue.at(m->_name).first == 0 && mTominMaxValue.at(m->_name).second == 0) || (mTominMaxValue.at(m->_name).first - mTominMaxValue.at(m->_name).second == 0) ){
+            line.push_back(to_string_with_precision(0.0, 2));
+          } else {
+            line.push_back(to_string_with_precision(
+                (evaluate(*ass, *m) - mTominMaxValue.at(m->_name).second) / (mTominMaxValue.at(m->_name).first - mTominMaxValue.at(m->_name).second), 2));
+          }
+        }
       }
       //print the assertion with its ranking
       table.range_write_ln(std::begin(line), std::end(line));
     }
 
     std::cout << table.to_string() << std::endl;
+
+    //dump the robustness values to a file 
+    if(clc::debugRob){
+      std::fstream outFile;
+      outFile.open("./" + context._name + "_rob.txt", std::ios::in | std::ios::out | std::ios::trunc);
+      messageErrorIf(!outFile.is_open(), "Error opening the robustness dump file");
+      outFile << "double stdrob; double cumpos; double cumneg; double tropos; double troneg";
+      outFile << "\n";
+      
+      
+      //This should be the top ranking assertion
+      Assertion *ass = assertions[0];
+      
+      int rowCount = ass-> _robval[0].values->size();      
+      for(int i = 0; i < rowCount; i++){
+        outFile <<  ass-> _robval[0].values->at(i);
+        outFile << ";";
+        outFile <<  ass-> _robval[1].values->at(i);
+        outFile << ";";
+        outFile <<  ass-> _robval[2].values->at(i);
+        outFile << ";";
+        outFile <<  ass-> _robval[3].values->at(i);
+        outFile << ";";
+        outFile <<  ass-> _robval[4].values->at(i);
+        outFile << '\n'; 
+      }
+
+      outFile.close();
+    }
 
     if (!clc::intMode) {
       break;
@@ -712,35 +775,41 @@ std::vector<Assertion *> Qualifier::rankAssertions(Context &context,
   return assertions;
 }
 
-std::unordered_map<std::string, double>
-Qualifier::getMaxValuesForSortMetrics(std::vector<Metric *> &metrics,
+std::unordered_map<std::string, std::pair<double, double>>
+Qualifier::getminMaxValuesForSortMetrics(std::vector<Metric *> &metrics,
                                       std::vector<Assertion *> &assertions) {
 
-  std::unordered_map<std::string, double> mToMaxValue;
+  std::unordered_map<std::string, std::pair<double, double>> mTominMaxValue;
   for (auto &m : metrics) {
     double max = 0;
+    double min = std::numeric_limits<double>::max();
     for (auto &a : assertions) {
       double eval = evaluate(*a, *m);
       max = eval > max ? eval : max;
+      min = eval < min ? eval : min;
     }
-    mToMaxValue[m->_name] = max;
+    mTominMaxValue[m->_name].first = max;
+    mTominMaxValue[m->_name].second = min;
   }
-  return mToMaxValue;
+  return mTominMaxValue;
 }
-std::unordered_map<std::string, double> Qualifier::getMaxValuesForFilterMetrics(
+std::unordered_map<std::string, std::pair<double, double>> Qualifier::getminMaxValuesForFilterMetrics(
     std::vector<std::pair<Metric *, double>> &metrics,
     std::vector<Assertion *> &assertions) {
 
-  std::unordered_map<std::string, double> mToMaxValue;
+  std::unordered_map<std::string,std::pair<double, double>> mTominMaxValue;
   for (auto &[m, th] : metrics) {
     double max = 0;
+    double min = std::numeric_limits<double>::max();
     for (auto &a : assertions) {
       double eval = evaluate(*a, *m);
       max = eval > max ? eval : max;
+      min = eval < min ? eval : min;
     }
-    mToMaxValue[m->_name] = max;
+    mTominMaxValue[m->_name].first = max;
+    mTominMaxValue[m->_name].second = min;
   }
-  return mToMaxValue;
+  return mTominMaxValue;
 }
 
 } // namespace slam

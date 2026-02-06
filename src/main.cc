@@ -212,6 +212,10 @@ void parseCommandLineArguments(int argc, char *args[]) {
   if (result.count("remove-impl")){
     clc::ImplFilter = true;
   }
+  
+  if (result.count("debug-sat")){
+    clc::debugSAT = true;
+  }
 
   if (result.count("silent")) {
     clc::silent = true;
@@ -251,6 +255,12 @@ void parseCommandLineArguments(int argc, char *args[]) {
   if (result.count("debug-cls")) {
     clc::debugCls = true;
   }
+  
+  if (result.count("debug-rob")){
+    clc::debugRob = true;
+  }
+
+
   messageErrorIf(clc::splitLogic && !clc::genTemp,
                  "--split-logic must be used with --generate-config");
 

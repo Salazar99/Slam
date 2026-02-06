@@ -5,7 +5,7 @@
 #include <set>
 #include <vector>
 
-#define printTree 1
+#define printTree 0
 
 namespace slam {
 

@@ -50,6 +50,7 @@ cxxopts::ParseResult parseHARM(int argc, char *argv[]) {
         "split-logic", "split bitvectors into boolean variabes")
         ( "dont-print-ass", "do not print the mined assertions")
         ("remove-impl", "remove assertions that are implied by others")
+        ("debug-sat", "print debug information about the SAT filtering procedure")
         ("silent", "disable all outputs")
         ("wsilent", "disable all warning")(
         "isilent", "disable all info")("psilent", "disable all progress bars")(
@@ -58,7 +59,7 @@ cxxopts::ParseResult parseHARM(int argc, char *argv[]) {
         "estimation, <hc> hierarchical (default is kmeans)",
         cxxopts::value<std::string>(), "<String>")
         ("debug-cls", "print the clusters")
-        
+        ("debug-rob", "print debug information about the ROB procedure and dump the robustness values for each instant to file (only for the top-ranking assertion)")
         ("help", "Show options")(
         "name", "name of this execution (used when dumping statistics)",
         cxxopts::value<std::string>(), "<String>");

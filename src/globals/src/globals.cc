@@ -36,6 +36,7 @@ std::string selectedScope = "";
 bool dontFillAss = false;
 bool dontPrintAss = false;
 bool ImplFilter = false;
+bool debugSAT = false;
 bool silent = false;
 bool wsilent = false;
 bool isilent = false;
@@ -44,6 +45,7 @@ std::string clsAlg = "kmeans";
 bool dumpStat = false;
 bool dontNormalize = false;
 bool debugCls=0;
+bool debugRob=0;
 } // namespace clc
 
 // slam stat

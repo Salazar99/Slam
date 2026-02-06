@@ -20,7 +20,7 @@ std::pair<float, float> Placeholder::evaluate_std_robustness(size_t time) {
   std::make_pair(val_pos,val_neg);
   */
   float val = _prop->evaluate_robustness(time);
-  std::cout << "Placeholder robustness at time " << time << " is " << val << std::endl;
+  //std::cout << "Placeholder robustness at time " << time << " is " << val << std::endl;
   val = (val == 0.0f || val == -0.0f) ? 0.0f : val;
   return {val,0.0f};
 }

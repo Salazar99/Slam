@@ -36,6 +36,7 @@ extern bool splitLogic;
 extern bool dontFillAss;
 extern bool dontPrintAss;
 extern bool ImplFilter;
+extern bool debugSAT;
 extern bool vcdRecursive;
 extern std::string selectedScope;
 extern bool silent;
@@ -46,6 +47,7 @@ extern std::string clsAlg;
 extern bool dumpStat;
 extern bool dontNormalize;
 extern bool debugCls;
+extern bool debugRob;
 extern bool divideStat;
 extern size_t multiplyTrace;
 

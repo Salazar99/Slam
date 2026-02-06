@@ -47,15 +47,15 @@ private:
   void dumpAssToFile(Context &context, Trace *trace,
                      std::vector<Assertion *> &assertions);
 
-  /** \brief for each sorting metric, gather the max values reached by any of the input assertions
+  /** \brief for each sorting metric, gather the max and min values reached by any of the input assertions
    */
-  std::unordered_map<std::string, double>
-  getMaxValuesForSortMetrics(std::vector<Metric *> &metrics,
+  std::unordered_map<std::string, std::pair<double, double>>
+  getminMaxValuesForSortMetrics(std::vector<Metric *> &metrics,
                              std::vector<Assertion *> &assertions);
 
   /** \brief for each filtering metric, gather the max values reached by any of the input assertions
    */
-  std::unordered_map<std::string, double> getMaxValuesForFilterMetrics(
+  std::unordered_map<std::string,std::pair<double, double>> getminMaxValuesForFilterMetrics(
       std::vector<std::pair<Metric *, double>> &metrics,
       std::vector<Assertion *> &assertions);
 

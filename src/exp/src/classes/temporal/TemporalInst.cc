@@ -15,7 +15,7 @@ Trinary TemporalInst::evaluate(size_t time) {
 std::pair<float, float> TemporalInst::evaluate_std_robustness(size_t time){
   float val = _prop->evaluate_robustness(time);
   val = (val == 0.0f || val == -0.0f) ? 0.0f : val;
-  std::cout << "TemporalInst robustness at time " << time << " is " << val << std::endl;
+  //std::cout << "TemporalInst robustness at time " << time << " is " << val << std::endl;
   return {val,0.0f};
 }
 
