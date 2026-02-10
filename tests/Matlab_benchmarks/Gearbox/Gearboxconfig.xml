@@ -10,7 +10,7 @@
 		<numeric clustering="K,5Max,0.01WCSS,><,==,>=,<=" clsEffort = "0.01" exp="OutTorque" loc="dt"/>
 		<numeric clustering="K,5Max,0.01WCSS,><,==,>=,<=" clsEffort = "0.01" exp="VehiSpeed" loc="dt"/>
 		<numeric clustering="K,5Max,0.01WCSS,><,==,>=,<=" clsEffort = "0.01" exp="TransRPM" loc="dt"/>
-		<numeric clustering="K,5Max,0.01WCSS,==,>=,<=" clsEffort = "0.1" exp="gear" loc="c"/>
+		<numeric clustering="K,5Max,0.01WCSS,==" clsEffort = "0.1" exp="gear" loc="c"/>
 
         <template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0]P0)" />
 

@@ -153,7 +153,7 @@ For csv:
 		<prop exp="!var5 || !var6" loc="c"/>
 		<prop exp="var8" loc="c"/>
 		
-		<numeric clsEffort="0.3" exp="var7 + var8" loc="c"/>
+		<numeric op="e,r,ge,le" clsEffort="0.3" exp="var7 + var8" loc="c"/>
 		
 		<template dtLimits="4A,3D,2D,-0.1E" exp="G({..F..}|-> F[0,0](P0))" /> 
 		
