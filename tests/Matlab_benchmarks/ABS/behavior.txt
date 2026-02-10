@@ -1,0 +1,8 @@
+time
+controller_out --> 1 if slpErr > 0
+SlpErr --> 0.2 - Slp
+Wheel_acc
+Brakepress
+WheelAngVel
+vehi_speed
+Stop_dist --> integral of the velocity (so not so interesting to mine)
