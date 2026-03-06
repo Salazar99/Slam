@@ -13,13 +13,13 @@ class  stlLexer : public antlr4::Lexer {
 public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
-    DT_ANDF = 8, STL_EVENTUALLY = 9, STL_ALWAYS = 10, RELEASE = 11, IMPL = 12, 
-    SCOL = 13, COL = 14, COMMA = 15, FIRST_MATCH = 16, SIGN = 17, DER = 18, 
-    LCPAREN = 19, RCPAREN = 20, LPAREN = 21, RPAREN = 22, VARIABLE = 23, 
-    NUMERIC = 24, VERILOG_BINARY = 25, GCC_BINARY = 26, HEX = 27, BOOLEAN = 28, 
-    PLUS = 29, MINUS = 30, TIMES = 31, DIV = 32, GT = 33, GE = 34, LT = 35, 
-    LE = 36, EQ = 37, NEQ = 38, BAND = 39, BOR = 40, BXOR = 41, NEG = 42, 
-    LSHIFT = 43, RSHIFT = 44, AND = 45, OR = 46, NOT = 47, WS = 48
+    DT_ANDF = 8, DT_ANDG = 9, STL_EVENTUALLY = 10, STL_ALWAYS = 11, RELEASE = 12, 
+    IMPL = 13, SCOL = 14, COL = 15, COMMA = 16, FIRST_MATCH = 17, SIGN = 18, 
+    DER = 19, LCPAREN = 20, RCPAREN = 21, LPAREN = 22, RPAREN = 23, VARIABLE = 24, 
+    NUMERIC = 25, VERILOG_BINARY = 26, GCC_BINARY = 27, HEX = 28, BOOLEAN = 29, 
+    PLUS = 30, MINUS = 31, TIMES = 32, DIV = 33, GT = 34, GE = 35, LT = 36, 
+    LE = 37, EQ = 38, NEQ = 39, BAND = 40, BOR = 41, BXOR = 42, NEG = 43, 
+    LSHIFT = 44, RSHIFT = 45, AND = 46, OR = 47, NOT = 48, WS = 49
   };
 
   explicit stlLexer(antlr4::CharStream *input);

@@ -7,6 +7,7 @@ file : STL_ALWAYS LPAREN implication RPAREN EOF
 
 
 implication :
+ DT_ANDG IMPL STL_EVENTUALLY LCPAREN interval RCPAREN tformula |
  DT_ANDF IMPL STL_EVENTUALLY LCPAREN interval RCPAREN tformula |
  tformula IMPL STL_EVENTUALLY LCPAREN interval RCPAREN tformula
 ;
@@ -30,6 +31,10 @@ interval: interval_placeholder COMMA interval_placeholder
 
 DT_ANDF
     : '('? '..F..' ')'?
+    ;
+
+DT_ANDG
+    : '('? '..G..' ')'?
     ;
 
 STL_EVENTUALLY: 'F'; 

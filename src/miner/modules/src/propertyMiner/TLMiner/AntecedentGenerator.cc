@@ -232,17 +232,14 @@ inline void AntecedentGenerator::findCandidates(
 inline std::vector<std::pair<CachedAllNumeric::EvalRet, size_t>>
 AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
                                              int depth) {
-  //FIXME: antecedentGenerator::gatherInterestingValue does absolutely nothing at the moment
-  //everything is done at template side
-  auto ret = t->gatherInterestingValue(cn, depth, -1);
-  //  std::cout << "Numeric: " << allNum2String(*cn) << std::endl;
-
-  //  for(auto &pair : ret){
-  //    std::cout <<"("<<pair.first._d << "," << pair.second <<") " ;
-  //  }
-
-  // std::cout << "\n";
-  return ret;
+  //Depending of the type of antecedent DT operator the gathering is slightly different
+  if(typeid(t->getDT()) == typeid(DTAndF)){
+    return t->gatherFInterestingValue(cn, depth, -1);
+  } else if(typeid(t->getDT()) == typeid(DTAndG)){
+    return t->gatherGInterestingValue(cn, depth, -1);
+  } else {
+    messageError("Unknown DT operator type in gatherInterestingValues");
+  }
 }
 
 inline std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>

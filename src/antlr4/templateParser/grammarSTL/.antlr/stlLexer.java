@@ -1,4 +1,4 @@
-// Generated from /home/magister/Ex-harm/src/antlr4/templateParser/grammarSTL/stl.g4 by ANTLR 4.9.2
+// Generated from /home/magister/Slam/src/antlr4/templateParser/grammarSTL/stl.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -8,16 +8,16 @@ import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
-@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
+@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
 public class stlLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.9.2", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.13.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, DT_ANDF=3, STL_EVENTUALLY=4, STL_ALWAYS=5, RELEASE=6, 
-		IMPL=7, SCOL=8, COL=9, COMMA=10, FIRST_MATCH=11;
+		T__0=1, T__1=2, DT_ANDF=3, DT_ANDG=4, STL_EVENTUALLY=5, STL_ALWAYS=6, 
+		RELEASE=7, IMPL=8, SCOL=9, COL=10, COMMA=11, FIRST_MATCH=12;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -28,23 +28,23 @@ public class stlLexer extends Lexer {
 
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"T__0", "T__1", "DT_ANDF", "STL_EVENTUALLY", "STL_ALWAYS", "RELEASE", 
-			"IMPL", "SCOL", "COL", "COMMA", "FIRST_MATCH"
+			"T__0", "T__1", "DT_ANDF", "DT_ANDG", "STL_EVENTUALLY", "STL_ALWAYS", 
+			"RELEASE", "IMPL", "SCOL", "COL", "COMMA", "FIRST_MATCH"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'P'", "'X'", null, "'F'", "'G'", "'release'", "'->'", "';'", "':'", 
-			"','", "'first_match'"
+			null, "'P'", "'X'", null, null, "'F'", "'G'", "'release'", "'->'", "';'", 
+			"':'", "','", "'first_match'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, "DT_ANDF", "STL_EVENTUALLY", "STL_ALWAYS", "RELEASE", 
-			"IMPL", "SCOL", "COL", "COMMA", "FIRST_MATCH"
+			null, null, null, "DT_ANDF", "DT_ANDG", "STL_EVENTUALLY", "STL_ALWAYS", 
+			"RELEASE", "IMPL", "SCOL", "COL", "COMMA", "FIRST_MATCH"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -106,25 +106,57 @@ public class stlLexer extends Lexer {
 	public ATN getATN() { return _ATN; }
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\rJ\b\1\4\2\t\2\4"+
-		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
-		"\13\4\f\t\f\3\2\3\2\3\3\3\3\3\4\5\4\37\n\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4"+
-		"\5\4(\n\4\3\5\3\5\3\6\3\6\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\b\3\b\3\b"+
-		"\3\t\3\t\3\n\3\n\3\13\3\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f"+
-		"\3\f\2\2\r\3\3\5\4\7\5\t\6\13\7\r\b\17\t\21\n\23\13\25\f\27\r\3\2\2\2"+
-		"K\2\3\3\2\2\2\2\5\3\2\2\2\2\7\3\2\2\2\2\t\3\2\2\2\2\13\3\2\2\2\2\r\3\2"+
-		"\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2\23\3\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2"+
-		"\3\31\3\2\2\2\5\33\3\2\2\2\7\36\3\2\2\2\t)\3\2\2\2\13+\3\2\2\2\r-\3\2"+
-		"\2\2\17\65\3\2\2\2\218\3\2\2\2\23:\3\2\2\2\25<\3\2\2\2\27>\3\2\2\2\31"+
-		"\32\7R\2\2\32\4\3\2\2\2\33\34\7Z\2\2\34\6\3\2\2\2\35\37\7*\2\2\36\35\3"+
-		"\2\2\2\36\37\3\2\2\2\37 \3\2\2\2 !\7\60\2\2!\"\7\60\2\2\"#\7H\2\2#$\7"+
-		"\60\2\2$%\7\60\2\2%\'\3\2\2\2&(\7+\2\2\'&\3\2\2\2\'(\3\2\2\2(\b\3\2\2"+
-		"\2)*\7H\2\2*\n\3\2\2\2+,\7I\2\2,\f\3\2\2\2-.\7t\2\2./\7g\2\2/\60\7n\2"+
-		"\2\60\61\7g\2\2\61\62\7c\2\2\62\63\7u\2\2\63\64\7g\2\2\64\16\3\2\2\2\65"+
-		"\66\7/\2\2\66\67\7@\2\2\67\20\3\2\2\289\7=\2\29\22\3\2\2\2:;\7<\2\2;\24"+
-		"\3\2\2\2<=\7.\2\2=\26\3\2\2\2>?\7h\2\2?@\7k\2\2@A\7t\2\2AB\7u\2\2BC\7"+
-		"v\2\2CD\7a\2\2DE\7o\2\2EF\7c\2\2FG\7v\2\2GH\7e\2\2HI\7j\2\2I\30\3\2\2"+
-		"\2\5\2\36\'\2";
+		"\u0004\u0000\fV\u0006\uffff\uffff\u0002\u0000\u0007\u0000\u0002\u0001"+
+		"\u0007\u0001\u0002\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004"+
+		"\u0007\u0004\u0002\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007"+
+		"\u0007\u0007\u0002\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b"+
+		"\u0007\u000b\u0001\u0000\u0001\u0000\u0001\u0001\u0001\u0001\u0001\u0002"+
+		"\u0003\u0002\u001f\b\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
+		"\u0001\u0002\u0001\u0002\u0001\u0002\u0003\u0002(\b\u0002\u0001\u0003"+
+		"\u0003\u0003+\b\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003"+
+		"\u0001\u0003\u0001\u0003\u0001\u0003\u0003\u00034\b\u0003\u0001\u0004"+
+		"\u0001\u0004\u0001\u0005\u0001\u0005\u0001\u0006\u0001\u0006\u0001\u0006"+
+		"\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0007"+
+		"\u0001\u0007\u0001\u0007\u0001\b\u0001\b\u0001\t\u0001\t\u0001\n\u0001"+
+		"\n\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b"+
+		"\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b"+
+		"\u0000\u0000\f\u0001\u0001\u0003\u0002\u0005\u0003\u0007\u0004\t\u0005"+
+		"\u000b\u0006\r\u0007\u000f\b\u0011\t\u0013\n\u0015\u000b\u0017\f\u0001"+
+		"\u0000\u0000Y\u0000\u0001\u0001\u0000\u0000\u0000\u0000\u0003\u0001\u0000"+
+		"\u0000\u0000\u0000\u0005\u0001\u0000\u0000\u0000\u0000\u0007\u0001\u0000"+
+		"\u0000\u0000\u0000\t\u0001\u0000\u0000\u0000\u0000\u000b\u0001\u0000\u0000"+
+		"\u0000\u0000\r\u0001\u0000\u0000\u0000\u0000\u000f\u0001\u0000\u0000\u0000"+
+		"\u0000\u0011\u0001\u0000\u0000\u0000\u0000\u0013\u0001\u0000\u0000\u0000"+
+		"\u0000\u0015\u0001\u0000\u0000\u0000\u0000\u0017\u0001\u0000\u0000\u0000"+
+		"\u0001\u0019\u0001\u0000\u0000\u0000\u0003\u001b\u0001\u0000\u0000\u0000"+
+		"\u0005\u001e\u0001\u0000\u0000\u0000\u0007*\u0001\u0000\u0000\u0000\t"+
+		"5\u0001\u0000\u0000\u0000\u000b7\u0001\u0000\u0000\u0000\r9\u0001\u0000"+
+		"\u0000\u0000\u000fA\u0001\u0000\u0000\u0000\u0011D\u0001\u0000\u0000\u0000"+
+		"\u0013F\u0001\u0000\u0000\u0000\u0015H\u0001\u0000\u0000\u0000\u0017J"+
+		"\u0001\u0000\u0000\u0000\u0019\u001a\u0005P\u0000\u0000\u001a\u0002\u0001"+
+		"\u0000\u0000\u0000\u001b\u001c\u0005X\u0000\u0000\u001c\u0004\u0001\u0000"+
+		"\u0000\u0000\u001d\u001f\u0005(\u0000\u0000\u001e\u001d\u0001\u0000\u0000"+
+		"\u0000\u001e\u001f\u0001\u0000\u0000\u0000\u001f \u0001\u0000\u0000\u0000"+
+		" !\u0005.\u0000\u0000!\"\u0005.\u0000\u0000\"#\u0005F\u0000\u0000#$\u0005"+
+		".\u0000\u0000$%\u0005.\u0000\u0000%\'\u0001\u0000\u0000\u0000&(\u0005"+
+		")\u0000\u0000\'&\u0001\u0000\u0000\u0000\'(\u0001\u0000\u0000\u0000(\u0006"+
+		"\u0001\u0000\u0000\u0000)+\u0005(\u0000\u0000*)\u0001\u0000\u0000\u0000"+
+		"*+\u0001\u0000\u0000\u0000+,\u0001\u0000\u0000\u0000,-\u0005.\u0000\u0000"+
+		"-.\u0005.\u0000\u0000./\u0005G\u0000\u0000/0\u0005.\u0000\u000001\u0005"+
+		".\u0000\u000013\u0001\u0000\u0000\u000024\u0005)\u0000\u000032\u0001\u0000"+
+		"\u0000\u000034\u0001\u0000\u0000\u00004\b\u0001\u0000\u0000\u000056\u0005"+
+		"F\u0000\u00006\n\u0001\u0000\u0000\u000078\u0005G\u0000\u00008\f\u0001"+
+		"\u0000\u0000\u00009:\u0005r\u0000\u0000:;\u0005e\u0000\u0000;<\u0005l"+
+		"\u0000\u0000<=\u0005e\u0000\u0000=>\u0005a\u0000\u0000>?\u0005s\u0000"+
+		"\u0000?@\u0005e\u0000\u0000@\u000e\u0001\u0000\u0000\u0000AB\u0005-\u0000"+
+		"\u0000BC\u0005>\u0000\u0000C\u0010\u0001\u0000\u0000\u0000DE\u0005;\u0000"+
+		"\u0000E\u0012\u0001\u0000\u0000\u0000FG\u0005:\u0000\u0000G\u0014\u0001"+
+		"\u0000\u0000\u0000HI\u0005,\u0000\u0000I\u0016\u0001\u0000\u0000\u0000"+
+		"JK\u0005f\u0000\u0000KL\u0005i\u0000\u0000LM\u0005r\u0000\u0000MN\u0005"+
+		"s\u0000\u0000NO\u0005t\u0000\u0000OP\u0005_\u0000\u0000PQ\u0005m\u0000"+
+		"\u0000QR\u0005a\u0000\u0000RS\u0005t\u0000\u0000ST\u0005c\u0000\u0000"+
+		"TU\u0005h\u0000\u0000U\u0018\u0001\u0000\u0000\u0000\u0005\u0000\u001e"+
+		"\'*3\u0000";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

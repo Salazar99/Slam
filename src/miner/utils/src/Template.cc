@@ -451,7 +451,8 @@ bool Template::isFullyInstantiated() {
           getNumPlaceholders(slam::Location::AntCon)) == 0 &&
          _dtOp.second == nullptr;
 }
-std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInterestingValue(CachedAllNumeric *cn, int depth, int width) {
+
+std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherFInterestingValue(CachedAllNumeric *cn, int depth, int width) {
 
   DTOperator *template_dt = _dtOp.second;
 
@@ -459,7 +460,6 @@ std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInteres
   Proposition *fc = new BooleanConstant(false, VarType::Bool, 1, 0);
   std::vector<size_t> iv_suffix;  
 
-  //Automaton::Node *cn = _ant->_root;
   slam::Implication * impl = _impl;
   size_t currTime = 0;
   template_dt->addItem(tc,{0,0},depth);
@@ -479,6 +479,58 @@ std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherInteres
       for(size_t iv : iv_suffix){
         if(iv >= currTime && ((iv - currTime) <= _limits._maxDistance) && ((iv - currTime) >= _limits._minDistance)){
           ret.push_back(std::make_pair(value,(size_t)iv-currTime));
+          break;
+        }
+      }
+  }
+
+  delete tc;
+  delete fc;
+  return ret;
+  
+}
+
+std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherGInterestingValue(CachedAllNumeric *cn, int depth, int width) {
+
+  DTOperator *template_dt = _dtOp.second;
+
+  Proposition *tc = new BooleanConstant(true, VarType::Bool, 1, 0);
+  Proposition *fc = new BooleanConstant(false, VarType::Bool, 1, 0);
+  std::vector<size_t> iv_suffix;  
+
+  slam::Implication * impl = _impl;
+  size_t currTime = 0;
+  //add the true constant as first item of the template decision tree, to be able to evaluate the antecedent alone and get the interesting values for the consequent
+  template_dt->addItem(tc,{0,0},depth);
+
+  //This flag indicates that at the moment we are in a sequence of "interesting" values
+  bool true_seq = false;
+
+  while (currTime < _max_length) {
+    if(true_seq){
+      //if the sequence is interrupted, reset the flag
+      if(!(impl->evaluate_ant(currTime) == Trinary::T && impl->evaluate_con(currTime) == Trinary::T))
+        true_seq = false;
+    }else{
+      //if we are not in a sequence of consecutive ivs, check if the current value is interesting and eventully add it 
+      if((impl->evaluate_ant(currTime) == Trinary::T && impl->evaluate_con(currTime) == Trinary::T))
+        iv_suffix.push_back(currTime);
+        true_seq = true;
+    }   
+        // each currTime we change state, currTime increases by 1
+    currTime++;
+  }
+
+  template_dt->popItem(depth);
+  //now we have a vector of interesting values for the already instantiated part of the template
+  //iterate on cn trace values, to get {value,time} pairs
+  std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> ret;
+  for(currTime = 0; currTime < _max_length; currTime++){
+      CachedAllNumeric::EvalRet value = cn->evaluate(currTime);
+      for(size_t iv : iv_suffix){
+        if(iv >= currTime && ((iv - currTime) <= _limits._maxDistance) && ((iv - currTime) >= _limits._minDistance)){
+          ret.push_back(std::make_pair(value,(size_t)iv-currTime));
+          //get only the value for the immediate successor of current time 
           break;
         }
       }

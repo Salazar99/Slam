@@ -14,6 +14,7 @@
 
 #include "Automaton.hh"
 #include "DTAndF.hh"
+#include "DTAndG.hh"
 #include "Location.hh"
 #include "PermGenerator.hh"
 #include "Semaphore.hh"
@@ -194,7 +195,10 @@ public:
   size_t gatherInterestingValue(size_t time, int depth, int width);
 
   std::vector<std::pair<expression::CachedAllNumeric::EvalRet, size_t>>
-  gatherInterestingValue(CachedAllNumeric *cn, int depth, int width);
+  gatherFInterestingValue(CachedAllNumeric *cn, int depth, int width);
+  
+  std::vector<std::pair<expression::CachedAllNumeric::EvalRet, size_t>>
+  gatherGInterestingValue(CachedAllNumeric *cn, int depth, int width);
 
   void subPropInAssertion(Proposition *original, Proposition *newProp);
 

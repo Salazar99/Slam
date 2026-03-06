@@ -44,6 +44,19 @@ void StlParserHandler::exitImplication(stlParser::ImplicationContext *ctx) {
                                             _template, _template->_limits));
     _tfStack.push(new Implication(te, teformulaCon));
     return;
+  } else if (ctx->tformula().size() == 1 && ctx->DT_ANDG() != nullptr) {
+    //..G..
+    TemporalExp *te = new TemporalAnd();
+    TemporalExp *teformulaCon =
+        new Eventually(_tfStack.top(), std::pair<size_t, size_t>(0, 0), _trace);
+    _tfStack.pop();
+
+    std::string ph = "dtAndG";
+    _template->_dtOp =
+        std::make_pair(ph, new slam::DTAndG(dynamic_cast<TemporalAnd *>(te),
+                                            _template, _template->_limits));
+    _tfStack.push(new Implication(te, teformulaCon));
+    return;
   } else if (ctx->tformula().size() == 2) {
     std::pair<size_t, size_t> intv = *(_intervals[_intervalNames.top()]);
     _intervalNames.pop();
