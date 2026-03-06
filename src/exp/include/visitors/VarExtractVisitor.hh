@@ -65,8 +65,8 @@ std::vector<std::pair<std::string,size_t>> get_vars();
     void visit(LogicBitSelector &o) override;
     void visit(LogicToBool &o) override;
     void visit(LogicToNumeric &o) override;
-       void visit(LogicLShift &o) override;
-     void visit(LogicRShift &o) override;
+    void visit(LogicLShift &o) override;
+    void visit(LogicRShift &o) override;
 
   protected:
      std::vector<std::pair<std::string,size_t>> _vars;

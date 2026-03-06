@@ -157,4 +157,12 @@ void CopyVisitor::visit(Eventually &o) {
   _te = copy;
 }
 
+void CopyVisitor::visit(Globally &o) {
+  auto item = o.getOperand();
+  auto *copy = new Globally(o);
+  item->acceptVisitor(*this);
+  copy->setOperand(_te);
+  _te = copy;
+}
+
 } // namespace expression

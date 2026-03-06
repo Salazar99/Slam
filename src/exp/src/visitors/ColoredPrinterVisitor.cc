@@ -258,6 +258,14 @@ void ColoredPrinterVisitor::visit(Eventually &o) {
   _ss << TEMP(")");
 }
 
+void ColoredPrinterVisitor::visit(Globally &o) {
+  _ss << TEMP("G[") << o.getInterval().first << TEMP(",")
+      << o.getInterval().second << TEMP("](");
+  o.getItems()[0]->acceptVisitor(*this);
+  _ss << TEMP(")");
+}
+
+
 #define DERIVATIVE(TYPE)                                                       \
   void ColoredPrinterVisitor::visit(TYPE &o) {                                 \
     _ss << TIMPL("@(");                                                        \

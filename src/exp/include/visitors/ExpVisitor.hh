@@ -75,6 +75,7 @@ public:
   virtual void visit(TemporalInst &o);
   virtual void visit(Placeholder &o);
   virtual void visit(Eventually &o);
+  virtual void visit(Globally &o);
   virtual void visit(Implication &o);
 
 protected:

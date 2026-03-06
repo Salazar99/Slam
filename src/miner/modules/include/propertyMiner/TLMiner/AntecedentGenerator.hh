@@ -110,11 +110,11 @@ private:
                         double currEntropy);
 
   /// @brief find choices to split the search space
-  inline void findCandidates(size_t candidate, DecTreeVariables &dcVariables,
-                             Template *t,
-                             std::vector<DiscoveredLeaf> &discLeaves,
-                             std::vector<CandidateDec> &igs, int depth,
-                             double currEntropy);
+  // inline void findCandidates(size_t candidate, DecTreeVariables &dcVariables,
+                            //  Template *t,
+                            //  std::vector<DiscoveredLeaf> &discLeaves,
+                            //  std::vector<CandidateDec> &igs, int depth,
+                            //  double currEntropy);
 
   /// @brief find choices to split the search space, use numerics instead of props, uses gatherPropositionsFromNumerics
   inline void findCandidatesNumeric(size_t candidate,

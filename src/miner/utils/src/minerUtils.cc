@@ -357,8 +357,8 @@ genPropsThroughClustering(
   std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> ret;
   std::pair<VarType, size_t> type = cn->getType();
 
-  if (cn->getType().first == VarType::Numeric) {
-    if (cn->getType().second == 32) {
+  if (type.first == VarType::Numeric) {
+    if (type.second == 32) {
       std::vector<std::pair<float, float>> elements;
       for (auto &iv : ivs) {
         elements.push_back(std::make_pair(iv.first._f, (float)iv.second));
@@ -375,7 +375,7 @@ genPropsThroughClustering(
           clsElbow<double>(elements, cn->_clsEffort, allNum2String(*cn));
       ret = makeNumericRange<double>(clusters, type, cn);
     }
-  } else if (cn->getType().first == VarType::SLogic) {
+  } else if (type.first == VarType::SLogic) {
     std::vector<std::pair<SLogic, SLogic>> elements;
     for (auto &iv : ivs) {
       elements.push_back(std::make_pair(iv.first._s, (SLogic)iv.second));
@@ -383,7 +383,7 @@ genPropsThroughClustering(
     auto clusters =
         clsElbow<SLogic>(elements, cn->_clsEffort, allNum2String(*cn));
     ret = makeLogicRange<SLogic>(clusters, type, cn);
-  } else if (cn->getType().first == VarType::ULogic) {
+  } else if (type.first == VarType::ULogic) {
     std::vector<std::pair<SLogic, SLogic>> elements;
     for (auto &iv : ivs) {
       elements.push_back(std::make_pair(iv.first._u, (SLogic)iv.second));

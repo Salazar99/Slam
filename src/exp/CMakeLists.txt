@@ -13,6 +13,7 @@ SET(EXP_SRCS
     src/classes/expression/TypeCast.cc
     #temporal
     src/classes/temporal/Eventually.cc
+    src/classes/temporal/Globally.cc
     src/classes/temporal/Implication.cc
     src/classes/temporal/TemporalInst.cc
     src/classes/temporal/Placeholder.cc

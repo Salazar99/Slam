@@ -145,10 +145,10 @@ void AntecedentGenerator::makeAntecedents(
 #endif
 }
 
-inline void AntecedentGenerator::findCandidates(
-    size_t candidate, DecTreeVariables &dcVariables, Template *t,
-    std::vector<DiscoveredLeaf> &discLeaves, std::vector<CandidateDec> &igs,
-    int depth, double currEntropy) {
+// inline void AntecedentGenerator::findCandidates(
+    // size_t candidate, DecTreeVariables &dcVariables, Template *t,
+    // std::vector<DiscoveredLeaf> &discLeaves, std::vector<CandidateDec> &igs,
+    // int depth, double currEntropy) {
   //  // debug
   //  // std::cout << "RIG: " << RIG << "\n";
   //  // std::cout << "_condEnt: " << condEnt << "\n";
@@ -227,7 +227,7 @@ inline void AntecedentGenerator::findCandidates(
   //  // std::cout << "_condEnt: " << condEnt << "\n";
   //  // std::cout <<"\t\t\t\t\t\t"
   //  // <<__func__<<"<---------"<<t->getColoredAssertion() << "\n";
-}
+// }
 
 inline std::vector<std::pair<CachedAllNumeric::EvalRet, size_t>>
 AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
@@ -239,6 +239,7 @@ AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
     return t->gatherGInterestingValue(cn, depth, -1);
   } else {
     messageError("Unknown DT operator type in gatherInterestingValues");
+    return {};
   }
 }
 
@@ -387,7 +388,7 @@ void AntecedentGenerator::_runDecisionTree(
   std::vector<DiscoveredLeaf> discLeaves;
   // getting the relative information gain (RIG) for each unused variable X
   // RIG (Y|X) = (H(Y) - H(Y|X)) / H(Y)
-  auto candidate = unusedVars.begin();
+  //auto candidate = unusedVars.begin();
   auto candidateNumeric = unusedNumerics.begin();
 
   std::vector<CandidateDec> igs;
@@ -395,12 +396,13 @@ void AntecedentGenerator::_runDecisionTree(
   //std::cout << "----->" << t->getColoredAssertion() << "\n";
 
   if (template_dt->getNChoices() < template_dt->getLimits()._maxAll) {
-    for (; candidate != unusedVars.end() ||
+    for (;
+      // candidate != unusedVars.end() ||
            candidateNumeric != unusedNumerics.end();) {
       if (template_dt->canInsertAtDepth(-1)) {
-        if (candidate != unusedVars.end())
-          findCandidates(*candidate, dcVariables, t, discLeaves, igs, -1,
-                         currEntropy);
+        // if (candidate != unusedVars.end())
+          // findCandidates(*candidate, dcVariables, t, discLeaves, igs, -1,
+                        //  currEntropy);
 
         if (candidateNumeric != unusedNumerics.end()) {
           findCandidatesNumeric(*candidateNumeric, numericCandidates, t,
@@ -408,9 +410,9 @@ void AntecedentGenerator::_runDecisionTree(
         }
       }
 
-      if (candidate != unusedVars.end())
-        candidate++;
-
+      // if (candidate != unusedVars.end())
+      //  candidate++;
+      // 
       if (candidateNumeric != unusedNumerics.end())
         candidateNumeric++;
 

@@ -79,6 +79,7 @@ public:
   virtual void visit(TemporalInst &o) override;
   virtual void visit(Placeholder &o) override;
   virtual void visit(Eventually &o) override;
+  virtual void visit(Globally &o) override;
   virtual void visit(Implication &o) override;
 
 private:

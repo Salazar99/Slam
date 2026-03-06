@@ -78,6 +78,7 @@ public:
   void visit(TemporalNot &o);
   void visit(Implication &o);
   void visit(Eventually &o);
+  void visit(Globally &o);
 
   //Misc
   void visit(LogicDerivative &o) override;

@@ -513,9 +513,10 @@ std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherGIntere
         true_seq = false;
     }else{
       //if we are not in a sequence of consecutive ivs, check if the current value is interesting and eventully add it 
-      if((impl->evaluate_ant(currTime) == Trinary::T && impl->evaluate_con(currTime) == Trinary::T))
+      if((impl->evaluate_ant(currTime) == Trinary::T && impl->evaluate_con(currTime) == Trinary::T)){
         iv_suffix.push_back(currTime);
         true_seq = true;
+      }
     }   
         // each currTime we change state, currTime increases by 1
     currTime++;

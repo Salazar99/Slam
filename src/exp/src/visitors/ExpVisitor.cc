@@ -84,6 +84,7 @@ TEMPORAL_NODE(TemporalAnd)
 TEMPORAL_NODE(TemporalOr)
 TEMPORAL_NODE(Implication)
 TEMPORAL_NODE(Eventually)
+TEMPORAL_NODE(Globally)
 
 void ExpVisitor::visit(TemporalNot &o) {
   o.getItem()->acceptVisitor(*this);

@@ -13,6 +13,7 @@ SET(MINER_UTILS_SRC src/Trace.cc src/DataType.cc src/Template.cc
     #	src/Hstring.cc  
     src/EdgeProposition.cc
     src/DTAndF.cc
+    src/DTAndG.cc
     src/minerUtils.cc
     src/Context.cc
     src/Assertion.cc

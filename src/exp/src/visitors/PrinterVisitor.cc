@@ -258,6 +258,12 @@ void PrinterVisitor::visit(Eventually &o) {
   o.getItems()[0]->acceptVisitor(*this);
   _ss << ")";
 }
+void PrinterVisitor::visit(Globally &o) {
+  _ss << "G[" << o.getInterval().first << "," << o.getInterval().second << "](";
+  o.getItems()[0]->acceptVisitor(*this);
+  _ss << ")";
+}
+
 
 void PrinterVisitor::visit(TemporalOr &o) {
   if (o.getItems().empty()) {
