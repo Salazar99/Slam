@@ -403,4 +403,142 @@ genPropsThroughClustering(
   //  }
   return ret;
 }
+//Hash function Szudzik's Pairing Function = b^2 + a
+size_t hashCluster(const std::pair<size_t,size_t> &intv){
+    return intv.second * intv.second + intv.first;
+}
+
+std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+genPropsThroughClustering3D(
+    std::vector<std::pair<std::pair<CachedAllNumeric::EvalRet, size_t>, size_t>> &ivs,
+    CachedAllNumeric *cn, size_t max_length) {
+
+  //return var
+  std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> ret;
+  
+  std::pair<VarType, size_t> type = cn->getType();
+
+  if (type.first == VarType::Numeric) {
+    //We are in the Numeric float case
+    if (type.second == 32) {
+      //We need to perform clustering for each segment
+      //Each element is a vector of pairs of a segment
+      std::vector<std::vector<std::pair<float, float>>> elements;
+
+      //Maps clusters that are present in each segment analyzed, contains list of numeric pairs and the temporal interval
+      // Key: hash
+      // Value: { Vector of points, {Cluster boundaries, Last seen segment ID} } 
+      std::unordered_map<size_t, std::pair<std::pair<float, float>, std::pair<std::pair<size_t, size_t>, size_t>>> accumulation_map;
+      //List of hashes with number of segments in which the cluster is present
+      std::unordered_map<size_t, size_t> hashes_hits;
+
+
+      //Group elements by segment
+      for (auto &iv : ivs) {
+        auto unpacked = iv.first;
+        auto segment = iv.second;
+        elements[segment].push_back(std::make_pair(unpacked.first._f, (float)unpacked.second));
+      }
+  
+      
+      // 3. Process segments
+      for (size_t i = 0; i < elements.size(); ++i) {
+          //If segment is empty skip it (maybe we could just break, since if a segment is empty nothing will be kept)
+          if (elements[i].empty()) continue;
+
+          //Launch clustering for this segment
+          auto c = clsElbow<float>(elements[i], cn->_clsEffort, allNum2String(*cn));
+
+          //For each generated cluster
+          for (auto &cluster : c) {
+              //Hash cluster using its temporal interval
+              size_t hash = hashCluster(cluster.second);
+
+              if (i == 0) {
+                  // First segment: Always add
+                  //Store the minimum left bound
+                  accumulation_map[hash].first.first = std::min(cluster.first.first, accumulation_map[hash].first.first);
+                  //Store the maximum right bound
+                  accumulation_map[hash].first.second = std::max(cluster.first.second, accumulation_map[hash].first.second);
+                  accumulation_map[hash].second.first = cluster.second;
+                  accumulation_map[hash].second.second = i; // last_seen_segment
+              } else{
+
+                  auto it = accumulation_map.find(hash);
+                  if (it == accumulation_map.end()) {
+                    // Subsequent segments: Update ONLY if it survived previous prunes
+                    it->second.first.first = std::min(cluster.first.first, accumulation_map[hash].first.first);
+                    it->second.first.second = std::max(cluster.first.second, accumulation_map[hash].first.second);
+                    it->second.second.first = cluster.second;
+                    //update last_seen
+                    it->second.second.second = i;
+                  }
+              }
+              //Pruning 
+              if (i > 0) {
+                for (auto it = accumulation_map.begin(); it != accumulation_map.end(); ) {
+                  //if not seen in this segment then remove it 
+                  if (it->second.second.second != i) {
+                    it = accumulation_map.erase(it); // erase returns the next valid iterator
+                  } else {
+                    //otherwise skip
+                    ++it;
+                  }
+                }
+              }
+          }   
+      }
+
+      //Merge clusters that have same temporal interval and are close in value (e.g., less than 10% of the range of values)
+      std::vector<std::pair<std::pair<float, float>, std::pair<size_t, size_t>>> clusters;
+      for (auto &entry : accumulation_map) {
+        auto tmp = std::make_pair(entry.second.first, entry.second.second.first);
+        clusters.push_back(tmp);
+      }
+
+      ret = makeNumericRange<float>(clusters, type, cn);
+    }
+  }
+      /*      
+    } else {
+      std::vector<std::pair<double, double>> elements;
+      for (auto &iv : ivs) {
+        auto unpacked = iv.first;
+        elements.push_back(std::make_pair(unpacked.first._d, (double)unpacked.second));
+      }
+      auto clusters =
+          clsElbow<double>(elements, cn->_clsEffort, allNum2String(*cn));
+      ret = makeNumericRange<double>(clusters, type, cn);
+    }
+  } else if (type.first == VarType::SLogic) {
+    std::vector<std::pair<SLogic, SLogic>> elements;
+    for (auto &iv : ivs) {
+      auto unpacked = iv.first;
+      elements.push_back(std::make_pair(unpacked.first._s, (SLogic)unpacked.second));
+    }
+    auto clusters =
+        clsElbow<SLogic>(elements, cn->_clsEffort, allNum2String(*cn));
+    ret = makeLogicRange<SLogic>(clusters, type, cn);
+  } else if (type.first == VarType::ULogic) {
+    std::vector<std::pair<SLogic, SLogic>> elements;
+    for (auto &iv : ivs) {
+      auto unpacked = iv.first;
+      elements.push_back(std::make_pair(unpacked.first._u, (SLogic)unpacked.second));
+    }
+    std::vector<std::pair<std::pair<SLogic, SLogic>, std::pair<size_t, size_t>>>
+        clusters =
+            clsElbow<SLogic>(elements, cn->_clsEffort, allNum2String(*cn));
+    ret = makeLogicRange<SLogic>(clusters, type, cn);
+  } else {
+    messageError("Unknown type in CachedAllNumeric");
+  }
+*/
+  //  debug
+  //std::cout << "Clustered:" << "\n";
+  //  for (auto &[p,inter] : ret) {
+  //  std::cout << prop2String(*p) << "Interval: " <<inter.first << " , " << inter.second <<std::endl;
+  //  }
+  return ret;
+}
+
 } // namespace slam

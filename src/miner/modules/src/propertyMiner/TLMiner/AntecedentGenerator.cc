@@ -229,19 +229,19 @@ void AntecedentGenerator::makeAntecedents(
   //  // <<__func__<<"<---------"<<t->getColoredAssertion() << "\n";
 // }
 
-inline std::vector<std::pair<CachedAllNumeric::EvalRet, size_t>>
-AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
-                                             int depth) {
-  //Depending of the type of antecedent DT operator the gathering is slightly different
-  if(typeid(t->getDT()) == typeid(DTAndF)){
-    return t->gatherFInterestingValue(cn, depth, -1);
-  } else if(typeid(t->getDT()) == typeid(DTAndG)){
-    return t->gatherGInterestingValue(cn, depth, -1);
-  } else {
-    messageError("Unknown DT operator type in gatherInterestingValues");
-    return {};
-  }
-}
+// inline std::vector<std::pair<CachedAllNumeric::EvalRet, size_t>>
+// AntecedentGenerator::gatherInterestingValues(Template *t, CachedAllNumeric *cn,
+                                            //  int depth) {
+// Depending of the type of antecedent DT operator the gathering is slightly different
+  // if(typeid(t->getDT()) == typeid(DTAndF)){
+    // return t->gatherFInterestingValue(cn, depth, -1);
+  // } else if(typeid(t->getDT()) == typeid(DTAndG)){
+    // return t->gatherGInterestingValue(cn, depth, -1);
+  // } else {
+    // messageError("Unknown DT operator type in gatherInterestingValues");
+    // return {};
+  // }
+// }
 
 inline std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
 AntecedentGenerator::gatherPropositionsFromNumerics(
@@ -249,20 +249,40 @@ AntecedentGenerator::gatherPropositionsFromNumerics(
     std::vector<Proposition *> &genProps) {
 
   // 1. Gather IV
-  std::vector<std::pair<CachedAllNumeric::EvalRet, size_t>> ivs =
-      gatherInterestingValues(t, cn, depth);
-  // 2. Generation of propositions
-  std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> propsWintv;
-  if (!ivs.empty()) {
-    propsWintv = genPropsThroughClustering(ivs, cn, t->_max_length);
+  // Depending of the type of antecedent DT operator the gathering is slightly different
+  if(typeid(t->getDT()) == typeid(DTAndF)){
+    std::vector<std::pair<CachedAllNumeric::EvalRet, size_t>> ivs = t->gatherFInterestingValue(cn, depth, -1);
+    // 2. Generation of propositions
+    std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> propsWintv;
+    if (!ivs.empty()) {
+      propsWintv = genPropsThroughClustering(ivs, cn, t->_max_length);
+    }
+    // keep track of generated props to know what to delete
+    for (auto &item : propsWintv)
+      genProps.push_back(item.first);
+
+    // 3. Selection of best candidates
+    return propsWintv;
+
+
+  } else if(typeid(t->getDT()) == typeid(DTAndG)){
+    std::vector<std::pair<std::pair<CachedAllNumeric::EvalRet, size_t>, size_t>> ivs = t->gatherGInterestingValue(cn, depth, -1);
+    // 2. Generation of propositions
+    std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> propsWintv;
+    if (!ivs.empty()) {
+      propsWintv = genPropsThroughClustering3D(ivs, cn, t->_max_length);
+    }
+    // keep track of generated props to know what to delete
+    for (auto &item : propsWintv)
+      genProps.push_back(item.first);
+
+    // 3. Selection of best candidates
+    return propsWintv;
+
+  } else {
+    messageError("Unknown DT operator type in gatherInterestingValues");
+    return {};
   }
-  // keep track of generated props to know what to delete
-  for (auto &item : propsWintv)
-    genProps.push_back(item.first);
-
-  // 3. Selection of best candidates
-
-  return propsWintv;
 }
 
 inline void AntecedentGenerator::findCandidatesNumeric(

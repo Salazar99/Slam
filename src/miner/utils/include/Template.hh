@@ -190,14 +190,18 @@ public:
   void check();
 
   TemporalExp *getPropByToken(const std::string &token);
-  Automaton *getAntecedentAutomaton();
 
-  size_t gatherInterestingValue(size_t time, int depth, int width);
-
+  /** \brief gathers the interesting values for the F operator\
+   * \return a vector of pairs {value, time to the next iv}
+  */
   std::vector<std::pair<expression::CachedAllNumeric::EvalRet, size_t>>
   gatherFInterestingValue(CachedAllNumeric *cn, int depth, int width);
   
-  std::vector<std::pair<expression::CachedAllNumeric::EvalRet, size_t>>
+  
+  /** \brief gathers the interesting values for the G operator\
+   * \return a vector of tuples {value, time to the next iv, segment number}
+  */
+  std::vector<std::pair<std::pair<CachedAllNumeric::EvalRet, size_t>, size_t>>
   gatherGInterestingValue(CachedAllNumeric *cn, int depth, int width);
 
   void subPropInAssertion(Proposition *original, Proposition *newProp);

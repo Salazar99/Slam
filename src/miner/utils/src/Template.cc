@@ -490,7 +490,8 @@ std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherFIntere
   
 }
 
-std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherGInterestingValue(CachedAllNumeric *cn, int depth, int width) {
+//TODO: fix the return type to include the segment number and modify the code accordingly in AntecedentGenerator
+std::vector<std::pair<std::pair<CachedAllNumeric::EvalRet,size_t>,size_t>> Template::gatherGInterestingValue(CachedAllNumeric *cn, int depth, int width) {
 
   DTOperator *template_dt = _dtOp.second;
 
@@ -525,12 +526,12 @@ std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherGIntere
   template_dt->popItem(depth);
   //now we have a vector of interesting values for the already instantiated part of the template
   //iterate on cn trace values, to get {value,time} pairs
-  std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> ret;
+  std::vector<std::pair<std::pair<CachedAllNumeric::EvalRet,size_t>,size_t>> ret;
   for(currTime = 0; currTime < _max_length; currTime++){
-      CachedAllNumeric::EvalRet value = cn->evaluate(currTime);
+      CachedAllNumeric::EvalRet value = cn->evaluate(currTime);    
       for(size_t iv : iv_suffix){
         if(iv >= currTime && ((iv - currTime) <= _limits._maxDistance) && ((iv - currTime) >= _limits._minDistance)){
-          ret.push_back(std::make_pair(value,(size_t)iv-currTime));
+          ret.push_back(std::make_pair(std::make_pair(value,(size_t)iv-currTime), std::distance(iv_suffix.begin(), std::find(iv_suffix.begin(), iv_suffix.end(), iv))));
           //get only the value for the immediate successor of current time 
           break;
         }
