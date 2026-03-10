@@ -125,7 +125,8 @@ private:
                                     double currEntropy);
 
   /// @brief find choices through clustering, uses gatherPropositionsFromNumerics
-  inline std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+  /// @return vector of: Propositions, shift for the already instantiated part, interval of validity for the new proposition
+  inline  std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>>
   gatherPropositionsFromNumerics(CachedAllNumeric *cn, Template *t, int depth,
                                  std::vector<Proposition *> &genProps);
 

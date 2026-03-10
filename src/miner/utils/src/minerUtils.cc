@@ -387,7 +387,7 @@ genPropsThroughClustering(
       }
       auto clusters =
           clsElbow<float>(elements, cn->_clsEffort, allNum2String(*cn));
-      ret = makeNumericRange<float>(clusters, type, cn);
+      ret = makeNumericRange<float>(clusters, type, cn, false);
     } else {
       std::vector<std::pair<double, double>> elements;
       for (auto &iv : ivs) {
@@ -395,25 +395,12 @@ genPropsThroughClustering(
       }
       auto clusters =
           clsElbow<double>(elements, cn->_clsEffort, allNum2String(*cn));
-      ret = makeNumericRange<double>(clusters, type, cn);
+      ret = makeNumericRange<double>(clusters, type, cn, false);
     }
   } else if (type.first == VarType::SLogic) {
-    std::vector<std::pair<SLogic, SLogic>> elements;
-    for (auto &iv : ivs) {
-      elements.push_back(std::make_pair(iv.first._s, (SLogic)iv.second));
-    }
-    auto clusters =
-        clsElbow<SLogic>(elements, cn->_clsEffort, allNum2String(*cn));
-    ret = makeLogicRange<SLogic>(clusters, type, cn);
+    messageError("SLogic type unsupported in this operation");
   } else if (type.first == VarType::ULogic) {
-    std::vector<std::pair<SLogic, SLogic>> elements;
-    for (auto &iv : ivs) {
-      elements.push_back(std::make_pair(iv.first._u, (SLogic)iv.second));
-    }
-    std::vector<std::pair<std::pair<SLogic, SLogic>, std::pair<size_t, size_t>>>
-        clusters =
-            clsElbow<SLogic>(elements, cn->_clsEffort, allNum2String(*cn));
-    ret = makeLogicRange<SLogic>(clusters, type, cn);
+    messageError("ULogic type unsupported in operation");
   } else {
     messageError("Unknown type in CachedAllNumeric");
   }
@@ -436,7 +423,7 @@ genPropsThroughClustering3D(
     CachedAllNumeric *cn, size_t max_length) {
 
   //return var
-  std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> ret;
+  std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>> ret;
   
   std::pair<VarType, size_t> type = cn->getType();
 
@@ -518,7 +505,7 @@ genPropsThroughClustering3D(
         clusters.push_back(tmp);
       }
 
-      ret = makeNumericRange<float>(clusters, type, cn);   
+      ret = makeNumericRange<float>(clusters, type, cn, true);   
 
     } else {
       //We need to perform clustering for each segment
@@ -594,7 +581,7 @@ genPropsThroughClustering3D(
         clusters.push_back(tmp);
       }
 
-      ret = makeNumericRange<double>(clusters, type, cn);
+      ret = makeNumericRange<double>(clusters, type, cn, true);
     }
   } else if (type.first == VarType::SLogic) {
     messageError("SLogic type unsupported for this type of operator");

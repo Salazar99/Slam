@@ -39,10 +39,10 @@ void DTAndF::addLeaf(Proposition *p, size_t id, bool second, int depth) {
   _leaves[id].first.second = p;
 }
 
-void DTAndF::removeItems() { _choices->removeItems(); _t->setConsequentInterval(std::pair(0,0)); }
+void DTAndF::removeItems() { _choices->removeItems(); _t->setConsequentInterval(std::make_pair(0,0)); }
 
 
-void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> interval,
+void DTAndF::addItem(Proposition *p, std::pair<std::pair<size_t, size_t>,std::pair<size_t,size_t>> interval,
                      int depth) {
 
   auto items = _choices->getItems();
@@ -50,15 +50,15 @@ void DTAndF::addItem(Proposition *p, std::pair<size_t, size_t> interval,
   for (size_t i = 0; i < items.size(); i++) {
     auto e = dynamic_cast<Eventually *>(items[i]);
     auto currInterval = e->getInterval();
-    e->setInterval(std::make_pair(currInterval.first + interval.first,
-                                  currInterval.second + interval.second));
+    e->setInterval(std::make_pair(currInterval.first + interval.second.first,
+                                  currInterval.second + interval.second.second));
   }
 
   //shift consequent interval
   auto currInterval = _t->getConsequentInterval();
   _t->setConsequentInterval(
-      std::make_pair(currInterval.first + interval.first,
-                     currInterval.second + interval.second));
+      std::make_pair(currInterval.first + interval.second.first,
+                     currInterval.second + interval.second.second));
 
   _choices->addFront(new Eventually(new TemporalInst(p, ""),
                                     std::make_pair(0, 0), _t->_trace));

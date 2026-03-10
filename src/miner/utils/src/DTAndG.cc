@@ -39,10 +39,10 @@ void DTAndG::addLeaf(Proposition *p, size_t id, bool second, int depth) {
   _leaves[id].first.second = p;
 }
 
-void DTAndG::removeItems() { _choices->removeItems(); _t->setConsequentInterval(std::pair(0,0)); }
+void DTAndG::removeItems() { _choices->removeItems(); _t->setConsequentInterval(std::make_pair(0,0)); }
 
 
-void DTAndG::addItem(Proposition *p, std::pair<size_t, size_t> interval,
+void DTAndG::addItem(Proposition *p,  std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>> interval,
                      int depth) {
 
   auto items = _choices->getItems();
@@ -50,18 +50,19 @@ void DTAndG::addItem(Proposition *p, std::pair<size_t, size_t> interval,
   for (size_t i = 0; i < items.size(); i++) {
     auto e = dynamic_cast<Globally *>(items[i]);
     auto currInterval = e->getInterval();
-    e->setInterval(std::make_pair(currInterval.first + interval.first,
-                                  currInterval.second + interval.second));
+    e->setInterval(std::make_pair(currInterval.first + interval.first.first,
+                                  currInterval.second + interval.first.second));
   }
 
   //shift consequent interval
   auto currInterval = _t->getConsequentInterval();
   _t->setConsequentInterval(
-      std::make_pair(currInterval.first + interval.first,
-                     currInterval.second + interval.second));
+      std::make_pair(currInterval.first + interval.second.first,
+                     currInterval.second + interval.second.second));
 
   _choices->addFront(new Globally(new TemporalInst(p, ""),
-                                    std::make_pair(0, 0), _t->_trace));
+                                    std::make_pair(currInterval.first + interval.first.first,
+                                                   currInterval.second + interval.first.second), _t->_trace));
 
 }
 void DTAndG::popItem(int depth) {
@@ -69,12 +70,13 @@ void DTAndG::popItem(int depth) {
                  "DTAndG::popItem: empty choices");
 
   auto items = _choices->getItems();
+  //GET THE SHIFT OF THE CURRENT GLOBALLY
   auto shiftingInterval =
       items.size() > 1 ? dynamic_cast<Globally *>(items[1])->getInterval()
                        : _t->getConsequentInterval();
 
   if (items.size() > 1) {
-    //All intervals need to be shifted by the interval of the second item
+    //All intervals need to be shifted by the SHIFT of the second item
     //Reset the interval of the second item
     dynamic_cast<Globally *>(items[1])->setInterval(std::make_pair(0, 0));
     //shift all other intervals (if the antecedent contains more than 2 items)

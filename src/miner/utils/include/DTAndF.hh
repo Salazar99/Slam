@@ -19,7 +19,7 @@ public:
   virtual void removeLeaf(size_t id,bool second, int depth) override;
   virtual void addLeaf(Proposition *p, size_t id, bool second, int depth) override;
   virtual void removeItems() override;
-  virtual void addItem(Proposition *p, std::pair<size_t, size_t> interval, int depth) override;
+  virtual void addItem(Proposition *p, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>> interval, int depth) override;
 
   virtual void popItem(int depth) override;
   virtual std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>

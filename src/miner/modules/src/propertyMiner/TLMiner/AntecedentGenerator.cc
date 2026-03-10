@@ -243,17 +243,18 @@ void AntecedentGenerator::makeAntecedents(
   // }
 // }
 
-inline std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+inline std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>>
 AntecedentGenerator::gatherPropositionsFromNumerics(
     CachedAllNumeric *cn, Template *t, int depth,
     std::vector<Proposition *> &genProps) {
 
   // 1. Gather IV
   // Depending of the type of antecedent DT operator the gathering is slightly different
-  if(typeid(t->getDT()) == typeid(DTAndF)){
+  if(dynamic_cast<DTAndF *>(t->getDT()) != nullptr){
     std::vector<std::pair<CachedAllNumeric::EvalRet, size_t>> ivs = t->gatherFInterestingValue(cn, depth, -1);
     // 2. Generation of propositions
-    std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> propsWintv;
+    std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>> propsWintv;
+    //To avoid modifying everything 
     if (!ivs.empty()) {
       propsWintv = genPropsThroughClustering(ivs, cn, t->_max_length);
     }
@@ -265,10 +266,10 @@ AntecedentGenerator::gatherPropositionsFromNumerics(
     return propsWintv;
 
 
-  } else if(typeid(t->getDT()) == typeid(DTAndG)){
+  } else if(dynamic_cast<DTAndG *>(t->getDT()) != nullptr){
     std::vector<std::pair<std::pair<CachedAllNumeric::EvalRet, size_t>, size_t>> ivs = t->gatherGInterestingValue(cn, depth, -1);
     // 2. Generation of propositions
-    std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> propsWintv;
+    std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>> propsWintv;
     if (!ivs.empty()) {
       propsWintv = genPropsThroughClustering3D(ivs, cn, t->_max_length);
     }
@@ -302,7 +303,7 @@ inline void AntecedentGenerator::findCandidatesNumeric(
   //std::cout << "DT size: "<<template_dt->getNChoices()  <<std::endl;
 
   // retrieve the propositions (props)
-  std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> props =
+  std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>> props =
       gatherPropositionsFromNumerics(dcVariables.at(candidate), t, depth,
                                      genProps);
 

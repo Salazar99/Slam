@@ -82,6 +82,8 @@ std::string Template::getTemplate() {
   } else {
     if (dynamic_cast<DTAndF *>(_dtOp.second) != nullptr) {
       ant = "(..F..)";
+    } else if(dynamic_cast<DTAndG *>(_dtOp.second) != nullptr){
+      ant = "(..G..)";
     } else {
       messageError("Unknown dt operator");
     }
@@ -96,7 +98,9 @@ std::string Template::getColoredTemplate() {
   } else {
     if (dynamic_cast<DTAndF *>(_dtOp.second) != nullptr) {
       ant = TEMP("(..F..)");
-    } else {
+    } else if(dynamic_cast<DTAndG *>(_dtOp.second) != nullptr){
+      ant = TEMP("(..G..)");
+    }else {
       messageError("Unknow dt operator");
     }
   }
@@ -490,7 +494,6 @@ std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherFIntere
   
 }
 
-//TODO: fix the return type to include the segment number and modify the code accordingly in AntecedentGenerator
 std::vector<std::pair<std::pair<CachedAllNumeric::EvalRet,size_t>,size_t>> Template::gatherGInterestingValue(CachedAllNumeric *cn, int depth, int width) {
 
   DTOperator *template_dt = _dtOp.second;

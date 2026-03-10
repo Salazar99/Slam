@@ -20,10 +20,10 @@ std::pair<expression::VarType, size_t>
 variableTypeFromString(const std::string &type, size_t size = 1);
 
 
-std::vector<std::pair<expression::Proposition *,std::pair<size_t,size_t>>>
+std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>>
 genPropsThroughClustering(std::vector<std::pair<expression::CachedAllNumeric::EvalRet,size_t>> &ivs , expression::CachedAllNumeric *cn, size_t max_length) ;
 
-std::vector<std::pair<expression::Proposition *,std::pair<size_t,size_t>>>
+std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>> 
 genPropsThroughClustering3D(std::vector<std::pair<std::pair<expression::CachedAllNumeric::EvalRet,size_t>,size_t>> &ivs , expression::CachedAllNumeric *cn, size_t max_length) ;
 
 

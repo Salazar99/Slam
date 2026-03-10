@@ -32,7 +32,7 @@ public:
    * \param Proposition the proposition representing the operand
    * \param depth the temporal depth in the dt operator where to insert the operand
    */
-  virtual void addItem(Proposition *p, std::pair<size_t,size_t> interval, int depth) = 0;
+  virtual void addItem(Proposition *p,  std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>> interval, int depth) = 0;
   /** \brief Removes an operands at depth 'depth'
    */
   virtual void popItem(int depth) = 0;
