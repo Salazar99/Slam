@@ -22,8 +22,7 @@ public:
   virtual void addItem(Proposition *p, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>> interval, int depth) override;
 
   virtual void popItem(int depth) override;
-  virtual std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
-  getItems() override;
+  virtual std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t,size_t>>>> getItems() override;
   virtual std::vector<TemporalExp *> minimize(bool isOffset) override;
   virtual std::vector<TemporalExp *> unpack() override;
   virtual std::vector<TemporalExp *> unpack(TemporalExp *pack) override;
@@ -38,7 +37,7 @@ public:
                           expression::Proposition *&sub) override;
   virtual const DTLimits &getLimits() override;
 
-  void loadSolution(const std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> &sol);
+  void loadSolution(const std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t,size_t>>>> &sol);
   
 
 private:

@@ -33,7 +33,7 @@ struct DiscoveredLeaf {
 struct CandidateDec {
 
   CandidateDec() {}
-  CandidateDec(size_t id, double ig, int depth, Proposition *p, std::pair<size_t,size_t> intv, bool offSet,
+  CandidateDec(size_t id, double ig, int depth, Proposition *p, std::pair<std::pair<size_t,size_t>,std::pair<size_t,size_t>> intv, bool offSet,
                double entropy = 1.f)
       : _id(id), _ig(ig), _depth(depth), _entropy(entropy) {
     _props.emplace_back(p, offSet);
@@ -54,7 +54,7 @@ struct CandidateDec {
   double _ig;
   int _depth;
   double _entropy;
-  std::vector<std::pair<std::pair<size_t,size_t>,size_t>> _intv;
+  std::vector<std::pair<std::pair<std::pair<size_t,size_t>,std::pair<size_t,size_t>>,size_t>> _intv;
   std::vector<std::pair<Proposition *, size_t>> _props;
 };
 
@@ -83,10 +83,10 @@ public:
   size_t maxPropositions;
 
   /// the algorithm's result (onset, ant -> con):
-  std::vector<std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>>
+  std::vector<std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>>>
       onSets;
   /// the algorithm's result (offset, ant -> !con):
-  std::vector<std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>>
+  std::vector<std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>>>
       offSets;
 
   ///if true, it prompts the algo to save the offset

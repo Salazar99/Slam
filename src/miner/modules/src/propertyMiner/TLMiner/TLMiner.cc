@@ -278,8 +278,6 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
 
     AntecedentGenerator antGen;
 
-    //FIXME
-    //antGen.saveOffset = t->saveOffset();
 
     DecTreeVariables candidateVariables_copy;
     //creating a copy of candidateVariables to pass as parameter to decision tree algorithm
@@ -296,7 +294,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
                            genProps);
 
     // Onset
-    for (std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+    for (std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>>
              &props : antGen.onSets) {
         
 
@@ -360,7 +358,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       }
     }
     // Offset, same as onset but the consequent is negated
-    for (std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+    for (std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>>
              &props : antGen.offSets) {
       /*
       if (t->getDT()->isMultiDimensional()) {
@@ -372,7 +370,7 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
       } else {
       */
       for (auto prop : props) {
-        t->getDT()->addItem(prop.first, std::pair<size_t, size_t>(prop.second),
+        t->getDT()->addItem(prop.first, prop.second,
                             -1);
       }
       //}

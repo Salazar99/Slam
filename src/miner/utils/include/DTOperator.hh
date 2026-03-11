@@ -86,14 +86,15 @@ public:
   virtual bool isMultiDimensional() = 0;
   virtual bool isSolutionInconsequential(std::vector<TemporalExp *> &sol) = 0;
 
-  virtual std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> getItems() = 0;
+  virtual std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>> getItems() = 0;
   /** \brief Returns the current number of choices in the decision tree
    */
   virtual size_t getNChoices() = 0;
   virtual size_t getCurrentDepth() = 0;
   virtual const DTLimits &getLimits() = 0;
   virtual std::pair<std::string, std::string> prettyPrint(bool offset) = 0;
-  virtual void loadSolution(const std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> &sol)=0;
+
+  virtual void loadSolution(const std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>> &sol)=0;
 
 protected:
   ///dt configuration

@@ -5,8 +5,8 @@
 namespace expression {
 
 Globally::Globally(TemporalExp *operand,
-                             const std::pair<size_t, size_t> &interval, slam::Trace *trace)
-    : _operand(operand), _interval(interval), _trace(trace){};
+                             const std::pair<size_t, size_t> &interval, const std::pair<size_t, size_t> &shift, slam::Trace *trace)
+    : _operand(operand), _interval(interval), _shift(shift), _trace(trace){};
 
 Globally::~Globally() {
     delete _operand;
@@ -43,6 +43,9 @@ void Globally::setInterval(const std::pair<size_t, size_t> &intv) {
 }
 
 std::pair<size_t, size_t> Globally::getInterval() { return _interval; }
+
+std::pair<size_t, size_t> Globally::getShift() { return _shift; }
+
 void Globally::acceptVisitor(ExpVisitor &vis) { vis.visit(*this); }
 
 }; // namespace expression

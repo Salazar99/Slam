@@ -514,10 +514,10 @@ void AntecedentGenerator::storeSolution(Template *t, bool isOffset) {
 
   // Let's save the current propositions
   //std::vector<Proposition *> items = template_dt->minimize(isOffset);
-  std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> items =
+  std::vector<std::pair<Proposition *,std::pair<std::pair<size_t,size_t>,std::pair<size_t,size_t>>>> items =
       template_dt->getItems();
 
-  messageErrorIf(items.empty(), "Solution is empry");
+  messageErrorIf(items.empty(), "Solution is empty");
 /*
   if (isKnownSolution(items, template_dt)) {
     if (template_dt->isMultiDimensional()) {

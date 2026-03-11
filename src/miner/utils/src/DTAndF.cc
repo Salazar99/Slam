@@ -96,9 +96,9 @@ void DTAndF::popItem(int depth) {
   delete _choices->popFront();
 }
 
-std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>>
 DTAndF::getItems() {
-  std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> ret;
+  std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>> ret;
   auto items = _choices->getItems();
 
   if (items.empty()) {
@@ -110,12 +110,12 @@ DTAndF::getItems() {
                        ->getProposition();
   messageErrorIf(frontProp == nullptr, "DTAndF::getItems: frontProp is null");
 
-  ret.emplace_back(frontProp, _t->getConsequentInterval());
+  ret.emplace_back(std::make_pair(frontProp, std::make_pair(std::make_pair(0,0),_t->getConsequentInterval())));
 
   for (size_t i = 1; i < items.size(); i++) {
     auto e = dynamic_cast<Eventually *>(items[i]);
     auto p = dynamic_cast<TemporalInst *>(e->getOperand())->getProposition();
-    ret.emplace_back(p, e->getInterval());
+    ret.emplace_back( std::make_pair(p, std::make_pair(std::make_pair(0,0), e->getInterval())));
   }
 
   return ret;
@@ -220,17 +220,17 @@ std::pair<std::string, std::string> DTAndF::prettyPrint(bool offset) {
 }
 
 void DTAndF::loadSolution(
-    const std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+    const std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>>
         &sol) {
 
   auto items = sol;
-  _t->setConsequentInterval(sol.front().second);
+  _t->setConsequentInterval(sol.front().second.second);
   _choices->addItem(new Eventually(new TemporalInst(items[0].first, ""),
                                     std::make_pair(0, 0), _t->_trace));
 
   for (size_t i = 1; i < items.size(); i++) {
     _choices->addItem(new Eventually(new TemporalInst(items[i].first, ""),
-                                      items[i].second, _t->_trace));
+                                      items[i].second.second, _t->_trace));
   }
 }
 } // namespace slam

@@ -466,7 +466,7 @@ std::vector<std::pair<CachedAllNumeric::EvalRet,size_t>> Template::gatherFIntere
 
   slam::Implication * impl = _impl;
   size_t currTime = 0;
-  template_dt->addItem(tc,{0,0},depth);
+  template_dt->addItem(tc,{{0,0},{0,0}},depth);
   while (currTime < _max_length) {
     if(impl->evaluate_ant(currTime) == Trinary::T && impl->evaluate_con(currTime) == Trinary::T)
       iv_suffix.push_back(currTime);
@@ -505,7 +505,7 @@ std::vector<std::pair<std::pair<CachedAllNumeric::EvalRet,size_t>,size_t>> Templ
   slam::Implication * impl = _impl;
   size_t currTime = 0;
   //add the true constant as first item of the template decision tree, to be able to evaluate the antecedent alone and get the interesting values for the consequent
-  template_dt->addItem(tc,{0,0},depth);
+  template_dt->addItem(tc,{{0,0},{0,0}},depth);
 
   //This flag indicates that at the moment we are in a sequence of "interesting" values
   bool true_seq = false;

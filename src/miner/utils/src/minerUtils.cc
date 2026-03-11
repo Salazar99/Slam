@@ -155,10 +155,10 @@ makeNumericRange(
 
   //retval
   std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>> ret;
+  std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>> ret_intv;
 
   for (auto &c : clusters) {
     if (c.first.first != c.first.second) {
-      std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>> ret_intv;
       if(own_interval){
       //Need to calculate own_intv
         size_t temp_dim = c.second.second - c.second.first + 1;
@@ -446,6 +446,10 @@ genPropsThroughClustering3D(
       for (auto &iv : ivs) {
         auto unpacked = iv.first;
         auto segment = iv.second;
+         //to avoid segfaults
+        if(segment >= elements.size()){
+          elements.resize(segment + 1); // resize to accommodate the new segment index
+        }
         elements[segment].push_back(std::make_pair(unpacked.first._f, (float)unpacked.second));
       }
   
@@ -523,6 +527,10 @@ genPropsThroughClustering3D(
       for (auto &iv : ivs) {
         auto unpacked = iv.first;
         auto segment = iv.second;
+        //to avoid segfaults
+        if(segment >= elements.size()){
+          elements.resize(segment + 1); // resize to accommodate the new segment index
+        }
         elements[segment].push_back(std::make_pair(unpacked.first._f, (double)unpacked.second));
       }
 
@@ -550,7 +558,7 @@ genPropsThroughClustering3D(
               } else{
 
                   auto it = accumulation_map.find(hash);
-                  if (it == accumulation_map.end()) {
+                  if (it != accumulation_map.end()) {
                     // Subsequent segments: Update ONLY if it survived previous prunes
                     it->second.first.first = std::min(cluster.first.first, accumulation_map[hash].first.first);
                     it->second.first.second = std::max(cluster.first.second, accumulation_map[hash].first.second);

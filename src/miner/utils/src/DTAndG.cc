@@ -50,8 +50,8 @@ void DTAndG::addItem(Proposition *p,  std::pair<std::pair<size_t, size_t>,std::p
   for (size_t i = 0; i < items.size(); i++) {
     auto e = dynamic_cast<Globally *>(items[i]);
     auto currInterval = e->getInterval();
-    e->setInterval(std::make_pair(currInterval.first + interval.first.first,
-                                  currInterval.second + interval.first.second));
+    e->setInterval(std::make_pair(currInterval.first + interval.second.first,
+                                  currInterval.second + interval.second.second));
   }
 
   //shift consequent interval
@@ -60,9 +60,11 @@ void DTAndG::addItem(Proposition *p,  std::pair<std::pair<size_t, size_t>,std::p
       std::make_pair(currInterval.first + interval.second.first,
                      currInterval.second + interval.second.second));
 
+  //New item has its own unshifter interval and the shift that it applies on other items is stored in the operator
   _choices->addFront(new Globally(new TemporalInst(p, ""),
-                                    std::make_pair(currInterval.first + interval.first.first,
-                                                   currInterval.second + interval.first.second), _t->_trace));
+                                    interval.first,
+                                    interval.second, 
+                                    _t->_trace));
 
 }
 void DTAndG::popItem(int depth) {
@@ -70,25 +72,23 @@ void DTAndG::popItem(int depth) {
                  "DTAndG::popItem: empty choices");
 
   auto items = _choices->getItems();
-  //GET THE SHIFT OF THE CURRENT GLOBALLY
+  //Get the shift of the first item 
   auto shiftingInterval =
-      items.size() > 1 ? dynamic_cast<Globally *>(items[1])->getInterval()
+      items.size() > 1 ? dynamic_cast<Globally *>(items[0])->getShift()
                        : _t->getConsequentInterval();
 
   if (items.size() > 1) {
-    //All intervals need to be shifted by the SHIFT of the second item
-    //Reset the interval of the second item
-    dynamic_cast<Globally *>(items[1])->setInterval(std::make_pair(0, 0));
-    //shift all other intervals (if the antecedent contains more than 2 items)
-    for (size_t i = 2; i < items.size(); i++) {
+    //shift all successors intervals (if the antecedent contains more than 2 items)
+    for (size_t i = 1; i < items.size(); i++) {
       auto e = dynamic_cast<Globally *>(items[i]);
+      //get current interval
       auto currInterval = e->getInterval();
+      //shift it back by the shift of the first item
       e->setInterval(
           std::make_pair(currInterval.first - shiftingInterval.first,
                          currInterval.second - shiftingInterval.second));
     }
   }
-
   //shift consequent interval
   auto currInterval = _t->getConsequentInterval();
   _t->setConsequentInterval(
@@ -98,9 +98,9 @@ void DTAndG::popItem(int depth) {
   delete _choices->popFront();
 }
 
-std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>>
 DTAndG::getItems() {
-  std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>> ret;
+  std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>> ret;
   auto items = _choices->getItems();
 
   if (items.empty()) {
@@ -112,12 +112,11 @@ DTAndG::getItems() {
                        ->getProposition();
   messageErrorIf(frontProp == nullptr, "DTAndG::getItems: frontProp is null");
 
-  ret.emplace_back(frontProp, _t->getConsequentInterval());
 
-  for (size_t i = 1; i < items.size(); i++) {
+  for (size_t i = 0; i < items.size(); i++) {
     auto e = dynamic_cast<Globally *>(items[i]);
     auto p = dynamic_cast<TemporalInst *>(e->getOperand())->getProposition();
-    ret.emplace_back(p, e->getInterval());
+    ret.emplace_back(p, std::make_pair(e->getInterval(),e->getShift()));
   }
 
   return ret;
@@ -222,17 +221,17 @@ std::pair<std::string, std::string> DTAndG::prettyPrint(bool offset) {
 }
 
 void DTAndG::loadSolution(
-    const std::vector<std::pair<Proposition *, std::pair<size_t, size_t>>>
+    const std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>>
         &sol) {
 
   auto items = sol;
-  _t->setConsequentInterval(sol.front().second);
+  _t->setConsequentInterval(sol.front().second.second);
   _choices->addItem(new Globally(new TemporalInst(items[0].first, ""),
-                                    std::make_pair(0, 0), _t->_trace));
+                                    items[0].second.first,items[0].second.second,_t->_trace));
 
   for (size_t i = 1; i < items.size(); i++) {
     _choices->addItem(new Globally(new TemporalInst(items[i].first, ""),
-                                      items[i].second, _t->_trace));
+                                      items[i].second.first,items[i].second.second,_t->_trace));
   }
 }
 } // namespace slam
