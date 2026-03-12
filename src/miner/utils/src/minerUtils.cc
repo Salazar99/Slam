@@ -469,19 +469,19 @@ genPropsThroughClustering3D(
 
               if (i == 0) {
                   // First segment: Always add
-                  //Store the minimum left bound
-                  accumulation_map[hash].first.first = std::min(cluster.first.first, accumulation_map[hash].first.first);
-                  //Store the maximum right bound
-                  accumulation_map[hash].first.second = std::max(cluster.first.second, accumulation_map[hash].first.second);
+                  accumulation_map[hash].first.first = cluster.first.first;
+                  accumulation_map[hash].first.second = cluster.first.second;
                   accumulation_map[hash].second.first = cluster.second;
                   accumulation_map[hash].second.second = i; // last_seen_segment
               } else{
 
                   auto it = accumulation_map.find(hash);
-                  if (it == accumulation_map.end()) {
+                  if (it != accumulation_map.end()) {
                     // Subsequent segments: Update ONLY if it survived previous prunes
-                    it->second.first.first = std::min(cluster.first.first, accumulation_map[hash].first.first);
-                    it->second.first.second = std::max(cluster.first.second, accumulation_map[hash].first.second);
+                    float minval = std::min(cluster.first.first, accumulation_map[hash].first.first);
+                    it->second.first.first = minval;
+                    float maxval = std::max(cluster.first.second, accumulation_map[hash].first.second);
+                    it->second.first.second = maxval;
                     it->second.second.first = cluster.second;
                     //update last_seen
                     it->second.second.second = i;
@@ -502,7 +502,7 @@ genPropsThroughClustering3D(
           }   
       }
 
-      //Merge clusters that have same temporal interval and are close in value (e.g., less than 10% of the range of values)
+      //Merge clusters that have same temporal interval
       std::vector<std::pair<std::pair<float, float>, std::pair<size_t, size_t>>> clusters;
       for (auto &entry : accumulation_map) {
         auto tmp = std::make_pair(entry.second.first, entry.second.second.first);

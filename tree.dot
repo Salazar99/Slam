@@ -1,0 +1,48 @@
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p0 == 0.000000) \[0, 0.076\]"];
+1 -> 2[label= "(p1 == 0.000000) \[0, 0.052\]"];
+
+
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p0 == 0.000000) \[0, 0.084\]"];
+1 -> 2[label= "(p1 == 0.000000) \[0, 0.057\]"];
+
+
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p0 == 0.000000) \[0, 0.084\]"];
+1 -> 2[label= "(p1 == 0.000000) \[0, 0.057\]"];
+
+
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p0 == 0.000000) \[0, 0.084\]"];
+1 -> 2[label= "(p1 == 0.000000) \[0, 0.057\]"];
+
+
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+
+
+}

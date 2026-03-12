@@ -1,0 +1,1 @@
+~/Slam/build/slam --csv ./Gchain.csv --conf ./Gchain.xml

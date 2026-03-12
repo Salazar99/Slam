@@ -1,0 +1,14 @@
+<slam>
+    <!---->	
+	<context name="GloballyChain"> 
+	
+		<numeric op="e,r,ge,le" clsEffort = "0.001" exp="p0" loc="dt"/>
+		<numeric op="e,r,ge,le" clsEffort = "0.001" exp="p1" loc="dt"/>
+
+        <template dtLimits="3A,0.01E,100maxd,0mind" exp="G( ..G.. -> F[0,0]consequent == 1)" />
+
+		<sort name="causality" exp="1-afct/traceLength"/>
+		<sort name="support" exp="atct/traceLength"/>
+	</context>
+	
+</slam>

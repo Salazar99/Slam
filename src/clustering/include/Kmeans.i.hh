@@ -386,7 +386,7 @@ std::vector<std::pair<std::pair<T, T>, std::pair<size_t, size_t>>>
 kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
                double SDmin_red, bool keepOnlyBest,
                const std::string &expName) {
-    max=5;
+    //max=5;
     //keepOnlyBest=1;
 
     //std::cout <<"Number of elements: "<< elements.size() << "\n";
