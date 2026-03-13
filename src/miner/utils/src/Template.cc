@@ -520,6 +520,8 @@ std::vector<std::pair<std::pair<CachedAllNumeric::EvalRet,size_t>,size_t>> Templ
       if((impl->evaluate_ant(currTime) == Trinary::T && impl->evaluate_con(currTime) == Trinary::T)){
         iv_suffix.push_back(currTime);
         true_seq = true;
+        // if(clc::debugCls)
+        //   std::cout << "Found interesting value for G at time " << currTime << "\n";
       }
     }   
         // each currTime we change state, currTime increases by 1
@@ -534,6 +536,9 @@ std::vector<std::pair<std::pair<CachedAllNumeric::EvalRet,size_t>,size_t>> Templ
       CachedAllNumeric::EvalRet value = cn->evaluate(currTime);    
       for(size_t iv : iv_suffix){
         if(iv >= currTime && ((iv - currTime) <= _limits._maxDistance) && ((iv - currTime) >= _limits._minDistance)){
+          // if(clc::debugCls){
+              // std::cout << "Adding interesting value: " << (double)value._d << ", " << (size_t)iv-currTime << " at time " << currTime << "\n";
+          // }
           ret.push_back(std::make_pair(std::make_pair(value,(size_t)iv-currTime), std::distance(iv_suffix.begin(), std::find(iv_suffix.begin(), iv_suffix.end(), iv))));
           //get only the value for the immediate successor of current time 
           break;

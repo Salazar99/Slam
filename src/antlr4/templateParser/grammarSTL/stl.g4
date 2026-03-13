@@ -15,6 +15,7 @@ implication :
 tformula:
 	| NOT tformula 
     | STL_EVENTUALLY LCPAREN interval RCPAREN tformula
+    | STL_ALWAYS LCPAREN interval RCPAREN tformula
 	| tformula (AND | OR) tformula 
 	| LPAREN tformula RPAREN 
     | boolean | placeholder

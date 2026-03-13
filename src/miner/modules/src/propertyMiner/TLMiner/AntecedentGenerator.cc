@@ -16,6 +16,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
+#include <globals.hh>
 
 #define numLeavesOffset 1000000
 
@@ -301,6 +302,8 @@ inline void AntecedentGenerator::findCandidatesNumeric(
   }
 
   //std::cout << "DT size: "<<template_dt->getNChoices()  <<std::endl;
+   if(clc::debugCls)
+    std::cout << "Template: " << t->getColoredAssertion() << "\n";
 
   // retrieve the propositions (props)
   std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>> props =
@@ -404,6 +407,12 @@ void AntecedentGenerator::_runDecisionTree(
     std::set<size_t> &unusedNumerics, NumericDecTreeExp &numericCandidates,
     Template *t, std::vector<Proposition *> &genProps, double currEntropy) {
 
+
+  if(clc::debugCls)
+    messageInfo("Template before dt:" + t->getAssertion() + "std::endl");
+
+
+
   DTOperator *template_dt = t->getDT();
 
   std::vector<DiscoveredLeaf> discLeaves;
@@ -498,6 +507,12 @@ void AntecedentGenerator::_runDecisionTree(
 
     _runDecisionTree(unusedVars, dcVariables, unusedNumerics, numericCandidates,
                      t, genProps, c_ig._entropy);
+    
+    
+    if(clc::debugCls)
+      messageInfo("Template after dt:" + t->getAssertion() + "std::endl");
+
+
     template_dt->popItem(c_ig._depth);
     template_dt->removeLeaf(c_ig._id, pos, c_ig._depth);
   } // for igs

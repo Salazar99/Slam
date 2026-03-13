@@ -357,39 +357,40 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
         }
       }
     }
-    // Offset, same as onset but the consequent is negated
-    for (std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>>
-             &props : antGen.offSets) {
-      /*
-      if (t->getDT()->isMultiDimensional()) {
-        for (size_t i = 0; i < props.size(); i++) {
-          for (auto prop : t->getDT()->unpack(props[i])) {
-            t->getDT()->addItem(prop, i);
-          }
-        }
-      } else {
-      */
-      for (auto prop : props) {
-        t->getDT()->addItem(prop.first, prop.second,
-                            -1);
-      }
-      //}
-
-      assert(!t->getDT()->getItems().empty());
-
-      if (!t->isVacuousOffset(Location::Ant)) {
-        auto prettyAss = t->getDT()->prettyPrint(1);
-        Assertion *ass = new Assertion();
-        t->fillContingency(ass->_ct, 1);
-        ass->_toString = prettyAss;
-        ass->_props2string = t->getAssPropsAsString();
-        //FIXME
-        std::vector<Proposition *> loadedProps; // = t->getLoadedPropositions();
-        ass->_complexity = getNumVariables(loadedProps);
-        ass->_pRepetitions = getRepetitions(loadedProps);
-        ass->fillValuesOffset(t);
-        assp.push_back(ass);
-      }
+     //Offset, same as onset but the consequent is negated
+     for (std::vector<std::pair<Proposition *, std::pair<std::pair<size_t, size_t>,std::pair<size_t, size_t>>>>
+              &props : antGen.offSets) {
+       /*
+       if (t->getDT()->isMultiDimensional()) {
+         for (size_t i = 0; i < props.size(); i++) {
+           for (auto prop : t->getDT()->unpack(props[i])) {
+             t->getDT()->addItem(prop, i);
+           }
+         }
+       } else {
+       */
+       for (auto prop : props) {
+         t->getDT()->addItem(prop.first, prop.second,
+                             -1);
+       }
+       
+       assert(!t->getDT()->getItems().empty());
+        //check for vacuity
+       if (!t->isVacuousOffset(Location::Ant)) {
+         std::pair<std::string, std::string> prettyAss;
+         prettyAss.first = t->getAssertion();
+         prettyAss.second = t->getColoredAssertion();
+         Assertion *ass = new Assertion();
+         t->fillContingency(ass->_ct, 0);
+         ass->_toString = prettyAss;
+         ass->_props2string = t->getAssPropsAsString();
+         std::vector<Proposition *> loadedProps; //= t->getLoadedPropositions();
+         ass->_complexity = getNumVariables(loadedProps);
+         ass->_pRepetitions = getRepetitions(loadedProps);
+         ass->fillValues(t);
+         assp.push_back(ass);
+         
+       }
 #if dumpVacAss
 
       else {
@@ -402,12 +403,6 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
 #endif
 
       t->getDT()->removeItems();
-      //if (t->getDT()->isMultiDimensional()) {
-      //  for (size_t i = 0; i < props.size(); i++) {
-      //    t->getDT()->clearPack(props[i]);
-      //    delete props[i];
-      //  }
-      //}
     }
 
 #if enPB

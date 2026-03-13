@@ -249,6 +249,10 @@ void plotPointsAndRectangles(
     return;
   }
 
+  // for (auto &point : points) {
+    // std::cout << "Point: (" << point.first << ", " << point.second << ")\n";
+  // }
+
   auto xMinMax = std::minmax_element(
       points.begin(), points.end(),
       [](const auto &p1, const auto &p2) { return p1.first < p2.first; });
@@ -265,6 +269,15 @@ void plotPointsAndRectangles(
   xMax *= xMax > 0 ? 1.1 : 0.9;
   yMin *= yMin > 0 ? 0.9 : 1.1;
   yMax *= yMax > 0 ? 1.1 : 0.9;
+
+  // std::cout << "Plotting with x range: [" << xMin << ", " << xMax
+            // << "] and y range: [" << yMin << ", " << yMax << "]\n";
+
+  if (xMin == xMax){
+    xMin -= 0.01;
+    xMax += 0.01;
+  }
+    
 
   fprintf(gnuplotPipe, "set xrange [%f:%f]\n", xMin, xMax);
   fprintf(gnuplotPipe, "set yrange [%f:%f]\n", yMin, yMax);
@@ -408,10 +421,10 @@ kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
     auto means = std::get<0>(cluster_data);
     auto labels = std::get<1>(cluster_data);
 
-    // print the clusters
-    //for (size_t j = 0; j < data.size(); j++) {
-    //  std::cout << "("<<data[j][0]<<","<<data[j][0]<<") "<< " " << labels[j] << std::endl;
-    //}
+    //print the clusters
+    // for (size_t j = 0; j < data.size(); j++) {
+      // std::cout << "("<<data[j][0]<<","<<data[j][0]<<") "<< " " << labels[j] << std::endl;
+    // }
 
     //std::cout << "means:" << "\n";
     //for (size_t k = 0; k < means.size(); k++) {
@@ -453,9 +466,9 @@ kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
     // translate the clusters into ranges [min, max]
     auto rr = toRanges2D<T>(labelToValues);
 
-  //if (clc::debugCls) {
-  //  printClusters(elements, rr, expName);
-  //}
+    // if (clc::debugCls) {
+    // printClusters(elements, rr, expName);
+    // }
 
     // add the ranges to the final list
     if (keepOnlyBest) {
@@ -479,9 +492,9 @@ kmeansElbowStl(std::vector<std::pair<T, T>> elements, size_t max,
   }
 
 
-  if (clc::debugCls) {
-    printClusters(elements, ranges, expName);
-  }
+  // if (clc::debugCls) {
+    // printClusters(elements, ranges, expName);
+  // }
 
   //sort to simplify debug
   sort(ranges.begin(),ranges.end(),[](const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &a,const std::pair<std::pair<T, T>,std::pair<size_t,size_t>> &b){return a.second.second<b.second.second ;} );

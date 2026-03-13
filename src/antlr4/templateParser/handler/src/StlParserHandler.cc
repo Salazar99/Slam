@@ -128,7 +128,13 @@ void StlParserHandler::exitTformula(stlParser::TformulaContext *ctx) {
       Eventually *p = new Eventually(_tfStack.top(), intv, _trace);
       _tfStack.pop();
       _tfStack.push(p);
-    } else if (ctx->tformula().size() == 1 && ctx->NOT() != nullptr) {
+    }else if(ctx->STL_ALWAYS() != nullptr){
+      std::pair<size_t, size_t> intv = *(_intervals[_intervalNames.top()]);
+      _intervalNames.pop();
+      Globally *p = new Globally(_tfStack.top(), intv, std::make_pair(0, 0), _trace);
+      _tfStack.pop();
+      _tfStack.push(p);
+    }else if (ctx->tformula().size() == 1 && ctx->NOT() != nullptr) {
       TemporalNot *p = new TemporalNot(_tfStack.top());
       _tfStack.pop();
       _tfStack.push(p);

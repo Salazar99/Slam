@@ -456,50 +456,61 @@ genPropsThroughClustering3D(
       
       // 3. Process segments
       for (size_t i = 0; i < elements.size(); ++i) {
-          //If segment is empty skip it (maybe we could just break, since if a segment is empty nothing will be kept)
-          if (elements[i].empty()) continue;
-
-          //Launch clustering for this segment
-          auto c = clsElbow<float>(elements[i], cn->_clsEffort, allNum2String(*cn));
-
-          //For each generated cluster
-          for (auto &cluster : c) {
-              //Hash cluster using its temporal interval
-              size_t hash = hashCluster(cluster.second);
-
-              if (i == 0) {
-                  // First segment: Always add
-                  accumulation_map[hash].first.first = cluster.first.first;
-                  accumulation_map[hash].first.second = cluster.first.second;
-                  accumulation_map[hash].second.first = cluster.second;
-                  accumulation_map[hash].second.second = i; // last_seen_segment
-              } else{
-
-                  auto it = accumulation_map.find(hash);
-                  if (it != accumulation_map.end()) {
-                    // Subsequent segments: Update ONLY if it survived previous prunes
-                    float minval = std::min(cluster.first.first, accumulation_map[hash].first.first);
-                    it->second.first.first = minval;
-                    float maxval = std::max(cluster.first.second, accumulation_map[hash].first.second);
-                    it->second.first.second = maxval;
-                    it->second.second.first = cluster.second;
-                    //update last_seen
-                    it->second.second.second = i;
-                  }
-              }
-              //Pruning 
-              if (i > 0) {
-                for (auto it = accumulation_map.begin(); it != accumulation_map.end(); ) {
-                  //if not seen in this segment then remove it 
-                  if (it->second.second.second != i) {
-                    it = accumulation_map.erase(it); // erase returns the next valid iterator
-                  } else {
-                    //otherwise skip
-                    ++it;
-                  }
+        //If segment is empty skip it (maybe we could just break, since if a segment is empty nothing will be kept)
+        if (elements[i].empty()) continue;
+        //Launch clustering for this segment
+        auto c = clsElbow<float>(elements[i], cn->_clsEffort, allNum2String(*cn));
+        //For each generated cluster
+        for (auto &cluster : c) {
+            //Hash cluster using its temporal interval
+            size_t hash = hashCluster(cluster.second);
+            // if(clc::debugCls){
+            //   std::cout << "Segment " << i << ": Cluster with boundaries [" << cluster.first.first << " , " << cluster.first.second << "] and temporal interval [" << cluster.second.first << " , " << cluster.second.second << "] has hash " << hash << "\n";
+            // }
+            if (i == 0) {
+                // First segment: Always add
+                accumulation_map[hash].first.first = cluster.first.first;
+                accumulation_map[hash].first.second = cluster.first.second;
+                accumulation_map[hash].second.first = cluster.second;
+                accumulation_map[hash].second.second = i; // last_seen_segment
+            } else{
+                auto it = accumulation_map.find(hash);
+                if (it != accumulation_map.end()) {
+                  // Subsequent segments: Update ONLY if it survived previous prunes
+                  float minval = std::min(cluster.first.first, accumulation_map[hash].first.first);
+                  it->second.first.first = minval;
+                  float maxval = std::max(cluster.first.second, accumulation_map[hash].first.second);
+                  it->second.first.second = maxval;
+                  it->second.second.first = cluster.second;
+                  //update last_seen
+                  it->second.second.second = i;
                 }
-              }
-          }   
+            }
+        }  
+        //Pruning after all clusters of the segment have been processed
+        if (i > 0) {
+          for (auto it = accumulation_map.begin(); it != accumulation_map.end(); ) {
+            //if not seen in this segment then remove it 
+            if (it->second.second.second != i) {
+              it = accumulation_map.erase(it); // erase returns the next valid iterator
+            } else {
+              //otherwise skip
+              ++it;
+            }
+          }
+        } 
+        // if(clc::debugCls){
+        //     std::cout << "After segment " << i << ", surviving clusters: " << accumulation_map.size() << "\n";
+        //     for (const auto &entry : accumulation_map) {
+        //         const auto &cluster_info = entry.second;
+        //         std::cout << "Cluster with hash " << entry.first 
+        //                   << " has num boundaries [" << cluster_info.first.first 
+        //                   << " , " << cluster_info.first.second 
+        //                   << "]. Has temporal interval [" << cluster_info.second.first.first
+        //                   << ", " << cluster_info.second.first.second
+        //                   << "] and was last seen in segment " << cluster_info.second.second << "\n";
+        //     }
+        // }
       }
 
       //Merge clusters that have same temporal interval
@@ -512,6 +523,7 @@ genPropsThroughClustering3D(
       ret = makeNumericRange<float>(clusters, type, cn, true);   
 
     } else {
+      //double case
       //We need to perform clustering for each segment
       //Each element is a vector of pairs of a segment
       std::vector<std::vector<std::pair<double, double>>> elements;
@@ -523,73 +535,86 @@ genPropsThroughClustering3D(
       //List of hashes with number of segments in which the cluster is present
       std::unordered_map<size_t, size_t> hashes_hits;
 
+
       //Group elements by segment
       for (auto &iv : ivs) {
         auto unpacked = iv.first;
         auto segment = iv.second;
-        //to avoid segfaults
+         //to avoid segfaults
         if(segment >= elements.size()){
           elements.resize(segment + 1); // resize to accommodate the new segment index
         }
         elements[segment].push_back(std::make_pair(unpacked.first._f, (double)unpacked.second));
       }
-
+  
+      
       // 3. Process segments
       for (size_t i = 0; i < elements.size(); ++i) {
-          //If segment is empty skip it (maybe we could just break, since if a segment is empty nothing will be kept)
-          if (elements[i].empty()) continue;
-
-          //Launch clustering for this segment
-          auto c = clsElbow<double>(elements[i], cn->_clsEffort, allNum2String(*cn));
-
-          //For each generated cluster
-          for (auto &cluster : c) {
-              //Hash cluster using its temporal interval
-              size_t hash = hashCluster(cluster.second);
-
-              if (i == 0) {
-                  // First segment: Always add
-                  //Store the minimum left bound
-                  accumulation_map[hash].first.first = std::min(cluster.first.first, accumulation_map[hash].first.first);
-                  //Store the maximum right bound
-                  accumulation_map[hash].first.second = std::max(cluster.first.second, accumulation_map[hash].first.second);
-                  accumulation_map[hash].second.first = cluster.second;
-                  accumulation_map[hash].second.second = i; // last_seen_segment
-              } else{
-
-                  auto it = accumulation_map.find(hash);
-                  if (it != accumulation_map.end()) {
-                    // Subsequent segments: Update ONLY if it survived previous prunes
-                    it->second.first.first = std::min(cluster.first.first, accumulation_map[hash].first.first);
-                    it->second.first.second = std::max(cluster.first.second, accumulation_map[hash].first.second);
-                    it->second.second.first = cluster.second;
-                    //update last_seen
-                    it->second.second.second = i;
-                  }
-              }
-              //Pruning 
-              if (i > 0) {
-                for (auto it = accumulation_map.begin(); it != accumulation_map.end(); ) {
-                  //if not seen in this segment then remove it 
-                  if (it->second.second.second != i) {
-                    it = accumulation_map.erase(it); // erase returns the next valid iterator
-                  } else {
-                    //otherwise skip
-                    ++it;
-                  }
+        //If segment is empty skip it (maybe we could just break, since if a segment is empty nothing will be kept)
+        if (elements[i].empty()) continue;
+        //Launch clustering for this segment
+        auto c = clsElbow<double>(elements[i], cn->_clsEffort, allNum2String(*cn));
+        //For each generated cluster
+        for (auto &cluster : c) {
+            //Hash cluster using its temporal interval
+            size_t hash = hashCluster(cluster.second);
+            // if(clc::debugCls){
+            //   std::cout << "Segment " << i << ": Cluster with boundaries [" << cluster.first.first << " , " << cluster.first.second << "] and temporal interval [" << cluster.second.first << " , " << cluster.second.second << "] has hash " << hash << "\n";
+            // }
+            if (i == 0) {
+                // First segment: Always add
+                accumulation_map[hash].first.first = cluster.first.first;
+                accumulation_map[hash].first.second = cluster.first.second;
+                accumulation_map[hash].second.first = cluster.second;
+                accumulation_map[hash].second.second = i; // last_seen_segment
+            } else{
+                auto it = accumulation_map.find(hash);
+                if (it != accumulation_map.end()) {
+                  // Subsequent segments: Update ONLY if it survived previous prunes
+                  double minval = std::min(cluster.first.first, accumulation_map[hash].first.first);
+                  it->second.first.first = minval;
+                  double maxval = std::max(cluster.first.second, accumulation_map[hash].first.second);
+                  it->second.first.second = maxval;
+                  it->second.second.first = cluster.second;
+                  //update last_seen
+                  it->second.second.second = i;
                 }
-              }
-          }   
+            }
+        }  
+        //Pruning after all clusters of the segment have been processed
+        if (i > 0) {
+          for (auto it = accumulation_map.begin(); it != accumulation_map.end(); ) {
+            //if not seen in this segment then remove it 
+            if (it->second.second.second != i) {
+              it = accumulation_map.erase(it); // erase returns the next valid iterator
+            } else {
+              //otherwise skip
+              ++it;
+            }
+          }
+        } 
+        // if(clc::debugCls){
+        //     std::cout << "After segment " << i << ", surviving clusters: " << accumulation_map.size() << "\n";
+        //     for (const auto &entry : accumulation_map) {
+        //         const auto &cluster_info = entry.second;
+        //         std::cout << "Cluster with hash " << entry.first 
+        //                   << " has num boundaries [" << cluster_info.first.first 
+        //                   << " , " << cluster_info.first.second 
+        //                   << "]. Has temporal interval [" << cluster_info.second.first.first
+        //                   << ", " << cluster_info.second.first.second
+        //                   << "] and was last seen in segment " << cluster_info.second.second << "\n";
+        //     }
+        // }
       }
 
-      //Merge clusters that have same temporal interval and are close in value (e.g., less than 10% of the range of values)
+      //Merge clusters that have same temporal interval
       std::vector<std::pair<std::pair<double, double>, std::pair<size_t, size_t>>> clusters;
       for (auto &entry : accumulation_map) {
         auto tmp = std::make_pair(entry.second.first, entry.second.second.first);
         clusters.push_back(tmp);
       }
 
-      ret = makeNumericRange<double>(clusters, type, cn, true);
+      ret = makeNumericRange<double>(clusters, type, cn, true);   
     }
   } else if (type.first == VarType::SLogic) {
     messageError("SLogic type unsupported for this type of operator");

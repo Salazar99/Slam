@@ -1,0 +1,142 @@
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p0 == 0.000000) \[0, 0.077\]"];
+1 -> 2[label= "(p1 == 0.000000) \[0, 0.051\]"];
+
+
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p1 >= 3.000000) && (p1 <= 5.000000) \[0, 0.36\]"];
+1 -> 2[label= "(p0 == 0.000000) \[0, 0\]"];
+
+0->a0[color="green4"];
+
+a0[shape=box, color="green4" label="{G(G[0,8]((p0 <= 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\n}"]
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p1 >= 3.000000) && (p1 <= 5.000000) \[0, 0.36\]"];
+1 -> 2[label= "(p0 == 0.000000) \[0, 0\]"];
+
+0->a0[color="green4"];
+
+a0[shape=box, color="green4" label="{G(G[0,8]((p0 <= 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\n}"]
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p1 >= 3.000000) && (p1 <= 5.000000) \[0, 0.36\]"];
+1 -> 2[label= "(p0 == 0.000000) \[0, 0\]"];
+
+0->a0[color="green4"];
+
+a0[shape=box, color="green4" label="{G(G[0,8]((p0 <= 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\n}"]
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p1 >= 3.000000) && (p1 <= 5.000000) \[0, 0.36\]"];
+1 -> 2[label= "(p0 == 0.000000) \[0, 0\]"];
+
+0->a0[color="green4"];
+
+a0[shape=box, color="green4" label="{G(G[0,8]((p0 <= 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\n}"]
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p1 >= 3.000000) && (p1 <= 5.000000) \[0, 0.36\]"];
+1 -> 2[label= "(p0 == 0.000000) \[0, 0\]"];
+
+0->a0[color="green4"];
+
+a0[shape=box, color="green4" label="{G(G[0,8]((p0 <= 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\n}"]
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p1 >= 3.000000) && (p1 <= 5.000000) \[0, 0.36\]"];
+1 -> 2[label= "(p0 == 0.000000) \[0, 0\]"];
+
+0->a0[color="green4"];
+
+a0[shape=box, color="green4" label="{G(G[0,8]((p0 <= 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\n}"]
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p1 >= 3.000000) && (p1 <= 5.000000) \[0, 0.36\]"];
+1 -> 2[label= "(p0 == 0.000000) \[0, 0\]"];
+
+0->a0[color="green4"];
+
+a0[shape=box, color="green4" label="{G(G[0,8]((p0 <= 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\n}"]
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p1 >= 3.000000) && (p1 <= 5.000000) \[0, 0.36\]"];
+1 -> 2[label= "(p0 == 0.000000) \[0, 0\]"];
+
+0->a0[color="green4"];
+
+a0[shape=box, color="green4" label="{G(G[0,8]((p0 <= 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\n}"]
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p1 >= 3.000000) && (p1 <= 5.000000) \[0, 0.36\]"];
+1 -> 2[label= "(p0 == 0.000000) \[0, 0\]"];
+
+0->a0[color="green4"];
+
+a0[shape=box, color="green4" label="{G(G[0,8]((p0 <= 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\n}"]
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p1 >= 3.000000) && (p1 <= 5.000000) \[0, 0.36\]"];
+1 -> 2[label= "(p0 == 0.000000) \[0, 0\]"];
+
+0->a0[color="green4"];
+
+a0[shape=box, color="green4" label="{G(G[0,8]((p0 <= 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\n}"]
+}
+digraph G {
+label="G([1m[32mtrue[0m -> F[0,0]((consequent == 1.000000)))"
+
+
+labelloc="t"
+0 -> 1[label= "(p1 >= 3.000000) && (p1 <= 5.000000) \[0, 0.36\]"];
+1 -> 2[label= "(p0 == 0.000000) \[0, 0\]"];
+
+0->a0[color="green4"];
+
+a0[shape=box, color="green4" label="{G(G[0,8]((p0 <= 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\nG(G[0,8]((p0 == 0.000000)) -\> !(F[8,8]((consequent == 1.000000))))\n}"]
+}

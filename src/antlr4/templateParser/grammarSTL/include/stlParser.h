@@ -122,6 +122,7 @@ public:
     antlr4::tree::TerminalNode *LCPAREN();
     IntervalContext *interval();
     antlr4::tree::TerminalNode *RCPAREN();
+    antlr4::tree::TerminalNode *STL_ALWAYS();
     antlr4::tree::TerminalNode *LPAREN();
     antlr4::tree::TerminalNode *RPAREN();
     BooleanContext *boolean();

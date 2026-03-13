@@ -1,1 +1,1 @@
-~/Slam/build/slam --csv ./Gchain.csv --conf ./Gchain.xml
+~/Slam/build/slam --csv ./Gchain.csv --conf ./Gchain.xml --debug-cls --psilent
