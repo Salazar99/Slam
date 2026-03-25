@@ -27,6 +27,7 @@ The official repo of the Signal temporal Logic Assertion Miner
 
 [Optional arguments](#optional-arguments)
 
+[Citations](#citations)
 ## Project info
 
 SLAM (Signal temporal Logic Assertion Miner) is a tool to generate Signal Temporal Logic (STL) assertions starting from a set of user-defined hints and the simulation traces of the design under verification (DUV). The tool is agnostic with respect to the design from which the trace was generated, thus the DUV source code is not necessary. The user-defined hints involve STL templates, propositions and ranking metrics that are exploited by the assertion miner to reduce the search space and improve the quality of the generated assertions. This way, the tool supports the work of the verification engineer by including his/her insights in the process of automatically generating assertions.
@@ -241,6 +242,7 @@ The template expression has an additional parameter "check", if it is set to "1"
 * \-\-help : show options
 * \-\-interactive : enable interactive assertion ranking
 * \-\-dont-normalize : discard assertions using the absolute value (not normalized) of filterig metrics 
+* \-\-remove-impl : discard assertions that are implied by others using the STLSat tool 
 * \-\-isilent : disable all infos
 * \-\-max-ass <uint> : the maximum number of assertions to keep after the ranking
 * \-\-max-threads <uint> : max number of threads that SLAM is allowed to spawn
@@ -252,3 +254,9 @@ The template expression has an additional parameter "check", if it is set to "1"
 * \-\-vcd-r : recursively add signals for all sub-scopes
 * \-\-vcd-ss <string> :  select a scope of signals in the .vcd trace
 * \-\-wsilent : disable all warnings
+
+# Citations
+If you need to reference Slam in an academic publication, refer to the following paper:
+```
+D. Nicoletti, S. Germiniani and G. Pravadelli, "Mining signal temporal logic specifications for hybrid systems," 2024 Forum on Specification & Design Languages (FDL), Stockholm, Sweden, 2024, pp. 1-8, doi: 10.1109/FDL63219.2024.10673843.
+```
