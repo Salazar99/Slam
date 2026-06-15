@@ -290,6 +290,10 @@ void TLMiner::l1Handler(Template *t, size_t l2InstId, size_t l3InstId,
 
     std::vector<Proposition *> genProps;
 
+    //If the consequent is a G operator, we need to instantiate the interval before running the DT
+    if(t->isConGlobally())
+      t->makeGConInterval();
+
     antGen.makeAntecedents(t, candidateVariables_copy, numericCandidates,
                            genProps);
 

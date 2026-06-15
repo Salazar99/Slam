@@ -221,11 +221,36 @@ public:
     }
   }
   void setConsequentInterval(const std::pair<size_t, size_t> &interval) {
-    dynamic_cast<Eventually *>(_impl->getItems()[1])->setInterval(interval);
+    if(dynamic_cast<Eventually *>(_impl->getItems()[1])!=nullptr){
+      dynamic_cast<Eventually *>(_impl->getItems()[1])->setInterval(interval);
+    }
+    else if(dynamic_cast<Globally *>(_impl->getItems()[1])!=nullptr){
+      dynamic_cast<Globally *>(_impl->getItems()[1])->setInterval(interval);
+    }
+     else {
+      messageError("Trying to set the consequent interval of a template whose consequent is not an eventually or globally operator");
+    }
   }
   std::pair<size_t, size_t> getConsequentInterval() {
-    return dynamic_cast<Eventually *>(_impl->getItems()[1])->getInterval();
+    if(dynamic_cast<Eventually *>(_impl->getItems()[1])!=nullptr){
+      return dynamic_cast<Eventually *>(_impl->getItems()[1])->getInterval();
+    }
+    else if(dynamic_cast<Globally *>(_impl->getItems()[1])!=nullptr){
+      return dynamic_cast<Globally *>(_impl->getItems()[1])->getInterval();
+    }
+     else {
+      messageError("Trying to get the consequent interval of a template whose consequent is not an eventually or globally operator");
+      return std::make_pair(0,0);
+    }
   }
+
+  //True if the consequent is a G operator, false otherwise
+  bool isConGlobally() {
+    return dynamic_cast<Globally *>(_impl->getItems()[1])!=nullptr;
+  }
+
+  //Instantiate the interval of the conseuqent using clustering on the proposition
+  void makeGConInterval();
 
 private:
   /// used to generate the permutations

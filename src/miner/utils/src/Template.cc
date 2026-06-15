@@ -573,4 +573,17 @@ void Template::subPropInAssertion(Proposition *original, Proposition *newProp) {
 }
 
 
+void Template::makeGConInterval(){
+  int delta = 0;
+  //1. Gather the values to cluster, i.e. instants in which prop is true
+
+
+  //2. Cluster the time values in order to find the span of the G operator
+
+
+  //3. Set the found interval 
+
+  this->setConsequentInterval(std::make_pair(0, delta));
+}
+
 } // namespace slam
