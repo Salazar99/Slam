@@ -103,6 +103,7 @@ public:
     std::vector<TformulaContext *> tformula();
     TformulaContext* tformula(size_t i);
     antlr4::tree::TerminalNode *DT_ANDF();
+    antlr4::tree::TerminalNode *STL_ALWAYS();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

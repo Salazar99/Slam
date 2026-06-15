@@ -34,8 +34,15 @@ void StlParserHandler::exitImplication(stlParser::ImplicationContext *ctx) {
   if (ctx->tformula().size() == 1 && ctx->DT_ANDF() != nullptr) {
     //..F..
     TemporalExp *te = new TemporalAnd();
-    TemporalExp *teformulaCon =
-        new Eventually(_tfStack.top(), std::pair<size_t, size_t>(0, 0), _trace);
+    TemporalExp *teformulaCon;
+    if(ctx->STL_EVENTUALLY() != nullptr){
+      teformulaCon = new Eventually(_tfStack.top(), std::pair<size_t, size_t>(0, 0), _trace);
+    } else if(ctx->STL_ALWAYS() != nullptr){
+      teformulaCon = new Globally(_tfStack.top(), std::pair<size_t, size_t>(0, 0), _trace);
+    } else {
+      messageError("Unexpected temporal operator in implication");
+      return;
+    }  
     _tfStack.pop();
 
     std::string ph = "dtAndF";
@@ -47,8 +54,15 @@ void StlParserHandler::exitImplication(stlParser::ImplicationContext *ctx) {
   } else if (ctx->tformula().size() == 1 && ctx->DT_ANDG() != nullptr) {
     //..G..
     TemporalExp *te = new TemporalAnd();
-    TemporalExp *teformulaCon =
-        new Eventually(_tfStack.top(), std::pair<size_t, size_t>(0, 0), _trace);
+    TemporalExp *teformulaCon;
+    if(ctx->STL_EVENTUALLY() != nullptr){
+      teformulaCon = new Eventually(_tfStack.top(), std::pair<size_t, size_t>(0, 0), _trace);
+    } else if(ctx->STL_ALWAYS() != nullptr){
+      teformulaCon = new Globally(_tfStack.top(), std::pair<size_t, size_t>(0, 0), _trace);
+    } else {
+      messageError("Unexpected temporal operator in implication");
+      return;
+    }  
     _tfStack.pop();
 
     std::string ph = "dtAndG";

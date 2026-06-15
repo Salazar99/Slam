@@ -9,7 +9,10 @@ file : STL_ALWAYS LPAREN implication RPAREN EOF
 implication :
  DT_ANDG IMPL STL_EVENTUALLY LCPAREN interval RCPAREN tformula |
  DT_ANDF IMPL STL_EVENTUALLY LCPAREN interval RCPAREN tformula |
- tformula IMPL STL_EVENTUALLY LCPAREN interval RCPAREN tformula
+ tformula IMPL STL_EVENTUALLY LCPAREN interval RCPAREN tformula |
+ DT_ANDG IMPL STL_ALWAYS LCPAREN interval RCPAREN tformula |
+ DT_ANDF IMPL STL_ALWAYS LCPAREN interval RCPAREN tformula |
+ tformula IMPL STL_ALWAYS LCPAREN interval RCPAREN tformula
 ;
 
 tformula:
