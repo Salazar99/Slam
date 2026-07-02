@@ -575,14 +575,49 @@ void Template::subPropInAssertion(Proposition *original, Proposition *newProp) {
 
 void Template::makeGConInterval(){
   int delta = 0;
-  //1. Gather the values to cluster, i.e. instants in which prop is true
+  //1. Gather the values and calculate the minimum consecutive instances of true in the consequent
+  DTOperator *template_dt = _dtOp.second;
 
+  Proposition *tc = new BooleanConstant(true, VarType::Bool, 1, 0);
+  Proposition *fc = new BooleanConstant(false, VarType::Bool, 1, 0);
+  size_t delta = 0;  
+  size_t curr_delta = 0;
 
-  //2. Cluster the time values in order to find the span of the G operator
+  slam::Implication * impl = _impl;
+  size_t currTime = 0;
+  //add the true constant as first item of the template decision tree, to be able to evaluate the antecedent alone and get the interesting values for the consequent
+  template_dt->addItem(tc,{{0,0},{0,0}},0);
 
+  //This flag indicates that at the moment we are in a sequence of "interesting" values
+  bool true_seq = false;
 
-  //3. Set the found interval 
+  while (currTime < _max_length) {
+    if(true_seq){
+      //if the sequence is interrupted, reset the flag and reset the current delta
+      if(!(impl->evaluate_ant(currTime) == Trinary::T && impl->evaluate_con(currTime) == Trinary::T)){
+        true_seq = false;
+        curr_delta = 0;
+      }else{
+        curr_delta++;
+        delta = std::min(delta, curr_delta);
+      }
+    }else{
+      //if we are not in a sequence of consecutive ivs, check if the current value is interesting and eventully add it 
+      if((impl->evaluate_ant(currTime) == Trinary::T && impl->evaluate_con(currTime) == Trinary::T)){
+        curr_delta++;
+        true_seq = true;
+        delta = std::min(delta, curr_delta);
+        // if(clc::debugCls)
+        //   std::cout << "Found interesting value for G at time " << currTime << "\n";
+      }
+    }   
+        // each currTime we change state, currTime increases by 1
+    currTime++;
+  }
+  delete tc;
+  delete fc;
 
+  //Set the consequent interval to be [0, delta] (the minimum consecutive instances of true in the consequent)
   this->setConsequentInterval(std::make_pair(0, delta));
 }
 

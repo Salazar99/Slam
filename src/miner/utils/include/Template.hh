@@ -203,7 +203,7 @@ public:
   */
   std::vector<std::pair<std::pair<CachedAllNumeric::EvalRet, size_t>, size_t>>
   gatherGInterestingValue(CachedAllNumeric *cn, int depth, int width);
-
+  
   void subPropInAssertion(Proposition *original, Proposition *newProp);
 
   TemporalExp *getImplication() { return _impl; }
