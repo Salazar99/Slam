@@ -1,0 +1,86 @@
+WT1   ok  violations=0 triggers=531  z <= 1.28 -> F[0,15] a == 1
+WT2   ok  violations=0 triggers=132  G[0,1] a == 0 -> d_d1 > 0
+WT3   ok  violations=0 triggers=788  a == 1 -> d_d1 < 0 || d <= 0.1
+WT4   ok  violations=0 triggers=64  rain < 0 && a == 0 -> z_d1 < 0
+WT5   ok  violations=0 triggers=371  rain > 0 && a == 1 && z < 2 -> z_d1 > 0
+GB1   ok  violations=0 triggers=401  omega > 0 && omega < 15 -> gear == 1
+GB2   ok  violations=0 triggers=70  omega >= 15.2 && omega <= 24.8 -> gear == 2
+GB3   ok  violations=0 triggers=90  omega >= 25.1 && omega <= 34.8 -> gear == 3
+GB4   ok  violations=0 triggers=40  omega >= 35.1 -> gear == 4
+GB5   ok  violations=0 triggers=298  omega >= 5 -> theta_d1 > 0
+GB6   ok  violations=0 triggers=369  G[0,1] omega == 0 -> theta_d1 == 0
+HT1   ok  violations=0 triggers=300  T <= 15.2 && Status != 2 -> F[0,1] Status == 1
+HT2   ok  violations=0 triggers=36  T >= 16.2 -> Status == 0
+HT3   ok  violations=0 triggers=363  Status == 2 && T <= 13 -> T_d1 == 0
+AT1   ok  violations=0 triggers=0  speed < 120
+AT2   skipped (falsified): ARCH-COMP AT (sldemo_autotrans), discretised at 0.1 s per sample. Violated on 1 of 40 runs (max 4754.9 rpm): not a property of the model under these inputs.
+AT51  skipped (falsified): ARCH-COMP AT (sldemo_autotrans), discretised at 0.1 s per sample. Falsified on the generated runs (1 violation).
+AT52  skipped (falsified): ARCH-COMP AT (sldemo_autotrans), discretised at 0.1 s per sample. Falsified on the generated runs (4 violations).
+AT53  skipped (falsified): ARCH-COMP AT (sldemo_autotrans), discretised at 0.1 s per sample. Falsified on the generated runs (26 violations).
+AT54  ok  violations=0 triggers=48  gear != 4 && F[1,1] gear == 4 -> F[1,1] G[0,25] gear == 4
+AT6a  ok  violations=0 triggers=3  G[0,300] rpm < 3000 -> G[0,40] speed < 35
+AT6b  ok  violations=0 triggers=3  G[0,300] rpm < 3000 -> G[0,80] speed < 50
+AT6c  ok  violations=0 triggers=3  G[0,300] rpm < 3000 -> G[0,200] speed < 65
+FS1   ok  violations=0 triggers=0  afr >= 14 && afr <= 15.2
+FS2   ok  violations=0 triggers=0  fuel > 0
+FS3   ok  violations=0 triggers=260  throttle_d1 > 0.5 -> F[0,2] map_d1 > 0
+FS4   ok  violations=0 triggers=97  throttle_d1 < -0.5 -> F[0,3] fuel_d1 < 0
+AB1   ok  violations=0 triggers=9110  vs > 10 -> slip <= 0.3
+AB2   ok  violations=0 triggers=8094  vs > 1 && slip >= 0.1 -> vs_d1 < 0
+AB3   ok  violations=0 triggers=10356  vs > 1 -> sd_d1 > 0
+AB4   skipped (no): sldemo_absbrake (Modeling an Anti-Lock Braking System), ABS on, 0.05 s per sample; vs/ww are vehicle/wheel speeds in angular-velocity units. Compares two signals: outside the fragment of G (as App. D.4). Also violated in the first 0.2 s.
+HH1   ok  violations=0 triggers=0  tin >= 64.9 && tin <= 75.1
+HH2   ok  violations=0 triggers=284  tin <= 65.05 -> F[0,2] heater == 1
+HH3   ok  violations=0 triggers=569  tin >= 74.9 -> F[0,1] heater == 0
+HH4   ok  violations=0 triggers=34319  G[0,1] heater == 0 -> cost_d1 == 0
+| Design | Source | Reqs (encodable) | Coverage G = 1 | Coverage G ≥ 0.9 | Mean best-G |
+|---|---|---|---|---|---|
+| Gearbox | qwen2.5:14b-instruct-req | 6 (6) | 0.43 ± 0.09 | 0.43 ± 0.09 | 0.72 ± 0.05 |
+| Gearbox | qwen2.5:14b-instruct-trace | 6 (6) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.39 ± 0.04 |
+| Gearbox | qwen2.5:14b-instruct-trace-checked | 6 (6) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.29 ± 0.12 |
+| Gearbox | qwen2.5:7b-instruct-req | 6 (6) | 0.00 ± 0.00 | 0.03 ± 0.07 | 0.30 ± 0.10 |
+| Gearbox | qwen2.5:7b-instruct-trace | 6 (6) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.31 ± 0.09 |
+| Gearbox | qwen2.5:7b-instruct-trace-checked | 6 (6) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.21 ± 0.13 |
+| Gearbox | slam | 6 (6) | 0.00 | 0.00 | 0.36 |
+| Heater | qwen2.5:14b-instruct-req | 3 (3) | 0.33 ± 0.00 | 0.47 ± 0.18 | 0.67 ± 0.11 |
+| Heater | qwen2.5:14b-instruct-trace | 3 (3) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.57 ± 0.06 |
+| Heater | qwen2.5:14b-instruct-trace-checked | 3 (3) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.51 ± 0.03 |
+| Heater | qwen2.5:7b-instruct-req | 3 (3) | 0.20 ± 0.18 | 0.20 ± 0.18 | 0.51 ± 0.23 |
+| Heater | qwen2.5:7b-instruct-trace | 3 (3) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.49 ± 0.10 |
+| Heater | qwen2.5:7b-instruct-trace-checked | 3 (3) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.42 ± 0.14 |
+| Heater | slam | 3 (3) | 0.00 | 0.00 | 0.19 |
+| WaterTanks | qwen2.5:14b-instruct-req | 5 (5) | 0.40 ± 0.14 | 0.44 ± 0.09 | 0.73 ± 0.05 |
+| WaterTanks | qwen2.5:14b-instruct-trace | 5 (5) | 0.00 ± 0.00 | 0.08 ± 0.11 | 0.50 ± 0.15 |
+| WaterTanks | qwen2.5:14b-instruct-trace-checked | 5 (5) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.32 ± 0.18 |
+| WaterTanks | qwen2.5:7b-instruct-req | 5 (5) | 0.00 ± 0.00 | 0.04 ± 0.09 | 0.37 ± 0.09 |
+| WaterTanks | qwen2.5:7b-instruct-trace | 5 (5) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.21 ± 0.12 |
+| WaterTanks | qwen2.5:7b-instruct-trace-checked | 5 (5) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.08 ± 0.11 |
+| WaterTanks | slam | 5 (5) | 0.00 | 0.20 | 0.42 |
+| absbrake | qwen2.5:14b-instruct-req | 4 (3) | 0.40 ± 0.15 | 0.40 ± 0.15 | 0.69 ± 0.13 |
+| absbrake | qwen2.5:14b-instruct-trace | 4 (3) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.15 ± 0.09 |
+| absbrake | qwen2.5:14b-instruct-trace-checked | 4 (3) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.15 ± 0.09 |
+| absbrake | qwen2.5:7b-instruct-req | 4 (3) | 0.13 ± 0.18 | 0.13 ± 0.18 | 0.36 ± 0.23 |
+| absbrake | qwen2.5:7b-instruct-trace | 4 (3) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.37 ± 0.03 |
+| absbrake | qwen2.5:7b-instruct-trace-checked | 4 (3) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.24 ± 0.05 |
+| absbrake | slam | 4 (3) | 0.00 | 0.67 | 0.83 |
+| autotrans | qwen2.5:14b-instruct-req | 9 (5) | 0.20 ± 0.00 | 0.20 ± 0.00 | 0.30 ± 0.00 |
+| autotrans | qwen2.5:14b-instruct-trace | 9 (5) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.20 ± 0.02 |
+| autotrans | qwen2.5:14b-instruct-trace-checked | 9 (5) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.18 ± 0.04 |
+| autotrans | qwen2.5:7b-instruct-req | 9 (5) | 0.16 ± 0.09 | 0.16 ± 0.09 | 0.26 ± 0.08 |
+| autotrans | qwen2.5:7b-instruct-trace | 9 (5) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.25 ± 0.04 |
+| autotrans | qwen2.5:7b-instruct-trace-checked | 9 (5) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.10 ± 0.07 |
+| autotrans | slam | 9 (5) | 0.00 | 0.00 | 0.29 |
+| fuelsys | qwen2.5:14b-instruct-req | 4 (4) | 0.10 ± 0.14 | 0.10 ± 0.14 | 0.28 ± 0.16 |
+| fuelsys | qwen2.5:14b-instruct-trace | 4 (4) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.38 ± 0.05 |
+| fuelsys | qwen2.5:14b-instruct-trace-checked | 4 (4) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.30 ± 0.03 |
+| fuelsys | qwen2.5:7b-instruct-req | 4 (4) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.06 ± 0.00 |
+| fuelsys | qwen2.5:7b-instruct-trace | 4 (4) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.27 ± 0.09 |
+| fuelsys | qwen2.5:7b-instruct-trace-checked | 4 (4) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.20 ± 0.12 |
+| fuelsys | slam | 4 (4) | 0.00 | 0.00 | 0.03 |
+| househeat | qwen2.5:14b-instruct-req | 4 (4) | 0.00 ± 0.00 | 0.40 ± 0.14 | 0.61 ± 0.12 |
+| househeat | qwen2.5:14b-instruct-trace | 4 (4) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.30 ± 0.09 |
+| househeat | qwen2.5:14b-instruct-trace-checked | 4 (4) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.23 ± 0.09 |
+| househeat | qwen2.5:7b-instruct-req | 4 (4) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.16 ± 0.17 |
+| househeat | qwen2.5:7b-instruct-trace | 4 (4) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.49 ± 0.15 |
+| househeat | qwen2.5:7b-instruct-trace-checked | 4 (4) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.30 ± 0.21 |
+| househeat | slam | 4 (4) | 0.00 | 0.00 | 0.10 |
