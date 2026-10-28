@@ -1,29 +1,21 @@
 <slam>
-	<!-- sldemo_househeat, 60 s per sample; one context per requirement consequent. -->
-	<context name="comfort">
-		<numeric op="le,ge" clsEffort="0.01" exp="tout" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](tin >= 64.9 && tin <= 75.1))" />
-		<sort name="causality" exp="1-afct/traceLength"/>
-		<sort name="support" exp="atct/traceLength"/>
-	</context>
+	<!-- One context per golden-reference requirement (experiments/thesis/ground_truth.csv), configured by
+	     `s2_sweep.py tune` (grid and choice in experiments/thesis/results/s2_tuning.csv). -->
 	<context name="heater_on">
-		<numeric op="le,ge" clsEffort="0.01" exp="tin" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="tout" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](heater == 1))" />
+		<numeric op="le,ge" clsEffort="0.001" exp="tin" loc="dt"/>
+		<template dtLimits="1A,0.1E,5maxd,0mind" exp="G( ..F.. -> F[0,0](heater == 1))" />
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
 	<context name="heater_off">
-		<numeric op="le,ge" clsEffort="0.01" exp="tin" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="tout" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](heater == 0))" />
+		<numeric op="le,ge" clsEffort="0.001" exp="tin" loc="dt"/>
+		<template dtLimits="1A,0.1E,0maxd,0mind" exp="G( ..F.. -> F[0,0](heater == 0))" />
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
 	<context name="no_cost">
-		<numeric op="le,ge" clsEffort="0.01" exp="heater" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="tin" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](@(cost,1) == 0))" />
+		<numeric op="le,ge" clsEffort="0.001" exp="heater" loc="dt"/>
+		<template dtLimits="1A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](@(cost,1) == 0))" />
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>

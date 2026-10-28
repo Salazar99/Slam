@@ -1,63 +1,27 @@
 <slam>
-	<!-- sldemo_autotrans, 0.1 s per sample (maxd 100 = 10 s); one context per requirement consequent
-	     (ARCH-COMP AT1, AT2, AT5x, AT6x). -->
-	<context name="speed_limit">
-		<numeric op="le,ge" clsEffort="0.01" exp="rpm" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="throttle" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](speed < 120))" />
+	<!-- One context per golden-reference requirement (experiments/thesis/ground_truth.csv), configured by
+	     `s2_sweep.py tune` (grid and choice in experiments/thesis/results/s2_tuning.csv). -->
+	<context name="shift_gear1">
+		<numeric op="le,ge" clsEffort="0.1" exp="speed" loc="dt"/>
+		<template dtLimits="1A,0.1E,0maxd,0mind" exp="G( ..F.. -> F[0,0](gear == 1))" />
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
-	<context name="rpm_limit">
-		<numeric op="le,ge" clsEffort="0.01" exp="speed" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="throttle" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](rpm < 4750))" />
+	<context name="shift_gear2up">
+		<numeric op="le,ge" clsEffort="0.001" exp="speed" loc="dt"/>
+		<template dtLimits="1A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](gear >= 2))" />
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
-	<context name="gear1">
-		<numeric op="le,ge" clsEffort="0.01" exp="speed" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="throttle" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](gear == 1))" />
+	<context name="shift_gear3up">
+		<numeric op="le,ge" clsEffort="0.1" exp="speed" loc="dt"/>
+		<template dtLimits="1A,0.1E,20maxd,0mind" exp="G( ..F.. -> F[0,0](gear >= 3))" />
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
-	<context name="gear2">
-		<numeric op="le,ge" clsEffort="0.01" exp="speed" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="throttle" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](gear == 2))" />
-		<sort name="causality" exp="1-afct/traceLength"/>
-		<sort name="support" exp="atct/traceLength"/>
-	</context>
-	<context name="gear3">
-		<numeric op="le,ge" clsEffort="0.01" exp="speed" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="throttle" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](gear == 3))" />
-		<sort name="causality" exp="1-afct/traceLength"/>
-		<sort name="support" exp="atct/traceLength"/>
-	</context>
-	<context name="gear4">
-		<numeric op="le,ge" clsEffort="0.01" exp="speed" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="throttle" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](gear == 4))" />
-		<sort name="causality" exp="1-afct/traceLength"/>
-		<sort name="support" exp="atct/traceLength"/>
-	</context>
-	<context name="speed_below_35">
-		<numeric op="le" clsEffort="0.01" exp="rpm" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](speed < 35))" />
-		<sort name="causality" exp="1-afct/traceLength"/>
-		<sort name="support" exp="atct/traceLength"/>
-	</context>
-	<context name="speed_below_50">
-		<numeric op="le" clsEffort="0.01" exp="rpm" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](speed < 50))" />
-		<sort name="causality" exp="1-afct/traceLength"/>
-		<sort name="support" exp="atct/traceLength"/>
-	</context>
-	<context name="speed_below_65">
-		<numeric op="le" clsEffort="0.01" exp="rpm" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](speed < 65))" />
+	<context name="shift_gear4">
+		<numeric op="le,ge" clsEffort="0.001" exp="speed" loc="dt"/>
+		<template dtLimits="1A,0.1E,0maxd,0mind" exp="G( ..F.. -> F[0,0](gear == 4))" />
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>

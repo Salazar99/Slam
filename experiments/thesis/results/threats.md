@@ -20,17 +20,26 @@
 
 ## SLAM (Ch. 5)
 - **No quantitative comparison with other STL miners.** The LLM baseline (S6) is the only external reference (TeLEx, S5, was dropped: see above).
-- **Few, small benchmarks.** These are the 3 FDL designs (1001 samples each) plus the Simulink application examples (if completed). Every case is mined and scored on the same trace, with no held-out traces.
+- **Few, small benchmarks.** These are the 3 FDL designs (about 1000 samples each) plus 4 Simulink application examples. Every case is mined and scored on the same trace, with no held-out traces.
 - **The ground truth was formalized a posteriori.** The informal requirements of the FDL 2024 paper survive only as the SLAM config contexts (`38ff97a`, one per requirement). Requirement text and STL were reconstructed from the configs, the hybrid-automaton report and the traces, then reviewed by the author. Every ground-truth formula is checked to hold on its nominal trace and to be non-vacuously triggered (`score.py --check-truth`).
-- **Table I counts are not reproduced exactly.** Same configs, traces and mining code (only the Spot removal differs between `38ff97a` and `b1149a4`), at `--min-final 0.90`:
+- **Table I is the published one.** The thesis reports the FDL 2024 Table I (time, N ass, N specs, 100% coverage, faulty water tanks) as published. Re-mining with the frozen binary does not give the same counts, at `--min-final 0.90`:
 
-  | | Paper | Now |
+  | | Paper | Frozen binary |
   |---|---|---|
   | Water tanks | 46 | 218 |
   | Gearbox | 34 | 40 |
   | Thermostat | 25 | 17 |
 
-  The paper-time configs or traces probably differed. With th×10, the Thermostat count is 25.
+  Causes:
+  - The paper mined Water tanks on `tests/waterTanksCase/Trace_final.csv` (801 rows; `tests/CMakeLists.txt` at `142e952`/`38ff97a`), while the campaign uses `WT_Trace_Date.csv` (1000 rows, first 363 identical).
+  - Gearbox and Thermostat use the paper's traces and identical configs (only the root tag was renamed), so their difference presumably comes from the code (paper-era `142e952`/`38ff97a` vs `b1149a4`), which was not rebuilt.
+
+  The campaign's own measurements (S1 coverage, S2, faults) use the frozen binary throughout.
+- **SLAM prints constants as float32** with 6 decimals (`16.200001` is float32(16.2)). The translation to the G fragment writes them back as their shortest decimal (`16.2`), otherwise an assertion such as `T >= 16.200001` would never trigger in double precision and would look vacuous (`common.to_fragment`).
+- **Ranking in the frozen binary vs the paper's description.**
+  - The paper describes a support ranking normalized to 1 at the best assertion and cut at 0.90.
+  - The code (`Qualifier::sortAssertionsWithMetrics`) multiplies one sigmoid score per `<sort>` metric. The FDL configs define two: causality and support. When no assertion is near the top on both, every assertion scores close to 0 and `--min-final 0.90` keeps nothing.
+  - This is why fuelsys yields no assertion: its contexts mine 12 and 8 assertions at `--min-final 0`, all with a final score of 0.00. It is reported as observed.
 - **Sample-based time.** One row is one time unit. Mined windows count samples, not seconds.
 - **The derivative at the end of the trace.** SLAM's `@(x,k)` returns x itself on the last k samples. The G evaluation ignores those instants (it checks only the instants where the horizon fits).
 
@@ -43,18 +52,35 @@
 
 ## LLM baseline (S6)
 - Two free local open-weight models (`qwen2.5:7b-instruct`, the Ch. 6 RQ4 model, and `qwen2.5:14b-instruct`) ran through Ollama on an RTX 3060, with 5 samples per prompt (temperature 0.8, seeds 1..5) and one prompt per mode. Results do not generalize to larger or proprietary LLMs, or to LLM miners at large. Paid APIs were not used.
+- **S6 compares on the 3 FDL designs only.** The Simulink answers were generated for the earlier Simulink requirements and are not scored; extending S6 needs a new run (about 40 min of GPU).
 - Mode *req* reads the requirement text, which is an unfair advantage. Mode *trace* sees the same hints SLAM gets, plus a short description of the system and an excerpt of one trace, while SLAM mines all traces. The excerpt is the longest prefix of the first trace that fits a 20480-token context with 1500 tokens left for the answer: the whole run for Heater, absbrake, autotrans and fuelsys; 545/1000 rows for WaterTanks, 663/1001 for Gearbox, 889/2881 for househeat.
 - Ollama cuts a prompt longer than `num_ctx` to `num_ctx/2` without an error, keeping only the first 4 tokens. The first trace-mode run was lost to this, because Qwen tokenizes digits one by one (a numeric CSV is about one token per byte). Its 230 samples are kept apart (`s6_samples_trace_truncated.jsonl`) and not scored. The final prompts fit by construction (bytes + answer budget ≤ `num_ctx`), and the server log shows no truncation.
 - Answers are parsed into the G fragment with tabex's `convert` (as RQ4) plus one equivalence-preserving rewrite: constant-first comparisons (`15.2 <= omega`) are flipped. Anything else outside the fragment counts as a failure, as do missing `->`, bare Boolean atoms, unbounded or fractional windows and signal-vs-signal comparisons. The failure rates are reported with the results; SLAM's output is in the fragment by construction.
 
 - **Fault detection** counts only the assertions that hold on the nominal traces, because a violated one would be a false alarm. A sample with no such assertion detects nothing. This filter makes the unchecked trace-mode set identical to `-trace-checked`.
-- **G timeouts:** 18 of the 12,357 (requirement, candidate) pairs exceeded the 120 s per-pair budget. They are left out of the best-G maximum (all are LLM candidates). The forked scorer also crashed transiently on some pairs, about 2%; those were recomputed and all were scored.
+- **G timeouts:** 12 of the 5,310 (requirement, candidate) pairs in the final tables exceeded the 120 s per-pair budget. They are left out of the best-G maximum (all are LLM candidates). The forked scorer also crashed transiently on some pairs, about 2%; those were recomputed and all were scored.
 
 ## Simulink application benchmarks
 - These are MathWorks examples (`sldemo_autotrans`, `sldemo_fuelsys`, `sldemo_absbrake`, `sldemo_househeat`, R2026b), driven by seeded random inputs within documented ranges. They are not industrial field data.
 - The fuelsys nominal runs are restricted to the sensors' validity envelope: 10 input draws whose MAP reading exceeded 0.95 were redrawn, because that latches the controller's fail-safe mode. The first 2 s (start-up) are dropped.
-- Requirements for fuelsys, absbrake and househeat were formalized from the example descriptions and checked on the traces. The autotrans requirements are the published ARCH-COMP AT ones. AT2, AT51, AT52 and AT53 are **falsified** by the model on the random inputs, so they are reported, not used as ground truth.
-- **SLAM limits exposed by these benchmarks:**
-  - The `G(..F.. -> F[0,0] c)` template cannot express invariants (contexts whose consequent always holds mine nothing), `G` in the consequent (AT5x) or `G` in the antecedent (AT6x).
-  - `@(x,k)` is an operator computed on the trace, not a trace signal, so it cannot be a decision-tree numeric (such contexts mine nothing). Antecedents are therefore built from trace signals and their sums/differences; derivatives appear only in the template consequent (e.g. WT2–WT5, GB5, HT3).
+- **The Simulink golden reference is restricted to SLAM's template** (implications whose antecedent compares plain trace signals with constants, possibly under bounded F, and whose consequent is a single non-invariant predicate). The paper's coverage claim is scoped to this template.
+  - The requirements were written from the model documentation and parameters, not from SLAM's output:
+    - autotrans: the ShiftLogic schedule (lowest 2→1 downshift and highest upshift speeds; one-sample debounce, since `TWAIT` ticks of the 0.04 s chart fall within one 0.1 s sample);
+    - fuelsys: the EGO switching threshold of 0.5 and stoichiometric AFR 14.6;
+    - absbrake and househeat: the example descriptions.
+  - Every requirement holds on all traces and is triggered.
+  - Drafts falsified by the traces were dropped: brake with low throttle → speed decreasing; EGO rich → fuel rate decreasing (the feed-forward term dominates); heater on → indoor temperature rising; heater off with cold outdoor → falling.
+  - The earlier, broader set is archived in `ground_truth_v1_simulink.csv` and not scored. It holds the published ARCH-COMP AT1, AT2, AT5x and AT6x, the fuelsys invariants (AFR band, fuel > 0), derivative-antecedent requirements and `ww <= vs`, some of them falsified by the model and others outside SLAM's template.
+- **The Simulink contexts are configured per requirement, against the golden reference.** At the user's direction no standard template is imposed.
+  - Each context's configuration was picked by a grid search (`s2_sweep.py tune`, logged in `s2_tuning.csv`) over the knobs SLAM exposes:
+    - DT operands (`1A`/`3A`);
+    - antecedent window bound (`maxd` 0/5/20/100);
+    - clustering effort (`clsEffort` 0.001/0.01/0.1);
+    - ranking metrics (causality × support, or support only, as the paper describes the ranking);
+    - consequent window (`F[0,0]`, or the requirement's documented reaction window).
+  - All runs use `--min-final 0.90`. The pick covers its requirement, then has the best own-context G, then the fewest assertions.
+  - The Simulink coverage therefore shows that SLAM *can* mine each requirement with a suitable context. It is not a blind-mining result. The FDL designs keep the paper's own configs.
+- **SLAM's template limits** (why requirements were out of scope):
+  - The `G(..F.. -> F[0,0] c)` template cannot express invariants (a context whose consequent always holds mines nothing), `G` in the consequent (AT5x) or long `G` windows in the antecedent (AT6x).
+  - `@(x,k)` is an operator computed on the trace, not a trace signal, so it cannot be a decision-tree numeric. Derivatives appear only in consequents.
 - Sample-based windows: autotrans and fuelsys at 0.1 s, absbrake at 0.05 s, househeat at 60 s per row.

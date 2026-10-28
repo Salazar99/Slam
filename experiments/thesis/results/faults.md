@@ -18,9 +18,5 @@
 | WaterTanks | qwen2.5:7b-instruct-req | 5 | 0.8 ± 1.1 |
 | WaterTanks | qwen2.5:7b-instruct-trace-checked | 5 | 0.6 ± 0.9 |
 | WaterTanks | slam | 5 | 4.0 |
-| fuelsys | ground-truth | 4 | 4.0 |
-| fuelsys | qwen2.5:14b-instruct-req | 4 | 1.6 ± 2.2 |
-| fuelsys | qwen2.5:14b-instruct-trace-checked | 4 | 3.0 ± 1.2 |
-| fuelsys | qwen2.5:7b-instruct-req | 4 | 4.0 ± 0.0 |
-| fuelsys | qwen2.5:7b-instruct-trace-checked | 4 | 2.4 ± 2.2 |
+| fuelsys | ground-truth | 4 | 1.0 |
 | fuelsys | slam | 4 | 1.0 |

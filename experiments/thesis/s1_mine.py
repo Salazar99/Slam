@@ -40,6 +40,9 @@ def mine(case, extra, conf=None):
             viol = check_on_traces(formula, case)[0] if formula else ""
             rows.append(dict(case=case, source="slam", sample=0, context=context, rank=rank,
                              slam=line, formula=formula, unsupported=reason, violations=viol))
+    if not rows:    # nothing mined: the case is still scored (every requirement uncovered)
+        rows.append(dict(case=case, source="slam", sample=0, context="", rank=0, slam="", formula="",
+                         unsupported="no assertion mined", violations=""))
     return rows, ttm, wall
 
 

@@ -1,0 +1,12 @@
+chosen {'case': 'autotrans', 'context': 'shift_gear1', 'A': 1, 'maxd': 0, 'clsEffort': 0.1, 'sorts': 'causality,support', 'window': 0, 'n_ass': 2, 'covered': 1, 'own_G': 0.478625}
+chosen {'case': 'autotrans', 'context': 'shift_gear2up', 'A': 1, 'maxd': 100, 'clsEffort': 0.001, 'sorts': 'causality,support', 'window': 0, 'n_ass': 5, 'covered': 1, 'own_G': 0.999637}
+chosen {'case': 'autotrans', 'context': 'shift_gear3up', 'A': 1, 'maxd': 20, 'clsEffort': 0.1, 'sorts': 'causality,support', 'window': 0, 'n_ass': 3, 'covered': 1, 'own_G': 0.660544}
+chosen {'case': 'autotrans', 'context': 'shift_gear4', 'A': 1, 'maxd': 0, 'clsEffort': 0.001, 'sorts': 'causality,support', 'window': 0, 'n_ass': 1, 'covered': 1, 'own_G': 0.42259}
+chosen {'case': 'fuelsys', 'context': 'ego_rich', 'A': 1, 'maxd': 0, 'clsEffort': 0.001, 'sorts': 'causality,support', 'window': 0, 'n_ass': 10, 'covered': 1, 'own_G': 0.965361}
+chosen {'case': 'fuelsys', 'context': 'ego_lean', 'A': 1, 'maxd': 0, 'clsEffort': 0.001, 'sorts': 'causality,support', 'window': 0, 'n_ass': 2, 'covered': 1, 'own_G': 0.997005}
+chosen {'case': 'absbrake', 'context': 'slip_limit', 'A': 1, 'maxd': 100, 'clsEffort': 0.001, 'sorts': 'causality,support', 'window': 0, 'n_ass': 5, 'covered': 1, 'own_G': 0.968392}
+chosen {'case': 'absbrake', 'context': 'deceleration', 'A': 3, 'maxd': 0, 'clsEffort': 0.001, 'sorts': 'causality,support', 'window': 0, 'n_ass': 7, 'covered': 1, 'own_G': 0.830411}
+chosen {'case': 'absbrake', 'context': 'distance', 'A': 1, 'maxd': 5, 'clsEffort': 0.001, 'sorts': 'causality,support', 'window': 0, 'n_ass': 5, 'covered': 1, 'own_G': 0.928089}
+chosen {'case': 'househeat', 'context': 'heater_on', 'A': 1, 'maxd': 5, 'clsEffort': 0.001, 'sorts': 'causality,support', 'window': 0, 'n_ass': 4, 'covered': 1, 'own_G': 0.999531}
+chosen {'case': 'househeat', 'context': 'heater_off', 'A': 1, 'maxd': 0, 'clsEffort': 0.001, 'sorts': 'causality,support', 'window': 0, 'n_ass': 1, 'covered': 1, 'own_G': 0.476763}
+chosen {'case': 'househeat', 'context': 'no_cost', 'A': 1, 'maxd': 100, 'clsEffort': 0.001, 'sorts': 'causality,support', 'window': 0, 'n_ass': 1, 'covered': 1, 'own_G': 0.032645}

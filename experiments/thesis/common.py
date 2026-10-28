@@ -30,7 +30,7 @@ sys.path[:0] = [str(TABEX), str(TABEX / "experiments" / "rq4_llm")]
 from similarity.intervals import UnsupportedFormula  # noqa: E402
 from similarity.reference_semantics import constants, parse, variables  # noqa: E402
 from fast_similarity.engine import one_way, regions  # noqa: E402
-from experiments.rq3_mining.mine import to_fragment  # noqa: E402,F401
+from experiments.rq3_mining.mine import to_fragment as _to_fragment  # noqa: E402
 from experiments.rq3_mining.quality import antecedent, column, evaluate, read_trace  # noqa: E402,F401
 from experiments.rq3_mining.prune import TAUS  # noqa: E402,F401
 import experiments.rq4_llm.analyze as _analyze  # noqa: E402
@@ -47,6 +47,14 @@ CASES = {
 }
 for _d in sorted((TESTS / "simulink").glob("*/config.xml")):   # Simulink benchmarks, once generated
     CASES[_d.parent.name] = (_d, _d.parent / "traces")
+
+
+def to_fragment(assertion):
+    """tabex's SLAM -> fragment translation, with SLAM's float32 constants written back as their
+    shortest decimal: SLAM prints float32(16.2) as 16.200001, and in double `T >= 16.200001` never
+    holds where SLAM's `T >= 16.2f` does (the assertion would look vacuous)."""
+    return re.sub(r"(?<![\w.])-?\d+\.\d+",
+                  lambda m: np.format_float_positional(np.float32(m[0]), trim="-"), _to_fragment(assertion))
 
 
 def run_slam(conf, trace, extra=(), cwd=None, timeout=None):

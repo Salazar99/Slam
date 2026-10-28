@@ -1,22 +1,22 @@
 <slam>
-	<!-- sldemo_absbrake, 0.05 s per sample; one context per requirement consequent. -->
+	<!-- One context per golden-reference requirement (experiments/thesis/ground_truth.csv), configured by
+	     `s2_sweep.py tune` (grid and choice in experiments/thesis/results/s2_tuning.csv). -->
 	<context name="slip_limit">
-		<numeric op="le,ge" clsEffort="0.01" exp="vs" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="ww" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](slip <= 0.3))" />
+		<numeric op="le,ge" clsEffort="0.001" exp="vs" loc="dt"/>
+		<template dtLimits="1A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](slip <= 0.3))" />
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
 	<context name="deceleration">
-		<numeric op="le,ge" clsEffort="0.01" exp="vs" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="slip" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](@(vs,1) < 0))" />
+		<numeric op="le,ge" clsEffort="0.001" exp="vs" loc="dt"/>
+		<numeric op="le,ge" clsEffort="0.001" exp="slip" loc="dt"/>
+		<template dtLimits="3A,0.1E,0maxd,0mind" exp="G( ..F.. -> F[0,0](@(vs,1) < 0))" />
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
 	<context name="distance">
-		<numeric op="le,ge" clsEffort="0.01" exp="vs" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](@(sd,1) > 0))" />
+		<numeric op="le,ge" clsEffort="0.001" exp="vs" loc="dt"/>
+		<template dtLimits="1A,0.1E,5maxd,0mind" exp="G( ..F.. -> F[0,0](@(sd,1) > 0))" />
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>

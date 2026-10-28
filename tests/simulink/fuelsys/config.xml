@@ -1,32 +1,15 @@
 <slam>
-	<!-- sldemo_fuelsys, 0.1 s per sample, fault-free runs; one context per requirement consequent.
-	     Derivative numerics (@(throttle,1)) in the dt pool yield no candidates in SLAM b1149a4, so plain signals are used. -->
-	<context name="afr_regulation">
-		<numeric op="le,ge" clsEffort="0.01" exp="map" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="throttle" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="speed" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](afr >= 14 && afr <= 15.2))" />
+	<!-- One context per golden-reference requirement (experiments/thesis/ground_truth.csv), configured by
+	     `s2_sweep.py tune` (grid and choice in experiments/thesis/results/s2_tuning.csv). -->
+	<context name="ego_rich">
+		<numeric op="le,ge" clsEffort="0.001" exp="afr" loc="dt"/>
+		<template dtLimits="1A,0.1E,0maxd,0mind" exp="G( ..F.. -> F[0,0](ego > 0.5))" />
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>
-	<context name="fuel_on">
-		<numeric op="le,ge" clsEffort="0.01" exp="map" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="throttle" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](fuel > 0))" />
-		<sort name="causality" exp="1-afct/traceLength"/>
-		<sort name="support" exp="atct/traceLength"/>
-	</context>
-	<context name="map_rise">
-		<numeric op="le,ge" clsEffort="0.01" exp="throttle" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="map" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](@(map,1) > 0))" />
-		<sort name="causality" exp="1-afct/traceLength"/>
-		<sort name="support" exp="atct/traceLength"/>
-	</context>
-	<context name="fuel_fall">
-		<numeric op="le,ge" clsEffort="0.01" exp="throttle" loc="dt"/>
-		<numeric op="le,ge" clsEffort="0.01" exp="map" loc="dt"/>
-		<template dtLimits="3A,0.1E,100maxd,0mind" exp="G( ..F.. -> F[0,0](@(fuel,1) < 0))" />
+	<context name="ego_lean">
+		<numeric op="le,ge" clsEffort="0.001" exp="afr" loc="dt"/>
+		<template dtLimits="1A,0.1E,0maxd,0mind" exp="G( ..F.. -> F[0,0](ego < 0.5))" />
 		<sort name="causality" exp="1-afct/traceLength"/>
 		<sort name="support" exp="atct/traceLength"/>
 	</context>

@@ -3,11 +3,15 @@
     python score.py --check-truth
     python score.py results/s1_candidates.csv [results/s6_candidates.csv ...] [--tag s1]
 
-For every requirement r and every candidate set (case, source, sample): best-G of r against
-all candidates of the case (and, for SLAM, against its own context only), on the domain D
-of r (see common.domain). Outputs:
+For every requirement r and every candidate set (case, source, sample):
+  covered  the paper's coverage (FDL 2024, Table I): r's own context yields at least one
+           assertion that holds on all traces and is triggered (the context stands for
+           "related to r", which the paper judged by hand);
+  best-G   of r against all candidates of the case (and against its own context only), on the
+           domain D of r (see common.domain); stricter: closeness to an exact formalization.
+Outputs:
   results/<tag>_per_req.csv  one row per (requirement, source, sample)
-  results/<tag>_table.{csv,md,tex}  per case and source: coverage at G = 1 and at G >= tau,
+  results/<tag>_table.{csv,md,tex}  per case and source: paper coverage, coverage at G = 1 and at G >= tau,
                                     mean best-G; mean +- std over samples for LLM sources.
 """
 import argparse
@@ -15,6 +19,7 @@ import csv
 import statistics as st
 import sys
 from collections import defaultdict
+from functools import cache
 
 from common import RESULTS, TAUS, check_on_traces, domain, load_truth, parse, scores
 
@@ -39,6 +44,13 @@ def check_truth(truth):
     return bad
 
 
+@cache
+def holds(formula, case):
+    """True on all traces and non-vacuous (as check_truth); fast enough to run per candidate."""
+    viol, trig = check_on_traces(formula, case)
+    return viol == 0 and (trig > 0 or "->" not in formula)
+
+
 def per_requirement(truth, cands):
     groups = defaultdict(list)
     for c in cands:
@@ -54,7 +66,8 @@ def per_requirement(truth, cands):
             done = [(sc[(r["stl"], c["formula"])], c) for c in group if sc[(r["stl"], c["formula"])]["G"] is not None]
             best, bc = max(done, key=lambda x: x[0]["G"], default=({"G": 0.0, "fw": None, "bw": None}, {}))
             own = [s["G"] for s, c in done if c["context"] == r["context"]]
-            rows.append(dict(case=case, req_id=r["req_id"], source=source, sample=sample, D=str(D),
+            covered = any(holds(c["formula"], case) for c in group if c["context"] == r["context"])
+            rows.append(dict(case=case, req_id=r["req_id"], source=source, sample=sample, D=str(D), covered=int(covered),
                              n_cands=len(group), timeouts=len(group) - len(done),
                              best_G=round(best["G"], 6), fw=best["fw"], bw=best["bw"],
                              best_cand=bc.get("formula", ""), best_ctx=bc.get("context", ""),
@@ -71,12 +84,14 @@ def summarize(truth, rows):
         n_enc[r["case"]] += r["encodable"] == "yes"
     by = defaultdict(lambda: defaultdict(list))
     for x in rows:
-        by[(x["case"], x["source"])][x["sample"]].append(x["best_G"])
+        by[(x["case"], x["source"])][x["sample"]].append(x)
     out = []
     for (case, source), samples in sorted(by.items()):
         per = []
-        for gs in samples.values():
-            m = {"cov@1": sum(g >= EXACT for g in gs) / n_enc[case], "meanG": st.mean(gs)}
+        for xs in samples.values():
+            gs = [x["best_G"] for x in xs]
+            m = {"cov_paper": sum(x["covered"] for x in xs) / n_enc[case],
+                 "cov@1": sum(g >= EXACT for g in gs) / n_enc[case], "meanG": st.mean(gs)}
             m.update({f"cov@{t}": sum(g >= t - 1e-12 for g in gs) / n_enc[case] for t in TAUS})
             per.append(m)
         row = dict(case=case, source=source, n_req=n_req[case], encodable=n_enc[case], samples=len(per))
@@ -101,11 +116,13 @@ def write(tag, rows, table):
         w = csv.DictWriter(fh, list(table[0]))
         w.writeheader()
         w.writerows(table)
-    cols = ["cov@1", f"cov@{MAIN_TAU}", "meanG"]
-    head = f"| Design | Source | Reqs (encodable) | Coverage G = 1 | Coverage G ≥ {MAIN_TAU} | Mean best-G |"
-    md = [head, "|---|---|---|---|---|---|"]
-    tex = [r"\begin{tabular}{llcccc}", r"\toprule",
-           rf"Design & Source & Reqs & Cov.\ $G{{=}}1$ & Cov.\ $G{{\geq}}{MAIN_TAU}$ & Mean best-$G$ \\", r"\midrule"]
+    cols = ["cov_paper", "cov@1", f"cov@{MAIN_TAU}", "meanG"]
+    head = (f"| Design | Source | Reqs (encodable) | Coverage (paper) | Coverage G = 1 | Coverage G ≥ {MAIN_TAU} "
+            "| Mean best-G |")
+    md = [head, "|---|---|---|---|---|---|---|"]
+    tex = [r"\begin{tabular}{llccccc}", r"\toprule",
+           rf"Design & Source & Reqs & Cov.\ (paper) & Cov.\ $G{{=}}1$ & Cov.\ $G{{\geq}}{MAIN_TAU}$ & Mean best-$G$ \\",
+           r"\midrule"]
     for t in table:
         vals = [fmt(t, k) for k in cols]
         md.append(f"| {t['case']} | {t['source']} | {t['n_req']} ({t['encodable']}) | " + " | ".join(vals) + " |")

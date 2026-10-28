@@ -1,36 +1,36 @@
-{'case': 'WaterTanks', 'min_final': 0.8, 'th_scale': 0.1, 'n_ass': 260, 'time_to_mine_s': 2.586, 'wall_s': 2.635, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
-{'case': 'WaterTanks', 'min_final': 0.85, 'th_scale': 0.1, 'n_ass': 241, 'time_to_mine_s': 2.508, 'wall_s': 2.56, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
-{'case': 'WaterTanks', 'min_final': 0.9, 'th_scale': 0.1, 'n_ass': 218, 'time_to_mine_s': 2.435, 'wall_s': 2.489, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
-{'case': 'WaterTanks', 'min_final': 0.95, 'th_scale': 0.1, 'n_ass': 187, 'time_to_mine_s': 2.452, 'wall_s': 2.496, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
-{'case': 'WaterTanks', 'min_final': 0.8, 'th_scale': 1, 'n_ass': 260, 'time_to_mine_s': 2.511, 'wall_s': 2.556, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
-{'case': 'WaterTanks', 'min_final': 0.85, 'th_scale': 1, 'n_ass': 241, 'time_to_mine_s': 2.519, 'wall_s': 2.571, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
-{'case': 'WaterTanks', 'min_final': 0.9, 'th_scale': 1, 'n_ass': 218, 'time_to_mine_s': 2.492, 'wall_s': 2.542, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
-{'case': 'WaterTanks', 'min_final': 0.95, 'th_scale': 1, 'n_ass': 187, 'time_to_mine_s': 2.44, 'wall_s': 2.484, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
-{'case': 'WaterTanks', 'min_final': 0.8, 'th_scale': 10, 'n_ass': 260, 'time_to_mine_s': 2.264, 'wall_s': 2.312, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
-{'case': 'WaterTanks', 'min_final': 0.85, 'th_scale': 10, 'n_ass': 241, 'time_to_mine_s': 2.232, 'wall_s': 2.272, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
-{'case': 'WaterTanks', 'min_final': 0.9, 'th_scale': 10, 'n_ass': 218, 'time_to_mine_s': 2.318, 'wall_s': 2.363, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
-{'case': 'WaterTanks', 'min_final': 0.95, 'th_scale': 10, 'n_ass': 187, 'time_to_mine_s': 2.36, 'wall_s': 2.409, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
-{'case': 'Gearbox', 'min_final': 0.8, 'th_scale': 0.1, 'n_ass': 55, 'time_to_mine_s': 0.132, 'wall_s': 0.147, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
-{'case': 'Gearbox', 'min_final': 0.85, 'th_scale': 0.1, 'n_ass': 50, 'time_to_mine_s': 0.139, 'wall_s': 0.155, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
-{'case': 'Gearbox', 'min_final': 0.9, 'th_scale': 0.1, 'n_ass': 42, 'time_to_mine_s': 0.15, 'wall_s': 0.169, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
-{'case': 'Gearbox', 'min_final': 0.95, 'th_scale': 0.1, 'n_ass': 36, 'time_to_mine_s': 0.133, 'wall_s': 0.146, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
-{'case': 'Gearbox', 'min_final': 0.8, 'th_scale': 1, 'n_ass': 50, 'time_to_mine_s': 0.123, 'wall_s': 0.139, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
-{'case': 'Gearbox', 'min_final': 0.85, 'th_scale': 1, 'n_ass': 44, 'time_to_mine_s': 0.132, 'wall_s': 0.149, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
-{'case': 'Gearbox', 'min_final': 0.9, 'th_scale': 1, 'n_ass': 40, 'time_to_mine_s': 0.123, 'wall_s': 0.139, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
-{'case': 'Gearbox', 'min_final': 0.95, 'th_scale': 1, 'n_ass': 36, 'time_to_mine_s': 0.12, 'wall_s': 0.134, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
-{'case': 'Gearbox', 'min_final': 0.8, 'th_scale': 10, 'n_ass': 22, 'time_to_mine_s': 0.088, 'wall_s': 0.102, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
-{'case': 'Gearbox', 'min_final': 0.85, 'th_scale': 10, 'n_ass': 20, 'time_to_mine_s': 0.083, 'wall_s': 0.096, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
-{'case': 'Gearbox', 'min_final': 0.9, 'th_scale': 10, 'n_ass': 17, 'time_to_mine_s': 0.089, 'wall_s': 0.104, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
-{'case': 'Gearbox', 'min_final': 0.95, 'th_scale': 10, 'n_ass': 16, 'time_to_mine_s': 0.095, 'wall_s': 0.11, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
-{'case': 'Heater', 'min_final': 0.8, 'th_scale': 0.1, 'n_ass': 17, 'time_to_mine_s': 0.063, 'wall_s': 0.071, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
-{'case': 'Heater', 'min_final': 0.85, 'th_scale': 0.1, 'n_ass': 17, 'time_to_mine_s': 0.062, 'wall_s': 0.073, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
-{'case': 'Heater', 'min_final': 0.9, 'th_scale': 0.1, 'n_ass': 17, 'time_to_mine_s': 0.063, 'wall_s': 0.072, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
-{'case': 'Heater', 'min_final': 0.95, 'th_scale': 0.1, 'n_ass': 16, 'time_to_mine_s': 0.062, 'wall_s': 0.072, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
-{'case': 'Heater', 'min_final': 0.8, 'th_scale': 1, 'n_ass': 17, 'time_to_mine_s': 0.082, 'wall_s': 0.094, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
-{'case': 'Heater', 'min_final': 0.85, 'th_scale': 1, 'n_ass': 17, 'time_to_mine_s': 0.071, 'wall_s': 0.082, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
-{'case': 'Heater', 'min_final': 0.9, 'th_scale': 1, 'n_ass': 17, 'time_to_mine_s': 0.064, 'wall_s': 0.076, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
-{'case': 'Heater', 'min_final': 0.95, 'th_scale': 1, 'n_ass': 16, 'time_to_mine_s': 0.062, 'wall_s': 0.071, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
-{'case': 'Heater', 'min_final': 0.8, 'th_scale': 10, 'n_ass': 25, 'time_to_mine_s': 0.043, 'wall_s': 0.052, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1321}
-{'case': 'Heater', 'min_final': 0.85, 'th_scale': 10, 'n_ass': 23, 'time_to_mine_s': 0.043, 'wall_s': 0.051, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1321}
-{'case': 'Heater', 'min_final': 0.9, 'th_scale': 10, 'n_ass': 21, 'time_to_mine_s': 0.043, 'wall_s': 0.051, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1321}
-{'case': 'Heater', 'min_final': 0.95, 'th_scale': 10, 'n_ass': 8, 'time_to_mine_s': 0.051, 'wall_s': 0.059, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1321}
+{'case': 'WaterTanks', 'min_final': 0.8, 'th_scale': 0.1, 'n_ass': 260, 'time_to_mine_s': 2.366, 'wall_s': 2.414, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
+{'case': 'WaterTanks', 'min_final': 0.85, 'th_scale': 0.1, 'n_ass': 241, 'time_to_mine_s': 2.105, 'wall_s': 2.145, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
+{'case': 'WaterTanks', 'min_final': 0.9, 'th_scale': 0.1, 'n_ass': 218, 'time_to_mine_s': 2.078, 'wall_s': 2.115, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
+{'case': 'WaterTanks', 'min_final': 0.95, 'th_scale': 0.1, 'n_ass': 187, 'time_to_mine_s': 2.077, 'wall_s': 2.114, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
+{'case': 'WaterTanks', 'min_final': 0.8, 'th_scale': 1, 'n_ass': 260, 'time_to_mine_s': 2.081, 'wall_s': 2.122, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
+{'case': 'WaterTanks', 'min_final': 0.85, 'th_scale': 1, 'n_ass': 241, 'time_to_mine_s': 2.071, 'wall_s': 2.112, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
+{'case': 'WaterTanks', 'min_final': 0.9, 'th_scale': 1, 'n_ass': 218, 'time_to_mine_s': 2.09, 'wall_s': 2.134, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
+{'case': 'WaterTanks', 'min_final': 0.95, 'th_scale': 1, 'n_ass': 187, 'time_to_mine_s': 2.078, 'wall_s': 2.114, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
+{'case': 'WaterTanks', 'min_final': 0.8, 'th_scale': 10, 'n_ass': 260, 'time_to_mine_s': 2.104, 'wall_s': 2.146, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
+{'case': 'WaterTanks', 'min_final': 0.85, 'th_scale': 10, 'n_ass': 241, 'time_to_mine_s': 2.083, 'wall_s': 2.121, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
+{'case': 'WaterTanks', 'min_final': 0.9, 'th_scale': 10, 'n_ass': 218, 'time_to_mine_s': 2.08, 'wall_s': 2.122, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
+{'case': 'WaterTanks', 'min_final': 0.95, 'th_scale': 10, 'n_ass': 187, 'time_to_mine_s': 2.075, 'wall_s': 2.115, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.2, 'cov@0.5': 0.4, 'meanG': 0.4223}
+{'case': 'Gearbox', 'min_final': 0.8, 'th_scale': 0.1, 'n_ass': 55, 'time_to_mine_s': 0.125, 'wall_s': 0.142, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
+{'case': 'Gearbox', 'min_final': 0.85, 'th_scale': 0.1, 'n_ass': 50, 'time_to_mine_s': 0.127, 'wall_s': 0.141, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
+{'case': 'Gearbox', 'min_final': 0.9, 'th_scale': 0.1, 'n_ass': 42, 'time_to_mine_s': 0.127, 'wall_s': 0.142, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
+{'case': 'Gearbox', 'min_final': 0.95, 'th_scale': 0.1, 'n_ass': 36, 'time_to_mine_s': 0.129, 'wall_s': 0.141, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
+{'case': 'Gearbox', 'min_final': 0.8, 'th_scale': 1, 'n_ass': 50, 'time_to_mine_s': 0.121, 'wall_s': 0.135, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
+{'case': 'Gearbox', 'min_final': 0.85, 'th_scale': 1, 'n_ass': 44, 'time_to_mine_s': 0.116, 'wall_s': 0.131, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
+{'case': 'Gearbox', 'min_final': 0.9, 'th_scale': 1, 'n_ass': 40, 'time_to_mine_s': 0.114, 'wall_s': 0.128, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
+{'case': 'Gearbox', 'min_final': 0.95, 'th_scale': 1, 'n_ass': 36, 'time_to_mine_s': 0.118, 'wall_s': 0.132, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
+{'case': 'Gearbox', 'min_final': 0.8, 'th_scale': 10, 'n_ass': 22, 'time_to_mine_s': 0.08, 'wall_s': 0.092, 'cov_paper': 0.8333, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
+{'case': 'Gearbox', 'min_final': 0.85, 'th_scale': 10, 'n_ass': 20, 'time_to_mine_s': 0.077, 'wall_s': 0.091, 'cov_paper': 0.8333, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
+{'case': 'Gearbox', 'min_final': 0.9, 'th_scale': 10, 'n_ass': 17, 'time_to_mine_s': 0.079, 'wall_s': 0.092, 'cov_paper': 0.8333, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
+{'case': 'Gearbox', 'min_final': 0.95, 'th_scale': 10, 'n_ass': 16, 'time_to_mine_s': 0.078, 'wall_s': 0.092, 'cov_paper': 0.8333, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.1667, 'meanG': 0.3559}
+{'case': 'Heater', 'min_final': 0.8, 'th_scale': 0.1, 'n_ass': 17, 'time_to_mine_s': 0.06, 'wall_s': 0.071, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
+{'case': 'Heater', 'min_final': 0.85, 'th_scale': 0.1, 'n_ass': 17, 'time_to_mine_s': 0.061, 'wall_s': 0.072, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
+{'case': 'Heater', 'min_final': 0.9, 'th_scale': 0.1, 'n_ass': 17, 'time_to_mine_s': 0.059, 'wall_s': 0.067, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
+{'case': 'Heater', 'min_final': 0.95, 'th_scale': 0.1, 'n_ass': 16, 'time_to_mine_s': 0.058, 'wall_s': 0.068, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
+{'case': 'Heater', 'min_final': 0.8, 'th_scale': 1, 'n_ass': 17, 'time_to_mine_s': 0.061, 'wall_s': 0.069, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
+{'case': 'Heater', 'min_final': 0.85, 'th_scale': 1, 'n_ass': 17, 'time_to_mine_s': 0.059, 'wall_s': 0.069, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
+{'case': 'Heater', 'min_final': 0.9, 'th_scale': 1, 'n_ass': 17, 'time_to_mine_s': 0.061, 'wall_s': 0.07, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
+{'case': 'Heater', 'min_final': 0.95, 'th_scale': 1, 'n_ass': 16, 'time_to_mine_s': 0.059, 'wall_s': 0.068, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1898}
+{'case': 'Heater', 'min_final': 0.8, 'th_scale': 10, 'n_ass': 25, 'time_to_mine_s': 0.041, 'wall_s': 0.05, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1321}
+{'case': 'Heater', 'min_final': 0.85, 'th_scale': 10, 'n_ass': 23, 'time_to_mine_s': 0.041, 'wall_s': 0.05, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1321}
+{'case': 'Heater', 'min_final': 0.9, 'th_scale': 10, 'n_ass': 21, 'time_to_mine_s': 0.042, 'wall_s': 0.051, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1321}
+{'case': 'Heater', 'min_final': 0.95, 'th_scale': 10, 'n_ass': 8, 'time_to_mine_s': 0.041, 'wall_s': 0.05, 'cov_paper': 1.0, 'cov@1': 0.0, 'cov@0.9': 0.0, 'cov@0.5': 0.0, 'meanG': 0.1321}

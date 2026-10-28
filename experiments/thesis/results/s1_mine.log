@@ -1,0 +1,7 @@
+WaterTanks    218 assertions, 0 outside fragment, 0 violated on own trace, wall 1.88s
+Gearbox        40 assertions, 0 outside fragment, 0 violated on own trace, wall 0.11s
+Heater         17 assertions, 0 outside fragment, 0 violated on own trace, wall 0.06s
+absbrake       17 assertions, 0 outside fragment, 0 violated on own trace, wall 0.21s
+autotrans      11 assertions, 0 outside fragment, 0 violated on own trace, wall 0.16s
+fuelsys        12 assertions, 0 outside fragment, 0 violated on own trace, wall 0.05s
+househeat       6 assertions, 0 outside fragment, 0 violated on own trace, wall 1.15s
