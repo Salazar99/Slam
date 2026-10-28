@@ -175,6 +175,19 @@ def valid(tree, n):
     return max(n - tree.horizon() - max(ks, default=0), 0)
 
 
+def strip_parens(text):
+    """Drop balanced outer parentheses: `((p) -> (q))` -> `(p) -> (q)`."""
+    text = text.strip()
+    while text.startswith("(") and text.endswith(")"):
+        depth = 0
+        for k, ch in enumerate(text):
+            depth += (ch == "(") - (ch == ")")
+            if depth == 0 and k < len(text) - 1:
+                return text             # the first '(' closes before the end: not an outer pair
+        text = text[1:-1].strip()
+    return text
+
+
 def check_on_traces(formula, case):
     """(violations, triggers) of an implication body over all instants where its horizon fits.
     Triggers stay 0 if the formula is not a top-level implication (e.g. `G[1,2](p -> q)`)."""
@@ -183,7 +196,7 @@ def check_on_traces(formula, case):
     ant = None
     if "->" in formula:
         try:
-            ant, _ = antecedent(f"G({formula})")
+            ant, _ = antecedent(f"G({strip_parens(formula)})")
         except ValueError:      # '->' only nested under a temporal operator
             pass
     for tr in traces_of(case):

@@ -58,7 +58,7 @@ triggered (the paper's "covered by at least one related assertion"). The G colum
 requirement against the design's whole candidate set, i.e. closeness to an exact formalization.
 Simulink golden reference: only requirements in SLAM's template (`ground_truth.csv`; the earlier set is in
 `ground_truth_v1_simulink.csv`); its SLAM contexts are configured per requirement by `s2_sweep.py tune`
-(grid in `s2_tuning.csv`), the FDL designs keep the paper's configs. LLM rows (S6, FDL designs only) are mean ± std
+(grid in `s2_tuning.csv`), the FDL designs keep the paper's configs. LLM rows (S6) are mean ± std
 over 5 samples.
 `-req`: one formula per requirement text; `-trace`: assertions from a trace excerpt and SLAM's hints;
 `-trace-checked`: only the trace-mode assertions that hold on the trace.

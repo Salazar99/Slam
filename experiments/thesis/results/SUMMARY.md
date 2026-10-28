@@ -13,7 +13,7 @@ triggered (the paper's "covered by at least one related assertion"). The G colum
 requirement against the design's whole candidate set, i.e. closeness to an exact formalization.
 Simulink golden reference: only requirements in SLAM's template (`ground_truth.csv`; the earlier set is in
 `ground_truth_v1_simulink.csv`); its SLAM contexts are configured per requirement by `s2_sweep.py tune`
-(grid in `s2_tuning.csv`), the FDL designs keep the paper's configs. LLM rows (S6, FDL designs only) are mean ± std
+(grid in `s2_tuning.csv`), the FDL designs keep the paper's configs. LLM rows (S6) are mean ± std
 over 5 samples.
 `-req`: one formula per requirement text; `-trace`: assertions from a trace excerpt and SLAM's hints;
 `-trace-checked`: only the trace-mode assertions that hold on the trace.
@@ -41,9 +41,33 @@ over 5 samples.
 | WaterTanks | qwen2.5:7b-instruct-trace | 5 (5) | 0.12 ± 0.18 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.21 ± 0.12 |
 | WaterTanks | qwen2.5:7b-instruct-trace-checked | 5 (5) | 0.12 ± 0.18 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.08 ± 0.11 |
 | WaterTanks | slam | 5 (5) | 1.00 | 0.00 | 0.20 | 0.42 |
+| absbrake | qwen2.5:14b-instruct-req | 3 (3) | 0.67 ± 0.00 | 0.33 ± 0.00 | 0.33 ± 0.00 | 0.60 ± 0.00 |
+| absbrake | qwen2.5:14b-instruct-trace | 3 (3) | 1.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.20 ± 0.11 |
+| absbrake | qwen2.5:14b-instruct-trace-checked | 3 (3) | 1.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.19 ± 0.10 |
+| absbrake | qwen2.5:7b-instruct-req | 3 (3) | 0.07 ± 0.15 | 0.07 ± 0.15 | 0.07 ± 0.15 | 0.22 ± 0.23 |
+| absbrake | qwen2.5:7b-instruct-trace | 3 (3) | 0.73 ± 0.28 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.38 ± 0.04 |
+| absbrake | qwen2.5:7b-instruct-trace-checked | 3 (3) | 0.73 ± 0.28 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.34 ± 0.05 |
 | absbrake | slam | 3 (3) | 1.00 | 0.00 | 0.67 | 0.91 |
+| autotrans | qwen2.5:14b-instruct-req | 4 (4) | 0.15 ± 0.22 | 0.00 ± 0.00 | 0.10 ± 0.14 | 0.48 ± 0.38 |
+| autotrans | qwen2.5:14b-instruct-trace | 4 (4) | 0.50 ± 0.00 | 0.00 ± 0.00 | 0.75 ± 0.25 | 0.91 ± 0.04 |
+| autotrans | qwen2.5:14b-instruct-trace-checked | 4 (4) | 0.50 ± 0.00 | 0.00 ± 0.00 | 0.45 ± 0.33 | 0.73 ± 0.33 |
+| autotrans | qwen2.5:7b-instruct-req | 4 (4) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.02 ± 0.05 |
+| autotrans | qwen2.5:7b-instruct-trace | 4 (4) | 0.40 ± 0.22 | 0.00 ± 0.00 | 0.55 ± 0.33 | 0.84 ± 0.12 |
+| autotrans | qwen2.5:7b-instruct-trace-checked | 4 (4) | 0.40 ± 0.22 | 0.00 ± 0.00 | 0.20 ± 0.27 | 0.58 ± 0.31 |
 | autotrans | slam | 4 (4) | 1.00 | 0.00 | 0.50 | 0.86 |
+| fuelsys | qwen2.5:14b-instruct-req | 2 (2) | 1.00 ± 0.00 | 1.00 ± 0.00 | 1.00 ± 0.00 | 1.00 ± 0.00 |
+| fuelsys | qwen2.5:14b-instruct-trace | 2 (2) | 0.40 ± 0.42 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.45 ± 0.01 |
+| fuelsys | qwen2.5:14b-instruct-trace-checked | 2 (2) | 0.40 ± 0.42 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.19 ± 0.20 |
+| fuelsys | qwen2.5:7b-instruct-req | 2 (2) | 0.10 ± 0.22 | 0.10 ± 0.22 | 0.10 ± 0.22 | 0.63 ± 0.36 |
+| fuelsys | qwen2.5:7b-instruct-trace | 2 (2) | 0.20 ± 0.27 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.35 ± 0.20 |
+| fuelsys | qwen2.5:7b-instruct-trace-checked | 2 (2) | 0.20 ± 0.27 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.10 ± 0.14 |
 | fuelsys | slam | 2 (2) | 1.00 | 0.00 | 1.00 | 0.98 |
+| househeat | qwen2.5:14b-instruct-req | 3 (3) | 0.27 ± 0.15 | 0.00 ± 0.00 | 0.20 ± 0.18 | 0.45 ± 0.22 |
+| househeat | qwen2.5:14b-instruct-trace | 3 (3) | 0.33 ± 0.24 | 0.00 ± 0.00 | 0.20 ± 0.30 | 0.61 ± 0.22 |
+| househeat | qwen2.5:14b-instruct-trace-checked | 3 (3) | 0.33 ± 0.24 | 0.00 ± 0.00 | 0.07 ± 0.15 | 0.33 ± 0.21 |
+| househeat | qwen2.5:7b-instruct-req | 3 (3) | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.00 ± 0.00 | 0.26 ± 0.23 |
+| househeat | qwen2.5:7b-instruct-trace | 3 (3) | 0.13 ± 0.18 | 0.00 ± 0.00 | 0.13 ± 0.18 | 0.69 ± 0.04 |
+| househeat | qwen2.5:7b-instruct-trace-checked | 3 (3) | 0.13 ± 0.18 | 0.00 ± 0.00 | 0.07 ± 0.15 | 0.35 ± 0.26 |
 | househeat | slam | 3 (3) | 1.00 | 0.00 | 0.33 | 0.72 |
 
 Per-requirement detail (best candidate, one-way scores): `s1_per_req.csv`.
@@ -52,12 +76,12 @@ LLM answers in and out of the G fragment, and how many fail on the traces (`-che
 
 | Source | Lines | Outside fragment / dropped | Violated on the traces |
 |---|---|---|---|
-| qwen2.5:14b-instruct-req | 70 | 8 | 14 |
-| qwen2.5:14b-instruct-trace | 696 | 118 | 435 |
-| qwen2.5:14b-instruct-trace-checked | 696 | 553 | 0 |
-| qwen2.5:7b-instruct-req | 70 | 27 | 32 |
-| qwen2.5:7b-instruct-trace | 422 | 254 | 124 |
-| qwen2.5:7b-instruct-trace-checked | 422 | 378 | 0 |
+| qwen2.5:14b-instruct-req | 130 | 29 | 21 |
+| qwen2.5:14b-instruct-trace | 1292 | 182 | 770 |
+| qwen2.5:14b-instruct-trace-checked | 1292 | 952 | 0 |
+| qwen2.5:7b-instruct-req | 130 | 72 | 45 |
+| qwen2.5:7b-instruct-trace | 799 | 371 | 298 |
+| qwen2.5:7b-instruct-trace-checked | 799 | 669 | 0 |
 
 ## S2: sensitivity (ranking threshold --min-final × elbow th scale)
 | Design | N ass (min-max) | Coverage paper (min-max) | Cov. G≥0.9 (min-max) | Mean best-G (min-max) | Wall time s (min-max) |
@@ -65,10 +89,10 @@ LLM answers in and out of the G fragment, and how many fail on the traces (`-che
 | WaterTanks | 187–260 | 1.00–1.00 | 0.20–0.20 | 0.42–0.42 | 2.11–2.41 |
 | Gearbox | 16–55 | 0.83–1.00 | 0.00–0.00 | 0.36–0.36 | 0.09–0.14 |
 | Heater | 8–25 | 1.00–1.00 | 0.00–0.00 | 0.13–0.19 | 0.05–0.07 |
-| autotrans | 8–17 | 0.75–1.00 | 0.50–0.50 | 0.86–0.86 | 0.13–0.20 |
+| autotrans | 8–17 | 0.75–1.00 | 0.50–0.50 | 0.86–0.86 | 0.13–0.21 |
 | fuelsys | 12–14 | 1.00–1.00 | 1.00–1.00 | 0.98–0.98 | 0.05–0.06 |
-| absbrake | 17–17 | 1.00–1.00 | 0.67–0.67 | 0.91–0.91 | 0.21–0.21 |
-| househeat | 6–6 | 1.00–1.00 | 0.33–0.33 | 0.72–0.72 | 1.15–1.15 |
+| absbrake | 17–17 | 1.00–1.00 | 0.67–0.67 | 0.91–0.91 | 0.21–0.22 |
+| househeat | 6–6 | 1.00–1.00 | 0.33–0.33 | 0.72–0.72 | 1.16–1.18 |
 
 Full grids: `s2_sensitivity.md`, `s2_sensitivity_sim.md`.
 
@@ -105,6 +129,10 @@ Figure: `s2_scalability.pdf`.
 | WaterTanks | qwen2.5:7b-instruct-trace-checked | 5 | 0.6 ± 0.9 |
 | WaterTanks | slam | 5 | 4.0 |
 | fuelsys | ground-truth | 4 | 1.0 |
+| fuelsys | qwen2.5:14b-instruct-req | 4 | 1.0 ± 0.0 |
+| fuelsys | qwen2.5:14b-instruct-trace-checked | 4 | 0.6 ± 0.9 |
+| fuelsys | qwen2.5:7b-instruct-req | 4 | 0.0 ± 0.0 |
+| fuelsys | qwen2.5:7b-instruct-trace-checked | 4 | 0.8 ± 1.3 |
 | fuelsys | slam | 4 | 1.0 |
 
 ## Table I details (P/NE sets, templates, trace length)

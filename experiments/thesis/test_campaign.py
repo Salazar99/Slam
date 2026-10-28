@@ -1,7 +1,7 @@
 """Smallest checks of the campaign plumbing: python test_campaign.py"""
 from fractions import Fraction
 
-from common import check_on_traces, scores, to_fragment
+from common import check_on_traces, scores, strip_parens, to_fragment
 from score import per_requirement, summarize
 from s6_llm import to_formula
 
@@ -18,6 +18,9 @@ assert 0 < sc[(truth, "T >= 16 -> Status == 0")]["G"] < 1
 assert check_on_traces(truth, "Heater") == (0, 36)
 # an implication nested under G[a,b] is checked (no trigger count) instead of raising
 assert check_on_traces("G[0,1](T >= 16.2 -> Status == 0)", "Heater") == (0, 0)
+# a fully parenthesized implication is still triggered (LLM answers often come wrapped)
+assert check_on_traces(f"(({truth}))", "Heater") == (0, 36)
+assert strip_parens("(a) -> (b)") == "(a) -> (b)"
 # LLM answers: constant-first comparisons are flipped, signal names ending in digits untouched
 assert to_formula("16.2 <= T && x_d1 > 0 -> F[0,1] Status == 0") == "T >= 16.2 && x_d1 > 0 -> F[0,1] Status == 0"
 # coverage: 2 requirements, one exact, one at 0.95

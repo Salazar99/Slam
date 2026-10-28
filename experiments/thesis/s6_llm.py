@@ -28,7 +28,6 @@ from experiments.rq4_llm.generate import PROMPT
 
 K, TEMPERATURE = 5, 0.8            # as tabex RQ4, with 5 samples
 MODELS = ["qwen2.5:7b-instruct", "qwen2.5:14b-instruct"]   # free, local (Ollama, RTX 3060)
-FDL = ("WaterTanks", "Gearbox", "Heater")
 NUM_CTX = {"req": 4096, "trace": 20480}
 NUM_PREDICT = {"req": 200, "trace": 1500}                  # req: as RQ4
 # Ollama silently cuts a prompt longer than num_ctx to num_ctx/2 (keeping only the first 4 tokens).
@@ -188,10 +187,6 @@ def to_formula(line):
 def candidates():
     rows = []
     for r in map(json.loads, SAMPLES.read_text().splitlines()):
-        # ponytail: S6 compares on the FDL designs only; the Simulink answers predate the template-restricted
-        # golden reference. Rerun `run --cases autotrans fuelsys absbrake househeat` (~40 min GPU) to extend.
-        if r["case"] not in FDL:
-            continue
         lines = [clean(r["answer"])] if r["mode"] == "req" else \
             [l for l in re.sub(r"```[a-zA-Z]*", "", r["answer"]).splitlines() if l.strip()][:10]
         src = f"{r['model']}-{r['mode']}"
