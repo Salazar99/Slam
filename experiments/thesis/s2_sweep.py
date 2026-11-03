@@ -2,7 +2,7 @@
 
     python s2_sweep.py sensitivity [--cases ...] [--tag s2_sensitivity_sim]   # --min-final x clsEffort scale
     python s2_sweep.py scalability   # number of dt numeric expressions at fixed trace length
-    python s2_sweep.py table1        # P/NE sets, template, trace length per benchmark
+    python s2_sweep.py table1        # P/NE sets, template, trace length, assertions per filtering stage
     python s2_sweep.py tune [--cases ...]   # per-context SLAM configuration search (Simulink designs)
 
 Outputs in results/: s2_sensitivity.{csv,md}, s2_scalability.{csv,md,png}, s2_tableI.md.
@@ -16,7 +16,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from common import CASES, RESULTS, UnsupportedFormula, load_truth, run_slam, to_fragment, traces_of
+from common import CASES, RESULTS, SLAM, TESTS, UnsupportedFormula, load_truth, run_slam, to_fragment, traces_of
 from score import per_requirement, summarize
 
 MIN_FINAL = [0.80, 0.85, 0.90, 0.95]
@@ -134,10 +134,38 @@ def plot(rows):
     fig.savefig(RESULTS / "s2_scalability.pdf")
 
 
+PAPER_N_ASS = {"WaterTanks": 46, "Gearbox": 34, "Heater": 25}   # FDL 2024 Table I (Thermostat = Heater)
+
+
+def stage_counts(conf, trace, min_final):
+    """{context: (mined, kept)} from SLAM's log: 'Found N assertions' is the raw mined count (before dedup and
+    ranking), 'Number of assertions' what is left after dedup and the --min-final cut (the paper's N ass)."""
+    src = ["--csv-dir" if Path(trace).is_dir() else "--csv", str(trace)]
+    with tempfile.TemporaryDirectory() as tmp:
+        log = subprocess.run([str(SLAM), *src, "--conf", str(conf), "--min-final", str(min_final), "--divide-stat"],
+                             cwd=tmp, capture_output=True, text=True, check=True).stdout
+    log = re.sub(r"\x1b\[[0-9;]*m", "", log)
+    return {c: (int(f), int(n)) for c, f, n in
+            re.findall(r"CONTEXT: (\S+).*?Found (\d+) assertions.*?Number of assertions: (\d+)", log, re.S)}
+
+
 def table1():
-    lines = ["| Benchmark | Context | P (prop) | NE (numeric, op, th) | Template | dtLimits | Trace length |",
-             "|---|---|---|---|---|---|---|"]
-    for case, (conf, _) in CASES.items():
+    lines = ["| Benchmark | Context | P (prop) | NE (numeric, op, th) | Template | dtLimits | Trace length "
+             "| Mined | After dedup | After --min-final 0.90 |", "|---|---|---|---|---|---|---|---|---|---|"]
+    runs = [(case, conf, trace, case) for case, (conf, trace) in CASES.items()]
+    runs.insert(1, ("WaterTanks", CASES["WaterTanks"][0], TESTS / "waterTanksCase/Trace_final.csv",
+                    "WaterTanks (paper trace)"))
+    totals = []
+    for case, conf, trace, label in runs:
+        # FDL only: Table I's designs (a rebuilt b1149a4 on another machine reproduces their counts, not the
+        # Simulink ones: see threats.md)
+        dedup, cut = (stage_counts(conf, trace, 0), stage_counts(conf, trace, 0.90)) if case in FDL else ({}, {})
+        if dedup:
+            totals.append(f"| {label} | {Path(trace).name} | {sum(m for m, _ in dedup.values())} "
+                          f"| {sum(n for _, n in dedup.values())} | {sum(n for _, n in cut.values())} "
+                          f"| {PAPER_N_ASS.get(case, '-')} |")
+        if label != case:
+            continue
         n = sum(len(next(iter(t.values()))) for t in traces_of(case))
         text = re.sub(r"<!--.*?-->", "", Path(conf).read_text(), flags=re.S)
         for name, body in re.findall(r'<context\s+name\s*=\s*"([^"]*)"\s*>(.*?)</context>', text, re.S):
@@ -148,7 +176,13 @@ def table1():
                             for e in tags("numeric")) or "-"
             for t in tags("template"):
                 lines.append(f"| {case} | {name} | {props} | {nes} | `{t['exp']}` | "
-                             f"{t.get('dtLimits', '')} | {n} |")
+                             f"{t.get('dtLimits', '')} | {n} | "
+                             + (f"{dedup[name][0]} | {dedup[name][1]} | {cut[name][1]} |" if dedup else "- | - | - |"))
+    lines += ["", "Per FDL design (b1149a4). Mined: SLAM's `Found N assertions` (every assertion that holds and is "
+              "triggered, before dedup); after dedup: `--min-final 0`; after the cut: `--min-final 0.90`, the stage "
+              "the FDL 2024 Table I N ass was counted at (`Qualifier.cc:283` at 38ff97a).", "",
+              "| Design | Trace | Mined | After dedup | After --min-final 0.90 | Paper Table I N ass |",
+              "|---|---|---|---|---|---|", *totals]
     (RESULTS / "s2_tableI.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))
 

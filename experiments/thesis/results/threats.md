@@ -22,17 +22,18 @@
 - **No quantitative comparison with other STL miners.** The LLM baseline (S6) is the only external reference (TeLEx, S5, was dropped: see above).
 - **Few, small benchmarks.** These are the 3 FDL designs (about 1000 samples each) plus 4 Simulink application examples. Every case is mined and scored on the same trace, with no held-out traces.
 - **The ground truth was formalized a posteriori.** The informal requirements of the FDL 2024 paper survive only as the SLAM config contexts (`38ff97a`, one per requirement). Requirement text and STL were reconstructed from the configs, the hybrid-automaton report and the traces, then reviewed by the author. Every ground-truth formula is checked to hold on its nominal trace and to be non-vacuously triggered (`score.py --check-truth`).
-- **Table I is the published one.** The thesis reports the FDL 2024 Table I (time, N ass, N specs, 100% coverage, faulty water tanks) as published. Re-mining with the frozen binary does not give the same counts, at `--min-final 0.90`:
+- **Table I is the published one, and its N ass is a filtered count.** The thesis reports the FDL 2024 Table I (time, N ass, N specs, 100% coverage, faulty water tanks) as published. SLAM mines far more assertions than N ass. Every mined assertion holds on the trace and is triggered; deduplication and then the ranking cut at `--min-final 0.90` remove most of them. At `38ff97a`, N ass is counted after the cut (`Qualifier.cc:283`). The frozen binary's count at each stage (`s2_sweep.py table1`, `s2_tableI.md`):
 
-  | | Paper | Frozen binary |
-  |---|---|---|
-  | Water tanks | 46 | 218 |
-  | Gearbox | 34 | 40 |
-  | Thermostat | 25 | 17 |
+  | | Mined | After dedup | After the 0.90 cut | Paper N ass |
+  |---|---|---|---|---|
+  | Water tanks (campaign trace `WT_Trace_Date.csv`) | 3199 | 3072 | 218 | 46 |
+  | Water tanks (paper trace `Trace_final.csv`) | 4347 | 4114 | 156 | 46 |
+  | Gearbox | 97 | 96 | 40 | 34 |
+  | Thermostat | 49 | 44 | 17 | 25 |
 
-  Causes:
-  - The paper mined Water tanks on `tests/waterTanksCase/Trace_final.csv` (801 rows; `tests/CMakeLists.txt` at `142e952`/`38ff97a`), while the campaign uses `WT_Trace_Date.csv` (1000 rows, first 363 identical).
-  - Gearbox and Thermostat use the paper's traces and identical configs (only the root tag was renamed), so their difference presumably comes from the code (paper-era `142e952`/`38ff97a` vs `b1149a4`), which was not rebuilt.
+  - The ranking cut is the stage that shrinks the set: 93–96% of the Water tanks assertions, 58% for Gearbox and 61% for Thermostat.
+  - The post-cut counts still do not match the paper. The paper mined Water tanks on `Trace_final.csv` (801 rows; `tests/CMakeLists.txt` at `142e952`/`38ff97a`), and even on that trace the frozen binary keeps 156, not 46. Gearbox and Thermostat use the paper's traces and identical configs (only the root tag was renamed). Thermostat keeps fewer than the paper (17 vs 25), so a stricter filter cannot explain the gap on its own.
+  - The source diff from `38ff97a` to `b1149a4` is 8 insertions and 6268 deletions, mostly removed spot/LTL code. The paper-era binary was not rebuilt, so the remaining gap is reported, not explained.
 
   The campaign's own measurements (S1 coverage, S2, faults) use the frozen binary throughout.
 - **SLAM prints constants as float32** with 6 decimals (`16.200001` is float32(16.2)). The translation to the G fragment writes them back as their shortest decimal (`16.2`), otherwise an assertion such as `T >= 16.200001` would never trigger in double precision and would look vacuous (`common.to_fragment`).
