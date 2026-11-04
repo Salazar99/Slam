@@ -1,0 +1,24 @@
+And_s1: rc=1 1172s
+And_s2: rc=1 1097s
+And_s3: rc=1 1185s
+And_s4: rc=1 1170s
+And_s5: rc=1 1147s
+Next_s1: rc=1 2199s
+Next_s2: rc=1 2307s
+Next_s3: rc=1 4552s
+Next_s4: rc=1 4194s
+Next_s5: rc=1 3744s
+Eventually_s1: rc=1 889s
+Eventually_s2: rc=1 708s
+Eventually_s3: rc=1 765s
+Eventually_s4: rc=1 853s
+Eventually_s5: rc=1 788s
+NextAnd_s1: rc=1 10951s
+NextAnd_s2: rc=1 10719s
+NextAnd_s3: rc=1 10906s
+NextAnd_s4: rc=1 11065s
+NextAnd_s5: rc=1 14917s
+Until_s1: rc=1 3277s
+Until_s2: rc=1 3282s
+Until_s3: rc=1 3277s
+Killed

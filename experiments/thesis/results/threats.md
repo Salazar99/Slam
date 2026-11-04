@@ -1,12 +1,19 @@
 # Threats to validity (campaign notes for Ch. 5, 6, 8)
 
 ## Dropped campaigns
-- **S3 (USM-T seed variability) and S4 (NextAnd/Until challenges) were not run.**
-  - The miners run as Docker images, and this machine has no Docker.
-  - The original And/Next/Eventually challenge inputs are not on disk.
-  - The stimulus seed is hard-coded: `srand(0)` in `tool/synthetic_gen/testGenerator/input_generator/hif_utils.py:334`. In addition, the input order depends on `PYTHONHASHSEED` and the overlap step uses an unseeded `random`, so regenerating a challenge also changes its golden specifications.
-
-  Keep the Sec. 8.1 argument ("long traces, golden specs checked to hold and be non-vacuous") and state the single run as a limitation. Soften the ">99%" minimisation claim in 7.2, because S3 cannot support it.
+- **S3 (USM-T seed variability) and S4 (NextAnd/Until challenges) were rerun on the main machine** (`s3_usmt.py`, ENV.md). Notes:
+  - **Seeds.** The stimulus seed is set through `USMT_SEED` (`srand` in the generated testbench). `PYTHONHASHSEED=0` and `random.seed(0)` keep the golden specifications identical across the seeds of a challenge (checked by md5).
+  - **Code version.** USM-T `28dff1c`, the code of the TODAES submission. A first run on `3c6d0ca` is superseded: its Next design drove shared outputs from several submodules, and 7/10 golden specifications failed on the trace.
+  - **The published inputs cannot be regenerated exactly.** For Next (overlap 10), the published challenge drew its overlap with an unseeded `random`, so the regenerated Next has a different proposition set from the published one. And and Eventually have the same golden specifications as the published inputs, but the designs differ textually (And: 26 observable faults vs 28). The 5 seeds share one golden set, so the across-seed comparison holds, and the published TODAES 2026 tests are run once as a reference on their own inputs.
+  - **The published Next input fails `golden_check`:** 4/10 golden specifications do not hold on its own golden trace, all on outputs shared by two specifications (e.g. `c_2` connected to two submodules). To be raised with the co-authors before the thesis states it.
+  - **Settings follow the published case study's hand edits** (ENV.md): Texada caps, HARM `dtLimits` on And, Samples2LTL trim on And/Next, `--max-mined 10000 --ltlf` on Eventually. NextAnd and Until have no published test; their Texada cap (600 s) and Until's Eventually flags are campaign choices.
+  - **Texada on Until produced nothing:** both templates hit the 600 s cap on every seed, and Texada writes its output only at the end, so USM-T drops the use case ("mined specifications file is empty"). Reported as "no output within the limit".
+  - **Capped Texada calls duplicate output.** A killed call leaves the previous template's output in `/output/.temp`, which the run script appends again: And has 600 mined lines for 200 unique, Eventually and NextAnd about twice their unique count. `n_mined` (and possibly RS) counts the duplicates; MS, SFC and MC do not change. This is the published scripts' behaviour, kept as is.
+  - **USM-T's evaluation is itself random.** The output adaptor shuffles the mined specifications with an unseeded `shuf` (`adaptor.cc`), and `--max-mined` then keeps the first 10,000. Hybrid MS is the mean, over golden specifications, of the best similarity over all mined ones, so it is order-independent; it changes only when the cut drops specifications. That happens only for Texada on Eventually (about 82k unique specifications). Same input (Eventually seed 1), three runs: hybrid MS 0.87 / 0.83 / 0.88, semantic MS 0.20 / 0.00 / 0.30 (`~/usm-t-todaes/thesis_probes`). Texada's spread across seeds (0.84–0.89) is within this noise, and the paper's MS = 1.0 is one such sample. Texada on Next seed 1 (no cut), three runs: same 62,717 specifications, hybrid MS 0.90 each time, so Texada's spread on Next across seeds (0.71–1.00) is a seed effect. MC is a greedy cover over the shuffled order, so it varies on identical input (Next: 22/21/24; And HARM: ±1–2); SFC does not. RS = (n_mined − n_golden)/n_mined counts Texada's duplicated lines.
+  - **Samples2LTL hits its own 1800 s timeout on Until** and reports what it found by then.
+  - **GoldMine on the overlapping Next** skips the internal signals that drive shared outputs ("not found in data set. Possibly … an Lvalue of an Assign statement").
+  - **Run time is not a seed metric.** The host slowed all miners together on some tests (1.3–2.7×), and the last tests ran in two parallel lanes. Seed conclusions use MS, RS, SFC and MC only.
+  - Gemini (a paid API) is dropped from every test.
 
 - **S5 (TeLEx baseline) was dropped.** TeLEx (Jha et al., FMSD 2019; github.com/susmitjha/TeLEX, last commit 89cd49c, 2017-05-12) cannot run on a current toolchain without extensive changes. The source was inspected but never executed.
   - **Python 2.7 only.** The supported environment (`telex.yml`) pins Python 2.7.13, numpy 1.11.2, pandas 0.19.2, scipy 0.18.1 and parsimonious 0.7.0. All of these are years past end of life; Python 2.7 itself ended in January 2020.
@@ -59,7 +66,7 @@
 - Answers are parsed into the G fragment with tabex's `convert` (as RQ4) plus one equivalence-preserving rewrite: constant-first comparisons (`15.2 <= omega`) are flipped. Anything else outside the fragment counts as a failure, as do missing `->`, bare Boolean atoms, unbounded or fractional windows and signal-vs-signal comparisons. The failure rates are reported with the results; SLAM's output is in the fragment by construction.
 
 - **Fault detection** counts only the assertions that hold on the nominal traces, because a violated one would be a false alarm. A sample with no such assertion detects nothing. This filter makes the unchecked trace-mode set identical to `-trace-checked`.
-- **G timeouts:** 12 of the 5,310 (requirement, candidate) pairs in the final tables exceeded the 120 s per-pair budget. They are left out of the best-G maximum (all are LLM candidates). The forked scorer also crashed transiently on some pairs, about 2%; those were recomputed and all were scored.
+- **G timeouts:** 12 of the 7,786 (requirement, candidate) pairs in the final tables exceeded the 120 s per-pair budget. They are left out of the best-G maximum (all are LLM candidates). The forked scorer also crashed transiently on some pairs, about 2%; those were recomputed and all were scored.
 
 ## Simulink application benchmarks
 - These are MathWorks examples (`sldemo_autotrans`, `sldemo_fuelsys`, `sldemo_absbrake`, `sldemo_househeat`, R2026b), driven by seeded random inputs within documented ranges. They are not industrial field data.
