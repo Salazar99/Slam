@@ -1,0 +1,25 @@
+diff --git a/tool/synthetic_gen/testGenerator/input_generator/hif_utils.py b/tool/synthetic_gen/testGenerator/input_generator/hif_utils.py
+index f0b151a..e15f1a5 100644
+--- a/tool/synthetic_gen/testGenerator/input_generator/hif_utils.py
++++ b/tool/synthetic_gen/testGenerator/input_generator/hif_utils.py
+@@ -331,7 +331,7 @@ def generate_testbench(specification):
+           """ + f"{globals.top_module_name}_instance.simulate(&in_rst_on, cycles_number);" + """
+           """ + f"{globals.top_module_name}_instance.initialize();" + """
+ 
+-          srand(0);
++          srand(""" + os.environ.get("USMT_SEED", "0") + """);
+           """ + f"{globals.top_module_name}::{globals.top_module_name}_iostruct in;" + """
+ 
+           for (size_t k = 0; k < traceLength; ++k) {
+diff --git a/tool/synthetic_gen/testGenerator/input_generator/input_generator.py b/tool/synthetic_gen/testGenerator/input_generator/input_generator.py
+index d2ff989..ef860e0 100644
+--- a/tool/synthetic_gen/testGenerator/input_generator/input_generator.py
++++ b/tool/synthetic_gen/testGenerator/input_generator/input_generator.py
+@@ -2,6 +2,7 @@ import re
+ import subprocess
+ import os
+ import random
++random.seed(0)
+ import copy 
+ import sys
+ import time

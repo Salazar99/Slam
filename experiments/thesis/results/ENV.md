@@ -27,7 +27,7 @@
   - `samger/goldminer2` `sha256:4c8d76a6…`
 - USM-T: `~/usm-t-main`, a worktree of usm-t `origin/main` `3c6d0ca` on a local branch `exp/thesis-seeds` (not pushed). Built in Release with `-DCMAKE_POLICY_VERSION_MINIMUM=3.5`.
   - `third_party` is linked to the installs of `~/usm-t` (`syntgen_develop` `3a7d422`), plus radarChartPlotter `c64d38f`.
-  - Seed knob (uncommitted, 2 lines):
+  - Seed knob (2 lines, uncommitted in the worktrees; saved as `experiments/thesis/usmt_seed.patch`, applies to both 3c6d0ca and 28dff1c):
     - `hif_utils.py:334` writes `srand(<USMT_SEED>)` in the generated testbench;
     - `input_generator.py` calls `random.seed(0)`.
   - Generation runs with `PYTHONHASHSEED=0` and `CMAKE_POLICY_VERSION_MINIMUM=3.5`.
